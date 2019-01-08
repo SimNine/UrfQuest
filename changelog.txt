@@ -1,0 +1,15 @@
+0.1.0 - 2/2/16
+-Created something of a 2D rendering system
+--Renders a grid which is randomly generated of three different types of tiles: dirt, grass, rock
+--Always renders with the GameCenter in the center of the screen
+--Window is resizable, so that only the blocks that would fit on the screen at any time are rendered.
+-Four different types of coordinates:
+--GameCenter: the exact position (a decimal double) of the cursor
+--GameCenterBlock: the block that the cursor is currently on
+--DisplayCenter: the center of the QuestPanel relative to top-left (in terms of pixels)
+--DisplayBlockDimensions: the dimensions of the QuestPanel (in terms of tiles)
+-A timer goes off every 5ms:
+--Redraws the panel based on the current coordinates and dimensions
+--Checks what arrow keys are pressed down, moving the cursor appropriately
+-Whenever an arrow key is pressed, it is added to an array of keys. Whenever released, it is removed.
+-Status panel in upper-left corner displays all four coordinates
