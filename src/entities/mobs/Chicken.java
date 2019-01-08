@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import entities.items.ChickenLeg;
 import entities.mobs.ai.routines.FleeRoutine;
 import entities.mobs.ai.routines.IdleRoutine;
-import framework.QuestPanel;
 import framework.UrfQuest;
 
 public class Chicken extends Mob {
@@ -44,10 +43,9 @@ public class Chicken extends Mob {
 	}
 
 	protected void drawEntity(Graphics g) {
-		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - bounds.getY())*tileWidth), 
+					UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					UrfQuest.panel.gameToWindowY(bounds.getY()), 
 					null);
 		drawHealthBar(g);
 	}

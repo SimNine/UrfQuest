@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 import tiles.Tiles;
@@ -31,11 +30,11 @@ public abstract class Entity {
 	protected abstract void drawDebug(Graphics g);
 	
 	private void drawBounds(Graphics g) {
-		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.RED);
-		g.drawRect((int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH), 
-				   (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH),
-				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
+		g.drawRect((int) UrfQuest.panel.gameToWindowX(bounds.getX()), 
+				   (int) UrfQuest.panel.gameToWindowY(bounds.getY()),
+				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), 
+				   (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}
 	
 	// Updating methods
@@ -50,6 +49,19 @@ public abstract class Entity {
 	// object's position is incremented according to the parameters
 	public void move(double x, double y) {
 		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
+	}
+	
+	// moves the entity, NOT checking for validity of move
+	protected void move(int direction, double magnitude) {
+		double newX = bounds.getX();
+		double newY = bounds.getY();
+		double xComp = magnitude*Math.cos(Math.toRadians(direction));
+		double yComp = magnitude*Math.sin(Math.toRadians(direction));
+		
+		newX += xComp;
+		newY += yComp;
+		
+		bounds.setRect(newX, newY, bounds.getWidth(), bounds.getHeight());
 	}
 	
 	// gets the object's position as a double array with length 2 (x, y)

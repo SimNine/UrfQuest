@@ -30,6 +30,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	// returns true if the move is valid (in one or both directions), returns false if not
+	// if move is valid, moves the mob
 	protected boolean attemptMove(int dir, double velocity) {
 		QuestMap currMap = UrfQuest.game.getCurrMap();
 		double newX = bounds.getCenterX();
@@ -82,9 +83,8 @@ public abstract class Mob extends Entity {
 			return;
 		}
 		
-		Player player = UrfQuest.game.getPlayer();
-		int topLeftX = (int)(UrfQuest.panel.dispCenterX + (bounds.getX() - player.getPos()[0] + bounds.getWidth()/2.0)*QuestPanel.TILE_WIDTH) - 26;
-		int topLeftY = (int)(UrfQuest.panel.dispCenterY + (bounds.getY() - player.getPos()[1] + bounds.getHeight())*QuestPanel.TILE_WIDTH);
+		int topLeftX = (int)(UrfQuest.panel.gameToWindowX(bounds.getX()) + (bounds.getWidth()/2.0)*QuestPanel.TILE_WIDTH) - 26;
+		int topLeftY = (int)(UrfQuest.panel.gameToWindowY(bounds.getY()) + bounds.getHeight()*QuestPanel.TILE_WIDTH);
 		
 		int vis;
 		if (healthbarVisibility > 255) {
@@ -100,17 +100,16 @@ public abstract class Mob extends Entity {
 	}
 
 	protected void drawDebug(Graphics g) {
-		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
 		g.drawString("bounds: (" + (int)bounds.getX() + "," + (int)bounds.getY() + ") " + bounds.getWidth() + "*" + bounds.getHeight(),
-					(int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-					(int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+					(int) UrfQuest.panel.gameToWindowX(bounds.getX()),
+					(int) UrfQuest.panel.gameToWindowY(bounds.getY()));
 		g.drawString(("routine: " + routine.getClass().getSimpleName()),
-			 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-			 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+			 		 (int) UrfQuest.panel.gameToWindowX(bounds.getX()),
+			 		 (int) UrfQuest.panel.gameToWindowY(bounds.getY()) +10);
 		g.drawString(("action: " + routine.getCurrentAction().getClass().getSimpleName() + " duration: " + routine.getCurrentAction().getDuration()),
-		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+20);
+		 		 (int) UrfQuest.panel.gameToWindowX(bounds.getX()),
+		 		 (int) UrfQuest.panel.gameToWindowY(bounds.getY()) + 20);
 //		g.drawString(("angleTo: " + player.angleTo(this)),
 //		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
 //		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+30);

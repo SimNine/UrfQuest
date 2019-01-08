@@ -7,8 +7,6 @@ import java.awt.image.BufferedImage;
 
 import entities.Entity;
 import entities.mobs.Mob;
-import entities.mobs.Player;
-import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Item extends Entity {
@@ -27,7 +25,9 @@ public abstract class Item extends Entity {
 	}
 	
 	// manipulation methods
-	public abstract void use(Mob m);
+	
+	// returns true if used successfully, false if otherwise
+	public abstract boolean use(Mob m);
 	
 	public void update() {
 		if (getMaxCooldown() > -1) {
@@ -41,22 +41,20 @@ public abstract class Item extends Entity {
 	
 	// drawing methods
 	protected void drawEntity(Graphics g) {
-		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(itemPic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - bounds.getY())*tileWidth), 
+					UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					UrfQuest.panel.gameToWindowY(bounds.getY()), 
 					null);
 	}
 
 	public void drawDebug(Graphics g) {
-		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
 		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
-					 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-					 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+					 (int) UrfQuest.panel.gameToWindowX(bounds.getX()),
+					 (int) UrfQuest.panel.gameToWindowY(bounds.getY()));
 		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-				 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+				 (int) UrfQuest.panel.gameToWindowX(bounds.getX()),
+				 (int) UrfQuest.panel.gameToWindowY(bounds.getY()) + 10);
 	};
 	
 	// getters and setters

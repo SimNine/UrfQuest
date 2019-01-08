@@ -100,11 +100,11 @@ public class Loader {
 				}
 
 				// write number of items on the map
-				bos.writeInt(map.items.size());
+				bos.writeInt(map.getNumItems());
 
 				// for each item (in this case, only keys exist), write coords
-				for (i = 0; i < map.items.size(); i++) {
-					Item curr = map.items.get(i);
+				for (i = 0; i < map.getNumItems(); i++) {
+					Item curr = map.getItems().get(i);
 					bos.writeDouble(curr.getPos()[0]);
 					bos.writeDouble(curr.getPos()[1]);
 				}
@@ -192,7 +192,7 @@ public class Loader {
 
 				// read each item (in this case, only keys)
 				for (int j = 0; j < numItems; j++) {
-					map.items.add(new Key(bis.readDouble(), bis.readDouble()));
+					map.addItem(new Key(bis.readDouble(), bis.readDouble()));
 				}
 
 				// set the current map
@@ -219,7 +219,7 @@ public class Loader {
 			// create new player
 			Player p = new Player(xPos, yPos);
 			p.setHealth(health);
-			p.setMana(mana);
+			p.setMana((int)mana);
 			p.setVelocity(speed);
 
 			// set the player

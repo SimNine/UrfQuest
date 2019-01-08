@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import entities.items.Item;
-import framework.UrfQuest;
+import entities.mobs.Mob;
 
 public class Inventory {
-	private Item[] entries = new Item[10];
+	private Item[] entries;
 	private HashSet<Integer> occupiedEntries = new HashSet<Integer>();
 	private int selectedEntry = 0;
+	private Mob owner;
+	
+	public Inventory(Mob owner, int size) {
+		entries = new Item[size];
+		this.owner = owner;
+	}
 	
 	// gets a collection of all entries in the inventory
 	public ArrayList<Item> getItems() {
@@ -52,6 +58,11 @@ public class Inventory {
 	// (removes the stack if the item is unstackable)
 	public Item removeOneOfSelectedItem() {
 		if (entries[selectedEntry] != null) {
+			if (entries[selectedEntry].maxStackSize() == 1) {
+				Item temp = entries[selectedEntry];
+				removeSelectedEntry();
+				return temp;
+			}
 			Item i = entries[selectedEntry].clone();
 			if (entries[selectedEntry].currStackSize() > 1) {
 				entries[selectedEntry].incStackSize(-1);
@@ -82,24 +93,25 @@ public class Inventory {
 	}
 	
 	public void useSelectedItem() {
-		if (entries[selectedEntry] == null) {
+		Item entry = entries[selectedEntry];
+		
+		if (entry == null) {
 			return;
 		}
-		if (entries[selectedEntry].isUsable() && entries[selectedEntry].getCooldown() == 0) {// if the item is usable and cooled
-			entries[selectedEntry].use(UrfQuest.game.getPlayer());
-			entries[selectedEntry].setCooldown(entries[selectedEntry].getMaxCooldown());
-			if (entries[selectedEntry].isConsumable()) {
-				entries[selectedEntry].incStackSize(-1);
+		if (entry.getCooldown() == 0 && entry.use(owner)) {// if the item is cooled and usable
+			entry.setCooldown(entry.getMaxCooldown());
+			if (entry.isConsumable()) {
+				entry.incStackSize(-1);
 			}
-			if (entries[selectedEntry].degrades() && entries[selectedEntry].getDurability() > 0) { // if the item degrades
-				entries[selectedEntry].incDurability(-1);
-				if (entries[selectedEntry].getDurability() == 0) { // if the item is fully degraded
-					entries[selectedEntry].incStackSize(-1);
+			if (entry.degrades() && entry.getDurability() > 0) { // if the item degrades
+				entry.incDurability(-1);
+				if (entry.getDurability() == 0) { // if the item is fully degraded
+					entry.incStackSize(-1);
 				}
 			}
 		}
 		
-		if (entries[selectedEntry].currStackSize() == 0) {
+		if (entry.currStackSize() == 0) {
 			removeSelectedEntry();
 		}
 	}

@@ -27,7 +27,7 @@ public class Shovel extends Item {
 	}
 	
 	// manipulation methods
-	public void use(Mob m) {
+	public boolean use(Mob m) {
 		if (m.tileTypeAtDistance(0) == 2) {
 			int[] coords = m.tileCoordsAtDistance(0);
 			if (Math.random() > .05) {
@@ -51,6 +51,9 @@ public class Shovel extends Item {
 				System.out.println("soruce: " + coords[0] + ", " + coords[1]);
 				System.out.println("exit: " + caveSize/2 + ", " + caveSize/2);
 			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 

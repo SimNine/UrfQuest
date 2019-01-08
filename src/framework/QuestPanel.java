@@ -256,22 +256,22 @@ public class QuestPanel extends JPanel {
 	
 	// coordinate conversion
 	public int gameToWindowX(double x) {
-		int xRet = (int)(dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - x)*TILE_WIDTH);
+		int xRet = (int)(dispCenterX - (gameBoard.getCamera().getPos()[0] - x)*TILE_WIDTH);
 		return xRet;
 	}
 	
 	public int gameToWindowY(double y) {
-		int yRet = (int)(dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - y)*TILE_WIDTH);
+		int yRet = (int)(dispCenterY - (gameBoard.getCamera().getPos()[1] - y)*TILE_WIDTH);
 		return yRet;
 	}
 	
-	// these two methods are broken for purposes of rendering the board, but they work for finding what tile the mouse is on
-	// (don't trust these two methods)
+	// these two methods are broken for purposes of rendering the board, but they work for finding what tile the mouse is on.
+	// i'm not sure why this is the case. don't trust these two methods.
 	public double windowToGameX(int x) {
-		return UrfQuest.game.getPlayer().getPos()[0] - (((double)dispCenterX - (double)x) / (double)TILE_WIDTH);
+		return gameBoard.getCamera().getPos()[0] - (((double)dispCenterX - (double)x) / (double)TILE_WIDTH);
 	}
 	
 	public double windowToGameY(int y) {
-		return UrfQuest.game.getPlayer().getPos()[1] - (((double)dispCenterY - (double)y) / (double)TILE_WIDTH);
+		return gameBoard.getCamera().getPos()[1] - (((double)dispCenterY - (double)y) / (double)TILE_WIDTH);
 	}
 }

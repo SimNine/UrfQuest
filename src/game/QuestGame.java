@@ -2,7 +2,9 @@ package game;
 
 import java.util.ArrayList;
 
+import entities.mobs.CameraMob;
 import entities.mobs.Player;
+import framework.UrfQuest;
 import entities.items.Item;
 
 public class QuestGame {
@@ -11,7 +13,11 @@ public class QuestGame {
 	private QuestMap currMap;
 	private ArrayList<QuestMap> maps = new ArrayList<QuestMap>();
 	private Player player;
+	
 	private boolean buildMode = false;
+	
+	private int astralCounter = -1;
+	private CameraMob astralCamera = null;
 
 	public QuestGame() {
 		surfaceMap = new QuestMap(500, 500, QuestMap.SIMPLEX_MAP);
@@ -24,10 +30,20 @@ public class QuestGame {
 		currMap = surfaceMap;
 	}
 
+	/*
+	 * Ticker and updater
+	 */
+	
 	public void tick() {
 		currMap.update();
 		player.update();
+		
+		this.updateAstral();
 	}
+	
+	/*
+	 * Map management
+	 */
 	
 	public QuestMap getSurfaceMap() {
 		return surfaceMap;
@@ -52,6 +68,10 @@ public class QuestGame {
 		this.maps = maps;
 	}
 	
+	/*
+	 * Build mode
+	 */
+	
 	public void toggleBuildMode() {
 		buildMode = !buildMode;
 	}
@@ -60,6 +80,10 @@ public class QuestGame {
 		return buildMode;
 	}
 
+	/*
+	 * Player and inventory
+	 */
+	
 	public Player getPlayer() {
 		return player;
 	}
@@ -84,6 +108,10 @@ public class QuestGame {
 		player.setSelectedEntry(i);
 	}
 	
+	/*
+	 * MapLink methods
+	 */
+	
 	public void tryMapLink() {
 		MapLink ml = null;
 		for (MapLink l : currMap.getLinks().keySet()) {
@@ -100,5 +128,28 @@ public class QuestGame {
 			currMap = endPoint.getMap();
 			player.setPos(endPoint.getCoords()[0], endPoint.getCoords()[1]);
 		}
+	}
+	
+	/*
+	 * Astral rune special effect
+	 */
+	
+	private void updateAstral() {
+		if (astralCounter > -1) {
+			astralCounter--;
+		}
+		
+		if (astralCounter == 0) {
+			UrfQuest.panel.gameBoard.getCamera().setFollowMob(player);
+			currMap.removeMob(astralCamera);
+		}
+	}
+	
+	public void initiateAstral() {
+		CameraMob cm = new CameraMob(player.getPos()[0], player.getPos()[1], CameraMob.STILL_MODE);
+		UrfQuest.panel.gameBoard.getCamera().setFollowMob(cm);
+		astralCamera = cm;
+		currMap.addMob(cm);
+		astralCounter = 1000;
 	}
 }

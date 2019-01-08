@@ -9,8 +9,8 @@ import entities.items.Gem;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Mob;
+import entities.projectiles.Projectile;
 import entities.items.Item;
-import entities.particles.Particle;
 import framework.UrfQuest;
 import tiles.Tiles;
 import urf.SimplexNoise;
@@ -28,9 +28,17 @@ public class QuestMap {
 	
 	private HashMap<MapLink, MapLink> links = new HashMap<MapLink, MapLink>();
 	
-	public ArrayList<Mob> mobs = new ArrayList<Mob>();
-	public ArrayList<Item> items = new ArrayList<Item>();
-	public ArrayList<Particle> particles = new ArrayList<Particle>();
+	private ArrayList<Mob> mobs = new ArrayList<Mob>();
+	private ArrayList<Item> items = new ArrayList<Item>();
+	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	
+	private ArrayList<Mob> addMobs = new ArrayList<Mob>();
+	private ArrayList<Item> addItems = new ArrayList<Item>();
+	private ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
+	
+	private ArrayList<Item> removeItems = new ArrayList<Item>();
+	private ArrayList<Mob> removeMobs = new ArrayList<Mob>();
+	private ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
 	
 	public QuestMap(int width, int height, int type) {
 		map = new int[width][height];
@@ -63,25 +71,11 @@ public class QuestMap {
 		}
 	}
 	
-	public void generateMinimap() {
-		minimap = new BufferedImage(map.length, map[0].length, BufferedImage.TYPE_4BYTE_ABGR);
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				int color = Tiles.minimapColor(this.getTileAt(x, y));
-				minimap.setRGB(x, y, color);
-			}
-		}
-	}
+	/*
+	 * Tick updater
+	 */
 	
-	public BufferedImage getMinimap() {
-		return minimap;
-	}
-	
-	// updates entities and checks for collisions
 	public void update() {
-		ArrayList<Item> removeItems = new ArrayList<Item>();
-		ArrayList<Particle> removeParticles = new ArrayList<Particle>();
-		ArrayList<Mob> removeMobs = new ArrayList<Mob>();
 		
 		// check for the player colliding with items
 		for (Item i : items) {
@@ -108,19 +102,19 @@ public class QuestMap {
 		}
 		
 		// update particles
-		for (Particle p : particles) {
+		for (Projectile p : projectiles) {
 			if (p.isDead()) {
-				removeParticles.add(p);
+				removeProjectiles.add(p);
 			}
 			p.update();
 		}
 		
 		// check for collisions between particles and mobs
-		for (Particle p : particles) {
+		for (Projectile p : projectiles) {
 			for (Mob m : mobs) {
 				if (p.collides(m)) {
 					m.incrementHealth(-5.0);
-					removeParticles.add(p);
+					removeProjectiles.add(p);
 				}
 			}
 		}
@@ -133,12 +127,27 @@ public class QuestMap {
 			}
 		}
 
-		particles.removeAll(removeParticles);
 		items.removeAll(removeItems);
 		mobs.removeAll(removeMobs);
+		projectiles.removeAll(removeProjectiles);
+		
+		removeItems.clear();
+		removeMobs.clear();
+		removeProjectiles.clear();
+		
+		items.addAll(addItems);
+		mobs.addAll(addMobs);
+		projectiles.addAll(addProjectiles);
+		
+		addItems.clear();
+		addMobs.clear();
+		addProjectiles.clear();
 	}
 	
-	// map generation methods
+	/*
+	 * Map generation methods
+	 */
+	
 	public void generateSimplexNoiseMap() {
 		int width = map.length;
 		int height = map[0].length;
@@ -281,6 +290,8 @@ public class QuestMap {
 			}
 		}
 		
+		this.homeCoords[0] = width/2;
+		this.homeCoords[1] = height/2;
 		this.map = end;
 	}
 	
@@ -323,7 +334,10 @@ public class QuestMap {
 		this.map = end;
 	}
 	
-	// helper generation methods
+	/*
+	 * Local map feature generation
+	 */
+	
 	private void generateStartingArea() {
 		int spawnCenterX = map.length/2;
 		int spawnCenterY = map[0].length/2;
@@ -360,7 +374,28 @@ public class QuestMap {
 		}
 	}
 	
-	// entity generation methods
+	/*
+	 * Minimap management
+	 */
+	
+	public void generateMinimap() {
+		minimap = new BufferedImage(map.length, map[0].length, BufferedImage.TYPE_4BYTE_ABGR);
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				int color = Tiles.minimapColor(this.getTileAt(x, y));
+				minimap.setRGB(x, y, color);
+			}
+		}
+	}
+	
+	public BufferedImage getMinimap() {
+		return minimap;
+	}
+	
+	/*
+	 * Entity generation
+	 */
+	
 	public void generateMobs() {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
 		for (int x = 0; x < map.length; x++) {
@@ -394,7 +429,10 @@ public class QuestMap {
 		this.items = items;
 	}
 	
-	// Getters and setters
+	/*
+	 * Misc map manipulation
+	 */
+	
 	public int getTileAt(int x, int y) {
 		if (x < 0 || y < 0) return -1;
 		if (x >= map.length || y >= map[0].length) return -1;
@@ -439,11 +477,55 @@ public class QuestMap {
 		return map[0].length;
 	}
 	
+	/*
+	 * Entity management
+	 */
+	
 	public void addItem(Item i) {
-		items.add(i);
+		addItems.add(i);
 	}
 	
-	public void addParticle(Particle p) {
-		particles.add(p);
+	public void addMob(Mob m) {
+		addMobs.add(m);
+	}
+	
+	public void addParticle(Projectile p) {
+		addProjectiles.add(p);
+	}
+	
+	public void removeItem(Item i) {
+		removeItems.add(i);
+	}
+	
+	public void removeMob(Mob m) {
+		removeMobs.add(m);
+	}
+	
+	public void removeParticle(Projectile p) {
+		removeProjectiles.add(p);
+	}
+	
+	public ArrayList<Item> getItems() {
+		return items;
+	}
+	
+	public ArrayList<Mob> getMobs() {
+		return mobs;
+	}
+	
+	public ArrayList<Projectile> getProjectiles() {
+		return projectiles;
+	}
+	
+	public int getNumItems() {
+		return items.size();
+	}
+	
+	public int getNumMobs() {
+		return mobs.size();
+	}
+	
+	public int getNumProjectiles() {
+		return projectiles.size();
 	}
 }

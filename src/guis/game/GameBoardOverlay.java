@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import entities.items.Item;
 import entities.mobs.Mob;
 import entities.mobs.Player;
-import entities.particles.Particle;
+import entities.projectiles.Projectile;
 import framework.QuestPanel;
 import framework.UrfQuest;
 import game.QuestMap;
@@ -16,9 +16,11 @@ import tiles.Tiles;
 public class GameBoardOverlay extends Overlay {
 	private int selectedTileTransparency = 255;
 	private boolean transparencyIncreasing = false;
+	private Camera camera;
 
 	public GameBoardOverlay() {
 		super("board");
+		camera = new Camera(UrfQuest.game.getPlayer());
 	}
 
 	public void draw(Graphics g) {
@@ -36,18 +38,17 @@ public class GameBoardOverlay extends Overlay {
 		int dispCenterX = UrfQuest.panel.dispCenterX;
 		int dispCenterY = UrfQuest.panel.dispCenterY;
 		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
-		Player player = UrfQuest.game.getPlayer();
 		QuestMap currMap = UrfQuest.game.getCurrMap();
 
 		// get the rendering offset
 		int rootX = (int)(TILE_WIDTH - (dispCenterX % TILE_WIDTH));
 		int rootY = (int)(TILE_WIDTH - (dispCenterY % TILE_WIDTH));
-		rootX += (player.getPos()[0] % 1)*TILE_WIDTH;
-		rootY += (player.getPos()[1] % 1)*TILE_WIDTH;
+		rootX += (camera.getPos()[0] % 1)*TILE_WIDTH;
+		rootY += (camera.getPos()[1] % 1)*TILE_WIDTH;
 		
 		// get the block coordinate of the upper-left corner
-		int ulX = ((int)player.getPos()[0] - dispTileWidth/2) - 1;
-		int ulY = ((int)player.getPos()[1] - dispTileHeight/2) - 1;
+		int ulX = ((int)camera.getPos()[0] - dispTileWidth/2) - 1;
+		int ulY = ((int)camera.getPos()[1] - dispTileHeight/2) - 1;
 		
 		// find which tile the mouse is over
 		int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
@@ -83,7 +84,7 @@ public class GameBoardOverlay extends Overlay {
 		}
 		
 		// draw the highlight of the selected tile
-		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
+		if (UrfQuest.game.isBuildMode() && UrfQuest.panel.isGUIOpen()) {
 			int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
 			int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
 			g.setColor(new Color(255, 255, 255, selectedTileTransparency));
@@ -108,7 +109,7 @@ public class GameBoardOverlay extends Overlay {
 	}
 	
 	public boolean click() {
-		if (UrfQuest.game.isBuildMode()) {
+		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
 			int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
 			int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
 			
@@ -137,36 +138,41 @@ public class GameBoardOverlay extends Overlay {
 		g.drawString("CharacterHealth: " + player.getHealth(), 10, 70);
 		g.drawString("CharacterMana: " + player.getMana(), 10, 80);
 		g.drawString("CharacterSpeed: " + player.getVelocity(), 10, 90);
-		g.drawString("NumMobs: " + currMap.mobs.size(), 10, 100);
-		g.drawString("NumItems: " + currMap.items.size(), 10, 110);
-		g.drawString("NumParticles: " + currMap.particles.size(), 10, 120);
+		g.drawString("NumMobs: " + currMap.getNumMobs(), 10, 100);
+		g.drawString("NumItems: " + currMap.getNumItems(), 10, 110);
+		g.drawString("NumParticles: " + currMap.getNumProjectiles(), 10, 120);
 	}
 
 	private void drawEntities(Graphics g) {
-		Player player = UrfQuest.game.getPlayer();
 		QuestMap currMap = UrfQuest.game.getCurrMap();
 		
-		for (Mob m : currMap.mobs) {
-			if (m.getPos()[0] > player.getPos()[0] - 30 &&
-				m.getPos()[0] < player.getPos()[0] + 30 &&
-				m.getPos()[1] > player.getPos()[1] - 30 &&
-				m.getPos()[1] < player.getPos()[1] + 30)
+		for (Mob m : currMap.getMobs()) {
+			if (m.getCenter()[0] > camera.getPos()[0] - 30 &&
+				m.getCenter()[0] < camera.getPos()[0] + 30 &&
+				m.getCenter()[1] > camera.getPos()[1] - 30 &&
+				m.getCenter()[1] < camera.getPos()[1] + 30)
 			m.draw(g);
 		}
 
-		for (Item i : currMap.items) {
-			if (i.getPos()[0] > player.getPos()[0] - 30 &&
-				i.getPos()[0] < player.getPos()[0] + 30 &&
-				i.getPos()[1] > player.getPos()[1] - 30 &&
-				i.getPos()[1] < player.getPos()[1] + 30)
+		for (Item i : currMap.getItems()) {
+			if (i.getCenter()[0] > camera.getPos()[0] - 30 &&
+				i.getCenter()[0] < camera.getPos()[0] + 30 &&
+				i.getCenter()[1] > camera.getPos()[1] - 30 &&
+				i.getCenter()[1] < camera.getPos()[1] + 30)
 			i.draw(g);
 		}
 		
-		for (Particle p : currMap.particles) {
+		for (Projectile p : currMap.getProjectiles()) {
 			p.draw(g);
 		}
 
-		player.draw(g);
+		Player player = UrfQuest.game.getPlayer();
+		if (player.getCenter()[0] > camera.getPos()[0] - 30 &&
+			player.getCenter()[0] < camera.getPos()[0] + 30 &&
+			player.getCenter()[1] > camera.getPos()[1] - 30 &&
+			player.getCenter()[1] < camera.getPos()[1] + 30) {
+			player.draw(g);
+		}
 	}
 
 	private void drawCrosshair(Graphics g) {
@@ -176,5 +182,9 @@ public class GameBoardOverlay extends Overlay {
 		g.setColor(Color.WHITE);
 		g.drawLine(dispCenterX + 5, dispCenterY + 15, dispCenterX + 25, dispCenterY + 15);
 		g.drawLine(dispCenterX + 15, dispCenterY + 5, dispCenterX + 15, dispCenterY + 25);
+	}
+	
+	public Camera getCamera() {
+		return camera;
 	}
 }

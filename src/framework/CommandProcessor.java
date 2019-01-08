@@ -2,9 +2,12 @@ package framework;
 
 import javax.swing.JOptionPane;
 
+import entities.items.AstralRune;
 import entities.items.Cheese;
 import entities.items.ChickenLeg;
+import entities.items.CosmicRune;
 import entities.items.Gem;
+import entities.items.GrenadeItem;
 import entities.items.Hatchet;
 import entities.items.Key;
 import entities.items.LawRune;
@@ -44,7 +47,7 @@ public class CommandProcessor {
 					+ "\"set (health/mana/speed) (0-100)\"\n"
 					+ "\"tp (xpos) (ypos)\"\n"
 					+ "\"tprel (xoffset) (yoffset)\"\n"
-					+ "\"home\""
+					+ "\"home\"\n"
 					+ "\"toolkit\"", 
 					"command help", JOptionPane.INFORMATION_MESSAGE);
 		} else if (args[0].equals("give")) {
@@ -83,9 +86,13 @@ public class CommandProcessor {
 				} else if (args[1].equals("shotgun")) {
 					UrfQuest.game.getPlayer().addItem(new Shotgun(0, 0));
 				} else if (args[1].equals("grenade")) {
-					//UrfQuest.game.getPlayer().addItem(new Grenade(0, 0));
+					UrfQuest.game.getPlayer().addItem(new GrenadeItem(0, 0));
 				} else if (args[1].equals("lawrune")) {
 					UrfQuest.game.getPlayer().addItem(new LawRune(0, 0));
+				} else if (args[1].equals("cosmicrune")) {
+					UrfQuest.game.getPlayer().addItem(new CosmicRune(0, 0));
+				} else if (args[1].equals("astralrune")) {
+					UrfQuest.game.getPlayer().addItem(new AstralRune(0, 0));
 				}
 			}
 		} else if (args[0].equals("spawn")) {
@@ -98,9 +105,9 @@ public class CommandProcessor {
 			Player p = UrfQuest.game.getPlayer();
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("chicken")) {
-					UrfQuest.game.getCurrMap().mobs.add(new Chicken(p.getPos()[0], p.getPos()[1]));
+					UrfQuest.game.getCurrMap().addMob(new Chicken(p.getPos()[0], p.getPos()[1]));
 				} else if (args[1].equals("cyclops")) {
-					UrfQuest.game.getCurrMap().mobs.add(new Cyclops(p.getPos()[0], p.getPos()[1]));
+					UrfQuest.game.getCurrMap().addMob(new Cyclops(p.getPos()[0], p.getPos()[1]));
 				}
 			}
 		} else if (args[0].equals("set")) {

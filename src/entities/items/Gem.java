@@ -25,8 +25,8 @@ public class Gem extends Item {
 	}
 
 	// manipulation methods
-	public void use(Mob m) {
-		// nothing here
+	public boolean use(Mob m) {
+		return false;
 	}
 	
 	public Gem clone() {

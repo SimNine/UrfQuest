@@ -25,34 +25,44 @@ public class Pickaxe extends Item {
 	}
 	
 	// manipulation methods
-	public void use(Mob m) {
+	public boolean use(Mob m) {
 		if (m.tileTypeAtDistance(1.0) == 10) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 11) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 8);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 12) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 9);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 14) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 0);
 			double rand = Math.random();
-			if (rand > .98) {
-				UrfQuest.game.getCurrMap().addItem(new SMG(coords[0], coords[1]));
-			} else if (rand > .96) {
-				UrfQuest.game.getCurrMap().addItem(new Shotgun(coords[0], coords[1]));
-			} else if (rand > .90) {
-				UrfQuest.game.getCurrMap().addItem(new Pistol(coords[0], coords[1]));
-			} else if (rand > .80) {
+			if (rand > .95) {
 				UrfQuest.game.getCurrMap().addItem(new LawRune(coords[0], coords[1]));
+			} else if (rand > .90) {
+				UrfQuest.game.getCurrMap().addItem(new CosmicRune(coords[0], coords[1]));
+			} else if (rand > .85) {
+				UrfQuest.game.getCurrMap().addItem(new AstralRune(coords[0], coords[1]));
+			} else if (rand > .82) {
+				UrfQuest.game.getCurrMap().addItem(new Shotgun(coords[0], coords[1]));
+			} else if (rand > .79) {
+				UrfQuest.game.getCurrMap().addItem(new SMG(coords[0], coords[1]));
+			} else if (rand > .75) {
+				UrfQuest.game.getCurrMap().addItem(new GrenadeItem(coords[0], coords[1]));
 			} else {
 				UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
 			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 

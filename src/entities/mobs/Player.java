@@ -27,9 +27,9 @@ public class Player extends Mob {
 	private final double maxFullness = 100.0;
 	private double mana = 100.0;
 	private double fullness = 100.0;
-	private int fullnessCounter = 200;
+	private int statCounter = 200;
 	
-	private Inventory inventory = new Inventory();
+	private Inventory inventory;
 
 	public Player(double x, double y) {
 		super(x, y);
@@ -39,6 +39,8 @@ public class Player extends Mob {
 		}
 		velocity = 0.05;
 		health = 100.0;
+		
+		inventory = new Inventory(this, 10);
 		inventory.addItem(new Shovel(0, 0));
 		inventory.addItem(new Pickaxe(0, 0));
 		inventory.addItem(new Hatchet(0, 0));
@@ -183,19 +185,19 @@ public class Player extends Mob {
 		}
 		
 		g.drawImage(img[direction/45][animStage/STEP_SIZE], 
-					UrfQuest.panel.dispCenterX,
-					UrfQuest.panel.dispCenterY,
+					UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					UrfQuest.panel.gameToWindowY(bounds.getY()), 
 					null);
 	}
 	
 	public void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawString("direction: " + this.direction, 
-					 UrfQuest.panel.dispCenterX, 
-					 UrfQuest.panel.dispCenterY);
+					 UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					 UrfQuest.panel.gameToWindowY(bounds.getY()));
 		g.drawString("moveStage: " + this.animStage, 
-					 UrfQuest.panel.dispCenterX, 
-					 UrfQuest.panel.dispCenterY + 10);
+					 UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					 UrfQuest.panel.gameToWindowY(bounds.getY()) + 10);
 	}
 
 	public void update() {
@@ -204,15 +206,26 @@ public class Player extends Mob {
 		}
 		
 		// update hunger and health mechanics
-		if (fullnessCounter > 0) {
-			fullnessCounter--;
+		if (statCounter > 0) {
+			statCounter--;
 		} else {
+			if (fullness > maxFullness/2) {
+				if (health < maxHealth) {
+					health += 0.2;
+				}
+			}
+			
 			if (fullness > 0) {
 				fullness -= 0.2;
 			} else {
 				health -= 0.2;
 			}
-			fullnessCounter = 200;
+			
+			if (mana < maxMana) {
+				mana += 0.1;
+			}
+			
+			statCounter = 200;
 		}
 		
 		// use the selected item if space is down
@@ -349,7 +362,10 @@ public class Player extends Mob {
 		return maxFullness;
 	}
 	
-	// inventory methods
+	/*
+	 * Inventory management
+	 */
+	
 	public Inventory getInventory() {
 		return inventory;
 	}
@@ -376,142 +392,5 @@ public class Player extends Mob {
 	
 	public void useSelectedItem() {
 		inventory.useSelectedItem();
-	}
-	
-	// This is used in case the player's sprites somehow can't be loaded
-	@SuppressWarnings("unused")
-	private static void drawCharacterPlaceholder(Graphics g, int x, int y, int s, String dir) {
-		switch (dir) {
-		case "NW":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*0, y + s*0, s*6, s*6);
-			g.fillRect(x + s*6, y + s*0, s*1, s*2);
-			g.fillRect(x + s*0, y + s*6, s*2, s*1);
-			g.fillRect(x + s*6, y + s*3, s*1, s*7);
-			g.fillRect(x + s*5, y + s*4, s*3, s*5);
-			g.fillRect(x + s*4, y + s*5, s*5, s*3);
-			g.fillRect(x + s*3, y + s*6, s*7, s*1);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*1, y + s*1, s*3, s*3);
-			g.fillRect(x + s*4, y + s*1, s*1, s*1);
-			g.fillRect(x + s*1, y + s*4, s*1, s*1);
-			g.fillRect(x + s*3, y + s*3, s*2, s*2);
-			g.fillRect(x + s*4, y + s*4, s*2, s*2);
-			g.fillRect(x + s*5, y + s*5, s*2, s*2);
-			g.fillRect(x + s*6, y + s*7, s*1, s*1);
-			g.fillRect(x + s*7, y + s*6, s*1, s*1);
-			break;
-		case "W":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*0, y + s*3, s*10, s*4);
-			g.fillRect(x + s*1, y + s*2, s*4, s*1);
-			g.fillRect(x + s*2, y + s*1, s*3, s*1);
-			g.fillRect(x + s*3, y + s*0, s*2, s*10);
-			g.fillRect(x + s*1, y + s*7, s*2, s*1);
-			g.fillRect(x + s*2, y + s*8, s*3, s*1);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*3, y + s*2, s*1, s*1);
-			g.fillRect(x + s*2, y + s*3, s*2, s*1);
-			g.fillRect(x + s*1, y + s*4, s*8, s*2);
-			g.fillRect(x + s*2, y + s*6, s*2, s*1);
-			g.fillRect(x + s*3, y + s*7, s*1, s*1);
-			break;
-		case "SW":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*6, y + s*0, s*1, s*7);
-			g.fillRect(x + s*5, y + s*1, s*3, s*5);
-			g.fillRect(x + s*4, y + s*2, s*5, s*3);
-			g.fillRect(x + s*3, y + s*3, s*7, s*1);
-			g.fillRect(x + s*0, y + s*4, s*6, s*6);
-			g.fillRect(x + s*0, y + s*3, s*2, s*1);
-			g.fillRect(x + s*6, y + s*8, s*1, s*2);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*7, y + s*3, s*1, s*1);
-			g.fillRect(x + s*6, y + s*2, s*1, s*1);
-			g.fillRect(x + s*5, y + s*3, s*2, s*2);
-			g.fillRect(x + s*4, y + s*4, s*2, s*2);
-			g.fillRect(x + s*3, y + s*5, s*2, s*2);
-			g.fillRect(x + s*1, y + s*6, s*3, s*3);
-			g.fillRect(x + s*4, y + s*8, s*1, s*1);
-			g.fillRect(x + s*1, y + s*5, s*1, s*1);
-			break;
-		case "N":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*3, y + s*0, s*4, s*10);
-			g.fillRect(x + s*2, y + s*1, s*6, s*4);
-			g.fillRect(x + s*1, y + s*2, s*8, s*3);
-			g.fillRect(x + s*0, y + s*3, s*10, s*2);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*4, y + s*1, s*2, s*8);
-			g.fillRect(x + s*3, y + s*2, s*4, s*2);
-			g.fillRect(x + s*2, y + s*3, s*6, s*1);
-			break;
-		case "S":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*3, y + s*0, s*4, s*10);
-			g.fillRect(x + s*0, y + s*5, s*10, s*2);
-			g.fillRect(x + s*1, y + s*7, s*8, s*1);
-			g.fillRect(x + s*2, y + s*8, s*6, s*1);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*4, y + s*1, s*2, s*8);
-			g.fillRect(x + s*3, y + s*7, s*4, s*1);
-			g.fillRect(x + s*2, y + s*6, s*6, s*1);
-			break;
-		case "NE":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*4, y + s*0, s*6, s*6);
-			g.fillRect(x + s*3, y + s*0, s*1, s*2);
-			g.fillRect(x + s*8, y + s*6, s*2, s*1);
-			g.fillRect(x + s*3, y + s*3, s*1, s*7);
-			g.fillRect(x + s*2, y + s*4, s*3, s*5);
-			g.fillRect(x + s*1, y + s*5, s*5, s*3);
-			g.fillRect(x + s*0, y + s*6, s*7, s*1);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*6, y + s*1, s*3, s*3);
-			g.fillRect(x + s*5, y + s*1, s*1, s*1);
-			g.fillRect(x + s*8, y + s*4, s*1, s*1);
-			g.fillRect(x + s*5, y + s*3, s*2, s*2);
-			g.fillRect(x + s*4, y + s*4, s*2, s*2);
-			g.fillRect(x + s*3, y + s*5, s*2, s*2);
-			g.fillRect(x + s*2, y + s*6, s*1, s*1);
-			g.fillRect(x + s*3, y + s*7, s*1, s*1);
-			break;
-		case "E":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*0, y + s*3, s*10, s*4);
-			g.fillRect(x + s*5, y + s*0, s*2, s*10);
-			g.fillRect(x + s*5, y + s*1, s*3, s*8);
-			g.fillRect(x + s*5, y + s*2, s*4, s*6);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*1, y + s*4, s*8, s*2);
-			g.fillRect(x + s*6, y + s*2, s*1, s*6);
-			g.fillRect(x + s*6, y + s*3, s*2, s*4);
-			break;
-		case "SE":
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*3, y + s*0, s*1, s*7);
-			g.fillRect(x + s*2, y + s*1, s*3, s*5);
-			g.fillRect(x + s*1, y + s*2, s*5, s*3);
-			g.fillRect(x + s*0, y + s*3, s*7, s*1);
-			g.fillRect(x + s*4, y + s*4, s*6, s*6);
-			g.fillRect(x + s*3, y + s*8, s*1, s*2);
-			g.fillRect(x + s*8, y + s*3, s*2, s*1);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*3, y + s*2, s*1, s*1);
-			g.fillRect(x + s*2, y + s*3, s*1, s*1);
-			g.fillRect(x + s*3, y + s*3, s*2, s*2);
-			g.fillRect(x + s*4, y + s*4, s*2, s*2);
-			g.fillRect(x + s*5, y + s*5, s*2, s*2);
-			g.fillRect(x + s*6, y + s*6, s*3, s*3);
-			g.fillRect(x + s*5, y + s*8, s*1, s*1);
-			g.fillRect(x + s*8, y + s*5, s*1, s*1);
-			break;
-		default:
-			g.setColor(Color.BLACK);
-			g.fillRect(x + s*2, y + s*2, s*6, s*6);
-			g.setColor(Color.YELLOW);
-			g.fillRect(x + s*3, y + s*3, s*4, s*4);
-			break;
-		}
 	}
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
-import entities.particles.Particle;
+import entities.projectiles.Bullet;
 import framework.UrfQuest;
 
 public class Shotgun extends Item {
@@ -26,15 +26,17 @@ public class Shotgun extends Item {
 	}
 	
 	// manipulation methods
-	public void use(Mob m) {
+	public boolean use(Mob m) {
 		double[] pos = m.getCenter();
 		int dir;
 		int numShots = 15 + (int)(Math.random()*5);
 		
 		for (int i = 0; i < numShots; i++) {
 			dir = m.getDirection() + (int)((Math.random() - 0.5)*20);
-			UrfQuest.game.getCurrMap().addParticle(new Particle(pos[0], pos[1], dir));
+			UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir));
 		}
+		
+		return true;
 	}
 	
 	public Shotgun clone() {

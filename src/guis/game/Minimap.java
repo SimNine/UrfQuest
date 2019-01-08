@@ -79,7 +79,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each item currently on the minimap
 		g.setColor(Color.RED);
-		for (Item i : UrfQuest.game.getCurrMap().items) {
+		for (Item i : UrfQuest.game.getCurrMap().getItems()) {
 			if ((int)i.getPos()[0] > xCrop && (int)i.getPos()[0] < xCrop + width &&
 				(int)i.getPos()[1] > yCrop && (int)i.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)i.getPos()[0]-xCrop) - 1, 
@@ -89,7 +89,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each npc currently on the minimap
 		g.setColor(Color.YELLOW);
-		for (Mob m : UrfQuest.game.getCurrMap().mobs) {
+		for (Mob m : UrfQuest.game.getCurrMap().getMobs()) {
 			if ((int)m.getPos()[0] > xCrop && (int)m.getPos()[0] < xCrop + width &&
 				(int)m.getPos()[1] > yCrop && (int)m.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)m.getPos()[0]-xCrop) - 1, 

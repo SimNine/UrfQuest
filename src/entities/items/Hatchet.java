@@ -25,11 +25,14 @@ public class Hatchet extends Item {
 	}
 	
 	// manipulation methods
-	public void use(Mob m) {
+	public boolean use(Mob m) {
 		if (m.tileTypeAtDistance(1.0) == 7) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
 			UrfQuest.game.getCurrMap().addItem(new Log(coords[0], coords[1]));
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

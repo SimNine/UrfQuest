@@ -302,3 +302,33 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 --80% to get Stone
 --Anyplace besides caves, only stone is dropped
 -Weapons no longer generate on surface map; only Gems and Cheese
+
+0.16.0_pre3 - 1/27/17
+(Gameplay Update 2, continued)
+-Cave maps now have their center tile set as home coords
+-Added cosmic rune
+--When used, spawns a chicken at the user's position
+--1000t cooldown (same as law rune)
+--Stackable
+-Added mana mechanics
+--Cosmic rune use drains mana by 5.0
+--Law rune use drains mana by 30.0
+--Mana regenerates automatically, 0.1 per 200t
+-Separated the camera completely from the player entity
+-Added a Camera class, which wraps a mob
+--It is now possible to attach the camera to a mob, which it will follow
+-Added a CameraMob (essentially just a dummy mob to attach a camera to)
+-Renamed "Particle" class to "Bullet"
+-Fixed potential concurrency issue with adding new items, mobs, and projectiles.
+--New items, mobs, and projectiles are now added *after* all processing of current entites is done
+-Added grenade item and projectile
+--Short(ish) cooldown
+--Has 1000t long fuse
+--Explodes, creating 20 bullets which spray in all directions
+-Added astral rune
+--1000t cooldown
+--Disconnects the camera from the player for 1000t
+--The camera remains stationary while the player can move
+--Added appropriate functions in QuestGame, as there was no other reasonable place to put these methods
+--Costs 50.0 mana to use
+-Runes now generate in slightly higher frequency under rocks in caves

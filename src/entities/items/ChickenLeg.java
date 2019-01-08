@@ -26,10 +26,14 @@ public class ChickenLeg extends Item {
 	}
 	
 	// manipulation methods
-	public void use(Mob m) {
+	public boolean use(Mob m) {
 		if (m instanceof Player) {
-			((Player) m).incrementHunger(5.0);
+			if (((Player) m).getFullness() > 0.95) {
+				((Player) m).setFullness(((Player) m).getMaxFullness());
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	public ChickenLeg clone() {
