@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Stone extends Item {
 	public static BufferedImage stonePic;
 
-	public Stone(double x, double y) {
-		super(x, y);
+	public Stone(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (stonePic == null) {
 			try {
 				stonePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "stoneitem_scaled_30px.png"));
@@ -30,7 +31,7 @@ public class Stone extends Item {
 	}
 
 	public Stone clone() {
-		return new Stone(this.getPos()[0], this.getPos()[1]);
+		return new Stone(this.getPos()[0], this.getPos()[1], map);
 	}
 
 	// getters and setters

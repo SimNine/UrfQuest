@@ -6,26 +6,26 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
-import entities.projectiles.Bullet;
+import entities.projectiles.Rocket;
 import framework.UrfQuest;
 import game.QuestMap;
 
-public class SMG extends Item {
-	public static BufferedImage smgPic;
+public class RPG extends Item {
+	public static BufferedImage RPGPic;
 
-	public SMG(double x, double y, QuestMap m) {
+	public RPG(double x, double y, QuestMap m) {
 		super(x, y, m);
-		if (smgPic == null) {
+		if (RPGPic == null) {
 			try {
-				smgPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "smg_scaled_30px.png"));
+				RPGPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "rocket_scaled_30px.png"));
 			} catch (IOException e) {
-				System.out.println("Image could not be read at: " + assetPath + "smg_scaled_30px.png");
+				System.out.println("Image could not be read at: " + assetPath + "rocket_scaled_30px.png");
 				e.printStackTrace();
 			}
 		}
-		itemPic = smgPic;
+		itemPic = RPGPic;
 	}
-
+	
 	// manipulation methods
 	public boolean use(Mob m) {
 		if (cooldown > 0) {
@@ -34,13 +34,14 @@ public class SMG extends Item {
 		cooldown = getMaxCooldown();
 		
 		double[] pos = m.getCenter();
-		int dir = m.getDirection() + (int)((Math.random() - 0.5)*10);
-		m.getMap().addProjectile(new Bullet(pos[0], pos[1], dir, Bullet.getDefaultVelocity(), m, map));
+		int dir = m.getDirection();
+		m.getMap().addProjectile(new Rocket(pos[0], pos[1], dir, Rocket.getDefaultVelocity(), m, m.getMap()));
+		
 		return true;
 	}
 	
-	public SMG clone() {
-		return new SMG(this.getPos()[0], this.getPos()[1], map);
+	public RPG clone() {
+		return new RPG(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters
@@ -49,7 +50,7 @@ public class SMG extends Item {
 	}
 
 	public int getMaxCooldown() {
-		return 10;
+		return 400;
 	}
 
 	public int maxStackSize() {

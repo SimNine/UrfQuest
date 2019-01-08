@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Gem extends Item {
 	public static BufferedImage gemPic;
 
-	public Gem(double x, double y) {
-		super(x, y);
+	public Gem(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (gemPic == null) {
 			try {
 				gemPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "pink_gem_scaled_30px.png"));
@@ -30,7 +31,7 @@ public class Gem extends Item {
 	}
 	
 	public Gem clone() {
-		return new Gem(this.getPos()[0], this.getPos()[1]);
+		return new Gem(this.getPos()[0], this.getPos()[1], map);
 	}
 
 	// getters and setters

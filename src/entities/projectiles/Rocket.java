@@ -5,24 +5,24 @@ import java.awt.Graphics;
 
 import entities.Entity;
 import entities.mobs.Mob;
-import entities.particles.BulletSplash;
+import entities.particles.RocketExhaust;
 import framework.QuestPanel;
 import framework.UrfQuest;
 import game.QuestMap;
 import tiles.Tiles;
 
-public class Bullet extends Projectile {
+public class Rocket extends Projectile {
 
-	public Bullet(double x, double y, int dir, double velocity, Entity source, QuestMap m) {
+	public Rocket(double x, double y, int dir, double velocity, Entity source, QuestMap m) {
 		super(x, y, source, m);
-		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
+		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		this.velocity = velocity;
-		direction = dir;
+		this.direction = dir;
 	}
 
 	public void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
-		g.setColor(Color.BLACK);
+		g.setColor(Color.RED.darker());
 		g.fillOval(UrfQuest.panel.gameToWindowX(bounds.getX()), 
 				   UrfQuest.panel.gameToWindowY(bounds.getY()),
 				   (int)(bounds.getWidth()*tileWidth), 
@@ -33,9 +33,12 @@ public class Bullet extends Projectile {
 		this.move(velocity*Math.cos(Math.toRadians(direction)), velocity*Math.sin(Math.toRadians(direction)));
 		if(!Tiles.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
 			animStage = 1000;
-			splashParticles();
+			explode();
 		}
 		animStage++;
+		if (animStage % 10 == 0) {
+			map.addParticle(new RocketExhaust(bounds.getCenterX(), bounds.getCenterY(), map));
+		}
 	}
 
 	public boolean isDead() {
@@ -43,19 +46,17 @@ public class Bullet extends Projectile {
 	}
 	
 	public static double getDefaultVelocity() {
-		return Math.random()*0.03 + 0.07;
+		return Math.random()*0.04 + 0.08;
 	}
 	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-5.0);
-		splashParticles();
+		explode();
 		animStage = 1001;
 	}
 	
-	private void splashParticles() {
-		for (int i = 0; i < 10; i++) {
-			map.addParticle(new BulletSplash(bounds.x, bounds.y, map));
-		}
+	private void explode() {
+		map.addProjectile(new RocketExplosion(bounds.x, bounds.y, this, map));
 	}
 
 }

@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Key extends Item {
 	public static BufferedImage keyPic;
 
-	public Key(double x, double y) {
-		super(x, y);
+	public Key(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (keyPic == null) {
 			try {
 				keyPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "key_scaled_30px.png"));
@@ -30,7 +31,7 @@ public class Key extends Item {
 	}
 
 	public Key clone() {
-		return new Key(this.getPos()[0], this.getPos()[1]);
+		return new Key(this.getPos()[0], this.getPos()[1], map);
 	}
 
 	// getters and setters

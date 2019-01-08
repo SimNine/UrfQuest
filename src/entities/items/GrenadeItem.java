@@ -8,12 +8,13 @@ import javax.imageio.ImageIO;
 import entities.mobs.Mob;
 import entities.projectiles.GrenadeProjectile;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class GrenadeItem extends Item {
 	public static BufferedImage grenadeItemPic;
 
-	public GrenadeItem(double x, double y) {
-		super(x, y);
+	public GrenadeItem(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (grenadeItemPic == null) {
 			try {
 				grenadeItemPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "grenade_scaled_30px.png"));
@@ -32,12 +33,12 @@ public class GrenadeItem extends Item {
 		} // else
 		cooldown = getMaxCooldown();
 		
-		UrfQuest.game.getCurrMap().addParticle(new GrenadeProjectile(m.getCenter()[0], m.getCenter()[1], m));
+		m.getMap().addProjectile(new GrenadeProjectile(m.getCenter()[0], m.getCenter()[1], m, m.getMap()));
 		return true;
 	}
 	
 	public GrenadeItem clone() {
-		return new GrenadeItem(this.getPos()[0], this.getPos()[1]);
+		return new GrenadeItem(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

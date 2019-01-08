@@ -1,7 +1,7 @@
 Tile Types:
 -1 - Void (property-less black tile)
 0 - Dirt
-1 - Stone
+1 - Bedrock
 2 - Grass
 3 - ManaPad
 4 - HealthPad
@@ -15,3 +15,6 @@ Tile Types:
 12 - SandBoulder
 13 - DirtHole
 14 - DirtBoulder
+15 - Stone
+16 - IronOreStone
+17 - CopperOreStone

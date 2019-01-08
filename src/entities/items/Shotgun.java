@@ -8,12 +8,13 @@ import javax.imageio.ImageIO;
 import entities.mobs.Mob;
 import entities.projectiles.Bullet;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Shotgun extends Item {
 	public static BufferedImage shotgunPic;
 
-	public Shotgun(double x, double y) {
-		super(x, y);
+	public Shotgun(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (shotgunPic == null) {
 			try {
 				shotgunPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "shotgun_scaled_30px.png"));
@@ -38,14 +39,14 @@ public class Shotgun extends Item {
 		
 		for (int i = 0; i < numShots; i++) {
 			dir = m.getDirection() + (int)((Math.random() - 0.5)*20);
-			UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir, m));
+			m.getMap().addProjectile(new Bullet(pos[0], pos[1], dir, Bullet.getDefaultVelocity(), m, map));
 		}
 		
 		return true;
 	}
 	
 	public Shotgun clone() {
-		return new Shotgun(this.getPos()[0], this.getPos()[1]);
+		return new Shotgun(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

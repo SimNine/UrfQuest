@@ -14,7 +14,7 @@ public class Tiles {
 	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
-	private static BufferedImage[] tileImages = new BufferedImage[15];
+	private static BufferedImage[] tileImages = new BufferedImage[18];
 	private static BufferedImage[] waterImages = new BufferedImage[3];
 	
 	private static boolean[][] tileBooleanProperties = 
@@ -33,7 +33,10 @@ public class Tiles {
 		  {false,		false},
 		  {false,		false},//12
 		  {true,		true},
-		  {false,		false} };
+		  {false,		false},//14
+		  {false,		false},
+		  {false,		false},//16
+		  {false,		false}};
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
@@ -51,7 +54,10 @@ public class Tiles {
 		  {Color.GRAY.getRGB()},
 		  {Color.GRAY.getRGB()},//12
 		  {Color.BLACK.getRGB()},
-		  {new Color(107, 40, 7).getRGB()} };
+		  {new Color(107, 40, 7).getRGB()},//14
+		  {Color.LIGHT_GRAY.getRGB()},
+		  {Color.LIGHT_GRAY.darker().getRGB()},//16
+		  {Color.LIGHT_GRAY.darker().getRGB()} };
 	
 	public static void initGraphics() {
 		try {
@@ -69,10 +75,10 @@ public class Tiles {
 		}
 		
 		try {
-			tileImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
+			tileImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "bedrock.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "stone.png");
+			System.out.println(errMsg + tileRoot + "bedrock.png");
 		}
 		
 		try {
@@ -190,23 +196,48 @@ public class Tiles {
 			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
 			System.out.println(errMsg + tileRoot + "dirt.png");
 		}
-	}
-	
-	// draws a tile with a specified ID
-	public static void drawTile(Graphics g, int x, int y, int blockType) {
-		if (blockType == -1) {
-			g.setColor(Color.BLACK);
-			g.fillRect(x, y, QuestPanel.TILE_WIDTH, QuestPanel.TILE_WIDTH);
-		} else {
-			g.drawImage(tileImages[blockType], x, y, null);
+		
+		try {
+			tileImages[15] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "stone.png");
+		}
+		
+		try {
+			// here, the ore sprite is drawn onto the stone sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "ironore_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[16] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "ironore_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "stone.png");
+		}
+		
+		try {
+			// here, the ore sprite is drawn onto the stone sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "copperore_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[17] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "copperore_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "stone.png");
 		}
 	}
 	
+	// draws a tile with a specified ID
 	public static void drawTile(Graphics g, int x, int y, int blockType, int stage) {
-		if (blockType != 8) {
-			drawTile(g, x, y, blockType);
+		if (blockType == -1) {
+			g.setColor(Color.BLACK);
+			g.fillRect(x, y, QuestPanel.TILE_WIDTH, QuestPanel.TILE_WIDTH);
+		} else if (blockType == 8) {
+			g.drawImage(waterImages[(stage/30) % 3], x, y, null);
 		} else {
-			g.drawImage(waterImages[stage], x, y, null);
+			g.drawImage(tileImages[blockType], x, y, null);
 		}
 	}
 	

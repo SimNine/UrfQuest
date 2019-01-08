@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import entities.Entity;
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public abstract class Item extends Entity {
 	protected BufferedImage itemPic;
@@ -16,15 +17,17 @@ public abstract class Item extends Entity {
 	protected int durability = 1;
 	protected int stackSize = 1;
 	
-	protected Item(double x, double y) {
-		super(x, y);
+	protected Item(double x, double y, QuestMap m) {
+		super(x, y, m);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		if (this.degrades()) {
 			durability = this.getMaxDurability();
 		}
 	}
 	
-	// manipulation methods
+	/*
+	 * Manipulation methods
+	 */
 	
 	// returns true if used successfully, false if otherwise
 	public abstract boolean use(Mob m);
@@ -39,7 +42,10 @@ public abstract class Item extends Entity {
 	
 	public abstract Item clone();
 	
-	// drawing methods
+	/*
+	 * drawing methods
+	 */
+	
 	protected void drawEntity(Graphics g) {
 		g.drawImage(itemPic, 
 					UrfQuest.panel.gameToWindowX(bounds.getX()), 

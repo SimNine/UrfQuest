@@ -19,6 +19,7 @@ import entities.mobs.ai.routines.AttackRoutine;
 import entities.mobs.ai.routines.IdleRoutine;
 import framework.UrfQuest;
 import game.Inventory;
+import game.QuestMap;
 
 public class Rogue extends Mob {
 
@@ -34,8 +35,8 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(double x, double y) {
-		super(x, y);
+	public Rogue(double x, double y, QuestMap m) {
+		super(x, y, m);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		if (img[0][0] == null) {
 			initPlayer();
@@ -51,9 +52,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new SMG(0, 0));
-		inventory.addItem(new Shotgun(0, 0));
-		inventory.addItem(new Pistol(0, 0));
+		inventory.addItem(new SMG(0, 0, m));
+		inventory.addItem(new Shotgun(0, 0, m));
+		inventory.addItem(new Pistol(0, 0, m));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(this);
@@ -289,6 +290,11 @@ public class Rogue extends Mob {
 		// try firing a weapon
 		if (this.distanceTo(UrfQuest.game.getPlayer()) < 10 && this.hasClearPathTo(UrfQuest.game.getPlayer())) {
 			inventory.useSelectedItem();
+		}
+		
+		// just in case something weird happens
+		if (direction > 360) {
+			direction -= 360;
 		}
 	}
 	

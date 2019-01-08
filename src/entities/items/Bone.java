@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Bone extends Item {
 	public static BufferedImage bonePic;
 
-	public Bone(double x, double y) {
-		super(x, y);
+	public Bone(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (bonePic == null) {
 			try {
 				bonePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "bone_scaled_30px.png"));
@@ -30,7 +31,7 @@ public class Bone extends Item {
 	}
 
 	public Bone clone() {
-		return new Bone(this.getPos()[0], this.getPos()[1]);
+		return new Bone(this.getPos()[0], this.getPos()[1], map);
 	}
 
 	// getters and setters

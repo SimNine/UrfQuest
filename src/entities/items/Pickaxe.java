@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Pickaxe extends Item {
 	public static BufferedImage pickaxePic;
 
-	public Pickaxe(double x, double y) {
-		super(x, y);
+	public Pickaxe(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (pickaxePic == null) {
 			try {
 				pickaxePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "pickaxe_scaled_30px.png"));
@@ -31,43 +32,43 @@ public class Pickaxe extends Item {
 		} // else
 		if (m.tileTypeAtDistance(1.0) == 10) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
-			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
-			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			m.getMap().setTileAt(coords[0], coords[1], 2);
+			m.getMap().addItem(new Stone(coords[0], coords[1], map));
 			
 			cooldown = getMaxCooldown();
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 11) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
-			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 8);
-			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			m.getMap().setTileAt(coords[0], coords[1], 8);
+			m.getMap().addItem(new Stone(coords[0], coords[1], map));
 			
 			cooldown = getMaxCooldown();
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 12) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
-			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 9);
-			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			m.getMap().setTileAt(coords[0], coords[1], 9);
+			m.getMap().addItem(new Stone(coords[0], coords[1], map));
 
 			cooldown = getMaxCooldown();			
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 14) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
-			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 0);
+			m.getMap().setTileAt(coords[0], coords[1], 0);
 			double rand = Math.random();
 			if (rand > .95) {
-				UrfQuest.game.getCurrMap().addItem(new LawRune(coords[0], coords[1]));
+				m.getMap().addItem(new LawRune(coords[0], coords[1], map));
 			} else if (rand > .90) {
-				UrfQuest.game.getCurrMap().addItem(new CosmicRune(coords[0], coords[1]));
+				m.getMap().addItem(new CosmicRune(coords[0], coords[1], map));
 			} else if (rand > .85) {
-				UrfQuest.game.getCurrMap().addItem(new AstralRune(coords[0], coords[1]));
+				m.getMap().addItem(new AstralRune(coords[0], coords[1], map));
 			} else if (rand > .82) {
-				UrfQuest.game.getCurrMap().addItem(new Shotgun(coords[0], coords[1]));
+				m.getMap().addItem(new Shotgun(coords[0], coords[1], map));
 			} else if (rand > .79) {
-				UrfQuest.game.getCurrMap().addItem(new SMG(coords[0], coords[1]));
+				m.getMap().addItem(new SMG(coords[0], coords[1], map));
 			} else if (rand > .75) {
-				UrfQuest.game.getCurrMap().addItem(new GrenadeItem(coords[0], coords[1]));
+				m.getMap().addItem(new GrenadeItem(coords[0], coords[1], map));
 			} else {
-				UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+				m.getMap().addItem(new Stone(coords[0], coords[1], map));
 			}
 
 			cooldown = getMaxCooldown();			
@@ -78,7 +79,7 @@ public class Pickaxe extends Item {
 	}
 
 	public Pickaxe clone() {
-		return new Pickaxe(this.getPos()[0], this.getPos()[1]);
+		return new Pickaxe(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

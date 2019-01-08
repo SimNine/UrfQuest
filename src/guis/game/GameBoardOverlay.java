@@ -7,6 +7,7 @@ import entities.Entity;
 import entities.items.Item;
 import entities.mobs.Mob;
 import entities.mobs.Player;
+import entities.particles.Particle;
 import entities.projectiles.Projectile;
 import framework.QuestPanel;
 import framework.UrfQuest;
@@ -40,7 +41,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		tileAnimStage++;
-		if (tileAnimStage == 150) {
+		if (tileAnimStage == 360) {
 			tileAnimStage = 0;
 		}
 	}
@@ -64,18 +65,13 @@ public class GameBoardOverlay extends GUIContainer {
 		int ulX = ((int)camera.getPos()[0] - dispTileWidth/2) - 1;
 		int ulY = ((int)camera.getPos()[1] - dispTileHeight/2) - 1;
 		
-		// find which tile the mouse is over
-		int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
-		int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
-		
 		// draw grid tiles
 		for (int x = 0; x < dispTileWidth + 2; x++) {
 			int xRoot = - rootX + x * TILE_WIDTH;
 			for (int y = 0; y < dispTileHeight + 2; y++) {
 				int yRoot = - rootY + y * TILE_WIDTH;
 				int currTile = (currMap.getTileAt(ulX + x, ulY + y));
-				//Tiles.drawTile(g, xRoot, yRoot, currTile, tileAnimStage/50);
-				Tiles.drawTile(g, xRoot, yRoot, currTile);
+				Tiles.drawTile(g, xRoot, yRoot, currTile, tileAnimStage);
 			}
 		}
 
@@ -98,8 +94,16 @@ public class GameBoardOverlay extends GUIContainer {
 			}
 		}
 		
+		// find what coordinates the mouse is at
+		double mouseCoordX = UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
+		double mouseCoordY = UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
+		
+		// find which tile the mouse is over
+		int mouseX = (int) mouseCoordX;
+		int mouseY = (int) mouseCoordY;
+		
 		// draw the highlight of the selected tile
-		if (UrfQuest.game.isBuildMode() && UrfQuest.panel.isGUIOpen()) {
+		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
 			int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
 			int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
 			g.setColor(new Color(255, 255, 255, selectedTileTransparency));
@@ -108,6 +112,16 @@ public class GameBoardOverlay extends GUIContainer {
 			for (int i = 0; i < 3; i++) {
 				g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
 			}
+		}
+		
+		// get any mob underneath the mouse cursor, highlight it
+		Mob m = UrfQuest.game.getCurrMap().mobAt(mouseCoordX, mouseCoordY);
+		if (m != null) {
+			int tileWidth = QuestPanel.TILE_WIDTH;
+			int xTemp = UrfQuest.panel.gameToWindowX(m.getPos()[0]);
+			int yTemp = UrfQuest.panel.gameToWindowY(m.getPos()[1]);
+			g.setColor(Color.RED);
+			g.drawRect(xTemp, yTemp, (int)(m.getWidth()*tileWidth), (int)(m.getHeight()*tileWidth));
 		}
 		
 		// when debugging, draw the grid itself
@@ -124,11 +138,14 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 	
 	public boolean click() {
+		int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
+		int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
+		
 		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
-			int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
-			int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
-			
-			UrfQuest.game.getCurrMap().setTileAt(mouseX, mouseY, 2);
+			UrfQuest.game.getCurrMap().setTileAt(mouseX, mouseY, 15);
+			return true;
+		} else if (UrfQuest.game.getCurrMap().getTileAt(mouseX, mouseY) == 7) {
+			UrfQuest.game.getPlayer().incrementHealth(-5.0);
 			return true;
 		} else {
 			return false;
@@ -179,6 +196,10 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		for (Projectile p : currMap.getProjectiles()) {
+			p.draw(g);
+		}
+		
+		for (Particle p : currMap.getParticles()) {
 			p.draw(g);
 		}
 

@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class LawRune extends Item {
 	public static BufferedImage lawrunePic;
 
-	public LawRune(double x, double y) {
-		super(x, y);
+	public LawRune(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (lawrunePic == null) {
 			try {
 				lawrunePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "lawrune_scaled_30px.png"));
@@ -35,13 +36,13 @@ public class LawRune extends Item {
 		cooldown = getMaxCooldown();
 		
 		m.incrementMana(-30.0);
-		int[] home = UrfQuest.game.getCurrMap().getHomeCoords();
+		int[] home = m.getMap().getHomeCoords();
 		m.setPos(home[0], home[1]);
 		return true;
 	}
 	
 	public LawRune clone() {
-		return new LawRune(this.getPos()[0], this.getPos()[1]);
+		return new LawRune(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

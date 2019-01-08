@@ -6,14 +6,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
-import entities.mobs.Player;
+import entities.projectiles.Bullet;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class AstralRune extends Item {
 	public static BufferedImage astralRunePic;
 
-	public AstralRune(double x, double y) {
-		super(x, y);
+	public AstralRune(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (astralRunePic == null) {
 			try {
 				astralRunePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "astralRune_scaled_30px.png"));
@@ -36,14 +37,15 @@ public class AstralRune extends Item {
 		cooldown = getMaxCooldown();
 		
 		m.incrementMana(-50.0);
-		if (m instanceof Player) {
-			((Player) m).initiateAstral();
+		double[] pos = m.getCenter();
+		for (int i = 0; i < 180; i++) {
+			m.getMap().addProjectile(new Bullet(pos[0], pos[1], i*2, Bullet.getDefaultVelocity(), m, map));
 		}
 		return true;
 	}
 	
 	public AstralRune clone() {
-		return new AstralRune(this.getPos()[0], this.getPos()[1]);
+		return new AstralRune(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

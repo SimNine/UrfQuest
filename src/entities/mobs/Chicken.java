@@ -10,14 +10,15 @@ import entities.items.ChickenLeg;
 import entities.mobs.ai.routines.FleeRoutine;
 import entities.mobs.ai.routines.IdleRoutine;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Chicken extends Mob {
 	private static BufferedImage pic;
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(double x, double y) {
-		super(x, y);
+	public Chicken(double x, double y, QuestMap m) {
+		super(x, y, m);
 		animStage = (int)(Math.random()*200.0);
 		if (pic == null) {
 			initChicken();
@@ -89,7 +90,7 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (Math.random() > 0.5) {
-			UrfQuest.game.getCurrMap().addItem(new ChickenLeg(bounds.getCenterX(), bounds.getCenterY()));
+			UrfQuest.game.getCurrMap().addItem(new ChickenLeg(bounds.getCenterX(), bounds.getCenterY(), map));
 		}
 	}
 }

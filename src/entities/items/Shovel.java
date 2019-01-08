@@ -13,8 +13,8 @@ import game.QuestMap;
 public class Shovel extends Item {
 	public static BufferedImage shovelPic;
 
-	public Shovel(double x, double y) {
-		super(x, y);
+	public Shovel(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (shovelPic == null) {
 			try {
 				shovelPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "shovel_scaled_30px.png"));
@@ -34,25 +34,27 @@ public class Shovel extends Item {
 		if (m.tileTypeAtDistance(0) == 2) {
 			int[] coords = m.tileCoordsAtDistance(0);
 			if (Math.random() > .05) {
-				UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 0);
+				m.getMap().setTileAt(coords[0], coords[1], 0);
 			} else {
-				UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 13);
+				m.getMap().setTileAt(coords[0], coords[1], 13);
 				
-				int caveSize = 50;
+				int caveSize = 400;
 				
 				// create new map
 				QuestMap newCaveMap = new QuestMap(caveSize, caveSize, QuestMap.CAVE_MAP);
-				newCaveMap.setTileAt(caveSize/2, caveSize/2, 13);
+				int xHome = newCaveMap.getHomeCoords()[0];
+				int yHome = newCaveMap.getHomeCoords()[1];
+				newCaveMap.setTileAt(xHome, yHome, 13);
 				
 				//generate and add links
-				MapLink currLink = new MapLink(UrfQuest.game.getCurrMap(), coords[0], coords[1]);
-				MapLink newLink = new MapLink(newCaveMap, caveSize/2, caveSize/2);
-				UrfQuest.game.getCurrMap().addLink(currLink, newLink);
+				MapLink currLink = new MapLink(m.getMap(), coords[0], coords[1]);
+				MapLink newLink = new MapLink(newCaveMap, xHome, yHome);
+				m.getMap().addLink(currLink, newLink);
 				newCaveMap.addLink(newLink, currLink);
 				
 				//debug
 				System.out.println("soruce: " + coords[0] + ", " + coords[1]);
-				System.out.println("exit: " + caveSize/2 + ", " + caveSize/2);
+				System.out.println("exit: " + xHome + ", " + yHome);
 			}
 			
 			cooldown = getMaxCooldown();
@@ -63,7 +65,7 @@ public class Shovel extends Item {
 	}
 
 	public Shovel clone() {
-		return new Shovel(this.getPos()[0], this.getPos()[1]);
+		return new Shovel(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

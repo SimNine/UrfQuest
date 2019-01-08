@@ -376,3 +376,25 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 --Given a shotgun, a pistol, and an SMG; chooses a different one each time it stops
 --Attacks in the same manner as cyclops, but is a bit faster
 --Has a chance of spawning in caves
+
+0.18.0_pre1 - 2/10/17
+(Particles, caves, ores, and mores)
+-Added two more water tiles, identical in behavior, with slight visual changes
+--The GameBoardOverlay now increments a "tileAnimStage" counter each call to draw
+--The Tiles class now contains additional BufferedImage arrays for animated tiles
+-Each entity now contains a "map" property holding the map that it is in
+-Bullets now disappear when they hit trees or rocks
+-Eliminated old AstralRune effect, replaced it with bullets radiating outward from player
+-Bullets can now be given a custom speed
+-Added new "Particle" entity type; doesn't interact with other entities at all, purely for effect
+-Added new BulletSplash particles; they are released when a bullet collides with something
+-Added new RPG weapon
+--Fires rockets in direction of facing
+--Rockets do 5 damage, plus 0.15 damage for each tick within their blast radius
+--Rockets release puffs of smoke as they fly
+--Explosions destroy all trees within their blast radius
+-Added new stone tile, can be mined (drops nothing)
+-Added new iron ore tile, can be mined to get iron ore
+-Added new copper ore tile, can be mined to get copper ore
+-Redid cave system; now generates much like the upper world generates, but with closed-off spaces and minable spaces
+-Added RPG crafting recipe: 100 gems -> 1 RPG

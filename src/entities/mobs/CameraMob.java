@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import entities.mobs.ai.routines.IdleRoutine;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class CameraMob extends Mob {
 	public static int STILL_MODE = 1301;
@@ -11,8 +12,8 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(double x, double y, int mode) {
-		super(x, y);
+	public CameraMob(double x, double y, int mode, QuestMap m) {
+		super(x, y, m);
 		velocity = 0.01;
 		direction = (int)(Math.random()*360.0);
 		health = 100.0;

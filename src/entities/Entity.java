@@ -6,14 +6,17 @@ import java.awt.geom.Rectangle2D;
 
 import framework.QuestPanel;
 import framework.UrfQuest;
+import game.QuestMap;
 import tiles.Tiles;
 
 public abstract class Entity {
 	protected Rectangle2D.Double bounds;
 	protected int animStage = 0;
+	protected QuestMap map;
 	
-	protected Entity(double x, double y) {
+	protected Entity(double x, double y, QuestMap m) {
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		map = m;
 	}
 	
 	// Drawing methods
@@ -79,6 +82,19 @@ public abstract class Entity {
 		return ret;
 	}
 	
+	public double getWidth() {
+		return bounds.getWidth();
+	}
+	
+	public double getHeight() {
+		return bounds.getHeight();
+	}
+
+	// map methods
+	public QuestMap getMap() {
+		return map;
+	}
+	
 	// interactions with other entities
 	// -----
 	// returns true if this entity's bounds intersect with another entity's bounds
@@ -131,5 +147,10 @@ public abstract class Entity {
 		}
 		
 		return true;
+	}
+	
+	// returns whether the given coordinates are within the entity's bounding box
+	public boolean containsPoint(double x, double y) {
+		return bounds.contains(x, y);
 	}
 }

@@ -4,15 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import entities.Entity;
+import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public abstract class Projectile extends Entity {
 	protected double velocity;
 	protected int direction;
 	protected Entity source;
 
-	protected Projectile(double x, double y, Entity source) {
-		super(x, y);
+	protected Projectile(double x, double y, Entity source, QuestMap m) {
+		super(x, y, m);
 		this.source = source;
 	}
 
@@ -35,4 +37,6 @@ public abstract class Projectile extends Entity {
 	public Entity getSource() {
 		return source;
 	}
+	
+	public abstract void collideWith(Mob m);
 }

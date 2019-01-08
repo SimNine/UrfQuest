@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Log extends Item {
 	public static BufferedImage logPic;
 
-	public Log(double x, double y) {
-		super(x, y);
+	public Log(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (logPic == null) {
 			try {
 				logPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "log_scaled_30px.png"));
@@ -30,7 +31,7 @@ public class Log extends Item {
 	}
 
 	public Log clone() {
-		return new Log(this.getPos()[0], this.getPos()[1]);
+		return new Log(this.getPos()[0], this.getPos()[1], map);
 	}
 
 	// getters and setters

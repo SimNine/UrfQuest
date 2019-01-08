@@ -26,8 +26,8 @@ public abstract class Mob extends Entity {
 	
 	protected MobRoutine routine;
 
-	protected Mob(double x, double y) {
-		super(x, y);
+	protected Mob(double x, double y, QuestMap m) {
+		super(x, y, m);
 	}
 
 	public abstract void update();

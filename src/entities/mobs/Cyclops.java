@@ -13,16 +13,17 @@ import entities.mobs.ai.routines.IdleRoutine;
 import entities.mobs.ai.routines.AttackRoutine;
 import framework.QuestPanel;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Cyclops extends Mob {
 	private static BufferedImage pic;
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	private Shotgun shotgun = new Shotgun(0, 0);
+	private Shotgun shotgun;
 
-	public Cyclops(double x, double y) {
-		super(x, y);
+	public Cyclops(double x, double y, QuestMap m) {
+		super(x, y, m);
 		animStage = (int)(Math.random()*200.0);
 		if (pic == null) {
 			initCyclops();
@@ -40,6 +41,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
+		shotgun = new Shotgun(0, 0, m);
 		intelligence = 50;
 		routine = new IdleRoutine(this);
 		thinkingDelay = intelligence;
@@ -103,6 +105,6 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		UrfQuest.game.getCurrMap().addItem(new Bone(bounds.getCenterX(), bounds.getCenterY()));
+		UrfQuest.game.getCurrMap().addItem(new Bone(bounds.getCenterX(), bounds.getCenterY(), map));
 	}
 }

@@ -7,15 +7,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.Entity;
+import entities.mobs.Mob;
 import framework.QuestPanel;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class GrenadeProjectile extends Projectile {
 	public static BufferedImage grenadePic;
 	public static String assetPath = "/assets/items/";
 
-	public GrenadeProjectile(double x, double y, Entity source) {
-		super(x, y, source);
+	public GrenadeProjectile(double x, double y, Entity source, QuestMap m) {
+		super(x, y, source, m);
 		
 		if (grenadePic == null) {
 			try {
@@ -41,12 +43,16 @@ public class GrenadeProjectile extends Projectile {
 		animStage++;
 		if (animStage > 1000) {
 			for (int i = 0; i < 20; i++) {
-				UrfQuest.game.getCurrMap().addParticle(new Bullet(bounds.getCenterX(), bounds.getCenterY(), (int)(Math.random()*360), source));
+				map.addProjectile(new Bullet(bounds.getCenterX(), bounds.getCenterY(), (int)(Math.random()*360), Bullet.getDefaultVelocity(), source, map));
 			}
 		}
 	}
 
 	public boolean isDead() {
 		return (animStage > 1000);
+	}
+
+	public void collideWith(Mob m) {
+		// do nothing
 	}
 }

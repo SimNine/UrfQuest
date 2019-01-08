@@ -11,6 +11,7 @@ import entities.mobs.Cyclops;
 import entities.mobs.Mob;
 import entities.mobs.Player;
 import entities.mobs.Rogue;
+import entities.particles.Particle;
 import entities.projectiles.Projectile;
 import entities.items.Item;
 import framework.UrfQuest;
@@ -34,16 +35,19 @@ public class QuestMap {
 	private ArrayList<Mob> mobs = new ArrayList<Mob>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	private ArrayList<Particle> particles = new ArrayList<Particle>();
 
 	private ArrayList<Player> addPlayers = new ArrayList<Player>();
 	private ArrayList<Mob> addMobs = new ArrayList<Mob>();
 	private ArrayList<Item> addItems = new ArrayList<Item>();
 	private ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
+	private ArrayList<Particle> addParticles = new ArrayList<Particle>();
 
 	private ArrayList<Player> removePlayers = new ArrayList<Player>();
 	private ArrayList<Item> removeItems = new ArrayList<Item>();
 	private ArrayList<Mob> removeMobs = new ArrayList<Mob>();
 	private ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
+	private ArrayList<Particle> removeParticles = new ArrayList<Particle>();
 	
 	public QuestMap(int width, int height, int type) {
 		map = new int[width][height];
@@ -70,7 +74,9 @@ public class QuestMap {
 		}
 		
 		if (type != EMPTY_MAP) {
-			if (type != CAVE_MAP) {
+			if (type == CAVE_MAP) {
+				findHomeCoords();
+			} else {
 				generateStartingArea();
 			}
 			generateBorderWall();
@@ -85,6 +91,11 @@ public class QuestMap {
 	public void update() {
 		
 		// update particles
+		for (Particle p : particles) {
+			p.update();
+		}
+		
+		// update projectiles
 		for (Projectile p : projectiles) {
 			p.update();
 		}
@@ -121,14 +132,13 @@ public class QuestMap {
 			}
 		}
 		
-		// check for collisions between particles and mobs
+		// check for collisions between projectiles and mobs
 		for (Projectile p : projectiles) {
 			for (Mob m : mobs) {
 				if (p.getSource() == m) {
 					continue;
 				} else if (p.collides(m)) {
-					m.incrementHealth(-5.0);
-					removeProjectiles.add(p);
+					p.collideWith(m);
 				}
 			}
 		}
@@ -139,9 +149,15 @@ public class QuestMap {
 				if (j.getSource() == p) {
 					continue;
 				} else if (j.collides(p)) {
-					p.incrementHealth(-5.0);
-					removeProjectiles.add(j);
+					j.collideWith(p);
 				}
+			}
+		}
+		
+		// clean up dead particles
+		for (Particle p : particles) {
+			if (p.isDead()) {
+				removeParticles.add(p);
 			}
 		}
 		
@@ -164,21 +180,25 @@ public class QuestMap {
 		mobs.removeAll(removeMobs);
 		projectiles.removeAll(removeProjectiles);
 		players.removeAll(removePlayers);
+		particles.removeAll(removeParticles);
 		
 		removeItems.clear();
 		removeMobs.clear();
 		removeProjectiles.clear();
 		removePlayers.clear();
+		removeParticles.clear();
 		
 		items.addAll(addItems);
 		mobs.addAll(addMobs);
 		projectiles.addAll(addProjectiles);
 		players.addAll(addPlayers);
+		particles.addAll(addParticles);
 		
 		addItems.clear();
 		addMobs.clear();
 		addProjectiles.clear();
 		addPlayers.clear();
+		addParticles.clear();
 	}
 	
 	/*
@@ -247,8 +267,6 @@ public class QuestMap {
 			}
 		}
 		
-		
-		
 		this.map = end;
 	}
 	
@@ -292,7 +310,7 @@ public class QuestMap {
 		this.map = end;
 	}
 	
-	public void generateCaveMap() {
+	public void generateOldCaveMap() {
 		int width = map.length;
 		int height = map[0].length;
 		int[][] end = new int[width][height];
@@ -331,6 +349,65 @@ public class QuestMap {
 		
 		this.homeCoords[0] = width/2;
 		this.homeCoords[1] = height/2;
+		this.map = end;
+	}
+	
+	public void generateCaveMap() {
+		int width = map.length;
+		int height = map[0].length;
+		int[][] end = new int[width][height];
+		
+		// terrain distortion params
+		boolean enableDistortion = true;
+		double distortWeight = 0.25;
+		int distortFreq = 20;
+		boolean enableDistortionDistribution = false;
+		int distortDistributionFreq = 20;
+		
+		// generate accessible areas
+		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height, 5);
+		float[][] distortionNoise = SimplexNoise.generateSimplexNoise(width, height, distortFreq);
+		float[][] distortionDistribution = SimplexNoise.generateSimplexNoise(width, height, distortDistributionFreq);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (enableDistortionDistribution && distortionDistribution[x][y] > .5) {
+					distortionNoise[x][y] *= (distortionDistribution[x][y] - 0.5)*2;
+				}
+				if (enableDistortion) {
+					terrainNoise[x][y] += distortionNoise[x][y]*distortWeight;
+					terrainNoise[x][y] /= (1 + distortWeight);
+				}
+				
+				if (terrainNoise[x][y] > .55f) {
+					end[x][y] = 0;
+				} else if (terrainNoise[x][y] > .5f) {
+					end[x][y] = 1;
+				} else {
+					end[x][y] = -1;
+				}
+			}
+		}
+		
+		// generate stone veins
+		float[][] stoneNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (stoneNoise[x][y]*2 - 1 > Math.random() && end[x][y] == 0) {
+					end[x][y] = 15;
+				}
+			}
+		}
+		
+		// generate ore (only on stone)
+		float[][] oreNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (oreNoise[x][y] > 0.80f && end[x][y] == 15) {
+					end[x][y] = 16;
+				}
+			}
+		}
+		
 		this.map = end;
 	}
 	
@@ -401,6 +478,18 @@ public class QuestMap {
 		homeCoords[1] = spawnCenterY;
 	}
 	
+	private void findHomeCoords() {
+		int spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
+		int spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
+			spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
+			spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+		}
+		
+		homeCoords[0] = spawnCenterX;
+		homeCoords[1] = spawnCenterY;
+	}
+	
 	private void generateBorderWall() {
 		for (int i = 0; i < map.length; i++) {
 			map[i][0] = 1;
@@ -440,7 +529,7 @@ public class QuestMap {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
-					mobs.add(new Chicken(x, y));
+					mobs.add(new Chicken(x, y, this));
 				}
 			}
 		}
@@ -452,7 +541,7 @@ public class QuestMap {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
-					mobs.add(new Cyclops(x, y));
+					mobs.add(new Cyclops(x, y, this));
 				}
 			}
 		}
@@ -464,7 +553,7 @@ public class QuestMap {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.0005) {
-					mobs.add(new Rogue(x, y));
+					mobs.add(new Rogue(x, y, this));
 				}
 			}
 		}
@@ -478,9 +567,9 @@ public class QuestMap {
 				if (map[x][y] == 2 && Math.random() < 0.005) {
 					double rand = Math.random();
 					if (rand > .9975) {
-						items.add(new Cheese(x, y));
+						items.add(new Cheese(x, y, this));
 					} else {
-						items.add(new Gem(x, y));
+						items.add(new Gem(x, y, this));
 					}
 				}
 			}
@@ -548,12 +637,16 @@ public class QuestMap {
 		addMobs.add(m);
 	}
 	
-	public void addParticle(Projectile p) {
+	public void addProjectile(Projectile p) {
 		addProjectiles.add(p);
 	}
 	
 	public void addPlayer(Player p) {
 		addPlayers.add(p);
+	}
+	
+	public void addParticle(Particle p) {
+		addParticles.add(p);
 	}
 	
 	public void removeItem(Item i) {
@@ -564,12 +657,16 @@ public class QuestMap {
 		removeMobs.add(m);
 	}
 	
-	public void removeParticle(Projectile p) {
+	public void removeProjectile(Projectile p) {
 		removeProjectiles.add(p);
 	}
 	
-	public void removePlayers(Player p) {
+	public void removePlayer(Player p) {
 		removePlayers.add(p);
+	}
+	
+	public void removeParticle(Particle p) {
+		removeParticles.add(p);
 	}
 	
 	public ArrayList<Item> getItems() {
@@ -588,6 +685,10 @@ public class QuestMap {
 		return players;
 	}
 	
+	public ArrayList<Particle> getParticles() {
+		return particles;
+	}
+	
 	public int getNumItems() {
 		return items.size();
 	}
@@ -602,5 +703,23 @@ public class QuestMap {
 	
 	public int getNumPlayers() {
 		return players.size();
+	}
+	
+	public int getNumParticles() {
+		return particles.size();
+	}
+	
+	/*
+	 * Special entity methods
+	 */
+	
+	public Mob mobAt(double x, double y) {
+		for (Mob m : mobs) {
+			if (m.containsPoint(x, y)) {
+				return m;
+			}
+		}
+		
+		return null;
 	}
 }

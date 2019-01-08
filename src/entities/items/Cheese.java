@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Cheese extends Item {
 	public static BufferedImage cheesePic;
 
-	public Cheese(double x, double y) {
-		super(x, y);
+	public Cheese(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (cheesePic == null) {
 			try {
 				cheesePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "cheese_scaled_30px.png"));
@@ -40,7 +41,7 @@ public class Cheese extends Item {
 	}
 	
 	public Cheese clone() {
-		return new Cheese(this.getPos()[0], this.getPos()[1]);
+		return new Cheese(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

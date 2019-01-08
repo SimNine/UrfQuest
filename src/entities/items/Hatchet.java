@@ -7,12 +7,13 @@ import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
 import framework.UrfQuest;
+import game.QuestMap;
 
 public class Hatchet extends Item {
 	public static BufferedImage hatchetPic;
 
-	public Hatchet(double x, double y) {
-		super(x, y);
+	public Hatchet(double x, double y, QuestMap m) {
+		super(x, y, m);
 		if (hatchetPic == null) {
 			try {
 				hatchetPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "hatchet_scaled_30px.png"));
@@ -31,8 +32,8 @@ public class Hatchet extends Item {
 		} // else
 		if (m.tileTypeAtDistance(1.0) == 7) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
-			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
-			UrfQuest.game.getCurrMap().addItem(new Log(coords[0], coords[1]));
+			m.getMap().setTileAt(coords[0], coords[1], 2);
+			m.getMap().addItem(new Log(coords[0], coords[1], map));
 			
 			cooldown = getMaxCooldown();
 			return true;
@@ -42,7 +43,7 @@ public class Hatchet extends Item {
 	}
 	
 	public Hatchet clone() {
-		return new Hatchet(this.getPos()[0], this.getPos()[1]);
+		return new Hatchet(this.getPos()[0], this.getPos()[1], map);
 	}
 	
 	// getters and setters

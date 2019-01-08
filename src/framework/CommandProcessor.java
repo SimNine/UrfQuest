@@ -12,8 +12,10 @@ import entities.items.Hatchet;
 import entities.items.Key;
 import entities.items.LawRune;
 import entities.items.Log;
+import entities.items.Mic;
 import entities.items.Pickaxe;
 import entities.items.Pistol;
+import entities.items.RPG;
 import entities.items.SMG;
 import entities.items.Shotgun;
 import entities.items.Shovel;
@@ -21,6 +23,7 @@ import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Player;
 import entities.mobs.Rogue;
+import game.QuestMap;
 
 public class CommandProcessor {
 
@@ -38,6 +41,9 @@ public class CommandProcessor {
 		for (int i = 0; i < args.length; i++) {
 			args[i] = args[i].replaceAll("\\s","").toLowerCase();
 		}
+		
+		Player p = UrfQuest.game.getPlayer();
+		QuestMap m = p.getMap();
 		
 		// process the given arguments
 		if (args[0].equals("help")) {
@@ -65,35 +71,43 @@ public class CommandProcessor {
 			}
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("pistol")) {
-					UrfQuest.game.getPlayer().addItem(new Pistol(0, 0));
+					p.addItem(new Pistol(0, 0, m));
 				} else if (args[1].equals("smg")) {
-					UrfQuest.game.getPlayer().addItem(new SMG(0, 0));
+					p.addItem(new SMG(0, 0, m));
 				} else if (args[1].equals("cheese")) {
-					UrfQuest.game.getPlayer().addItem(new Cheese(0, 0));
+					p.addItem(new Cheese(0, 0, m));
 				} else if (args[1].equals("gem")) {
-					UrfQuest.game.getPlayer().addItem(new Gem(0, 0));
+					p.addItem(new Gem(0, 0, m));
 				} else if (args[1].equals("key")) {
-					UrfQuest.game.getPlayer().addItem(new Key(0, 0));
+					p.addItem(new Key(0, 0, m));
 				} else if (args[1].equals("hatchet")) {
-					UrfQuest.game.getPlayer().addItem(new Hatchet(0, 0));
+					p.addItem(new Hatchet(0, 0, m));
 				} else if (args[1].equals("chickenleg")) {
-					UrfQuest.game.getPlayer().addItem(new ChickenLeg(0, 0));
+					p.addItem(new ChickenLeg(0, 0, m));
 				} else if (args[1].equals("log")) {
-					UrfQuest.game.getPlayer().addItem(new Log(0, 0));
+					p.addItem(new Log(0, 0, m));
 				} else if (args[1].equals("shovel")) {
-					UrfQuest.game.getPlayer().addItem(new Shovel(0, 0));
+					p.addItem(new Shovel(0, 0, m));
 				} else if (args[1].equals("pickaxe")) {
-					UrfQuest.game.getPlayer().addItem(new Pickaxe(0, 0));
+					p.addItem(new Pickaxe(0, 0, m));
 				} else if (args[1].equals("shotgun")) {
-					UrfQuest.game.getPlayer().addItem(new Shotgun(0, 0));
+					p.addItem(new Shotgun(0, 0, m));
 				} else if (args[1].equals("grenade")) {
-					UrfQuest.game.getPlayer().addItem(new GrenadeItem(0, 0));
+					p.addItem(new GrenadeItem(0, 0, m));
 				} else if (args[1].equals("lawrune")) {
-					UrfQuest.game.getPlayer().addItem(new LawRune(0, 0));
+					p.addItem(new LawRune(0, 0, m));
 				} else if (args[1].equals("cosmicrune")) {
-					UrfQuest.game.getPlayer().addItem(new CosmicRune(0, 0));
+					p.addItem(new CosmicRune(0, 0, m));
 				} else if (args[1].equals("astralrune")) {
-					UrfQuest.game.getPlayer().addItem(new AstralRune(0, 0));
+					p.addItem(new AstralRune(0, 0, m));
+				} else if (args[1].equals("rpg")) {
+					p.addItem(new RPG(0, 0, m));
+				} else if (args[1].equals("mic")) {
+					p.addItem(new Mic(0, 0, m));
+				} else if (args[1].equals("head")) {
+					for (int l = 0; l < 100; l++) {
+						p.addItem(new Cheese(0, 0, m));
+					}
 				}
 			}
 		} else if (args[0].equals("spawn")) {
@@ -103,34 +117,33 @@ public class CommandProcessor {
 			} else {
 				count = 1;
 			}
-			Player p = UrfQuest.game.getPlayer();
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("chicken")) {
-					UrfQuest.game.getCurrMap().addMob(new Chicken(p.getPos()[0], p.getPos()[1]));
+					m.addMob(new Chicken(p.getPos()[0], p.getPos()[1], m));
 				} else if (args[1].equals("cyclops")) {
-					UrfQuest.game.getCurrMap().addMob(new Cyclops(p.getPos()[0], p.getPos()[1]));
+					m.addMob(new Cyclops(p.getPos()[0], p.getPos()[1], m));
 				} else if (args[1].equals("rogue")) {
-					UrfQuest.game.getCurrMap().addMob(new Rogue(p.getPos()[0], p.getPos()[1]));
+					m.addMob(new Rogue(p.getPos()[0], p.getPos()[1], m));
 				}
 			}
 		} else if (args[0].equals("set")) {
 			if (args[1].equals("health")) {
-				UrfQuest.game.getPlayer().setHealth(Double.parseDouble(args[2]));
+				p.setHealth(Double.parseDouble(args[2]));
 			} else if (args[1].equals("mana")) {
-				UrfQuest.game.getPlayer().setMana(Double.parseDouble(args[2]));
+				p.setMana(Double.parseDouble(args[2]));
 			} else if (args[1].equals("speed")) {
-				UrfQuest.game.getPlayer().setVelocity(Double.parseDouble(args[2])/100.0);
+				p.setVelocity(Double.parseDouble(args[2])/100.0);
 			}
 		} else if (args[0].equals("home")) {
-			UrfQuest.game.getPlayer().setPos(250, 250);
+			p.setPos(250, 250);
 		} else if (args[0].equals("tp")) {
-			UrfQuest.game.getPlayer().setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+			p.setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else if (args[0].equals("tprel")) {
-			UrfQuest.game.getPlayer().move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+			p.move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else if (args[0].equals("toolkit")) {
-			UrfQuest.game.getPlayer().addItem(new Pickaxe(0, 0));
-			UrfQuest.game.getPlayer().addItem(new Hatchet(0, 0));
-			UrfQuest.game.getPlayer().addItem(new Shovel(0, 0));
+			p.addItem(new Pickaxe(0, 0, m));
+			p.addItem(new Hatchet(0, 0, m));
+			p.addItem(new Shovel(0, 0, m));
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

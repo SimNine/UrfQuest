@@ -29,15 +29,10 @@ public class Player extends Mob {
 	
 	private String name;
 	private int statCounter = 200;
-	
 	private Inventory inventory;
-	private QuestMap currMap;
-	
-	private int astralCounter = -1;
-	private CameraMob astralCamera = null;
 
 	public Player(double x, double y, QuestMap currMap, String name) {
-		super(x, y);
+		super(x, y, currMap);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		if (img[0][0] == null) {
 			initPlayer();
@@ -52,11 +47,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Shovel(0, 0));
-		inventory.addItem(new Pickaxe(0, 0));
-		inventory.addItem(new Hatchet(0, 0));
-		
-		this.currMap = currMap;
+		inventory.addItem(new Shovel(0, 0, currMap));
+		inventory.addItem(new Pickaxe(0, 0, currMap));
+		inventory.addItem(new Hatchet(0, 0, currMap));
 		
 		this.name = name;
 	}
@@ -210,7 +203,7 @@ public class Player extends Mob {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
 		g.drawString(name, 
-					 UrfQuest.panel.gameToWindowX(bounds.getX()), 
+					 UrfQuest.panel.gameToWindowX(bounds.getX()) - 5*(name.length()/2), 
 					 UrfQuest.panel.gameToWindowY(bounds.getY()));
 		
 		drawHealthBar(g);
@@ -238,8 +231,6 @@ public class Player extends Mob {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
-		
-		this.updateAstral();
 		
 		// update hunger and health mechanics
 		if (statCounter > 0) {
@@ -323,8 +314,8 @@ public class Player extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getCenterX()),
-													 (int)(bounds.getCenterY()))) {
+		switch (map.getTileAt((int)(bounds.getCenterX()),
+							  (int)(bounds.getCenterY()))) {
 		case 0:
 			//nothing
 			break;
@@ -374,14 +365,10 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public QuestMap getMap() {
-		return currMap;
-	}
-	
 	public void setMap(QuestMap m) {
-		currMap.removePlayers(this);
+		map.removePlayer(this);
 		m.addPlayer(this);
-		currMap = m;
+		map = m;
 	}
 	
 	/*
@@ -413,7 +400,7 @@ public class Player extends Mob {
 		
 		double[] playerPos = getPos();
 		i.setPos(playerPos[0], playerPos[1]-1);
-		currMap.addItem(i);
+		map.addItem(i);
 	}
 	
 	public void setSelectedEntry(int i) {
@@ -434,7 +421,7 @@ public class Player extends Mob {
 	
 	public void tryMapLink() {
 		MapLink ml = null;
-		for (MapLink l : currMap.getLinks().keySet()) {
+		for (MapLink l : map.getLinks().keySet()) {
 			if (l.getCoords()[0] == (int)getCenter()[0] &&
 				l.getCoords()[1] == (int)getCenter()[1]) {
 				ml = l;
@@ -442,32 +429,9 @@ public class Player extends Mob {
 		}
 		
 		if (ml != null) {
-			MapLink endPoint = currMap.getLinks().get(ml);
+			MapLink endPoint = map.getLinks().get(ml);
 			setMap(endPoint.getMap());
 			setPos(endPoint.getCoords()[0], endPoint.getCoords()[1]);
 		}
-	}
-	
-	/*
-	 * Astral rune special effect
-	 */
-	
-	private void updateAstral() {
-		if (astralCounter > -1) {
-			astralCounter--;
-		}
-		
-		if (astralCounter == 0) {
-			UrfQuest.panel.setCamera(this);
-			currMap.removeMob(astralCamera);
-		}
-	}
-	
-	public void initiateAstral() {
-		CameraMob cm = new CameraMob(getPos()[0], getPos()[1], CameraMob.STILL_MODE);
-		UrfQuest.panel.setCamera(cm);
-		astralCamera = cm;
-		currMap.addMob(cm);
-		astralCounter = 1000;
 	}
 }
