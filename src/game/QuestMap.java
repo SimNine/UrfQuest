@@ -3,18 +3,19 @@ package game;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import entities.Entity;
-import entities.characters.Chicken;
 import entities.items.Cheese;
 import entities.items.Gem;
 import entities.items.Pistol;
 import entities.items.SMG;
+import entities.mobs.Chicken;
+import entities.mobs.Cyclops;
+import entities.mobs.Mob;
 import entities.items.Item;
 import entities.items.Key;
 import entities.particles.Particle;
-import framework.SimplexNoise;
 import framework.UrfQuest;
 import tiles.Tiles;
+import urf.SimplexNoise;
 
 public class QuestMap {
 	public static final int EMPTY_MAP = 5000;
@@ -24,7 +25,7 @@ public class QuestMap {
 	
 	private int[][] map;
 	private BufferedImage minimap;
-	public ArrayList<Entity> entities = new ArrayList<Entity>();
+	public ArrayList<Mob> mobs = new ArrayList<Mob>();
 	public ArrayList<Item> items = new ArrayList<Item>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	
@@ -70,7 +71,7 @@ public class QuestMap {
 	public void update() {
 		ArrayList<Item> removeItems = new ArrayList<Item>();
 		ArrayList<Particle> removeParticles = new ArrayList<Particle>();
-		ArrayList<Entity> removeEntities = new ArrayList<Entity>();
+		ArrayList<Mob> removeMobs = new ArrayList<Mob>();
 		
 		// check for the player colliding with items
 		for (Item i : items) {
@@ -86,12 +87,12 @@ public class QuestMap {
 			}
 		}
 		
-		// update entities and check for the player colliding with entities
-		for (Entity e : entities) {
-			e.update();
-			if (UrfQuest.game.player.collides(e)) {
+		// update mobs and check for the player colliding with mobs
+		for (Mob m : mobs) {
+			m.update();
+			if (UrfQuest.game.player.collides(m)) {
 				if (UrfQuest.debug) {
-					System.out.println("player collided with object: " + e.getType());
+					System.out.println("player collided with object: " + m.getType());
 				}
 			}
 		}
@@ -104,11 +105,11 @@ public class QuestMap {
 			p.update();
 		}
 		
-		// check for collisions between particles and entities
+		// check for collisions between particles and mobs
 		for (Particle p : particles) {
-			for (Entity e : entities) {
-				if (p.collides(e)) {
-					removeEntities.add(e);
+			for (Mob m : mobs) {
+				if (p.collides(m)) {
+					removeMobs.add(m);
 					removeParticles.add(p);
 				}
 			}
@@ -116,7 +117,7 @@ public class QuestMap {
 
 		particles.removeAll(removeParticles);
 		items.removeAll(removeItems);
-		entities.removeAll(removeEntities);
+		mobs.removeAll(removeMobs);
 	}
 	
 	// map generation methods
@@ -256,16 +257,20 @@ public class QuestMap {
 	}
 	
 	// entity generation methods
-	public void generateEntities() {
-		ArrayList<Entity> entities = new ArrayList<Entity>();
+	public void generateMobs() {
+		ArrayList<Mob> mobs = new ArrayList<Mob>();
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 				if (map[x][y] == 2 && Math.random() < 0.001) {
-					entities.add(new Chicken(x, y));
+					if (Math.random() > .05) {
+						mobs.add(new Chicken(x, y));
+					} else {
+						mobs.add(new Cyclops(x, y));
+					}
 				}
 			}
 		}
-		this.entities = entities;
+		this.mobs = mobs;
 	}
 	
 	public void generateItems() {

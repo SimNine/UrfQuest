@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import entities.characters.Player;
+import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -12,7 +12,7 @@ public abstract class Entity {
 	protected Rectangle2D.Double bounds;
 
 	// default values
-	protected String type = "entity";
+	protected String type;
 	protected String orientation = "N";
 	protected int animStage = 0;
 	
@@ -29,16 +29,7 @@ public abstract class Entity {
 	
 	protected abstract void drawEntity(Graphics g);
 	
-	private void drawDebug(Graphics g) {
-		Player player = UrfQuest.game.getPlayer();
-		g.setColor(Color.WHITE);
-		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
-					 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-					 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
-		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-				 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
-	};
+	protected abstract void drawDebug(Graphics g);
 	
 	private void drawBounds(Graphics g) {
 		Player player = UrfQuest.game.getPlayer();

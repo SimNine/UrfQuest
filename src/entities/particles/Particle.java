@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import entities.Entity;
+import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -27,6 +28,17 @@ public class Particle extends Entity {
 				   (int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPosition()[1] - bounds.getY())*tileWidth),
 				   (int)(bounds.getWidth()*tileWidth),
 				   (int)(bounds.getHeight()*tileWidth));
+	}
+	
+	public void drawDebug(Graphics g) {
+		Player player = UrfQuest.game.getPlayer();
+		g.setColor(Color.WHITE);
+		g.drawString("velocity: " + velocity,
+					 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+					 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+		g.drawString("direction: " + direction,
+				 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+				 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
 	}
 
 	@Override

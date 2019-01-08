@@ -11,6 +11,7 @@ import framework.UrfQuest;
 import guis.Overlay;
 import guis.OverlayInit;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -34,6 +35,11 @@ public class QuestPanel extends JPanel {
 		addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				UrfQuest.keys.add(e.getKeyCode());
+				
+				if (e.getKeyCode() == KeyEvent.VK_F1 && UrfQuest.debug) {
+					String command = JOptionPane.showInputDialog(UrfQuest.panel, "Command Prompt", null);
+					CommandProcessor.process(command);
+				}
 			}
 			public void keyReleased(KeyEvent e) {
 				UrfQuest.keys.remove(e.getKeyCode());

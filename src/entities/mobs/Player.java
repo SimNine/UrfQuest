@@ -1,4 +1,4 @@
-package entities.characters;
+package entities.mobs;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,7 +10,6 @@ import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
-import entities.Entity;
 import entities.items.Item;
 import framework.UrfQuest;
 import game.Inventory;
@@ -18,7 +17,7 @@ import game.InventoryEntry;
 import game.QuestMap;
 import tiles.Tiles;
 
-public class Player extends Entity {
+public class Player extends Mob {
 
 	private static BufferedImage[] NW = new BufferedImage[8];
 	private static BufferedImage[] N = new BufferedImage[8];
@@ -42,9 +41,12 @@ public class Player extends Entity {
 		super(x, y);
 		type = "player";
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		if (NW[0] == null) {
+			initPlayer();
+		}
 	}
 	
-	public static void initPlayer() {
+	private void initPlayer() {
 		// Load east-west
 		try {
 			E[0] = E[4] = W[0] = W[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E1.png"));
@@ -215,7 +217,7 @@ public class Player extends Entity {
 					null);
 	}
 	
-	protected void drawDebug(Graphics g) {
+	public void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawString("orientation: " + this.orientation, 
 					 UrfQuest.panel.dispCenterX, 

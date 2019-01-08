@@ -1,55 +1,20 @@
 package entities.items;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import entities.Entity;
+import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Item extends Entity {
-	public static BufferedImage keyPic, gunPic, gemPic, cheesePic, smgPic;
 	protected BufferedImage itemPic;
 	protected boolean isStackable;
 	protected static final String assetPath = "/assets/items/";
-	
-	public static void initItems() {
-		try {
-			keyPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "key_scaled_30px.png"));
-		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "key_scaled_30px.png");
-			e.printStackTrace();
-		}
-		try {
-			gunPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "gun_scaled_30px.png"));
-		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "gun_scaled_30px.png");
-			e.printStackTrace();
-		}
-		try {
-			gemPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "pink_gem_scaled_30px.png"));
-		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "pink_gem_scaled_30px.png");
-			e.printStackTrace();
-		}
-		try {
-			cheesePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "cheese_scaled_30px.png"));
-		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "cheese_scaled_30px.png");
-			e.printStackTrace();
-		}
-		try {
-			smgPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "smg_scaled_30px.png"));
-		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "smg_scaled_30px.png");
-			e.printStackTrace();
-		}
-	}
 	
 	public Item clone() {
 		double[] pos = this.getPosition();
@@ -72,13 +37,9 @@ public abstract class Item extends Entity {
 		return ret;
 	}
 	
-	protected Item(double x, double y, BufferedImage pic) {
+	protected Item(double x, double y) {
 		super(x, y);
-		itemPic = pic;
-		if (this.type == null) type = "item";
-		bounds = new Rectangle2D.Double(x, y,
-				((double)itemPic.getWidth())/QuestPanel.TILE_WIDTH,
-				((double)itemPic.getHeight())/QuestPanel.TILE_WIDTH);
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
 	protected void drawEntity(Graphics g) {
@@ -88,6 +49,17 @@ public abstract class Item extends Entity {
 					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPosition()[1] - bounds.getY())*tileWidth), 
 					null);
 	}
+
+	public void drawDebug(Graphics g) {
+		Player player = UrfQuest.game.getPlayer();
+		g.setColor(Color.WHITE);
+		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
+					 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+					 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
+				 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+				 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+	};
 	
 	public BufferedImage getPic() {
 		return itemPic;

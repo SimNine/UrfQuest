@@ -6,9 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import entities.Entity;
-import entities.characters.Player;
-import entities.items.SMG;
+import entities.mobs.Mob;
+import entities.mobs.Player;
 import entities.items.Item;
 import entities.particles.Particle;
 import framework.UrfQuest;
@@ -27,14 +26,12 @@ public class QuestGame {
 	public QuestGame() {
 		currMap = new QuestMap(500, 500, QuestMap.SIMPLEX_MAP);
 		currMap.generateItems();
-		currMap.generateEntities();
+		currMap.generateMobs();
 
 		maps = new ArrayList<QuestMap>();
 		maps.add(currMap);
 		player = new Player(currMap.getWidth() / 2.0, currMap.getHeight() / 2.0);
 		guiVisible = false;
-		
-		//player.addItem(new SMG(0, 0));
 	}
 
 	public void tick() {
@@ -187,18 +184,18 @@ public class QuestGame {
 		g.drawString("CharacterHealth: " + player.getHealth(), 10, 70);
 		g.drawString("CharacterMana: " + player.getMana(), 10, 80);
 		g.drawString("CharacterSpeed: " + player.getSpeed(), 10, 90);
-		g.drawString("Number of entities: " + currMap.entities.size(), 10, 100);
+		g.drawString("Number of mobs: " + currMap.mobs.size(), 10, 100);
 		g.drawString("Number of items: " + currMap.items.size(), 10, 110);
 		g.drawString("Number of particles: " + currMap.particles.size(), 10, 120);
 	}
 
 	private void drawEntities(Graphics g) {
-		for (Entity e : currMap.entities) {
-			if (e.getPosition()[0] > player.getPosition()[0] - 30 &&
-				e.getPosition()[0] < player.getPosition()[0] + 30 &&
-				e.getPosition()[1] > player.getPosition()[1] - 30 &&
-				e.getPosition()[1] < player.getPosition()[1] + 30)
-			e.draw(g);
+		for (Mob m : currMap.mobs) {
+			if (m.getPosition()[0] > player.getPosition()[0] - 30 &&
+				m.getPosition()[0] < player.getPosition()[0] + 30 &&
+				m.getPosition()[1] > player.getPosition()[1] - 30 &&
+				m.getPosition()[1] < player.getPosition()[1] + 30)
+			m.draw(g);
 		}
 
 		for (Item i : currMap.items) {
@@ -264,11 +261,11 @@ public class QuestGame {
 		
 		// draw a square for each npc currently on the minimap
 		g.setColor(Color.YELLOW);
-		for (Entity e : currMap.entities) {
-			if ((int)e.getPosition()[0] > cropX && (int)e.getPosition()[0] < cropX + minimapSize &&
-				(int)e.getPosition()[1] > cropY && (int)e.getPosition()[1] < cropY + minimapSize) {
-				g.fillRect(rootX + ((int)e.getPosition()[0]-cropX) - 1, 
-						   rootY + ((int)e.getPosition()[1]-cropY) - 1, 3, 3);
+		for (Mob m : currMap.mobs) {
+			if ((int)m.getPosition()[0] > cropX && (int)m.getPosition()[0] < cropX + minimapSize &&
+				(int)m.getPosition()[1] > cropY && (int)m.getPosition()[1] < cropY + minimapSize) {
+				g.fillRect(rootX + ((int)m.getPosition()[0]-cropX) - 1, 
+						   rootY + ((int)m.getPosition()[1]-cropY) - 1, 3, 3);
 			}
 		}
 		

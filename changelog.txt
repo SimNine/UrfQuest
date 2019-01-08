@@ -170,3 +170,10 @@ NOTE: Inventory code is a bit messy. Might be good idea to rewrite item system.
 -Pistol shoots one bullet per keypress of space, SMG shoots bullets constantly
 -Changed mapbuilding method privacy settings, rewrote QuestMap constructor for cleaner code
 -Debug display now indicated number of items, entities, and particles currently on the map
+
+0.12.1 - 1/4/17
+-Cleaned up graphics initialization of entities, tiles, player, etc
+-Added 'mob' class as superclass of player and chicken
+-The tree tile is now initialized as a single bufferedimage; it no longer has to be drawn with two images
+-Added "Cyclops" mob, moves more slowly than chicken, but in the same pattern
+-Added rudimentary console, accessible by pressing F1 when debug mode is on

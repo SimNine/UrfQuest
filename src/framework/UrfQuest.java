@@ -11,16 +11,13 @@ import java.util.Set;
 
 import javax.swing.*;
 
-import entities.characters.Chicken;
-import entities.characters.Player;
-import entities.items.Item;
 import framework.QuestPanel;
 import game.QuestGame;
 import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.12.0";
+    private static final String VERSION = "0.12.1";
     private static final String GAME_NAME = "UrfQuest";
     
 	public static UrfQuest quest;
@@ -47,10 +44,6 @@ public class UrfQuest implements Runnable {
         System.out.println();
 		
 		Tiles.initGraphics();
-		SoundEngine.initSounds();
-		Player.initPlayer();
-		Chicken.initChicken();
-		Item.initItems();
         
         UrfQuest.debug = false;
         UrfQuest.frame = new JFrame(GAME_NAME + " " + VERSION);

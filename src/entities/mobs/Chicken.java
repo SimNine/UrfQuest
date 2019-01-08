@@ -1,4 +1,4 @@
-package entities.characters;
+package entities.mobs;
 
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
@@ -7,19 +7,20 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import entities.Entity;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
-public class Chicken extends Entity {
+public class Chicken extends Mob {
 	private static BufferedImage pic;
-	private final static String assetPath = "/assets/entities/";
 	
 	public Chicken(double x, double y) {
 		super(x, y);
 		type = "chicken";
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		animStage = (int)(Math.random()*200.0);
+		if (pic == null) {
+			initChicken();
+		}
 	}
 	
 	public static void initChicken() {
@@ -31,7 +32,6 @@ public class Chicken extends Entity {
 		}
 	}
 
-	@Override
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
@@ -40,7 +40,6 @@ public class Chicken extends Entity {
 					null);
 	}
 
-	@Override
 	public void update() {
 		final int INTERVAL_SIZE = 50;
 		
@@ -63,5 +62,4 @@ public class Chicken extends Entity {
 		}
 		animStage++;
 	}
-
 }
