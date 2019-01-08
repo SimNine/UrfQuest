@@ -24,14 +24,12 @@ public class Loader {
 	private static File saveDir = new File("savedgames");
 
 	public static void saveGame() {
-		UrfQuest.time.stop();
-
-		if (!saveDir.exists())
+		if (!saveDir.exists()) {
 			saveDir.mkdir();
+		}
 
 		String filename = JOptionPane.showInputDialog(UrfQuest.panel, "Save Level", null) + ".urf";
 		if (filename.equals("null.urf")) {
-			UrfQuest.time.start();
 			return;
 		}
 
@@ -135,15 +133,11 @@ public class Loader {
 			e.printStackTrace();
 			System.exit(1);
 		}
-
-		UrfQuest.time.start();
 	}
 
 	public static void loadGame() {
-		UrfQuest.time.stop();
 		String filename = JOptionPane.showInputDialog(null, "Load a level...", null) + ".urf";
 		if (filename.equals("null.urf")) {
-			UrfQuest.time.start();
 			return;
 		}
 
@@ -208,6 +202,9 @@ public class Loader {
 				if (i == currMap) {
 					UrfQuest.game.setCurrMap(map);
 				}
+				
+				// regenerate the map's minimap
+				map.generateMinimap();
 
 				allMaps.add(map);
 			}
@@ -241,6 +238,5 @@ public class Loader {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		UrfQuest.time.start();
 	}
 }

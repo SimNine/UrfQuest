@@ -78,16 +78,16 @@ public class QuestGame {
 		keyCount += i;
 	}
 
-	public void toggleGUIVisible() {
-		if (guiVisible) {
-			guiVisible = false;
-		} else {
-			guiVisible = true;
-		}
-	}
-
 	public boolean isGUIVisible() {
 		return guiVisible;
+	}
+	
+	public void hideGUI() {
+		guiVisible = false;
+	}
+	
+	public void showGUI() {
+		guiVisible = true;
 	}
 	
 	public void cycleMinimapSize() {

@@ -132,3 +132,7 @@ NOTE: MapLoader is completely fucked
 --Drawback: must re-render minimap every time the map changes, must be done manually
 -Disabled keypress of S for saving and L for loading
 -Switched movement keys to WASD
+
+0.10.1 - 12/24/16
+-Fixed bug where the minimap didn't regenerate after loading a level
+-Fixed bug where the GUI wouldn't reappear after loading a level

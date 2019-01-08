@@ -34,27 +34,26 @@ public class QuestPanel extends JPanel {
 		addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				UrfQuest.keys.add(e.getKeyCode());
-				//repaint();
 			}
 			public void keyReleased(KeyEvent e) {
 				UrfQuest.keys.remove(e.getKeyCode());
-				//repaint();
 				
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					if (currOverlay == null && UrfQuest.time.isRunning()) {
 						UrfQuest.time.stop();
 						currOverlay = OverlayInit.newPauseMenu();
-						UrfQuest.game.toggleGUIVisible();
+						UrfQuest.game.hideGUI();
 						repaint();
 					} else if (currOverlay.getName() == "pause" && !UrfQuest.time.isRunning()) {
 						UrfQuest.time.start();
 						currOverlay = null;
-						UrfQuest.game.toggleGUIVisible();
+						UrfQuest.game.showGUI();
 						repaint();
 					}
 				}
 				if (e.getKeyCode() == KeyEvent.VK_X) {
 					UrfQuest.game.cycleMinimapSize();
+					repaint();
 				}
 			}
 			public void keyTyped(KeyEvent e) {}

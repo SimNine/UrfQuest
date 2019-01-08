@@ -17,7 +17,7 @@ public class OverlayInit {
 				UrfQuest.panel.currOverlay = null;
 				if (!UrfQuest.time.isRunning()) {
 					UrfQuest.time.start();
-					UrfQuest.game.toggleGUIVisible();
+					UrfQuest.game.showGUI();
 				}
 			}
 		});
@@ -88,7 +88,9 @@ public class OverlayInit {
 				UrfQuest.panel.currOverlay = null;
 				if (!UrfQuest.time.isRunning()) {
 					UrfQuest.time.start();
-					UrfQuest.game.toggleGUIVisible();
+				}
+				if (!UrfQuest.game.isGUIVisible()) {
+					UrfQuest.game.showGUI();
 				}
 			}
 		});
