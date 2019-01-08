@@ -6,14 +6,15 @@ import java.awt.Graphics;
 
 import framework.UrfQuest;
 import guis.Clickable;
+import guis.GUIContainer;
 
-public class TextButton extends TextArea implements Clickable {
+public abstract class TextButton extends TextArea implements Clickable {
 
-	public TextButton(String text, int fontSize, int xDisplacement, int yDisplacement, int anchor) {
-		super(text, fontSize, xDisplacement, yDisplacement, anchor);
+	public TextButton(String text, int fontSize, int xDisplacement, int yDisplacement, int anchor, GUIContainer parent) {
+		super(text, fontSize, xDisplacement, yDisplacement, anchor, parent);
 	}
 	
-	public void click(){}
+	public abstract boolean click();
 	
 	public void draw(Graphics g) {
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, fontSize));

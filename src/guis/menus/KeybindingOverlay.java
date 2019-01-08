@@ -6,19 +6,26 @@ import java.awt.event.KeyEvent;
 import framework.Keybindings;
 import framework.UrfQuest;
 import guis.Clickable;
+import guis.GUIContainer;
 import guis.GUIObject;
-import guis.Overlay;
 import guis.OverlayInit;
 
-public class KeybindingOverlay extends Overlay {
+public class KeybindingOverlay extends GUIContainer {
 	private KeybindingButton boxToWaitFor = null;
 	private Keybindings keybindings = UrfQuest.panel.getKeybindings();
 	
 	public KeybindingOverlay() {
-		super("keybindings", new Color(128, 128, 128, 128));
+		super(GUIObject.TOP_LEFT, 
+			  0, 
+			  0, 
+			  UrfQuest.panel.getWidth(), 
+			  UrfQuest.panel.getHeight(), 
+			  "keybindings", 
+			  null, 
+			  new Color(128, 128, 128, 128), null, 0);
 		
-		guiObjects.add(new TextBox("Map view: ", 30, -160, -150, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.TOGGLEMAPVIEW), 30, 120, -150, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Map view: ", 30, -160, -150, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.TOGGLEMAPVIEW), 30, 120, -150, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.TOGGLEMAPVIEW = k;
@@ -27,8 +34,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Drop item: ", 30, -160, -120, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.DROPITEM), 30, 120, -120, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Drop item: ", 30, -160, -120, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.DROPITEM), 30, 120, -120, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.DROPITEM = k;
@@ -37,8 +44,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Cycle minimap: ", 30, -160, -90, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CYCLEMINIMAP), 30, 120, -90, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Cycle minimap: ", 30, -160, -90, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CYCLEMINIMAP), 30, 120, -90, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.CYCLEMINIMAP = k;
@@ -47,8 +54,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Console: ", 30, -160, -60, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CONSOLE), 30, 120, -60, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Console: ", 30, -160, -60, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CONSOLE), 30, 120, -60, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.CONSOLE = k;
@@ -57,8 +64,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Fullscreen: ", 30, -160, -30, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.FULLSCREEN), 30, 120, -30, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Fullscreen: ", 30, -160, -30, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.FULLSCREEN), 30, 120, -30, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.FULLSCREEN = k;
@@ -67,8 +74,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Build mode: ", 30, -160, 0, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.BUILDMODE), 30, 120, 0, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Build mode: ", 30, -160, 0, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.BUILDMODE), 30, 120, 0, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.BUILDMODE = k;
@@ -77,8 +84,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Map Link: ", 30, -160, 30, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.MAPLINK), 30, 120, 30, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Map Link: ", 30, -160, 30, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.MAPLINK), 30, 120, 30, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.MAPLINK = k;
@@ -87,8 +94,8 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextBox("Crafting menu: ", 30, -160, 60, GUIObject.CENTER));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CRAFTING), 30, 120, 60, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Crafting menu: ", 30, -160, 60, GUIObject.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CRAFTING), 30, 120, 60, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
 				keybindings.CRAFTING = k;
@@ -97,19 +104,21 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER) {
-			public void click() {
+		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER, this) {
+			public boolean click() {
 				UrfQuest.debug = !UrfQuest.debug;
+				return true;
 			}
 		});
-		guiObjects.add(new TextButton("Back", 30, -80, 120, GUIObject.CENTER) {
-			public void click() {
+		guiObjects.add(new TextButton("Back", 30, -80, 120, GUIObject.CENTER, this) {
+			public boolean click() {
 				if (boxToWaitFor == null) {
 					UrfQuest.panel.swap(OverlayInit.newOptionsOverlay());
 				}
 				if (UrfQuest.debug) {
 					System.out.println(keybindings);
 				}
+				return true;
 			}
 		});
 	}

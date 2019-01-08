@@ -2,6 +2,6 @@ package guis;
 
 public interface Clickable {
 
-	public void click();
+	public boolean click();
 	
 }

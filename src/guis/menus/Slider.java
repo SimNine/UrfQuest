@@ -5,14 +5,15 @@ import java.awt.Graphics;
 
 import framework.UrfQuest;
 import guis.Clickable;
+import guis.GUIContainer;
 import guis.GUIObject;
 
 public class Slider extends GUIObject implements Clickable {
 	private int sliderPos = 0;
 	private int lineThickness = 3;
 	
-	public Slider(int size, int xDisp, int yDisp, int anchor) {
-		super(anchor, xDisp, yDisp, size*5, size);
+	public Slider(int size, int xDisp, int yDisp, int anchor, GUIContainer parent) {
+		super(anchor, xDisp, yDisp, size*5, size, parent);
 	}
 	
 	public void draw(Graphics g) {
@@ -55,6 +56,6 @@ public class Slider extends GUIObject implements Clickable {
 		return (((double)sliderPos - bounds.x)/(double)bounds.width);
 	}
 
-	public void click() {}
+	public boolean click() {return true;}
 
 }

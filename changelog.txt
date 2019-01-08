@@ -332,3 +332,26 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 --Added appropriate functions in QuestGame, as there was no other reasonable place to put these methods
 --Costs 50.0 mana to use
 -Runes now generate in slightly higher frequency under rocks in caves
+
+0.16.0 - 1/29/17
+(Gameplay Update 2, continued)
+-Added an AttackRoutine class in which the attacking enemy goes directly toward the player
+-Set cyclops to have AttackRoutine by default
+-Added a CraftingOverlay
+--Items (such as tools) can be crafted using the crafting overlay
+--The user must have enough of the required items to craft an item
+-Removed the "Overlay" class, replaced it with generalized GUIContainer class
+--GUIContainers are GUIObjects that hold other GUIObjects
+--Setting a GUIContainer to have a null parent makes it behave as an overlay (covering the whole screen)
+-Added an InventoryEntry class, a generalized display for items
+-Turned InventoryBar into a GUIContainer
+--InventoryBar now holds ten InventoryEntries
+--Replicates previous behavior, but differently
+-Added crafting system
+--Default key: c
+--Opens CraftingOverlay GUIContainer
+--Contains CraftingRecipies
+--CraftingRecipies contain lists of input items and output items
+--When a CraftingRecipie is clicked, the player finds out if the appropriate items are available
+	If they are, the required items are removed, and the product items are added
+--Added recipe for Hatchet and Pickaxe

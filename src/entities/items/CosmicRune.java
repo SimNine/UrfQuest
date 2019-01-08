@@ -16,9 +16,9 @@ public class CosmicRune extends Item {
 		super(x, y);
 		if (cosmicRunePic == null) {
 			try {
-				cosmicRunePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "cosmicRune_scaled_30px.png"));
+				cosmicRunePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "cosmicrune_scaled_30px.png"));
 			} catch (IOException e) {
-				System.out.println("Image could not be read at: " + assetPath + "cosmicRune_scaled_30px.png");
+				System.out.println("Image could not be read at: " + assetPath + "cosmicrune_scaled_30px.png");
 				e.printStackTrace();
 			}
 		}

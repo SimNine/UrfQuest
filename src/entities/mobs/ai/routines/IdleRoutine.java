@@ -8,6 +8,7 @@ public class IdleRoutine extends MobRoutine {
 	
 	public IdleRoutine(Mob m) {
 		super(m);
+		update();
 	}
 
 	public void update() {

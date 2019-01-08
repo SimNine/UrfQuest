@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import framework.UrfQuest;
+import guis.GUIContainer;
 import guis.GUIObject;
 
 public abstract class StatusBar extends GUIObject {
@@ -11,8 +12,8 @@ public abstract class StatusBar extends GUIObject {
 	private boolean visibleByDefault = false;
 	private int visibility = 0;
 	
-	public StatusBar(int xDisp, int yDisp, int width, int height, int anchor, Color col, boolean visibleByDefault) {
-		super(anchor, xDisp, yDisp, width, height);
+	public StatusBar(int xDisp, int yDisp, int width, int height, int anchor, Color col, boolean visibleByDefault, GUIContainer parent) {
+		super(anchor, xDisp, yDisp, width, height, parent);
 		this.color = col;
 		this.visibleByDefault = visibleByDefault;
 		if (visibleByDefault) {

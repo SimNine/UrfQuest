@@ -6,20 +6,23 @@ import java.awt.Rectangle;
 import framework.UrfQuest;
 
 public abstract class GUIObject {
-	protected int xDisplacement, yDisplacement;
 	public static final int TOP_LEFT = 2010;
 	public static final int TOP_RIGHT = 2015;
 	public static final int BOTTOM_LEFT = 2020;
 	public static final int BOTTOM_RIGHT = 2025;
 	public static final int CENTER = 2030;
+	
+	protected int xDisplacement, yDisplacement;
 	protected int anchor;
 	protected Rectangle bounds;
+	protected GUIObject parent;
 	
-	protected GUIObject(int anchorPoint, int xRel, int yRel, int width, int height) {
+	protected GUIObject(int anchorPoint, int xRel, int yRel, int width, int height, GUIObject parent) {
 		anchor = anchorPoint;
 		xDisplacement = xRel;
 		yDisplacement = yRel;
 		bounds = new Rectangle();
+		this.parent = parent;
 		setBounds(xDisplacement, yDisplacement, width, height);
 	}
 	
@@ -28,34 +31,42 @@ public abstract class GUIObject {
 	};
 	
 	public int xAnchor() {
+		if (parent == null) {
+			return 0;
+		}
+		
 		switch (anchor) {
 		case TOP_LEFT:
-			return 0;
+			return parent.getBounds().x;
 		case TOP_RIGHT:
-			return UrfQuest.panel.getWidth();
+			return parent.getBounds().x + parent.getBounds().width;
 		case BOTTOM_LEFT:
-			return 0;
+			return parent.getBounds().x;
 		case BOTTOM_RIGHT:
-			return UrfQuest.panel.getWidth();
+			return parent.getBounds().x + parent.getBounds().width;
 		case CENTER:
-			return UrfQuest.panel.dispCenterX;
+			return parent.getBounds().x + parent.getBounds().width/2;
 		default:
 			throw new IllegalStateException();
 		}
 	}
 	
 	public int yAnchor() {
+		if (parent == null) {
+			return 0;
+		}
+		
 		switch (anchor) {
 		case TOP_LEFT:
-			return 0;
+			return parent.getBounds().y;
 		case TOP_RIGHT:
-			return 0;
+			return parent.getBounds().y;
 		case BOTTOM_LEFT:
-			return UrfQuest.panel.getHeight();
+			return parent.getBounds().y + parent.getBounds().height;
 		case BOTTOM_RIGHT:
-			return UrfQuest.panel.getHeight();
+			return parent.getBounds().y + parent.getBounds().height;
 		case CENTER:
-			return UrfQuest.panel.dispCenterY;
+			return parent.getBounds().y + parent.getBounds().height/2;
 		default:
 			throw new IllegalStateException();
 		}

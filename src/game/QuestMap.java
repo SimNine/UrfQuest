@@ -210,6 +210,8 @@ public class QuestMap {
 			}
 		}
 		
+		
+		
 		this.map = end;
 	}
 	
@@ -396,20 +398,28 @@ public class QuestMap {
 	 * Entity generation
 	 */
 	
-	public void generateMobs() {
+	public void generateChickens() {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
-					if (Math.random() > .05) {
-						mobs.add(new Chicken(x, y));
-					} else {
-						mobs.add(new Cyclops(x, y));
-					}
+					mobs.add(new Chicken(x, y));
 				}
 			}
 		}
-		this.mobs = mobs;
+		this.mobs.addAll(mobs);
+	}
+	
+	public void generateCyclopses() {
+		ArrayList<Mob> mobs = new ArrayList<Mob>();
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
+					mobs.add(new Cyclops(x, y));
+				}
+			}
+		}
+		this.mobs.addAll(mobs);
 	}
 	
 	public void generateItems() {

@@ -11,7 +11,6 @@ public abstract class MobRoutine {
 	
 	protected MobRoutine(Mob m) {
 		this.mob = m;
-		update();
 	}
 	
 	public int suggestedDirection() {

@@ -9,6 +9,7 @@ import entities.mobs.Mob;
 import entities.mobs.Player;
 import framework.UrfQuest;
 import guis.Clickable;
+import guis.GUIContainer;
 import guis.GUIObject;
 
 public class Minimap extends GUIObject implements Clickable {
@@ -21,8 +22,8 @@ public class Minimap extends GUIObject implements Clickable {
 	private int xCrop;
 	private int yCrop;
 
-	public Minimap(int xDisp, int yDisp, int width, int height, int anchorPoint) {
-		super(anchorPoint, xDisp, yDisp, width, height);
+	public Minimap(int xDisp, int yDisp, int width, int height, int anchorPoint, GUIContainer parent) {
+		super(anchorPoint, xDisp, yDisp, width, height, parent);
 	}
 
 	public void draw(Graphics g) {
@@ -108,7 +109,7 @@ public class Minimap extends GUIObject implements Clickable {
 		}
 	}
 	
-	public void click() {
+	public boolean click() {
 		if (UrfQuest.debug) {
 			int xPos = UrfQuest.mousePos[0] - xRoot + xCrop;
 			int yPos = UrfQuest.mousePos[1] - yRoot + yCrop;
@@ -116,6 +117,7 @@ public class Minimap extends GUIObject implements Clickable {
 			System.out.println(xPos + ", " + yPos);
 			UrfQuest.game.getPlayer().setPos(xPos, yPos);
 		}
+		return true;
 	}
 
 	public int getSize() {

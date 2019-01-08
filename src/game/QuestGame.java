@@ -21,11 +21,10 @@ public class QuestGame {
 
 	public QuestGame() {
 		surfaceMap = new QuestMap(500, 500, QuestMap.SIMPLEX_MAP);
-		surfaceMap.generateItems();
-		surfaceMap.generateMobs();
-		
 		player = new Player(surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1]);
-
+		surfaceMap.generateItems();
+		surfaceMap.generateChickens();
+		
 		maps.add(surfaceMap);
 		currMap = surfaceMap;
 	}
@@ -118,7 +117,6 @@ public class QuestGame {
 			if (l.getMap() == currMap && 
 				l.getCoords()[0] == (int)player.getCenter()[0] &&
 				l.getCoords()[1] == (int)player.getCenter()[1]) {
-				//System.out.println("match found");
 				ml = l;
 			}
 		}
@@ -140,14 +138,14 @@ public class QuestGame {
 		}
 		
 		if (astralCounter == 0) {
-			UrfQuest.panel.gameBoard.getCamera().setFollowMob(player);
+			UrfQuest.panel.setCamera(player);
 			currMap.removeMob(astralCamera);
 		}
 	}
 	
 	public void initiateAstral() {
 		CameraMob cm = new CameraMob(player.getPos()[0], player.getPos()[1], CameraMob.STILL_MODE);
-		UrfQuest.panel.gameBoard.getCamera().setFollowMob(cm);
+		UrfQuest.panel.setCamera(cm);
 		astralCamera = cm;
 		currMap.addMob(cm);
 		astralCounter = 1000;

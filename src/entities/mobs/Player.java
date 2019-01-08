@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -175,8 +176,11 @@ public class Player extends Mob {
 			System.out.println("Image could not be read at: " + assetPath + "N7.png");
 		}
 	}
-
-	// drawing methods
+	
+	/*
+	 * Drawing methods
+	 */
+	
 	protected void drawEntity(Graphics g) {
 		final int STEP_SIZE = 15;
 		
@@ -200,6 +204,10 @@ public class Player extends Mob {
 					 UrfQuest.panel.gameToWindowY(bounds.getY()) + 10);
 	}
 
+	/*
+	 * per-tick updater
+	 */
+	
 	public void update() {
 		if (UrfQuest.panel.isGUIOpen()) {
 			return;
@@ -320,8 +328,11 @@ public class Player extends Mob {
 			break;
 		}
 	}
-
-	// getters, setters, and incrementers
+	
+	/*
+	 * Getters, setters, incrementers
+	 */
+	
 	public void incrementMana(double amt) {
 		setMana(mana + amt);
 	}
@@ -392,5 +403,9 @@ public class Player extends Mob {
 	
 	public void useSelectedItem() {
 		inventory.useSelectedItem();
+	}
+	
+	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
+		inventory.tryCrafting(input, output);
 	}
 }

@@ -57,7 +57,10 @@ public abstract class Item extends Entity {
 				 (int) UrfQuest.panel.gameToWindowY(bounds.getY()) + 10);
 	};
 	
-	// getters and setters
+	/*
+	 * Getters and setters
+	 */
+	
 	public BufferedImage getPic() {
 		return itemPic;
 	}
@@ -126,6 +129,18 @@ public abstract class Item extends Entity {
 		} else {
 			stackSize += i;
 		}
+	}
+	
+	public void setStackSize(int i) {
+		if (i < 1) {
+			throw new IllegalArgumentException();
+		}
+		
+		if (i > 1 && maxStackSize() == 1) {
+			stackSize = 1;
+		}
+		
+		stackSize = i;
 	}
 	
 	public abstract int maxStackSize();

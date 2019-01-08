@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 import entities.items.Item;
@@ -17,7 +18,7 @@ public class Inventory {
 		this.owner = owner;
 	}
 	
-	// gets a collection of all entries in the inventory
+	// gets an arrayList of all entries in the inventory
 	public ArrayList<Item> getItems() {
 		ArrayList<Item> e = new ArrayList<Item>();
 		for (int i = 0; i < entries.length; i++) {
@@ -84,6 +85,11 @@ public class Inventory {
 		occupiedEntries.remove(selectedEntry);
 	}
 	
+	private void removeEntry(int index) {
+		entries[index] = null;
+		occupiedEntries.remove(index);
+	}
+	
 	public void setSelectedEntry(int i) {
 		selectedEntry = i;
 	}
@@ -135,6 +141,44 @@ public class Inventory {
 			}
 		}
 		return -1;
+	}
+	
+	private void removeItemsOfEntry(int index, int number) {
+		if (entries[index].currStackSize() == number) {
+			this.removeEntry(index);
+		} else if (entries[index].currStackSize() > number) {
+			entries[index].incStackSize(-number);
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	// attempts to craft, using the given inputs and outputs
+	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
+		// check to see if the recipie is craftable
+		for (Item i : input) {
+			int index = findIndexOfEntry(i);
+			if (index == -1) {
+				return;
+			} else if (entries[index].currStackSize() < i.currStackSize()) {
+				return;
+			}
+		}
+		if (output.size() > 10 - occupiedEntries.size()) {
+			return;
+		}
+		
+		//at this point, the recipie is craftable
+		for (Item i : input) {
+			int index = findIndexOfEntry(i);
+			removeItemsOfEntry(index, i.currStackSize());
+		}
+		
+		for (Item i : output) {
+			int index = nextOpenSlot();
+			entries[index] = i;
+			occupiedEntries.add(index);
+		}
 	}
 	
 	public int getSelectedIndex() {

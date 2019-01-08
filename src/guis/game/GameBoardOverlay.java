@@ -3,6 +3,7 @@ package guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import entities.Entity;
 import entities.items.Item;
 import entities.mobs.Mob;
 import entities.mobs.Player;
@@ -10,17 +11,23 @@ import entities.projectiles.Projectile;
 import framework.QuestPanel;
 import framework.UrfQuest;
 import game.QuestMap;
-import guis.Overlay;
+import guis.GUIContainer;
+import guis.GUIObject;
 import tiles.Tiles;
 
-public class GameBoardOverlay extends Overlay {
+public class GameBoardOverlay extends GUIContainer {
 	private int selectedTileTransparency = 255;
 	private boolean transparencyIncreasing = false;
-	private Camera camera;
 
 	public GameBoardOverlay() {
-		super("board");
-		camera = new Camera(UrfQuest.game.getPlayer());
+		super(GUIObject.TOP_LEFT, 
+			  0, 
+			  0, 
+			  UrfQuest.panel.getWidth(), 
+			  UrfQuest.panel.getHeight(), 
+			  "board", 
+			  null, 
+			  null, null, 0);
 	}
 
 	public void draw(Graphics g) {
@@ -39,6 +46,7 @@ public class GameBoardOverlay extends Overlay {
 		int dispCenterY = UrfQuest.panel.dispCenterY;
 		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
 		QuestMap currMap = UrfQuest.game.getCurrMap();
+		Entity camera = UrfQuest.panel.getCamera();
 
 		// get the rendering offset
 		int rootX = (int)(TILE_WIDTH - (dispCenterX % TILE_WIDTH));
@@ -145,6 +153,7 @@ public class GameBoardOverlay extends Overlay {
 
 	private void drawEntities(Graphics g) {
 		QuestMap currMap = UrfQuest.game.getCurrMap();
+		Entity camera = UrfQuest.panel.getCamera();
 		
 		for (Mob m : currMap.getMobs()) {
 			if (m.getCenter()[0] > camera.getPos()[0] - 30 &&
@@ -182,9 +191,5 @@ public class GameBoardOverlay extends Overlay {
 		g.setColor(Color.WHITE);
 		g.drawLine(dispCenterX + 5, dispCenterY + 15, dispCenterX + 25, dispCenterY + 15);
 		g.drawLine(dispCenterX + 15, dispCenterY + 5, dispCenterX + 15, dispCenterY + 25);
-	}
-	
-	public Camera getCamera() {
-		return camera;
 	}
 }

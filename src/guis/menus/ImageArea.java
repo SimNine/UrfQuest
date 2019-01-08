@@ -6,13 +6,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import guis.GUIContainer;
 import guis.GUIObject;
 
 public abstract class ImageArea extends GUIObject {
 	protected BufferedImage image;
 	
-	public ImageArea(String source, int xDisp, int yDisp, int anchor) {
-		super(anchor, xDisp, yDisp, 0, 0);
+	public ImageArea(String source, int xDisp, int yDisp, int anchor, GUIContainer parent) {
+		super(anchor, xDisp, yDisp, 0, 0, parent);
 		try {
 			this.image = ImageIO.read(new File(source));
 		} catch (IOException e) {
