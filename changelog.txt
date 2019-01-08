@@ -60,3 +60,12 @@ NOTE: MapLoader is completely fucked
 -Player no longer converts grass to dirt
 -Replaced all tile and entity procedurally drawn graphics with .png images
 -New bug? game now lags considerably (might be due to running on battery power)
+
+0.6.0 - 11/22/16
+-Again, major restructuring of the game: all global variables are now accessed through the main class
+-Added support for multiple maps per game
+-Added new Tree tile
+-Began adding a rudimentary sound engine
+-Consolidated rendering of tiles and tile properties into Tiles class, using boolean "properties" array
+-Put all assets (pictures, sounds) into new "assets" folder and updated paths accordingly
+-MapLoader is still fucked, so are the Shape, Ball, and Square entity classes

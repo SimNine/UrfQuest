@@ -10,7 +10,6 @@ public class Square extends Shape{
 
 	public Square(double x, double y, Color c, double diameter) {
 		super(x, y, c, diameter);
-		bounds = new Rectangle2D.Double(x - diameter/2, y - diameter/2, diameter, diameter);
 		type = "square";
 		Xvelocity = 0.01;
 		Yvelocity = 0.01;
@@ -36,7 +35,5 @@ public class Square extends Shape{
 		} else if (Ypos < V.player.getPosition()[1]) {
 			Ypos += Yvelocity;
 		}
-		
-		bounds = new Rectangle2D.Double(Xpos - diameter/2, Ypos - diameter/2, diameter, diameter);
 	}
 }

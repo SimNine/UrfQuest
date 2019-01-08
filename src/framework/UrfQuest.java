@@ -2,53 +2,62 @@ package framework;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.*;
 
 import display.QuestPanel;
 import game.QuestGame;
-import game.QuestMap;
 import tiles.Tiles;
 
 /** Main class that specifies the frame and widgets of the GUI
  */
 public class UrfQuest implements Runnable {
-    private String version = "0.5.0";
-    private String gameName = "UrfQuest";
+    private static final String VERSION = "0.6.0";
+    private static final String GAME_NAME = "UrfQuest";
+    
+    public static final boolean debug = false;
+    public static final JFrame frame = new JFrame(GAME_NAME + " " + VERSION);
+    public static QuestPanel panel = new QuestPanel();
+    public static QuestGame game = new QuestGame();
+	public static Set<Integer> keys = new HashSet<Integer>(0);
+	
+    public static Timer time = new Timer(5, new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            game.tick();
+            panel.repaint();
+        }
+    });
     
 	public void run() {
         System.out.println();
 	    System.out.println("---------------------");
-	    System.out.println(gameName + " " + version);
+	    System.out.println(GAME_NAME + " " + VERSION);
         System.out.println("---------------------");
         System.out.println();
 	    
-		final JFrame frame = new JFrame(gameName + " " + version);
         frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         frame.setMinimumSize(new Dimension(700, 600));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setBackground(Color.BLACK);
 		
-		final QuestPanel questPanel = new QuestPanel(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
-		V.qPanel = questPanel;
-		frame.add(questPanel);
+		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                questPanel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
+                panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
             }
         });
 		
 		Tiles.initGraphics();
+		SoundEngine.initSounds();
 		
-		final QuestMap questMap = new QuestMap(500, 500);
-		V.qMap = questMap;
-		
-		final QuestGame questGame = new QuestGame();
-		V.qGame = questGame;
-		
-		V.time.start();
+		time.start();
 	}
 
 	public static void main(String[] args) {

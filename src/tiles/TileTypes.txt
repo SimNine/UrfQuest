@@ -1,4 +1,5 @@
 Tile Types:
+-1 - Void (property-less black tile)
 0 - Dirt
 1 - Stone
 2 - Grass
@@ -6,3 +7,4 @@ Tile Types:
 4 - HealthPad
 5 - HurtPad
 6 - SpeedPad
+7 - Tree

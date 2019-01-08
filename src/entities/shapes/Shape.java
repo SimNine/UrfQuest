@@ -2,6 +2,7 @@ package entities.shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 
 import entities.Entity;
 import framework.V;
@@ -18,6 +19,7 @@ public abstract class Shape extends Entity {
 		super(x, y);
 		color = c;
 		this.diameter = diameter;
+		this.bounds = new Rectangle2D.Double(x, y, diameter, diameter);
 	}
 
 	@Override

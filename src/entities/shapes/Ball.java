@@ -10,7 +10,6 @@ public class Ball extends Shape {
 
 	public Ball(double x, double y, Color c, double diameter) {
 		super(x, y, c, diameter);
-		bounds = new Ellipse2D.Double(x - diameter/2, y - diameter/2, diameter, diameter);
 		type = "ball";
 		Xacceleration = 0.001;
 		Yacceleration = 0.001;
@@ -42,7 +41,5 @@ public class Ball extends Shape {
 		
 		Xpos += Xvelocity;
 		Ypos += Yvelocity;
-		
-		bounds = new Ellipse2D.Double(Xpos - diameter/2, Ypos - diameter/2, diameter, diameter);
 	}
 }
