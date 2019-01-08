@@ -12,7 +12,6 @@ public class Key extends Item {
 
 	public Key(double x, double y) {
 		super(x, y);
-		type = "key";
 		isStackable = true;
 		if (keyPic == null) {
 			try {

@@ -14,31 +14,33 @@ public class Tiles {
 	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
-	private static BufferedImage[] tileImages = new BufferedImage[9];
+	private static BufferedImage[] tileImages = new BufferedImage[10];
 	
 	private static boolean[][] tileBooleanProperties = 
 		   //walkable	//penetrable
 		{ {true,		true},//0
 		  {false,		false},
-		  {true,		true},
+		  {true,		true},//2
 		  {true,		true},
 		  {true,		true},//4
 		  {true,		true},
-		  {true,		true},
+		  {true,		true},//6
 		  {false,		false},
-		  {false,		true} };
+		  {false,		true},//8
+		  {true,		true}};
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
 		{ {new Color(179, 136, 37).getRGB()},//0
 		  {Color.LIGHT_GRAY.getRGB()},
-		  {Color.GREEN.darker().getRGB()},
+		  {Color.GREEN.darker().getRGB()},//2
 		  {Color.BLUE.getRGB()},
 		  {Color.RED.getRGB()},//4
 		  {Color.DARK_GRAY.getRGB()},
-		  {Color.GREEN.getRGB()},
+		  {Color.GREEN.getRGB()},//6
 		  {Color.GREEN.darker().darker().getRGB()},
-		  {Color.BLUE.getRGB()} };
+		  {Color.BLUE.getRGB()},//8
+		  {Color.YELLOW.brighter().getRGB()}	};
 	
 	public static void initGraphics() {
 		try {
@@ -106,6 +108,13 @@ public class Tiles {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "water.png");
+		}
+		
+		try {
+			tileImages[9] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "sand.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "sand.png");
 		}
 	}
 	

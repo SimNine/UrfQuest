@@ -12,7 +12,6 @@ public class Gem extends Item {
 
 	public Gem(double x, double y) {
 		super(x, y);
-		type = "gem";
 		isStackable = true;
 		if (gemPic == null) {
 			try {

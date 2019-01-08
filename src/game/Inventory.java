@@ -17,6 +17,7 @@ public class Inventory {
 		}
 	}
 	
+	// gets a collection of all entries in the inventory
 	public Collection<InventoryEntry> getInventoryEntries() {
 		ArrayList<InventoryEntry> e = new ArrayList<InventoryEntry>();
 		for (int i = 0; i < entries.length; i++) {
@@ -30,10 +31,11 @@ public class Inventory {
 		return e;
 	}
 	
+	// finds either an empty slot for the item, or adds it to a preexisting stack
 	public boolean addItem(Item i) {
 		if (i.isStackable()) { // if the item is stackable
 			if (hasItem(i)) { // if the item already has a stack
-				entries[findIndexOfEntry(i.getType())].incNumItems(1);
+				entries[findIndexOfEntry(i)].incNumItems(1);
 				return true;
 			} else { // if the item doesn't already have a stack
 				int place = nextOpenSlot();
@@ -57,6 +59,8 @@ public class Inventory {
 		}
 	}
 	
+	// takes one of the selected item out of the stack and returns it
+	// (removes the stack if the item is unstackable)
 	public Item removeOneOfSelectedItem() {
 		if (!entries[selectedEntry].isEmpty()) {
 			Item i = entries[selectedEntry].getItem().clone();
@@ -85,7 +89,11 @@ public class Inventory {
 	}
 	
 	public boolean hasItem(Item i) {
-		return (findIndexOfEntry(i.getType()) != -1);
+		return (findIndexOfEntry(i) != -1);
+	}
+	
+	public void useSelectedItem() {
+		entries[selectedEntry].useItem();
 	}
 	
 	// finds index of next open slot. returns -1 if no open slots
@@ -99,10 +107,10 @@ public class Inventory {
 	}
 	
 	// finds the first index of the given type of item, -1 if it isn't in the inventory
-	private int findIndexOfEntry(String s) {
-		for (int i = 0; i < entries.length; i++) {
-			if (!entries[i].isEmpty() && entries[i].getType().equals(s)) {
-				return i;
+	private int findIndexOfEntry(Item i) {
+		for (int j = 0; j < entries.length; j++) {
+			if (!entries[j].isEmpty() && entries[j].getItem().getClass() == i.getClass()) {
+				return j;
 			}
 		}
 		return -1;

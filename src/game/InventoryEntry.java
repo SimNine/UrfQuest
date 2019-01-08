@@ -9,6 +9,7 @@ public class InventoryEntry {
 	private boolean isEmpty;
 	private boolean isSelected;
 	private int numItems;
+	private int cooldownState;
 	private Item item;
 	
 	public InventoryEntry() {
@@ -25,10 +26,26 @@ public class InventoryEntry {
 		this.numItems = 1;
 	}
 	
-	public String getType() {
-		return this.item.getType();
+	public void update() {
+		if (cooldownState > 0) {
+			cooldownState--;
+		}
 	}
 	
+	public void useItem() {
+		if (item.getCooldown() == -1) {
+			return; // the item isn't usable
+		}
+		
+		if (this.cooldownState == 0) { // the item is fully cooled down
+			item.use();
+			cooldownState = item.getCooldown();
+		} else {
+			return;
+		}
+	}
+	
+	// getters and setters
 	public Item getItem() {
 		return item;
 	}
@@ -39,6 +56,10 @@ public class InventoryEntry {
 	
 	public void incNumItems(int n) {
 		numItems += n;
+	}
+	
+	public double getCooldownPercentage() {
+		return cooldownState/(double)item.getCooldown();
 	}
 	
 	public boolean isStack() {

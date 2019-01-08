@@ -35,6 +35,8 @@ public class CommandProcessor {
 					+ "\"give (item name) [amount]\"\n"
 					+ "\"spawn (mob name) [amount]\"\n"
 					+ "\"set (health/mana/speed) (0-100)\"\n"
+					+ "\"tp (xpos) (ypos)\"\n"
+					+ "\"tprel (xoffset) (yoffset)\"\n"
 					+ "\"home\"", 
 					"command help", JOptionPane.INFORMATION_MESSAGE);
 		} else if (args[0].equals("give")) {
@@ -72,9 +74,9 @@ public class CommandProcessor {
 			Player p = UrfQuest.game.getPlayer();
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("chicken")) {
-					UrfQuest.game.getCurrMap().mobs.add(new Chicken(p.getPosition()[0], p.getPosition()[1]));
+					UrfQuest.game.getCurrMap().mobs.add(new Chicken(p.getPos()[0], p.getPos()[1]));
 				} else if (args[1].equals("cyclops")) {
-					UrfQuest.game.getCurrMap().mobs.add(new Cyclops(p.getPosition()[0], p.getPosition()[1]));
+					UrfQuest.game.getCurrMap().mobs.add(new Cyclops(p.getPos()[0], p.getPos()[1]));
 				}
 			}
 		} else if (args[0].equals("set")) {
@@ -83,12 +85,14 @@ public class CommandProcessor {
 			} else if (args[1].equals("mana")) {
 				UrfQuest.game.player.setMana(Double.parseDouble(args[2]));
 			} else if (args[1].equals("speed")) {
-				UrfQuest.game.player.setSpeed(Double.parseDouble(args[2])/100.0);
-			} else if (args[1].equals("pos")) {
-				UrfQuest.game.player.setPosition(Double.parseDouble(args[2]), Double.parseDouble(args[3]));
+				UrfQuest.game.player.setVelocity(Double.parseDouble(args[2])/100.0);
 			}
 		} else if (args[0].equals("home")) {
-			UrfQuest.game.player.setPosition(250, 250);
+			UrfQuest.game.player.setPos(250, 250);
+		} else if (args[0].equals("tp")) {
+			UrfQuest.game.player.setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+		} else if (args[0].equals("tprel")) {
+			UrfQuest.game.player.move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

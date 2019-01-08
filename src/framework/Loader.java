@@ -105,8 +105,8 @@ public class Loader {
 				// for each item (in this case, only keys exist), write coords
 				for (i = 0; i < map.items.size(); i++) {
 					Item curr = map.items.get(i);
-					bos.writeDouble(curr.getPosition()[0]);
-					bos.writeDouble(curr.getPosition()[1]);
+					bos.writeDouble(curr.getPos()[0]);
+					bos.writeDouble(curr.getPos()[1]);
 				}
 			}
 
@@ -114,13 +114,13 @@ public class Loader {
 			Player p = UrfQuest.game.getPlayer();
 
 			// write the current location of the player
-			bos.writeDouble(p.getPosition()[0]);
-			bos.writeDouble(p.getPosition()[1]);
+			bos.writeDouble(p.getPos()[0]);
+			bos.writeDouble(p.getPos()[1]);
 
 			// write the current stats of the player
 			bos.writeDouble(p.getHealth());
 			bos.writeDouble(p.getMana());
-			bos.writeDouble(p.getSpeed());
+			bos.writeDouble(p.getVelocity());
 
 			bos.flush();
 			bos.close();
@@ -220,7 +220,7 @@ public class Loader {
 			Player p = new Player(xPos, yPos);
 			p.setHealth(health);
 			p.setMana(mana);
-			p.setSpeed(speed);
+			p.setVelocity(speed);
 
 			// set the player
 			UrfQuest.game.setPlayer(p);

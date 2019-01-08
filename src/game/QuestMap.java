@@ -77,7 +77,7 @@ public class QuestMap {
 		for (Item i : items) {
 			if (UrfQuest.game.player.collides(i)) {
 				if (UrfQuest.debug) {
-					System.out.println("player collided with object: " + i.getType());
+					System.out.println("player collided with object: " + i.getClass().getName());
 				}
 				if (UrfQuest.game.player.addItem(i)) {
 					removeItems.add(i);
@@ -92,7 +92,7 @@ public class QuestMap {
 			m.update();
 			if (UrfQuest.game.player.collides(m)) {
 				if (UrfQuest.debug) {
-					System.out.println("player collided with object: " + m.getType());
+					System.out.println("player collided with object: " + m.getClass().getName());
 				}
 			}
 		}
@@ -109,9 +109,16 @@ public class QuestMap {
 		for (Particle p : particles) {
 			for (Mob m : mobs) {
 				if (p.collides(m)) {
-					removeMobs.add(m);
+					m.incrementHealth(-5.0);
 					removeParticles.add(p);
 				}
+			}
+		}
+		
+		// clean up dead mobs
+		for (Mob m : mobs) {
+			if (m.isDead()) {
+				removeMobs.add(m);
 			}
 		}
 
@@ -130,8 +137,10 @@ public class QuestMap {
 		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (terrainNoise[x][y] > .5f) {
+				if (terrainNoise[x][y] > .55f) {
 					end[x][y] = 2;
+				} else if (terrainNoise[x][y] > .5f) {
+					end[x][y] = 9;
 				} else {
 					end[x][y] = 8;
 				}
@@ -261,7 +270,7 @@ public class QuestMap {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
-				if (map[x][y] == 2 && Math.random() < 0.001) {
+				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
 					if (Math.random() > .05) {
 						mobs.add(new Chicken(x, y));
 					} else {

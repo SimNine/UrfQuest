@@ -15,7 +15,6 @@ public class Cyclops extends Mob {
 
 	public Cyclops(double x, double y) {
 		super(x, y);
-		type = "cyclops";
 		animStage = (int)(Math.random()*200.0);
 		if (pic == null) {
 			initCyclops();
@@ -23,6 +22,9 @@ public class Cyclops extends Mob {
 		bounds = new Rectangle2D.Double(x, y, 
 										pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 										pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
+		velocity = 0.01;
+		health = 50.0;
+		maxHealth = 50.0;
 	}
 	
 	public static void initCyclops() {
@@ -37,32 +39,38 @@ public class Cyclops extends Mob {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPosition()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPosition()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
 					null);
+		drawHealthBar(g);
 	}
 
 	public void update() {
 		final int INTERVAL_SIZE = 500;
+		
+		if (healthbarVisibility > 0) {
+			healthbarVisibility--;
+		}
 	
 		switch (animStage/INTERVAL_SIZE) {
 		case 0:
-			bounds.setRect(bounds.getX()-0.01, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+			direction = 180;
 			break;
 		case 1:
-			bounds.setRect(bounds.getX(), bounds.getY()-0.01, bounds.getWidth(), bounds.getHeight());
+			direction = 270;
 			break;
 		case 2:
-			bounds.setRect(bounds.getX()+0.01, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+			direction = 0;
 			break;
 		case 3:
-			bounds.setRect(bounds.getX(), bounds.getY()+0.01, bounds.getWidth(), bounds.getHeight());
+			direction = 90;
 			break;
 		case 4:
 			animStage = -1;
 			break;
 		}
 		animStage++;
+		attemptMove(direction);
 	}
 
 }

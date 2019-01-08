@@ -10,10 +10,6 @@ import framework.UrfQuest;
 
 public abstract class Entity {
 	protected Rectangle2D.Double bounds;
-
-	// default values
-	protected String type;
-	protected String orientation = "N";
 	protected int animStage = 0;
 	
 	protected Entity(double x, double y) {
@@ -23,8 +19,10 @@ public abstract class Entity {
 	// Drawing methods
 	public void draw(Graphics g) {
 		drawEntity(g);
-		if (UrfQuest.debug) drawDebug(g);
-		if (UrfQuest.debug) drawBounds(g);
+		if (UrfQuest.debug) {
+			drawDebug(g);
+			drawBounds(g);
+		}
 	}
 	
 	protected abstract void drawEntity(Graphics g);
@@ -34,8 +32,8 @@ public abstract class Entity {
 	private void drawBounds(Graphics g) {
 		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.RED);
-		g.drawRect((int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH), 
-				   (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH),
+		g.drawRect((int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH), 
+				   (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH),
 				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}
 	
@@ -48,7 +46,7 @@ public abstract class Entity {
 	}
 	
 	// sets the entity's position, NOT checking for validity of move
-	public void setPosition(double x, double y) {
+	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 	}
 	
@@ -59,15 +57,10 @@ public abstract class Entity {
 	}
 	
 	// gets the object's position as a double array with length 2 (x, y)
-	public double[] getPosition() {
+	public double[] getPos() {
 		double[] ret = new double[2];
 		ret[0] = bounds.getX();
 		ret[1] = bounds.getY();
 		return ret;
-	}
-	
-	// returns a string representing the type of entity
-	public String getType() {
-		return type;
 	}
 }

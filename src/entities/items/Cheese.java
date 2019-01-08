@@ -12,7 +12,6 @@ public class Cheese extends Item {
 
 	public Cheese(double x, double y) {
 		super(x, y);
-		type = "cheese";
 		isStackable = true;
 		if (cheesePic == null) {
 			try {

@@ -5,14 +5,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.particles.Particle;
 import framework.UrfQuest;
 
 public class Pistol extends Item {
 	public static BufferedImage pistolPic;
+	private static final int COOLDOWN = 100;
 
 	public Pistol(double x, double y) {
 		super(x, y);
-		type = "pistol";
 		isStackable = false;
 		if (pistolPic == null) {
 			try {
@@ -24,10 +25,16 @@ public class Pistol extends Item {
 		}
 		itemPic = pistolPic;
 	}
-
-	@Override
-	public void update() {
-		// nothing here
+	
+	public void use() {
+		double[] pos = UrfQuest.game.player.getPos();
+		int dir = UrfQuest.game.player.getDirection() + (int)((Math.random() - 0.5)*20);
+		UrfQuest.game.getCurrMap().addParticle(new Particle(pos[0], pos[1], dir));
+	}
+	
+	// getters and setters
+	public int getCooldown() {
+		return COOLDOWN;
 	}
 
 }

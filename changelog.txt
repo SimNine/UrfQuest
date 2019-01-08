@@ -177,3 +177,15 @@ NOTE: Inventory code is a bit messy. Might be good idea to rewrite item system.
 -The tree tile is now initialized as a single bufferedimage; it no longer has to be drawn with two images
 -Added "Cyclops" mob, moves more slowly than chicken, but in the same pattern
 -Added rudimentary console, accessible by pressing F1 when debug mode is on
+
+0.13.0 - 1/4/17
+-Added "tp" command (teleports player to absolute position)
+-Added "tprel" command (moves player by an offset)
+-Modified player class (and all mobs, by default) to use a degree-based direction system instead of a hardcoded one
+-Added tile collision for mobs, in the same way that it is implemented for the player
+-Removed the "getType()" entity method and replaced it with "instanceof" in all applicable cases
+-Added "use()" method to item, delegated pistol and smg's bullet-firing to it
+-Added cooldown functionality to items, using inventory slots
+-Added health functionality to mobs, and health bars that render and fade automatically
+-Added sand tile (walkable and penetrable)
+Note: Loader has been broken since v0.11.0

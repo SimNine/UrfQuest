@@ -15,12 +15,14 @@ public class Chicken extends Mob {
 	
 	public Chicken(double x, double y) {
 		super(x, y);
-		type = "chicken";
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		animStage = (int)(Math.random()*200.0);
 		if (pic == null) {
 			initChicken();
 		}
+		velocity = 0.1;
+		health = 10.0;
+		maxHealth = 10.0;
 	}
 	
 	public static void initChicken() {
@@ -35,31 +37,37 @@ public class Chicken extends Mob {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPosition()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPosition()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
 					null);
+		drawHealthBar(g);
 	}
 
 	public void update() {
 		final int INTERVAL_SIZE = 50;
 		
+		if (healthbarVisibility > 0) {
+			healthbarVisibility--;
+		}
+		
 		switch (animStage/INTERVAL_SIZE) {
 		case 0:
-			bounds.setRect(bounds.getX()-0.1, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+			direction = 180;
 			break;
 		case 1:
-			bounds.setRect(bounds.getX(), bounds.getY()-0.1, bounds.getWidth(), bounds.getHeight());
+			direction = 270;
 			break;
 		case 2:
-			bounds.setRect(bounds.getX()+0.1, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+			direction = 0;
 			break;
 		case 3:
-			bounds.setRect(bounds.getX(), bounds.getY()+0.1, bounds.getWidth(), bounds.getHeight());
+			direction = 90;
 			break;
 		case 4:
 			animStage = -1;
 			break;
 		}
 		animStage++;
+		attemptMove(direction);
 	}
 }

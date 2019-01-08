@@ -16,8 +16,25 @@ public abstract class Item extends Entity {
 	protected boolean isStackable;
 	protected static final String assetPath = "/assets/items/";
 	
+	protected Item(double x, double y) {
+		super(x, y);
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	}
+	
+	public void use() {
+		// does nothing by default
+	}
+	
+	public void update() {
+		// does nothing by default
+	}
+	
+	public int getCooldown() {
+		return -1; // should be overridden if needed; -1 indicated cooldown is not applicable
+	}
+	
 	public Item clone() {
-		double[] pos = this.getPosition();
+		double[] pos = this.getPos();
 		Item ret = null;
 		if (this instanceof Key) {
 			ret = new Key(pos[0], pos[1]);
@@ -30,23 +47,18 @@ public abstract class Item extends Entity {
 		} else if (this instanceof Cheese) {
 			ret = new Cheese(pos[0], pos[1]);
 		}
-		ret.type = this.getType();
 		ret.isStackable = this.isStackable;
 		ret.itemPic = this.itemPic;
 		ret.bounds = (Double) this.bounds.clone();
 		return ret;
 	}
 	
-	protected Item(double x, double y) {
-		super(x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
-	}
-	
+	// drawing methods
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(itemPic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPosition()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPosition()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
 					null);
 	}
 
@@ -54,13 +66,14 @@ public abstract class Item extends Entity {
 		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
 		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
-					 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-					 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+					 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+					 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
 		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-				 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+				 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+				 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
 	};
 	
+	// getters and setters
 	public BufferedImage getPic() {
 		return itemPic;
 	}
