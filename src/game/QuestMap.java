@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import entities.Entity;
@@ -7,10 +8,12 @@ import entities.items.Item;
 import entities.items.Key;
 import framework.SimplexNoise;
 import framework.UrfQuest;
+import tiles.Tiles;
 
 public class QuestMap {
 	
 	private int[][] map;
+	private BufferedImage minimap;
 	public ArrayList<Entity> entities;
 	public ArrayList<Item> items;
 	
@@ -18,6 +21,20 @@ public class QuestMap {
 		map = new int[width][height];
 		entities = new ArrayList<Entity>();
 		items = new ArrayList<Item>();
+	}
+	
+	public void generateMinimap() {
+		minimap = new BufferedImage(map.length, map[0].length, BufferedImage.TYPE_4BYTE_ABGR);
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				int color = Tiles.minimapColor(this.getTileAt(x, y));
+				minimap.setRGB(x, y, color);
+			}
+		}
+	}
+	
+	public BufferedImage getMinimap() {
+		return minimap;
 	}
 	
 	public void update() {

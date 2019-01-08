@@ -53,16 +53,6 @@ public class QuestPanel extends JPanel {
 						repaint();
 					}
 				}
-				
-				if (e.getKeyCode() == KeyEvent.VK_S) {
-					Loader.saveGame();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_L) {
-					Loader.loadGame();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_Z) {
-					UrfQuest.game.cycleMinimapZoom();
-				}
 				if (e.getKeyCode() == KeyEvent.VK_X) {
 					UrfQuest.game.cycleMinimapSize();
 				}

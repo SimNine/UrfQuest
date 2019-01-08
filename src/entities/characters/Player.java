@@ -210,15 +210,15 @@ public class Player extends Entity {
 					null);
 	}
 	
-//	protected void drawDebug(Graphics g) {
-//		g.setColor(Color.BLACK);
-//		g.drawString("orientation: " + this.orientation, 
-//					 UrfQuest.panel.dispCenterX, 
-//					 UrfQuest.panel.dispCenterY);
-//		g.drawString("moveStage: " + this.moveStage, 
-//					 UrfQuest.panel.dispCenterX, 
-//					 UrfQuest.panel.dispCenterY + 10);
-//	}
+	protected void drawDebug(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.drawString("orientation: " + this.orientation, 
+					 UrfQuest.panel.dispCenterX, 
+					 UrfQuest.panel.dispCenterY);
+		g.drawString("moveStage: " + this.moveStage, 
+					 UrfQuest.panel.dispCenterX, 
+					 UrfQuest.panel.dispCenterY + 10);
+	}
 
 	@Override
 	public void update() {
@@ -226,19 +226,19 @@ public class Player extends Entity {
 		
 		String newOrientation = "";
 		
-		if (UrfQuest.keys.contains(KeyEvent.VK_UP)) {
+		if (UrfQuest.keys.contains(KeyEvent.VK_W)) {
 			attemptMove(1);
 			newOrientation += "N";
 		}
-		if (UrfQuest.keys.contains(KeyEvent.VK_DOWN)) {
+		if (UrfQuest.keys.contains(KeyEvent.VK_S)) {
 			attemptMove(2);
 			newOrientation += "S";
 		}
-		if (UrfQuest.keys.contains(KeyEvent.VK_LEFT)) {
+		if (UrfQuest.keys.contains(KeyEvent.VK_A)) {
 			attemptMove(3);
 			newOrientation += "W";
 		}
-		if (UrfQuest.keys.contains(KeyEvent.VK_RIGHT)) {
+		if (UrfQuest.keys.contains(KeyEvent.VK_D)) {
 			attemptMove(4);
 			newOrientation += "E";
 		}

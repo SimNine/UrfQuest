@@ -115,3 +115,20 @@ NOTE: MapLoader is completely fucked
 -Added Tiles.minimapColor(t) which gets the color to be shown on the minimap for a certain type of tile
 -Added functions to cycle through minimap size multipliers and zoom multipliers
 -Added keyListener to listen for keypress of Z, which toggles map zoom, and X, which toggles map size
+
+0.10.0 - 12/24/16
+(The Efficiency Update)
+-Added Huffman compression for map saves
+--Created a new utility library
+--Added a modified Huffman compressor (from CIS 121) to utility library
+--Added a binary reader and writer from Princeton's standard library to utility library
+	This was necessary to write single bits to file
+--Huffman might not be necessary; generating the encoding map takes the vast majority of time
+	It might be a better idea to use predetermined values for common tiles
+-Reimplemented minimap more efficiently
+--Only one zoom level of minimap
+--Minimap is now generated after initialization of map
+--Minimap is cropped accordingly on draw
+--Drawback: must re-render minimap every time the map changes, must be done manually
+-Disabled keypress of S for saving and L for loading
+-Switched movement keys to WASD

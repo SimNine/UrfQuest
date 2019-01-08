@@ -17,8 +17,7 @@ import tiles.Tiles;
 
 public class QuestGame {
 
-	private int minimapSize = 200;
-	private int minimapZoom = 1;
+	private int minimapSize = 100; // either 1 (100px across), 2 (200px across), or 3 (300px across)
 	private QuestMap currMap;
 	private ArrayList<QuestMap> maps;
 	private boolean guiVisible;
@@ -29,6 +28,7 @@ public class QuestGame {
 	public QuestGame() {
 		currMap = new QuestMap(500, 500);
 		currMap.generateSimplexNoiseMap();
+		currMap.generateMinimap();
 		currMap.generateKeys();
 
 		maps = new ArrayList<QuestMap>();
@@ -88,16 +88,6 @@ public class QuestGame {
 
 	public boolean isGUIVisible() {
 		return guiVisible;
-	}
-	
-	public void cycleMinimapZoom() {
-		if (minimapZoom == 1) {
-			minimapZoom = 2;
-		} else if (minimapZoom == 2) {
-			minimapZoom = 3;
-		} else {
-			minimapZoom = 1;
-		}
 	}
 	
 	public void cycleMinimapSize() {
@@ -184,36 +174,41 @@ public class QuestGame {
 	}
 
 	private void drawMinimap(Graphics g) {
-		int mapWidth = minimapSize;
-		int mapHeight = minimapSize;
-		int halfWidth = mapWidth/2;
-		int halfHeight = mapHeight/2;
-		BufferedImage img = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_4BYTE_ABGR);
-		for (int x =  -halfWidth; x < halfWidth; x++) {
-			for (int y =  -halfHeight; y < halfHeight; y++) {
-				int color = Tiles.minimapColor(currMap.getTileAt(
-						(int) player.getPosition()[0] + x*minimapZoom,
-						(int) player.getPosition()[1] + y*minimapZoom));
-				img.setRGB(x + halfWidth, y + halfHeight, color);
-			}
-		}
-
-		int rootX = UrfQuest.panel.getWidth() - mapWidth - 20;
+		BufferedImage minimap = this.currMap.getMinimap();
+		
+		int rootX = UrfQuest.panel.getWidth() - minimapSize - 20;
 		int rootY = 20;
 		g.setColor(Color.BLACK);
-		g.fillRect(rootX - 5, rootY - 5, mapWidth + 10, mapHeight + 10);
-		g.drawImage(img, rootX, rootY, null);
+		g.fillRect(rootX - 5, rootY - 5, minimapSize + 10, minimapSize + 10);
+		
+		int cropX = (int)player.getPosition()[0] - minimapSize/2;
+		int cropY = (int)player.getPosition()[1] - minimapSize/2;
+		if (cropX < 0) {
+			cropX = 0;
+		}
+		if (cropY < 0) {
+			cropY = 0;
+		}
+		if (cropX + minimapSize > minimap.getWidth()) {
+			cropX = minimap.getWidth() - minimapSize;
+		}
+		if (cropY + minimapSize > minimap.getHeight()) {
+			cropY = minimap.getHeight() - minimapSize;
+		}
+		
+		minimap = minimap.getSubimage(cropX, cropY, minimapSize, minimapSize);
+		g.drawImage(minimap, rootX, rootY, null);
 	}
 
 	private void drawKeyCounter(Graphics g) {
 		g.setColor(new Color(128, 128, 128, 180));
 		g.fillRect(UrfQuest.panel.getWidth() - 120, UrfQuest.panel.getHeight() - 80, 120, 80);
 
-		g.drawImage(Key.getPic(), UrfQuest.panel.getWidth() - 110, UrfQuest.panel.getHeight() - 70, 60, 60, null);
+		g.drawImage(Key.getPic(), UrfQuest.panel.getWidth() - 115, UrfQuest.panel.getHeight() - 70, 50, 50, null);
 
 		g.setColor(Color.YELLOW);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
-		g.drawString("" + keyCount, UrfQuest.panel.getWidth() - 60, UrfQuest.panel.getHeight() - 30);
+		g.drawString("" + keyCount, UrfQuest.panel.getWidth() - 65, UrfQuest.panel.getHeight() - 30);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
 
