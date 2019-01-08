@@ -63,4 +63,11 @@ public abstract class Entity {
 		ret[1] = bounds.getY();
 		return ret;
 	}
+	
+	public double[] getCenter() {
+		double[] ret = new double[2];
+		ret[0] = bounds.getCenterX();
+		ret[1] = bounds.getCenterY();
+		return ret;
+	}
 }

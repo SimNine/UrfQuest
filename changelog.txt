@@ -206,3 +206,22 @@ NEW NUMBERING SYSTEM:
 majorelease.update.bugfix_checkpoint
 This was necessary due to the size of the next update.
 The checkpoint is to ensure I don't break the code and not know how to fix it.
+
+0.15.0_pre1 - 1/7/17
+(The GUI/AI Update)
+-Rebuild of entire GUI system
+--Each GUIelement is now passed its relative anchor point (each corner, or the screen center)
+--Moved status bars into their own class extending GUIObject
+--Moved minimap into its own class extending GUIObject
+--Moved inventory bar into its own class extending GUIObject
+--Converted QuestGame into an overlay
+--Minimap can now be toggled off completely
+--Added rendering of the board's grid itself when debug is on
+--Added vertical and horizontal lines to indicate where the mouse is when it is over a GUIObject
+-Addition of rudimentary AI system
+--Added MobAction abstract class and MoveAction and IdleAction classes
+--Added MobRoutine abstract class and IdleRoutine and FleeRoutine
+---Within each entity class's update() method, the current scenario is evaluated whenever the Mob's think() method is called
+---The think() method determines which routine will be used, and the routine assembles a (possibly random) order of actions
+---The mob then moves according to the mob's current routine's current action
+--Added AI for chicken; idles until the player is within 5 blocks, then runs away from the player until 5+ blocks away

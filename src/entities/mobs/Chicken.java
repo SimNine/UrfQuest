@@ -4,25 +4,33 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
+import entities.mobs.ai.routines.FleeRoutine;
+import entities.mobs.ai.routines.IdleRoutine;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
 public class Chicken extends Mob {
 	private static BufferedImage pic;
+	private int thinkingDelay;
+	private final int intelligence;
 	
 	public Chicken(double x, double y) {
 		super(x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		animStage = (int)(Math.random()*200.0);
+		velocity = 0.02;
+		health = 10.0;
+		maxHealth = 10.0;
+		
 		if (pic == null) {
 			initChicken();
 		}
-		velocity = 0.1;
-		health = 10.0;
-		maxHealth = 10.0;
+		
+		routine = new IdleRoutine(this);
+		intelligence = 50;
+		thinkingDelay = intelligence;
 	}
 	
 	public static void initChicken() {
@@ -37,37 +45,40 @@ public class Chicken extends Mob {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - bounds.getY())*tileWidth), 
 					null);
 		drawHealthBar(g);
 	}
 
 	public void update() {
-		final int INTERVAL_SIZE = 50;
-		
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
 		
-		switch (animStage/INTERVAL_SIZE) {
-		case 0:
-			direction = 180;
-			break;
-		case 1:
-			direction = 270;
-			break;
-		case 2:
-			direction = 0;
-			break;
-		case 3:
-			direction = 90;
-			break;
-		case 4:
-			animStage = -1;
-			break;
+		// if the chicken can think again
+		thinkingDelay--;
+		if (thinkingDelay <= 0) {
+			think();
+			thinkingDelay = intelligence;
 		}
-		animStage++;
-		attemptMove(direction);
+		
+		// execute the current action
+		routine.update();
+		attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
+	}
+	
+	private void think() {
+		// if the chicken is within 10 blocks of the player, and it isn't fleeing already, flee
+		if (Math.abs(getPos()[0] - UrfQuest.game.getPlayer().getPos()[0]) < 5 &&
+			Math.abs(getPos()[1] - UrfQuest.game.getPlayer().getPos()[1]) < 5) {
+			if (!(routine instanceof FleeRoutine)) {
+				routine = new FleeRoutine(this, UrfQuest.game.getPlayer());
+			}
+		} else {
+			if (!(routine instanceof IdleRoutine)){
+				routine = new IdleRoutine(this);
+			}
+		}
 	}
 }

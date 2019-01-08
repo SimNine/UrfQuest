@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.items.Bone;
+import entities.mobs.ai.routines.IdleRoutine;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -26,6 +27,8 @@ public class Cyclops extends Mob {
 		velocity = 0.01;
 		health = 50.0;
 		maxHealth = 50.0;
+		
+		routine = new IdleRoutine(this);
 	}
 	
 	public static void initCyclops() {
@@ -40,8 +43,8 @@ public class Cyclops extends Mob {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - bounds.getY())*tileWidth), 
 					null);
 		drawHealthBar(g);
 	}
@@ -71,7 +74,7 @@ public class Cyclops extends Mob {
 			break;
 		}
 		animStage++;
-		attemptMove(direction);
+		attemptMove(direction, velocity);
 	}
 	
 	public void onDeath() {

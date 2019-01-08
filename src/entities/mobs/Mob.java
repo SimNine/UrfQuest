@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import entities.Entity;
+import entities.mobs.ai.routines.MobRoutine;
 import framework.QuestPanel;
 import framework.UrfQuest;
 import game.QuestMap;
@@ -16,6 +17,7 @@ public abstract class Mob extends Entity {
 	protected double health = 0;
 	protected double maxHealth = 0;
 	protected int healthbarVisibility = 0;
+	protected MobRoutine routine;
 
 	protected Mob(double x, double y) {
 		super(x, y);
@@ -28,10 +30,10 @@ public abstract class Mob extends Entity {
 	}
 	
 	// returns true if the move is valid (in one or both directions), returns false if not
-	protected boolean attemptMove(int dir) {
+	protected boolean attemptMove(int dir, double velocity) {
 		QuestMap currMap = UrfQuest.game.getCurrMap();
-		double newX = bounds.getX() + bounds.getWidth()/2.0;
-		double newY = bounds.getY() + bounds.getHeight()/2.0;
+		double newX = bounds.getCenterX();
+		double newY = bounds.getCenterY();
 		double xComp = velocity*Math.cos(Math.toRadians(dir));
 		double yComp = velocity*Math.sin(Math.toRadians(dir));
 		
@@ -81,12 +83,15 @@ public abstract class Mob extends Entity {
 	protected void drawDebug(Graphics g) {
 		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
-		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
+		g.drawString("bounds: (" + (int)bounds.getX() + "," + (int)bounds.getY() + ") " + bounds.getWidth() + "*" + bounds.getHeight(),
 					(int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
 					(int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
-		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 	(int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
-				 	(int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+		g.drawString(("routine: " + routine.getClass().getSimpleName()),
+			 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+			 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+		g.drawString(("action: " + routine.getCurrentAction().getClass().getSimpleName() + " duration: " + routine.getCurrentAction().getDuration()),
+		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+20);
 	};
 
 	// setters, getters, and incrementers
