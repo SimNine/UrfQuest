@@ -14,7 +14,7 @@ public abstract class Entity {
 	protected Rectangle2D.Double bounds;
 	
 	protected String orientation;
-	protected int moveStage = 0;
+	protected int animStage = 0;
 	
 	protected Entity(double x, double y) {
 		bounds = new Rectangle2D.Double(x, y, 1, 1);

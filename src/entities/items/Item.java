@@ -13,7 +13,7 @@ import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Item extends Entity {
-	public static BufferedImage keyPic, gunPic, gemPic;
+	public static BufferedImage keyPic, gunPic, gemPic, cheesePic;
 	protected BufferedImage itemPic;
 	protected boolean isStackable;
 	protected static final String assetPath = "/assets/items/";
@@ -28,13 +28,19 @@ public abstract class Item extends Entity {
 		try {
 			gunPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "gun_scaled_30px.png"));
 		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "gun_scaled.png");
+			System.out.println("Image could not be read at: " + assetPath + "gun_scaled_30px.png");
 			e.printStackTrace();
 		}
 		try {
 			gemPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "pink_gem_scaled_30px.png"));
 		} catch (IOException e) {
-			System.out.println("Image could not be read at: " + assetPath + "gem_scaled_30px.png");
+			System.out.println("Image could not be read at: " + assetPath + "pink_gem_scaled_30px.png");
+			e.printStackTrace();
+		}
+		try {
+			cheesePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "cheese_scaled_30px.png"));
+		} catch (IOException e) {
+			System.out.println("Image could not be read at: " + assetPath + "cheese_scaled_30px.png");
 			e.printStackTrace();
 		}
 	}
@@ -48,6 +54,8 @@ public abstract class Item extends Entity {
 			ret = new Gun(pos[0], pos[1]);
 		} else if (this instanceof Gem) {
 			ret = new Gem(pos[0], pos[1]);
+		} else if (this instanceof Cheese) {
+			ret = new Cheese(pos[0], pos[1]);
 		}
 		ret.type = this.getType();
 		ret.isStackable = this.isStackable;

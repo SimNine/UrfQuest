@@ -44,7 +44,7 @@ public class Tiles {
 		  {Color.RED.getRGB()},//4
 		  {Color.DARK_GRAY.getRGB()},
 		  {Color.GREEN.getRGB()},
-		  {Color.GREEN.brighter().getRGB()},
+		  {Color.GREEN.darker().darker().getRGB()},
 		  {Color.BLUE.getRGB()} };
 	
 	public static void initGraphics() {

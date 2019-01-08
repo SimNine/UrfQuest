@@ -178,34 +178,34 @@ public class Player extends Entity {
 	protected void drawEntity(Graphics g) {
 		final int STEP_SIZE = 15;
 		
-		if (moveStage/STEP_SIZE == 8) {
-			moveStage = -1;
+		if (animStage/STEP_SIZE == 8) {
+			animStage = -1;
 		}
 	
 		switch (orientation) {
 		case "N":
-			temp = N[moveStage/STEP_SIZE];
+			temp = N[animStage/STEP_SIZE];
 			break;
 		case "NE":
-			temp = NE[moveStage/STEP_SIZE];
+			temp = NE[animStage/STEP_SIZE];
 			break;
 		case "E":
-			temp = E[moveStage/STEP_SIZE];
+			temp = E[animStage/STEP_SIZE];
 			break;
 		case "SE":
-			temp = SE[moveStage/STEP_SIZE];
+			temp = SE[animStage/STEP_SIZE];
 			break;
 		case "S":
-			temp = S[moveStage/STEP_SIZE];
+			temp = S[animStage/STEP_SIZE];
 			break;
 		case "SW":
-			temp = SW[moveStage/STEP_SIZE];
+			temp = SW[animStage/STEP_SIZE];
 			break;
 		case "W":
-			temp = W[moveStage/STEP_SIZE];
+			temp = W[animStage/STEP_SIZE];
 			break;
 		case "NW":
-			temp = NW[moveStage/STEP_SIZE];
+			temp = NW[animStage/STEP_SIZE];
 			break;
 		}
 		
@@ -220,7 +220,7 @@ public class Player extends Entity {
 		g.drawString("orientation: " + this.orientation, 
 					 UrfQuest.panel.dispCenterX, 
 					 UrfQuest.panel.dispCenterY);
-		g.drawString("moveStage: " + this.moveStage, 
+		g.drawString("moveStage: " + this.animStage, 
 					 UrfQuest.panel.dispCenterX, 
 					 UrfQuest.panel.dispCenterY + 10);
 	}
@@ -252,9 +252,9 @@ public class Player extends Entity {
 		}
 		
 		if (newOrientation.equals(orientation)) {
-			this.moveStage++;
+			this.animStage++;
 		} else { // if (newOrientation != orientation)
-			this.moveStage = 0;
+			this.animStage = 0;
 			if (newOrientation != "NONE") {
 				orientation = newOrientation;
 			}

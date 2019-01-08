@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import entities.Entity;
+import entities.items.Cheese;
 import entities.items.Gem;
 import entities.items.Gun;
 import entities.items.Item;
@@ -39,8 +40,9 @@ public class QuestMap {
 		return minimap;
 	}
 	
-	// checks for collisions
+	// checks for collisions with the player
 	public void update() {
+		//int count = 0;
 		ArrayList<Item> remove = new ArrayList<Item>();
 		for (Item i : items) {
 			if (UrfQuest.game.player.collides(i)) {
@@ -53,7 +55,9 @@ public class QuestMap {
 					continue;
 				}
 			}
+			//count++;
 		}
+		//System.out.println("checking " + count + " potential collisions");
 		items.removeAll(remove);
 		remove.clear();
 	}
@@ -218,9 +222,11 @@ public class QuestMap {
 			for (int y = 0; y < map[0].length; y++) {
 				if (map[x][y] == 2 && Math.random() < 0.005) {
 					double rand = Math.random();
-					if (rand > .99) {
+					if (rand > .9975) {
+						items.add(new Cheese(x, y));
+					} else if (rand > .9875) {
 						items.add(new Key(x, y));
-					} else if (rand > .95) {
+					} else if (rand > .9375) {
 						items.add(new Gun(x, y));
 					} else {
 						items.add(new Gem(x, y));

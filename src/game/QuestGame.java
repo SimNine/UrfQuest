@@ -194,8 +194,25 @@ public class QuestGame {
 			cropY = minimap.getHeight() - minimapSize;
 		}
 		
+		// crop the map's minimap to fit the current size
 		minimap = minimap.getSubimage(cropX, cropY, minimapSize, minimapSize);
 		g.drawImage(minimap, rootX, rootY, null);
+		
+		// draw a square for each item currently on the minimap
+		g.setColor(Color.RED);
+		for (Item i : currMap.items) {
+			if ((int)i.getPosition()[0] > cropX && (int)i.getPosition()[0] < cropX + minimapSize &&
+				(int)i.getPosition()[1] > cropY && (int)i.getPosition()[1] < cropY + minimapSize) {
+				g.fillRect(rootX + ((int)i.getPosition()[0]-cropX) - 1, 
+						   rootY + ((int)i.getPosition()[1]-cropY) - 1, 3, 3);
+			}
+		}
+		
+		// draw a square for the player
+		g.setColor(Color.BLACK);
+		int playerIndX = rootX + ((int)player.getPosition()[0]-cropX);
+		int playerIndY = rootY + ((int)player.getPosition()[1]-cropY);
+		g.fillRect(playerIndX-2, playerIndY-2, 5, 5);
 	}
 	
 	private void drawInventoryBar(Graphics g) {

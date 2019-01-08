@@ -151,3 +151,8 @@ NOTE: MapLoader is completely fucked
 -Added selecting active item with number keys 0-9
 NOTE: Loader does not yet save inventory or varied item types
 NOTE: Inventory code is a bit messy. Might be good idea to rewrite item system.
+
+0.11.1 - 12/29/16
+-Added very rare cheese
+-Added minimap player location indicator
+-Added minimap item location indicator
