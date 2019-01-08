@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import display.QuestPanel;
+import framework.QuestPanel;
 
 public class Tiles {
 	private static BufferedImage grassTile;
@@ -19,18 +19,20 @@ public class Tiles {
 	private static BufferedImage speedPadTile;
 	private static BufferedImage hurtPadTile;
 	private static BufferedImage treeTile;
-	private static String tileRoot = "assets/tiles/";
+	private static BufferedImage waterTile;
+	private static String tileRoot = "src/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
 	private static boolean[][] tileProperties = 
 		   //walkable
-		{ {true},
+		{ {true},//0
 		  {false},
 		  {true},
 		  {true},
+		  {true},//4
 		  {true},
 		  {true},
-		  {true},
+		  {false},
 		  {false} };
 	
 	public static void initGraphics() {
@@ -89,6 +91,13 @@ public class Tiles {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "tree_scaled.png");
 		}
+		
+		try {
+			waterTile = ImageIO.read(new File(tileRoot + "water.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "water.png");
+		}
 	}
 	
 	public static void drawTile(Graphics g, int x, int y, int blockType) {
@@ -121,6 +130,8 @@ public class Tiles {
 		case 7:
 			Tiles.drawTreeTile(g, x, y);
 			break;
+		case 8:
+			Tiles.drawWaterTile(g, x, y);
 		}
 	}
 	
@@ -155,6 +166,10 @@ public class Tiles {
 	public static void drawTreeTile(Graphics g, int x, int y) {
 		g.drawImage(grassTile, x, y, null);
 		g.drawImage(treeTile, x+1, y+1, null);
+	}
+	
+	public static void drawWaterTile(Graphics g, int x, int y) {
+		g.drawImage(waterTile, x, y, null);
 	}
 	
 	// gets properties of tiles from boolean array

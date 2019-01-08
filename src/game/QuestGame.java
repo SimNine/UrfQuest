@@ -4,21 +4,25 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import display.QuestGUI;
-import display.QuestPanel;
 import entities.Entity;
 import entities.characters.Player;
 import framework.UrfQuest;
+import guis.QuestGUI;
+import framework.QuestPanel;
 import tiles.Tiles;
 
 public class QuestGame {
-	private QuestMap currMap = new QuestMap(500, 500);
-	private ArrayList<QuestMap> maps = new ArrayList<QuestMap>();
+	private QuestMap currMap;
+	private ArrayList<QuestMap> maps;
 	private Player player;
+	private boolean guiVisible;
 	
 	public QuestGame() {
-		maps.add(new QuestMap(500, 500));
+		currMap = new QuestMap(500, 500);
+		maps = new ArrayList<QuestMap>();
+		maps.add(currMap);
 		player = new Player(currMap.getWidth()/2.0, currMap.getHeight()/2.0);
+		guiVisible = false;
 	}
 	
 	public void tick() {
@@ -37,10 +41,24 @@ public class QuestGame {
 		return player;
 	}
 	
+	public void toggleGUIVisible() {
+		if (guiVisible) {
+			guiVisible = false;
+		} else {
+			guiVisible = true;
+		}
+	}
+	
+	public boolean isGUIVisible() {
+		return guiVisible;
+	}
+	
 	public void drawGame(Graphics g) {
 		drawBoard(g);
 		drawSprites(g);
-		drawStatusBars(g);
+		if (guiVisible) {
+			drawStatusBars(g);
+		}
 		
 		if (UrfQuest.debug) drawCrosshair(g);
 		if (UrfQuest.debug) drawDebug(g);

@@ -6,8 +6,11 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class SoundEngine {
-	private static String soundPath = "assets/sounds/";
+	public static int soundVol;
 
+	public static int musicVol;
+	
+	private static String soundPath = "src/assets/sounds/";
     private static Clip clip;
 	private static AudioInputStream mouseover, mouseclick;
 	

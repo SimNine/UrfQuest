@@ -26,7 +26,7 @@ public class Player extends Entity{
 						  W1, W2, W3, W4, W5, W6, W7, W8,
 						  temp;
 	
-	private final String assetPath = "assets/player/";
+	private final String assetPath = "src/assets/player/";
 	
 	private double health = 100.0;
 	private double mana = 100.0;

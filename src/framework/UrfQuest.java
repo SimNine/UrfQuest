@@ -11,14 +11,13 @@ import java.util.Set;
 
 import javax.swing.*;
 
-import display.QuestPanel;
+import framework.QuestPanel;
 import game.QuestGame;
 import tiles.Tiles;
 
-/** Main class that specifies the frame and widgets of the GUI
- */
+// The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.6.0";
+    private static final String VERSION = "0.7.0";
     private static final String GAME_NAME = "UrfQuest";
     
     public static final boolean debug = false;
@@ -26,6 +25,8 @@ public class UrfQuest implements Runnable {
     public static QuestPanel panel = new QuestPanel();
     public static QuestGame game = new QuestGame();
 	public static Set<Integer> keys = new HashSet<Integer>(0);
+	public static int[] mousePos = new int[2];
+	public static boolean mousePressed = false;
 	
     public static Timer time = new Timer(5, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -56,8 +57,6 @@ public class UrfQuest implements Runnable {
 		
 		Tiles.initGraphics();
 		SoundEngine.initSounds();
-		
-		time.start();
 	}
 
 	public static void main(String[] args) {

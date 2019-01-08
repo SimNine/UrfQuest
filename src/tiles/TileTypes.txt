@@ -8,3 +8,4 @@ Tile Types:
 5 - HurtPad
 6 - SpeedPad
 7 - Tree
+8 - Water

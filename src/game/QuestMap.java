@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import entities.Entity;
 import entities.shapes.Ball;
 import entities.shapes.Square;
+import framework.SimplexNoise;
 
 @SuppressWarnings("unused")
 public class QuestMap {
@@ -14,13 +15,53 @@ public class QuestMap {
 	public ArrayList<Entity> entities;
 	
 	public QuestMap(int width, int height) {
-		map = generateSavannahMap(width, height);
+		map = generateSimplexNoiseMap(width, height);
 		entities = generateEntities(0);
 	}
 	
 	public QuestMap(String levelfile) {
 		//map = load(levelfile);
 		//V.qMap = this;
+	}
+	
+	public static int[][] generateSimplexNoiseMap(int width, int height) {
+		int[][] end = new int[width][height];
+		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height);
+		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		
+		// generate land and water
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (terrainNoise[x][y] > .5f) {
+					end[x][y] = 2;
+				} else {
+					end[x][y] = 8;
+				}
+			}
+		}
+		
+		// generate trees (only on land tiles)
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (treeNoise[x][y]*2 -1 > Math.random() && end[x][y] == 2) {
+					end[x][y] = 7;
+				}
+			}
+		}
+		
+		// generate starting pad
+		for (int x = 240; x < 260; x++) {
+			for (int y = 240; y < 260; y++) {
+				end[x][y] = 2;
+			}
+		}
+		
+		end[245][245] = 3;
+		end[245][255] = 4;
+		end[255][255] = 5;
+		end[255][245] = 6;
+		
+		return end;
 	}
 	
 	public static int[][] generateSavannahMap(int width, int height) {

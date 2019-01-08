@@ -69,3 +69,13 @@ NOTE: MapLoader is completely fucked
 -Consolidated rendering of tiles and tile properties into Tiles class, using boolean "properties" array
 -Put all assets (pictures, sounds) into new "assets" folder and updated paths accordingly
 -MapLoader is still fucked, so are the Shape, Ball, and Square entity classes
+
+0.7.0 - 11/22/16
+-Imported menu GUI from Arcanists Clone 0.1.0 project
+-Enabled pause menu and main menu
+-Added unwalkable water tile
+-Added new map generation method using simplex noise; simplex noise generator taken from: 
+	http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+	This method has been modified to provide a different result every time by permuting the "perm[]" array
+-Player is now placed in an automatically generated open area with no trees
+-Gameplay GUI (status bars, etc) is hidden while in menus
