@@ -13,3 +13,15 @@
 --Checks what arrow keys are pressed down, moving the cursor appropriately
 -Whenever an arrow key is pressed, it is added to an array of keys. Whenever released, it is removed.
 -Status panel in upper-left corner displays all four coordinates
+
+0.2.0 - 2/5/16
+-Split up the game's logic and its display into separate components (questPanel --> questGame + questPanel)
+-Split the GamePanel rendering into several different methods:
+--drawBoard(g)
+--drawStatus(g)
+--drawCursor(g)
+-Optimized drawBoard(g) to use temporary variables instead of reiterating through computations for each tile
+-Removed the black edges from each tile
+-The cursor can no longer enter stone or null tiles
+-The movement-per-tick of the cursor is now constrained to a variable "speed" in questGame
+-Movement of the curson in each direction is now constrained to a method "attemptMove()"

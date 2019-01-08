@@ -51,8 +51,8 @@ public class FloorBlocks {
 		g.fillRect(x + W*1, y + H*9, W*2, H*1);
 		g.fillRect(x + W*6, y + H*9, W*2, H*1);
 		
-		g.setColor(Color.BLACK);
-		g.drawRect(x, y, W*10, H*10);
+		//g.setColor(Color.BLACK);
+		//g.drawRect(x, y, W*10, H*10);
 	}
 	
 	public static void drawStoneBlock(Graphics g, int x, int y, int s) {
@@ -101,8 +101,8 @@ public class FloorBlocks {
 		g.fillRect(x + W*1, y + H*9, W*2, H*1);
 		g.fillRect(x + W*6, y + H*9, W*2, H*1);
 		
-		g.setColor(Color.BLACK);
-		g.drawRect(x, y, W*10, H*10);
+		//g.setColor(Color.BLACK);
+		//g.drawRect(x, y, W*10, H*10);
 	}
 		
 	public static void drawDirtBlock(Graphics g, int x, int y, int s) {
@@ -151,7 +151,7 @@ public class FloorBlocks {
 		g.fillRect(x + W*1, y + H*9, W*2, H*1);
 		g.fillRect(x + W*6, y + H*9, W*2, H*1);
 		
-		g.setColor(Color.BLACK);
-		g.drawRect(x, y, W*10, H*10);
+		//g.setColor(Color.BLACK);
+		//g.drawRect(x, y, W*10, H*10);
 	}
 }
