@@ -13,7 +13,7 @@ import game.QuestMap;
 /** Main class that specifies the frame and widgets of the GUI
  */
 public class UrfQuest implements Runnable {
-    private String version = "0.2.0";
+    private String version = "0.4.0";
     private String gameName = "UrfQuest";
     
 	public void run() {
@@ -31,6 +31,7 @@ public class UrfQuest implements Runnable {
 		frame.setBackground(Color.BLACK);
 		
 		final QuestPanel questPanel = new QuestPanel(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
+		V.qPanel = questPanel;
 		frame.add(questPanel);
 		frame.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -39,8 +40,12 @@ public class UrfQuest implements Runnable {
         });
 		
 		final QuestMap questMap = new QuestMap(500, 500);
+		V.qMap = questMap;
 		
-		final QuestGame questGame = new QuestGame(questPanel, questMap);
+		final QuestGame questGame = new QuestGame();
+		V.qGame = questGame;
+		
+		V.time.start();
 	}
 
 	public static void main(String[] args) {

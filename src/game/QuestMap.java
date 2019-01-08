@@ -1,15 +1,22 @@
 package game;
 
+import java.awt.Color;
+
+import framework.V;
+
 public class QuestMap {
 	
 	private int[][] map;
 	
 	public QuestMap(int width, int height) {
 		map = generate(width, height);
+		addEntities(500);
+		V.qMap = this;
 	}
 	
 	public QuestMap(String levelfile) {
 	//	map = load(levelfile);
+	// V.qMap = this;
 	}
 	
 	public static int[][] generate(int width, int height) {
@@ -51,6 +58,15 @@ public class QuestMap {
 		end[255][245] = 6;
 		
 		return end;
+	}
+	
+	private void addEntities(int num) {
+		V.entities = new Entity[num];
+		for (int i = 0; i < num; i++) {
+			V.entities[i] = new Entity(Math.random()*map.length, Math.random()*map[0].length,
+									   new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)),
+									   (int)(Math.random()*100));
+		}
 	}
 	
 	public int getTileAt(int x, int y) {
