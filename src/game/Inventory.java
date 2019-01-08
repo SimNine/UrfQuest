@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import entities.items.Item;
+import framework.UrfQuest;
 
 public class Inventory {
 	private InventoryEntry[] entries = new InventoryEntry[10];
@@ -93,7 +94,10 @@ public class Inventory {
 	}
 	
 	public void useSelectedItem() {
-		entries[selectedEntry].useItem();
+		entries[selectedEntry].use(UrfQuest.game.getPlayer());
+		if (entries[selectedEntry].isEmpty()) {
+			removeSelectedEntry();
+		}
 	}
 	
 	// finds index of next open slot. returns -1 if no open slots

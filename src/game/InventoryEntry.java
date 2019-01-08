@@ -3,10 +3,10 @@ package game;
 import java.awt.image.BufferedImage;
 
 import entities.items.Item;
+import entities.mobs.Mob;
 
 public class InventoryEntry {
 	private boolean isStack;
-	private boolean isEmpty;
 	private boolean isSelected;
 	private int numItems;
 	private int cooldownState;
@@ -14,7 +14,6 @@ public class InventoryEntry {
 	
 	public InventoryEntry() {
 		this.item = null;
-		this.isEmpty = true;
 		this.isStack = false;
 		this.numItems = 0;
 		this.isSelected = false;
@@ -32,17 +31,24 @@ public class InventoryEntry {
 		}
 	}
 	
-	public void useItem() {
-		if (isEmpty) {
+	public void use(Mob m) {
+		// if there's nothing in this entry, do nothing
+		if (isEmpty()) {
 			return;
 		}
 		
+		// if the item isn't cooled down, do nothing
 		if (item.getCooldown() == -1) {
-			return; // the item isn't usable
+			return;
 		}
 		
-		if (this.cooldownState == 0) { // the item is fully cooled down
-			item.use();
+		if (this.cooldownState == 0) {
+			item.use(m);
+			if (item.isConsumable()) {
+				if (this.numItems > 0) {
+					numItems--;
+				}
+			}
 			cooldownState = item.getCooldown();
 		} else {
 			return;
@@ -71,7 +77,7 @@ public class InventoryEntry {
 	}
 	
 	public boolean isEmpty() {
-		return isEmpty;
+		return this.numItems <= 0;
 	}
 	
 	public boolean isSelected() {

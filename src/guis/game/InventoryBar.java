@@ -63,5 +63,4 @@ public class InventoryBar extends GUIObject {
 			drawDebug(g);
 		}
 	}
-
 }

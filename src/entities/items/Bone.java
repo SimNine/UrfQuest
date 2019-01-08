@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.mobs.Mob;
 import framework.UrfQuest;
 
 public class Bone extends Item {
@@ -12,7 +13,6 @@ public class Bone extends Item {
 
 	public Bone(double x, double y) {
 		super(x, y);
-		isStackable = true;
 		if (bonePic == null) {
 			try {
 				bonePic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "bone_scaled_30px.png"));
@@ -24,9 +24,24 @@ public class Bone extends Item {
 		itemPic = bonePic;
 	}
 
-	@Override
 	public void update() {
 		// nothing here
+	}
+
+	public void use(Mob m) {
+		// nothing here
+	}
+
+	public boolean isConsumable() {
+		return false;
+	}
+
+	public int getCooldown() {
+		return -1;
+	}
+
+	public boolean isStackable() {
+		return true;
 	}
 
 }

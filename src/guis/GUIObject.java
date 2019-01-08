@@ -17,9 +17,9 @@ public abstract class GUIObject {
 	
 	protected GUIObject(int anchorPoint, int xRel, int yRel, int width, int height) {
 		anchor = anchorPoint;
-		bounds = new Rectangle();
 		xDisplacement = xRel;
 		yDisplacement = yRel;
+		bounds = new Rectangle();
 		setBounds(xDisplacement, yDisplacement, width, height);
 	}
 	

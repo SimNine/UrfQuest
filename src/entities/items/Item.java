@@ -7,13 +7,13 @@ import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 
 import entities.Entity;
+import entities.mobs.Mob;
 import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Item extends Entity {
 	protected BufferedImage itemPic;
-	protected boolean isStackable;
 	protected static final String assetPath = "/assets/items/";
 	
 	protected Item(double x, double y) {
@@ -21,17 +21,13 @@ public abstract class Item extends Entity {
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
-	public void use() {
-		// does nothing by default
-	}
+	public abstract void use(Mob m);
 	
-	public void update() {
-		// does nothing by default
-	}
+	public abstract boolean isConsumable();
 	
-	public int getCooldown() {
-		return -1; // should be overridden if needed; -1 indicated cooldown is not applicable
-	}
+	public abstract void update();
+	
+	public abstract int getCooldown();
 	
 	public Item clone() {
 		double[] pos = this.getPos();
@@ -49,7 +45,6 @@ public abstract class Item extends Entity {
 		} else if (this instanceof Bone) {
 			ret = new Bone(pos[0], pos[1]);
 		}
-		ret.isStackable = this.isStackable;
 		ret.itemPic = this.itemPic;
 		ret.bounds = (Double) this.bounds.clone();
 		return ret;
@@ -80,7 +75,5 @@ public abstract class Item extends Entity {
 		return itemPic;
 	}
 	
-	public boolean isStackable() {
-		return isStackable;
-	};
+	public abstract boolean isStackable();
 }

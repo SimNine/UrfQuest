@@ -5,16 +5,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.mobs.Mob;
 import entities.particles.Particle;
 import framework.UrfQuest;
 
 public class SMG extends Item {
 	public static BufferedImage smgPic;
-	private static final int COOLDOWN = 10;
 
 	public SMG(double x, double y) {
 		super(x, y);
-		isStackable = false;
 		if (smgPic == null) {
 			try {
 				smgPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "smg_scaled_30px.png"));
@@ -26,14 +25,26 @@ public class SMG extends Item {
 		itemPic = smgPic;
 	}
 
-	public void use() {
-		double[] pos = UrfQuest.game.getPlayer().getPos();
-		int dir = UrfQuest.game.getPlayer().getDirection() + (int)((Math.random() - 0.5)*20);
+	public void use(Mob m) {
+		double[] pos = m.getPos();
+		int dir = m.getDirection() + (int)((Math.random() - 0.5)*20);
 		UrfQuest.game.getCurrMap().addParticle(new Particle(pos[0], pos[1], dir));
 	}
 	
 	// getters and setters
 	public int getCooldown() {
-		return COOLDOWN;
+		return 10;
+	}
+
+	public boolean isConsumable() {
+		return false;
+	}
+
+	public boolean isStackable() {
+		return false;
+	}
+
+	public void update() {
+		// nothing here
 	}
 }

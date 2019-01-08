@@ -17,5 +17,4 @@ public class ImageBox extends ImageArea {
 			drawDebug(g);
 		}
 	}
-
 }

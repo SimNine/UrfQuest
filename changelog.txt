@@ -246,3 +246,10 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 -Added class "Keybindings", a container for keybindings to toggle in-game functions
 -Added keybinding GUI, which allows the user to bind keys to all functions
 -Created another timer; one to tick the game, and one to render everything (surprise: speedup due to multithreading)
+
+0.15.1 - 1/26/17
+-Added a stackable "ChickenLeg" item dropped by chickens on death 50% of the time
+-Added a "fullnessBar" object to GameStatusOverlay, which displays hunger
+-Player now contains a hunger counter with default size of 1000, drains hunger by one point per 1000 ticks
+--Health drains by one point per 1000 ticks once fullness is empty
+-Eating chicken legs increases fullness by 5, cheese increases fullness to max

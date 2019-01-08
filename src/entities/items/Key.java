@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.mobs.Mob;
 import framework.UrfQuest;
 
 public class Key extends Item {
@@ -12,7 +13,6 @@ public class Key extends Item {
 
 	public Key(double x, double y) {
 		super(x, y);
-		isStackable = true;
 		if (keyPic == null) {
 			try {
 				keyPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "key_scaled_30px.png"));
@@ -24,7 +24,22 @@ public class Key extends Item {
 		itemPic = keyPic;
 	}
 
-	@Override
+	public void use(Mob m) {
+		// nothing here
+	}
+
+	public boolean isConsumable() {
+		return false;
+	}
+
+	public int getCooldown() {
+		return -1;
+	}
+
+	public boolean isStackable() {
+		return true;
+	}
+
 	public void update() {
 		// nothing here
 	}

@@ -1,18 +1,19 @@
 package guis.game;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import framework.UrfQuest;
 import guis.GUIObject;
 import guis.Overlay;
+//import guis.menus.ImageBox;
 
 public class GameStatusOverlay extends Overlay {
 	private StatusBar healthBar;
 	private StatusBar manaBar;
+	private StatusBar fullnessBar;
+	//private ImageBox fullnessIcon;
 	private InventoryBar invBar;
 	private Minimap minimap;
-	private boolean minimapShowing = true;
 	
 	private int spacing = 3;
 	private int statusBarLength = 400;
@@ -40,9 +41,24 @@ public class GameStatusOverlay extends Overlay {
 				return UrfQuest.game.getPlayer().getHealth()/100.0;
 			}
 		};
+		fullnessBar = new StatusBar(spacing, -(spacing*4 + statusBarHeight*3 + inventoryBarHeight), 
+				  				  statusBarLength, statusBarHeight, 
+				  				  GUIObject.BOTTOM_LEFT, 
+				  				  new Color(255, 255, 255, 180), 
+				  				  true) {
+			public double getPercentage() {
+				return UrfQuest.game.getPlayer().getFullness()/100.0;
+			}
+		};
+//		fullnessIcon = new ImageBox("bin/assets/guis/star_white_40px.png", 
+//									200, 
+//									200,
+//									GUIObject.TOP_LEFT);
 		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
 		invBar = new InventoryBar(GUIObject.BOTTOM_LEFT, 3, -inventoryBarHeight - spacing, 40);
 		
+		guiObjects.add(fullnessBar);
+		//guiObjects.add(fullnessIcon);
 		guiObjects.add(manaBar);
 		guiObjects.add(healthBar);
 		guiObjects.add(minimap);
@@ -50,31 +66,21 @@ public class GameStatusOverlay extends Overlay {
 	}
 	
 	public void cycleMinimapSize() {
-		int mSize;
-		
-		if (minimapShowing) {
-			if (minimap.getSize() == 100) {
-				mSize = 200;
-			} else if (minimap.getSize() == 200) {
-				mSize = 300;
-			} else { //if (minimap.getSize() == 300) {
-				mSize = 100;
-				minimapShowing = false;
-			}
-			guiObjects.remove(minimap);
-			minimap = new Minimap(-(mSize + spacing), spacing, mSize, mSize, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+		if (!guiObjects.contains(minimap)) {
+			minimap = new Minimap(-(100 + spacing), spacing, 100, 100, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
 			guiObjects.add(minimap);
-		} else {
-			minimapShowing = true;
+			return;
 		}
-	}
-	
-	public void draw(Graphics g) {
-		if (minimapShowing) {
-			minimap.draw(g);
+		
+		guiObjects.remove(minimap);
+		if (minimap.getSize() == 100) {
+			minimap = new Minimap(-(200 + spacing), spacing, 200, 200, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+			guiObjects.add(minimap);
+		} else if (minimap.getSize() == 200) {
+			minimap = new Minimap(-(300 + spacing), spacing, 300, 300, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+			guiObjects.add(minimap);
+		} else { //if (minimap.getSize() == 300) {
+			// don't re-add the minimap
 		}
-		healthBar.draw(g);
-		manaBar.draw(g);
-		invBar.draw(g);
 	}
 }

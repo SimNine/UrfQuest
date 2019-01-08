@@ -21,7 +21,11 @@ public class Player extends Mob {
 	private static BufferedImage[][] img = new BufferedImage[8][8];
 	private final static String assetPath = "/assets/player/";
 	
+	private final double maxMana = 100.0;
+	private final double maxFullness = 100.0;
 	private double mana = 100.0;
+	private double fullness = 100.0;
+	private int fullnessCounter = 200;
 	
 	private Inventory inventory = new Inventory();
 
@@ -194,6 +198,18 @@ public class Player extends Mob {
 			return;
 		}
 		
+		// update hunger and health mechanics
+		if (fullnessCounter > 0) {
+			fullnessCounter--;
+		} else {
+			if (fullness > 0) {
+				fullness -= 0.2;
+			} else {
+				health -= 0.2;
+			}
+			fullnessCounter = 200;
+		}
+		
 		// use the selected item if space is down
 		if (UrfQuest.keys.contains(KeyEvent.VK_SPACE)) {
 			useSelectedItem();
@@ -291,11 +307,39 @@ public class Player extends Mob {
 	}
 	
 	public void setMana(double m) {
-		mana = m;
+		if (m > maxMana) {
+			mana = maxMana;
+		} else {
+			mana = m;
+		}
 	}
 	
 	public double getMana() {
 		return mana;
+	}
+	
+	public double getMaxMana() {
+		return maxMana;
+	}
+	
+	public void incrementHunger(double amt) {
+		setFullness(fullness + amt);
+	}
+	
+	public void setFullness(double f) {
+		if (f > maxFullness) {
+			fullness = maxFullness;
+		} else {
+			fullness = f;
+		}
+	}
+	
+	public double getFullness() {
+		return fullness;
+	}
+	
+	public double getMaxFullness() {
+		return maxFullness;
 	}
 	
 	// inventory methods

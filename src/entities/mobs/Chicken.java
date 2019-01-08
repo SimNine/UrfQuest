@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import entities.items.ChickenLeg;
 import entities.mobs.ai.routines.FleeRoutine;
 import entities.mobs.ai.routines.IdleRoutine;
 import framework.QuestPanel;
@@ -79,6 +80,12 @@ public class Chicken extends Mob {
 			if (!(routine instanceof IdleRoutine)){
 				routine = new IdleRoutine(this);
 			}
+		}
+	}
+	
+	public void onDeath() {
+		if (Math.random() > 0.5) {
+			UrfQuest.game.getCurrMap().addItem(new ChickenLeg(bounds.getCenterX(), bounds.getCenterY()));
 		}
 	}
 }
