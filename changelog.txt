@@ -106,3 +106,6 @@ NOTE: MapLoader is completely fucked
 -Added basics of collision detection in QuestMap class; player-key collisions are detected
 -Added keyCounter GUI
 -Added options menu feature to toggle debug mode
+
+0.8.1 - 11/25/16
+-Fixed Loader; it now saves and loads the locations of keys

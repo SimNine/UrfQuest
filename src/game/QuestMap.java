@@ -8,7 +8,6 @@ import entities.items.Key;
 import framework.SimplexNoise;
 import framework.UrfQuest;
 
-@SuppressWarnings("unused")
 public class QuestMap {
 	
 	private int[][] map;
@@ -16,10 +15,9 @@ public class QuestMap {
 	public ArrayList<Item> items;
 	
 	public QuestMap(int width, int height) {
-		map = generateSimplexNoiseMap(width, height);
-		entities = generateEntities(0);
-		
-		items = generateKeys();
+		map = new int[width][height];
+		entities = new ArrayList<Entity>();
+		items = new ArrayList<Item>();
 	}
 	
 	public void update() {
@@ -28,14 +26,19 @@ public class QuestMap {
 			if (UrfQuest.game.player.collides(i) && i.getType().equals("key")) {
 				remove.add(i);
 				UrfQuest.game.incKeyCount(1);
-				System.out.println("collides key");
+				if (UrfQuest.debug) {
+					System.out.println("player collided with object: " + i.getType());
+				}
 			}
 		}
 		items.removeAll(remove);
 		remove.clear();
 	}
 	
-	private static int[][] generateSimplexNoiseMap(int width, int height) {
+	// map generation methods
+	public void generateSimplexNoiseMap() {
+		int width = map.length;
+		int height = map[0].length;
 		int[][] end = new int[width][height];
 		
 		// generate land and water
@@ -63,10 +66,12 @@ public class QuestMap {
 		generateStartingArea(end);
 		generateBorderWall(end);
 		
-		return end;
+		this.map = end;
 	}
 	
-	private static int[][] generateSavannahMap(int width, int height) {
+	public void generateSavannahMap() {
+		int width = map.length;
+		int height = map[0].length;
 		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
@@ -104,11 +109,14 @@ public class QuestMap {
 		generateStartingArea(end);
 		generateBorderWall(end);
 		
-		return end;
+		this.map = end;
 	}
 	
-	private static int[][] generateTemplateMap(int width, int height) {
+	public void generateTemplateMap() {
+		int width = map.length;
+		int height = map[0].length;
 		int[][] end = new int[width][height];
+		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				end[x][y] = 1;
@@ -143,18 +151,19 @@ public class QuestMap {
 		generateStartingArea(end);
 		generateBorderWall(end);
 		
-		return end;
+		this.map = end;
 	}
 	
-	private ArrayList<Entity> generateEntities(int num) {
+	// entity generation methods
+	public void generateEntities(int num) {
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < num; i++) {
 			//nothing, atm
 		}
-		return entities;
+		this.entities = entities;
 	}
 	
-	private ArrayList<Item> generateKeys() {
+	public void generateKeys() {
 		ArrayList<Item> items = new ArrayList<Item>();
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
@@ -163,9 +172,10 @@ public class QuestMap {
 				}
 			}
 		}
-		return items;
+		this.items = items;
 	}
 	
+	// helper generation methods
 	private static void generateStartingArea(int[][] map) {
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {

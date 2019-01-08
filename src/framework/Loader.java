@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import entities.characters.Player;
+import entities.items.Item;
+import entities.items.Key;
 import game.QuestMap;
 
 public class Loader {
@@ -63,7 +65,20 @@ public class Loader {
             			oos.writeInt(map.getTileAt(x, y));
             		}
             	}
+            	
+            	// write number of items on the map
+            	oos.writeInt(map.items.size());
+            	
+            	// for each item (in this case, only keys exist), write coords
+            	for (i = 0; i < map.items.size(); i++) {
+            		Item curr = map.items.get(i);
+            		oos.writeDouble(curr.getPosition()[0]);
+            		oos.writeDouble(curr.getPosition()[1]);
+            	}
             }
+            
+            // write the current keyCount
+            oos.writeInt(UrfQuest.game.getKeyCount());
             
             // get the player
             Player p = UrfQuest.game.getPlayer();
@@ -105,6 +120,8 @@ public class Loader {
             
             // read number of maps
             int numMaps = ois.readInt();
+            
+            // read number of current map
             int currMap = ois.readInt();
             
             ArrayList<QuestMap> allMaps = new ArrayList<QuestMap>();
@@ -121,6 +138,14 @@ public class Loader {
             		}
             	}
             	
+            	// read the number of items on this map
+            	int numItems = ois.readInt();
+            	
+            	// read each item (in this case, only keys)
+            	for (int j = 0; j < numItems; j++) {
+            		map.items.add(new Key(ois.readDouble(), ois.readDouble()));
+            	}
+            	
             	// set the current map
             	if (i == currMap) {
             		UrfQuest.game.setCurrMap(map);
@@ -131,6 +156,9 @@ public class Loader {
             
             // set all maps
             UrfQuest.game.setAllMaps(allMaps);
+            
+            // read current keyCount
+            UrfQuest.game.setKeyCount(ois.readInt());
             
             // read player data
             double xPos = ois.readDouble();

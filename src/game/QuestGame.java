@@ -25,6 +25,9 @@ public class QuestGame {
 	
 	public QuestGame() {
 		currMap = new QuestMap(500, 500);
+		currMap.generateSimplexNoiseMap();
+		currMap.generateKeys();
+		
 		maps = new ArrayList<QuestMap>();
 		maps.add(currMap);
 		player = new Player(currMap.getWidth()/2.0, currMap.getHeight()/2.0);
@@ -62,6 +65,10 @@ public class QuestGame {
 	
 	public int getKeyCount() {
 		return keyCount;
+	}
+	
+	public void setKeyCount(int i) {
+		keyCount = i;
 	}
 	
 	public void incKeyCount(int i) {
