@@ -67,7 +67,13 @@ public class OverlayInit {
 				SoundEngine.musicVol = this.position;
 			}
 		});
-		optionsObjects.add(new TextButton("Back", 30, -80, 40) {
+		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 40) {
+			public void click() {
+				if (UrfQuest.debug) UrfQuest.debug = false;
+				else UrfQuest.debug = true;
+			}
+		});
+		optionsObjects.add(new TextButton("Back", 30, -80, 80) {
 			public void click() {
 				UrfQuest.panel.currOverlay = UrfQuest.panel.prevOverlay;
 			}

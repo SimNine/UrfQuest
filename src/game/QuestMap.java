@@ -1,23 +1,41 @@
 package game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import entities.Entity;
-import entities.shapes.Square;
+import entities.items.Item;
+import entities.items.Key;
 import framework.SimplexNoise;
+import framework.UrfQuest;
 
+@SuppressWarnings("unused")
 public class QuestMap {
 	
 	private int[][] map;
 	public ArrayList<Entity> entities;
+	public ArrayList<Item> items;
 	
 	public QuestMap(int width, int height) {
 		map = generateSimplexNoiseMap(width, height);
 		entities = generateEntities(0);
+		
+		items = generateKeys();
 	}
 	
-	public static int[][] generateSimplexNoiseMap(int width, int height) {
+	public void update() {
+		ArrayList<Item> remove = new ArrayList<Item>();
+		for (Item i : items) {
+			if (UrfQuest.game.player.collides(i) && i.getType().equals("key")) {
+				remove.add(i);
+				UrfQuest.game.incKeyCount(1);
+				System.out.println("collides key");
+			}
+		}
+		items.removeAll(remove);
+		remove.clear();
+	}
+	
+	private static int[][] generateSimplexNoiseMap(int width, int height) {
 		int[][] end = new int[width][height];
 		
 		// generate land and water
@@ -48,7 +66,7 @@ public class QuestMap {
 		return end;
 	}
 	
-	public static int[][] generateSavannahMap(int width, int height) {
+	private static int[][] generateSavannahMap(int width, int height) {
 		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
@@ -89,7 +107,7 @@ public class QuestMap {
 		return end;
 	}
 	
-	public static int[][] generateTemplateMap(int width, int height) {
+	private static int[][] generateTemplateMap(int width, int height) {
 		int[][] end = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -131,11 +149,21 @@ public class QuestMap {
 	private ArrayList<Entity> generateEntities(int num) {
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < num; i++) {
-			entities.add(new Square(Math.random()*map.length, Math.random()*map[0].length,
-						 new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)),
-						 (int)(Math.random()*100)));
+			//nothing, atm
 		}
 		return entities;
+	}
+	
+	private ArrayList<Item> generateKeys() {
+		ArrayList<Item> items = new ArrayList<Item>();
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				if (map[x][y] == 2 && Math.random() < 0.005) {
+					items.add(new Key(x, y));
+				}
+			}
+		}
+		return items;
 	}
 	
 	private static void generateStartingArea(int[][] map) {

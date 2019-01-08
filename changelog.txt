@@ -93,3 +93,16 @@ NOTE: MapLoader is completely fucked
 -The edge of the map additionally has an automatically generated border wall
 -Extra getters/setters added to QuestGame in order to facilitate loading and saving
 -Work begun on a minimap
+
+0.8.0 - 11/24/16
+-Player entity's images are now loaded into arrays, not loaded individually
+-Added Item abstract class for item representation
+-Added Key item
+-Images and graphics are now initialized BEFORE top classes are initialized in UrfQuest class
+-Removed posX and posY variables from entities, they are now contained within its "bounds" object
+-The player now uses a "fake" position to determine tile collisions (its actual position +0.5 on each axis,
+	but will use its actual position to determine collision with objects and entities.
+	This will get confusing; look for solution
+-Added basics of collision detection in QuestMap class; player-key collisions are detected
+-Added keyCounter GUI
+-Added options menu feature to toggle debug mode

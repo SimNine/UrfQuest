@@ -16,15 +16,15 @@ import tiles.Tiles;
 
 public class Player extends Entity {
 
-	private static BufferedImage NW1, NW2, NW3, NW4, NW5, NW6, NW7, NW8,
-						  N1, N2, N3, N4, N5, N6, N7, N8,
-						  NE1, NE2, NE3, NE4, NE5, NE6, NE7, NE8,
-						  E1, E2, E3, E4, E5, E6, E7, E8,
-						  SE1, SE2, SE3, SE4, SE5, SE6, SE7, SE8,
-						  S1, S2, S3, S4, S5, S6, S7, S8,
-						  SW1, SW2, SW3, SW4, SW5, SW6, SW7, SW8,
-						  W1, W2, W3, W4, W5, W6, W7, W8,
-						  temp;
+	private static BufferedImage[] NW = new BufferedImage[8];
+	private static BufferedImage[] N = new BufferedImage[8];
+	private static BufferedImage[] NE = new BufferedImage[8];
+	private static BufferedImage[] E = new BufferedImage[8];
+	private static BufferedImage[] SE = new BufferedImage[8];
+	private static BufferedImage[] S = new BufferedImage[8];
+	private static BufferedImage[] SW = new BufferedImage[8];
+	private static BufferedImage[] W = new BufferedImage[8];
+	private static BufferedImage temp;
 	
 	private final static String assetPath = "/assets/player/";
 	
@@ -36,37 +36,37 @@ public class Player extends Entity {
 		super(x, y);
 		type = "player";
 		
-		bounds = new Rectangle2D.Double(x, y, 30, 30);
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
 	public static void initPlayer() {
 		// Load east-west
 		try {
-			E1 = E5 = W1 = W5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E1.png"));
+			E[0] = E[4] = W[0] = W[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E1.png");
 		}
 		try {
-			E2 = E4 = W2 = W4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E2.png"));
+			E[1] = E[3] = W[1] = W[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E2.png");
 		}
 		try {
-			E3 = W3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E3.png"));
+			E[2] = W[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E3.png");
 		}
 		try {
-			E6 = E8 = W6 = W8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E6.png"));
+			E[5] = E[7] = W[5] = W[7] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E6.png");
 		}
 		try {
-			E7 = W7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E7.png"));
+			E[6] = W[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E7.png");
@@ -74,31 +74,31 @@ public class Player extends Entity {
 		
 		// Load NE-SW
 		try {
-			NE1 = NE5 = SW1 = SW5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE1.png"));
+			NE[0] = NE[4] = SW[0] = SW[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE1.png");
 		}
 		try {
-			NE2 = NE4 = SW2 = SW4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE2.png"));
+			NE[1] = NE[3] = SW[1] = SW[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE2.png");
 		}
 		try {
-			NE3 = SW3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE3.png"));
+			NE[2] = SW[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE3.png");
 		}
 		try {
-			NE6 = NE8 = SW6 = SW8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE6.png"));
+			NE[5] = NE[7] = SW[5] = SW[7] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE6.png");
 		}
 		try {
-			NE7 = SW7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE7.png"));
+			NE[6] = SW[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE7.png");
@@ -106,31 +106,31 @@ public class Player extends Entity {
 		
 		// Load NW-SE
 		try {
-			NW1 = NW5 = SE1 = SE5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW1.png"));
+			NW[0] = NW[4] = SE[0] = SE[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW1.png");
 		}
 		try {
-			NW2 = NW4 = SE2 = SE4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW2.png"));
+			NW[1] = NW[3] = SE[1] = SE[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW2.png");
 		}
 		try {
-			NW3 = SE3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW3.png"));
+			NW[2] = SE[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW3.png");
 		}
 		try {
-			NW6 = NW8 = SE6 = SE8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW6.png"));
+			NW[5] = NW[7] = SE[5] = SE[7] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW6.png");
 		}
 		try {
-			NW7 = SE7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW7.png"));
+			NW[6] = SE[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW7.png");
@@ -138,31 +138,31 @@ public class Player extends Entity {
 		
 		// Load north-south
 		try {
-			N1 = N5 = S1 = S5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N1.png"));
+			N[0] = N[4] = S[0] = S[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N1.png");
 		}
 		try {
-			N2 = N4 = S2 = S4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N2.png"));
+			N[1] = N[3] = S[1] = S[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N2.png");
 		}
 		try {
-			N3 = S3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N3.png"));
+			N[2] = S[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N3.png");
 		}
 		try {
-			N6 = N8 = S6 = S8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N6.png"));
+			N[5] = N[7] = S[5] = S[7] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N6.png");
 		}
 		try {
-			N7 = S7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N7.png"));
+			N[6] = S[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N7.png");
@@ -171,273 +171,54 @@ public class Player extends Entity {
 
 	@Override
 	protected void drawEntity(Graphics g) {
-		final int STEP_SIZE = 25;
+		final int STEP_SIZE = 15;
 		
+		if (moveStage/STEP_SIZE == 8) {
+			moveStage = -1;
+		}
+	
 		switch (orientation) {
 		case "N":
-			switch (moveStage) {
-			case 0:
-				temp = N1;
-				break;
-			case STEP_SIZE:
-				temp = N2;
-				break;
-			case 2*STEP_SIZE:
-				temp = N3;
-				break;
-			case 3*STEP_SIZE:
-				temp = N4;
-				break;
-			case 4*STEP_SIZE:
-				temp = N5;
-				break;
-			case 5*STEP_SIZE:
-				temp = N6;
-				break;
-			case 6*STEP_SIZE:
-				temp = N7;
-				break;
-			case 7*STEP_SIZE:
-				temp = N8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = N[moveStage/STEP_SIZE];
 			break;
 		case "NE":
-			switch (moveStage) {
-			case 0:
-				temp = NE1;
-				break;
-			case STEP_SIZE:
-				temp = NE2;
-				break;
-			case 2*STEP_SIZE:
-				temp = NE3;
-				break;
-			case 3*STEP_SIZE:
-				temp = NE4;
-				break;
-			case 4*STEP_SIZE:
-				temp = NE5;
-				break;
-			case 5*STEP_SIZE:
-				temp = NE6;
-				break;
-			case 6*STEP_SIZE:
-				temp = NE7;
-				break;
-			case 7*STEP_SIZE:
-				temp = NE8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = NE[moveStage/STEP_SIZE];
 			break;
 		case "E":
-			switch (moveStage) {
-			case 0:
-				temp = E1;
-				break;
-			case STEP_SIZE:
-				temp = E2;
-				break;
-			case 2*STEP_SIZE:
-				temp = E3;
-				break;
-			case 3*STEP_SIZE:
-				temp = E4;
-				break;
-			case 4*STEP_SIZE:
-				temp = E5;
-				break;
-			case 5*STEP_SIZE:
-				temp = E6;
-				break;
-			case 6*STEP_SIZE:
-				temp = E7;
-				break;
-			case 7*STEP_SIZE:
-				temp = E8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = E[moveStage/STEP_SIZE];
 			break;
 		case "SE":
-			switch (moveStage) {
-			case 0:
-				temp = SE1;
-				break;
-			case STEP_SIZE:
-				temp = SE2;
-				break;
-			case 2*STEP_SIZE:
-				temp = SE3;
-				break;
-			case 3*STEP_SIZE:
-				temp = SE4;
-				break;
-			case 4*STEP_SIZE:
-				temp = SE5;
-				break;
-			case 5*STEP_SIZE:
-				temp = SE6;
-				break;
-			case 6*STEP_SIZE:
-				temp = SE7;
-				break;
-			case 7*STEP_SIZE:
-				temp = SE8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = SE[moveStage/STEP_SIZE];
 			break;
 		case "S":
-			switch (moveStage) {
-			case 0:
-				temp = S1;
-				break;
-			case STEP_SIZE:
-				temp = S2;
-				break;
-			case 2*STEP_SIZE:
-				temp = S3;
-				break;
-			case 3*STEP_SIZE:
-				temp = S4;
-				break;
-			case 4*STEP_SIZE:
-				temp = S5;
-				break;
-			case 5*STEP_SIZE:
-				temp = S6;
-				break;
-			case 6*STEP_SIZE:
-				temp = S7;
-				break;
-			case 7*STEP_SIZE:
-				temp = S8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = S[moveStage/STEP_SIZE];
 			break;
 		case "SW":
-			switch (moveStage) {
-			case 0:
-				temp = SW1;
-				break;
-			case STEP_SIZE:
-				temp = SW2;
-				break;
-			case 2*STEP_SIZE:
-				temp = SW3;
-				break;
-			case 3*STEP_SIZE:
-				temp = SW4;
-				break;
-			case 4*STEP_SIZE:
-				temp = SW5;
-				break;
-			case 5*STEP_SIZE:
-				temp = SW6;
-				break;
-			case 6*STEP_SIZE:
-				temp = SW7;
-				break;
-			case 7*STEP_SIZE:
-				temp = SW8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = SW[moveStage/STEP_SIZE];
 			break;
 		case "W":
-			switch (moveStage) {
-			case 0:
-				temp = W1;
-				break;
-			case STEP_SIZE:
-				temp = W2;
-				break;
-			case 2*STEP_SIZE:
-				temp = W3;
-				break;
-			case 3*STEP_SIZE:
-				temp = W4;
-				break;
-			case 4*STEP_SIZE:
-				temp = W5;
-				break;
-			case 5*STEP_SIZE:
-				temp = W6;
-				break;
-			case 6*STEP_SIZE:
-				temp = W7;
-				break;
-			case 7*STEP_SIZE:
-				temp = W8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = W[moveStage/STEP_SIZE];
 			break;
 		case "NW":
-			switch (moveStage) {
-			case 0:
-				temp = NW1;
-				break;
-			case STEP_SIZE:
-				temp = NW2;
-				break;
-			case 2*STEP_SIZE:
-				temp = NW3;
-				break;
-			case 3*STEP_SIZE:
-				temp = NW4;
-				break;
-			case 4*STEP_SIZE:
-				temp = NW5;
-				break;
-			case 5*STEP_SIZE:
-				temp = NW6;
-				break;
-			case 6*STEP_SIZE:
-				temp = NW7;
-				break;
-			case 7*STEP_SIZE:
-				temp = NW8;
-				break;
-			case 8*STEP_SIZE:
-				moveStage = -1;
-				break;
-			}
+			temp = NW[moveStage/STEP_SIZE];
 			break;
 		}
 		
 		g.drawImage(temp, 
-					UrfQuest.panel.dispCenterX - (int)(0.5*temp.getWidth()),
-					UrfQuest.panel.dispCenterY - (int)(0.5*temp.getHeight()), null);
+					UrfQuest.panel.dispCenterX,
+					UrfQuest.panel.dispCenterY,
+					null);
 	}
 	
-	protected void drawDebug(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.drawString("orientation: " + this.orientation, 
-					 UrfQuest.panel.dispCenterX - (int)(0.5*temp.getWidth()), 
-					 UrfQuest.panel.dispCenterY - (int)(0.5*temp.getHeight()));
-		g.drawString("moveStage: " + this.moveStage, 
-					 UrfQuest.panel.dispCenterX - (int)(0.5*temp.getWidth()), 
-					 UrfQuest.panel.dispCenterY - (int)(0.5*temp.getHeight()) + 10);
-	}
+//	protected void drawDebug(Graphics g) {
+//		g.setColor(Color.BLACK);
+//		g.drawString("orientation: " + this.orientation, 
+//					 UrfQuest.panel.dispCenterX, 
+//					 UrfQuest.panel.dispCenterY);
+//		g.drawString("moveStage: " + this.moveStage, 
+//					 UrfQuest.panel.dispCenterX, 
+//					 UrfQuest.panel.dispCenterY + 10);
+//	}
 
 	@Override
 	public void update() {
@@ -473,13 +254,12 @@ public class Player extends Entity {
 				orientation = newOrientation;
 			}
 		}
-		
-		bounds.setRect(this.Xpos, this.Ypos, 30, 30);
 	}
 	
-	// helper
+	// helpers
 	private void processCurrentTile() {
-		switch (UrfQuest.game.getCurrMap().getTileAt((int)Xpos, (int)Ypos)) {
+		switch (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getX()+0.5),
+													 (int)(bounds.getY()+0.5))) {
 		case 0:
 			//nothing
 			break;
@@ -497,12 +277,14 @@ public class Player extends Entity {
 		case 5:
 			if (health > 0) incrementHealth(-0.1);
 			if (mana > 0) incrementMana(-0.1);
-			if (speed > 0.01) incrementSpeed(-.001);
+			if (speed > 0.01) incrementSpeed(-0.001);
 			break;
 		case 6:
-			if (speed < 1) incrementSpeed(.001);
+			if (speed < 1) incrementSpeed(0.001);
 			break;
 		case 7:
+			//impossible
+		case 8:
 			//impossible
 		default:
 			//nothing
@@ -510,32 +292,36 @@ public class Player extends Entity {
 		}
 	}
 	
-	// helper
 	private void attemptMove(int dir) { // 1 = up, 2 = down, 3 = left, 4 = right
 		QuestMap currMap = UrfQuest.game.getCurrMap();
+		double newX = bounds.getX()+0.5;
+		double newY = bounds.getY()+0.5;
+		
 		switch (dir) {
 		case 1:
-			if (Tiles.isWalkable(currMap.getTileAt((int)Xpos, (int)(Ypos - speed)))) Ypos -= speed;
-			else Ypos = (int)Math.floor(Ypos) + 0.0000001;
+			if (Tiles.isWalkable(currMap.getTileAt((int)newX, (int)(newY - speed)))) newY -= speed;
+			else newY = (int)Math.floor(newY) + 0.0000001;
 			break;
 		case 2:
-			if (Tiles.isWalkable(currMap.getTileAt((int)Xpos, (int)(Ypos + speed)))) Ypos += speed;
-			else Ypos = (int)Math.ceil(Ypos) - 0.0000001;
+			if (Tiles.isWalkable(currMap.getTileAt((int)newX, (int)(newY + speed)))) newY += speed;
+			else newY = (int)Math.ceil(newY) - 0.0000001;
 			break;
 		case 3:
-			if (Tiles.isWalkable(currMap.getTileAt((int)(Xpos - speed), (int)Ypos))) Xpos -= speed;
-			else Xpos = (int)Math.floor(Xpos) + 0.0000001;
+			if (Tiles.isWalkable(currMap.getTileAt((int)(newX - speed), (int)newY))) newX -= speed;
+			else newX = (int)Math.floor(newX) + 0.0000001;
 			break;
 		case 4:
-			if (Tiles.isWalkable(currMap.getTileAt((int)(Xpos + speed), (int)Ypos))) Xpos += speed;
-			else Xpos = (int)Math.ceil(Xpos) - 0.0000001;
+			if (Tiles.isWalkable(currMap.getTileAt((int)(newX + speed), (int)newY))) newX += speed;
+			else newX = (int)Math.ceil(newX) - 0.0000001;
 			break;
 		default:
 			break;
 		}
+		
+		bounds.setRect(newX-0.5, newY-0.5, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	// incrementers and decrementers
+	// incrementers
 	public void incrementHealth(double amt) {
 		health += amt;
 	}

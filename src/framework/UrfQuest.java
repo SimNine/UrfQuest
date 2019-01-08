@@ -12,24 +12,24 @@ import java.util.Set;
 import javax.swing.*;
 
 import entities.characters.Player;
+import entities.items.Item;
 import framework.QuestPanel;
 import game.QuestGame;
 import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.7.2";
+    private static final String VERSION = "0.8.0";
     private static final String GAME_NAME = "UrfQuest";
     
 	public static UrfQuest quest;
-    
-    public static final boolean debug = false;
-    public static final JFrame frame = new JFrame(GAME_NAME + " " + VERSION);
-    public static QuestPanel panel = new QuestPanel();
-    public static QuestGame game = new QuestGame();
-	public static Set<Integer> keys = new HashSet<Integer>(0);
-	public static int[] mousePos = new int[2];
-	public static boolean mousePressed = false;
+    public static boolean debug;
+    public static JFrame frame;
+    public static QuestPanel panel;
+    public static QuestGame game;
+	public static Set<Integer> keys;
+	public static int[] mousePos;
+	public static boolean mousePressed;
 	
     public static Timer time = new Timer(5, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -48,6 +48,15 @@ public class UrfQuest implements Runnable {
 		Tiles.initGraphics();
 		SoundEngine.initSounds();
 		Player.initPlayer();
+		Item.initItems();
+        
+        UrfQuest.debug = false;
+        UrfQuest.frame = new JFrame(GAME_NAME + " " + VERSION);
+        UrfQuest.panel = new QuestPanel();
+        UrfQuest.game = new QuestGame();
+        UrfQuest.keys = new HashSet<Integer>(0);
+        UrfQuest.mousePos = new int[2];
+        UrfQuest.mousePressed = false;
 	    
         frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         frame.setMinimumSize(new Dimension(700, 600));

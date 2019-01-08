@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import framework.QuestPanel;
 import entities.characters.Player;
+import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Entity {
@@ -15,13 +15,9 @@ public abstract class Entity {
 	
 	protected String orientation;
 	protected int moveStage = 0;
-
-	protected double Xpos;
-	protected double Ypos;
 	
-	public Entity(double x, double y) {
-		Xpos = x;
-		Ypos = y;
+	protected Entity(double x, double y) {
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		orientation = "N";
 	}
 	
@@ -34,28 +30,40 @@ public abstract class Entity {
 	
 	protected abstract void drawEntity(Graphics g);
 	
-	protected abstract void drawDebug(Graphics g);
+	protected void drawDebug(Graphics g) {
+		Player player = UrfQuest.game.getPlayer();
+		g.setColor(Color.WHITE);
+		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
+					 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+					 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
+				 (int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+				 (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
+	};
 	
 	private void drawBounds(Graphics g) {
 		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.RED);
 		g.drawRect((int)(UrfQuest.panel.dispCenterX - (player.getPosition()[0] - bounds.getX())*QuestPanel.TILE_WIDTH), 
 				   (int)(UrfQuest.panel.dispCenterY - (player.getPosition()[1] - bounds.getY())*QuestPanel.TILE_WIDTH),
-				   (int)bounds.getWidth(), (int)bounds.getHeight());
+				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}
 	
 	// Updating methods
 	public abstract void update();
 	
+	public boolean collides(Entity e) {
+		return bounds.intersects(e.bounds);
+	}
+	
 	public void setPosition(double x, double y) {
-		Xpos = x;
-		Ypos = y;
+		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 	}
 	
 	public double[] getPosition() {
 		double[] ret = new double[2];
-		ret[0] = Xpos;
-		ret[1] = Ypos;
+		ret[0] = bounds.getX();
+		ret[1] = bounds.getY();
 		return ret;
 	}
 	
