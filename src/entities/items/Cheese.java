@@ -25,26 +25,31 @@ public class Cheese extends Item {
 		itemPic = cheesePic;
 	}
 	
-	public boolean isConsumable() {
-		return true;
-	}
-	
+	// manipulation methods
 	public void use(Mob m) {
 		if (m instanceof Player) {
 			((Player) m).setFullness(((Player) m).getMaxFullness());
 		}
 	}
-
-	public void update() {
-		// nothing here
+	
+	public Cheese clone() {
+		return new Cheese(this.getPos()[0], this.getPos()[1]);
 	}
-
-	public int getCooldown() {
-		return 50;
-	}
-
-	public boolean isStackable() {
+	
+	// getters and setters
+	public boolean isConsumable() {
 		return true;
 	}
 
+	public int getMaxCooldown() {
+		return 50;
+	}
+
+	public int maxStackSize() {
+		return 100;
+	}
+
+	public int getMaxDurability() {
+		return -1;
+	}
 }

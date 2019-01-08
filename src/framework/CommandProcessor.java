@@ -7,10 +7,12 @@ import entities.items.ChickenLeg;
 import entities.items.Gem;
 import entities.items.Hatchet;
 import entities.items.Key;
+import entities.items.LawRune;
 import entities.items.Log;
 import entities.items.Pickaxe;
 import entities.items.Pistol;
 import entities.items.SMG;
+import entities.items.Shotgun;
 import entities.items.Shovel;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
@@ -78,6 +80,12 @@ public class CommandProcessor {
 					UrfQuest.game.getPlayer().addItem(new Shovel(0, 0));
 				} else if (args[1].equals("pickaxe")) {
 					UrfQuest.game.getPlayer().addItem(new Pickaxe(0, 0));
+				} else if (args[1].equals("shotgun")) {
+					UrfQuest.game.getPlayer().addItem(new Shotgun(0, 0));
+				} else if (args[1].equals("grenade")) {
+					//UrfQuest.game.getPlayer().addItem(new Grenade(0, 0));
+				} else if (args[1].equals("lawrune")) {
+					UrfQuest.game.getPlayer().addItem(new LawRune(0, 0));
 				}
 			}
 		} else if (args[0].equals("spawn")) {

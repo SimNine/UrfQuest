@@ -24,24 +24,29 @@ public class Key extends Item {
 		itemPic = keyPic;
 	}
 
+	// manipulation methods
 	public void use(Mob m) {
 		// nothing here
 	}
 
+	public Key clone() {
+		return new Key(this.getPos()[0], this.getPos()[1]);
+	}
+
+	// getters and setters
 	public boolean isConsumable() {
 		return false;
 	}
 
-	public int getCooldown() {
+	public int getMaxCooldown() {
 		return -1;
 	}
 
-	public boolean isStackable() {
-		return true;
+	public int maxStackSize() {
+		return 100;
 	}
 
-	public void update() {
-		// nothing here
+	public int getMaxDurability() {
+		return -1;
 	}
-
 }

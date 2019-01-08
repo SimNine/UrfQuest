@@ -6,13 +6,10 @@ import java.util.HashMap;
 
 import entities.items.Cheese;
 import entities.items.Gem;
-import entities.items.Pistol;
-import entities.items.SMG;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Mob;
 import entities.items.Item;
-import entities.items.Key;
 import entities.particles.Particle;
 import framework.UrfQuest;
 import tiles.Tiles;
@@ -388,14 +385,6 @@ public class QuestMap {
 					double rand = Math.random();
 					if (rand > .9975) {
 						items.add(new Cheese(x, y));
-					} else if (rand > .9875) {
-						items.add(new Key(x, y));
-					} else if (rand > .9375) {
-						if (Math.random() > .1) {
-							items.add(new Pistol(x, y));
-						} else {
-							items.add(new SMG(x, y));
-						}
 					} else {
 						items.add(new Gem(x, y));
 					}

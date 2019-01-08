@@ -277,3 +277,28 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 -Inter-map link system created
 --Each map now stores a hashmap of links to other maps
 -Added new "hole" and "dirtboulder" tiles
+
+0.16.0_pre_2 - 1/27/17
+(Gameplay Update 2, continued)
+-Added shotgun weapon
+--Has cooldown of 400t
+--Shoots 15-20 bullets in a single direction
+-Increased accuracy of pistol and smg from (+- 10 degrees) to (+- 5 degrees)
+-Added LawRune item
+--Using law rune teleports the player back to their home coordinates on a given map
+--Very long cooldown (1000t - maybe should be longer)
+--Stackable
+-Merged InventoryEntry and Item classes
+--Items now have all the properties and functions that InventoryEntries used to have
+-Added item durability for Shovels, Pickaxes, and Hatchets
+-Added rendering of miniature "durability bar" to inventory slots with durability items
+-Slowed down rendering clock (every 5ms to every 10ms)
+-Player now spawns with a toolkit (Pickaxe, Shovel, Hatchet)
+-In caves, when mining, the loot chances are as such:
+--2% to get SMG
+--2% to get Shotgun
+--6% to get Pistol
+--10% to get Law Rune
+--80% to get Stone
+--Anyplace besides caves, only stone is dropped
+-Weapons no longer generate on surface map; only Gems and Cheese

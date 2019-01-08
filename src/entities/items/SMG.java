@@ -25,26 +25,31 @@ public class SMG extends Item {
 		itemPic = smgPic;
 	}
 
+	// manipulation methods
 	public void use(Mob m) {
-		double[] pos = m.getPos();
-		int dir = m.getDirection() + (int)((Math.random() - 0.5)*20);
+		double[] pos = m.getCenter();
+		int dir = m.getDirection() + (int)((Math.random() - 0.5)*10);
 		UrfQuest.game.getCurrMap().addParticle(new Particle(pos[0], pos[1], dir));
 	}
 	
-	// getters and setters
-	public int getCooldown() {
-		return 10;
+	public SMG clone() {
+		return new SMG(this.getPos()[0], this.getPos()[1]);
 	}
-
+	
+	// getters and setters
 	public boolean isConsumable() {
 		return false;
 	}
 
-	public boolean isStackable() {
-		return false;
+	public int getMaxCooldown() {
+		return 10;
 	}
 
-	public void update() {
-		// nothing here
+	public int maxStackSize() {
+		return 1;
+	}
+
+	public int getMaxDurability() {
+		return -1;
 	}
 }

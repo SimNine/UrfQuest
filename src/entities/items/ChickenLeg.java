@@ -25,25 +25,31 @@ public class ChickenLeg extends Item {
 		itemPic = chickenLegPic;
 	}
 	
-	public void update() {
-		// nothing
-	}
-	
+	// manipulation methods
 	public void use(Mob m) {
 		if (m instanceof Player) {
 			((Player) m).incrementHunger(5.0);
 		}
 	}
+	
+	public ChickenLeg clone() {
+		return new ChickenLeg(this.getPos()[0], this.getPos()[1]);
+	}
 
+	// getters and setters
 	public boolean isConsumable() {
 		return true;
 	}
 
-	public int getCooldown() {
+	public int getMaxCooldown() {
 		return 50;
 	}
 
-	public boolean isStackable() {
-		return true;
+	public int maxStackSize() {
+		return 100;
+	}
+
+	public int getMaxDurability() {
+		return -1;
 	}
 }

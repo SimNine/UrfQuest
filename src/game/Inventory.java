@@ -1,32 +1,20 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 
 import entities.items.Item;
 import framework.UrfQuest;
 
 public class Inventory {
-	private InventoryEntry[] entries = new InventoryEntry[10];
-	private HashSet<Integer> occupiedSlots = new HashSet<Integer>();
+	private Item[] entries = new Item[10];
+	private HashSet<Integer> occupiedEntries = new HashSet<Integer>();
 	private int selectedEntry = 0;
 	
-	public Inventory() {
-		for (int i = 0; i < entries.length; i++) {
-			entries[i] = new InventoryEntry();
-		}
-	}
-	
 	// gets a collection of all entries in the inventory
-	public Collection<InventoryEntry> getInventoryEntries() {
-		ArrayList<InventoryEntry> e = new ArrayList<InventoryEntry>();
+	public ArrayList<Item> getItems() {
+		ArrayList<Item> e = new ArrayList<Item>();
 		for (int i = 0; i < entries.length; i++) {
-			if (i == selectedEntry) {
-				entries[i].setSelection(true);
-			} else {
-				entries[i].setSelection(false);
-			}
 			e.add(entries[i]);
 		}
 		return e;
@@ -34,17 +22,17 @@ public class Inventory {
 	
 	// finds either an empty slot for the item, or adds it to a preexisting stack
 	public boolean addItem(Item i) {
-		if (i.isStackable()) { // if the item is stackable
+		if (i.maxStackSize() > 1) { // if the item is stackable
 			if (hasItem(i)) { // if the item already has a stack
-				entries[findIndexOfEntry(i)].incNumItems(1);
+				entries[findIndexOfEntry(i)].incStackSize(1);
 				return true;
 			} else { // if the item doesn't already have a stack
 				int place = nextOpenSlot();
 				if (place == -1) { // if there's no open slots
 					return false;
 				} else { // if there are open slots
-					entries[place] = new InventoryEntry(i);
-					occupiedSlots.add(place);
+					entries[place] = i;
+					occupiedEntries.add(place);
 					return true;
 				}
 			}
@@ -53,8 +41,8 @@ public class Inventory {
 			if (place == -1) {
 				return false;
 			} else {
-				entries[place] = new InventoryEntry(i);
-				occupiedSlots.add(place);
+				entries[place] = i;
+				occupiedEntries.add(place);
 				return true;
 			}
 		}
@@ -63,10 +51,10 @@ public class Inventory {
 	// takes one of the selected item out of the stack and returns it
 	// (removes the stack if the item is unstackable)
 	public Item removeOneOfSelectedItem() {
-		if (!entries[selectedEntry].isEmpty()) {
-			Item i = entries[selectedEntry].getItem().clone();
-			if (entries[selectedEntry].isStack() && entries[selectedEntry].getNumItems() > 1) {
-				entries[selectedEntry].incNumItems(-1);
+		if (entries[selectedEntry] != null) {
+			Item i = entries[selectedEntry].clone();
+			if (entries[selectedEntry].currStackSize() > 1) {
+				entries[selectedEntry].incStackSize(-1);
 			} else {
 				removeSelectedEntry();
 			}
@@ -77,12 +65,12 @@ public class Inventory {
 	}
 	
 	public Item getSelectedItem() {
-		return entries[selectedEntry].getItem();
+		return entries[selectedEntry];
 	}
 	
 	public void removeSelectedEntry() {
-		entries[selectedEntry] = new InventoryEntry();
-		occupiedSlots.remove(selectedEntry);
+		entries[selectedEntry] = null;
+		occupiedEntries.remove(selectedEntry);
 	}
 	
 	public void setSelectedEntry(int i) {
@@ -94,8 +82,24 @@ public class Inventory {
 	}
 	
 	public void useSelectedItem() {
-		entries[selectedEntry].use(UrfQuest.game.getPlayer());
-		if (entries[selectedEntry].isEmpty()) {
+		if (entries[selectedEntry] == null) {
+			return;
+		}
+		if (entries[selectedEntry].isUsable() && entries[selectedEntry].getCooldown() == 0) {// if the item is usable and cooled
+			entries[selectedEntry].use(UrfQuest.game.getPlayer());
+			entries[selectedEntry].setCooldown(entries[selectedEntry].getMaxCooldown());
+			if (entries[selectedEntry].isConsumable()) {
+				entries[selectedEntry].incStackSize(-1);
+			}
+			if (entries[selectedEntry].degrades() && entries[selectedEntry].getDurability() > 0) { // if the item degrades
+				entries[selectedEntry].incDurability(-1);
+				if (entries[selectedEntry].getDurability() == 0) { // if the item is fully degraded
+					entries[selectedEntry].incStackSize(-1);
+				}
+			}
+		}
+		
+		if (entries[selectedEntry].currStackSize() == 0) {
 			removeSelectedEntry();
 		}
 	}
@@ -103,7 +107,7 @@ public class Inventory {
 	// finds index of next open slot. returns -1 if no open slots
 	private int nextOpenSlot() {
 		for (int i = 0; i < entries.length; i++) {
-			if (!occupiedSlots.contains(i)) {
+			if (!occupiedEntries.contains(i)) {
 				return i;
 			}
 		}
@@ -113,10 +117,15 @@ public class Inventory {
 	// finds the first index of the given type of item, -1 if it isn't in the inventory
 	private int findIndexOfEntry(Item i) {
 		for (int j = 0; j < entries.length; j++) {
-			if (!entries[j].isEmpty() && entries[j].getItem().getClass() == i.getClass()) {
+			if (entries[j] != null && 
+				entries[j].getClass() == i.getClass()) {
 				return j;
 			}
 		}
 		return -1;
+	}
+	
+	public int getSelectedIndex() {
+		return selectedEntry;
 	}
 }

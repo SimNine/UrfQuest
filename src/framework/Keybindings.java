@@ -10,6 +10,8 @@ public class Keybindings {
 	public int TOGGLEMAPVIEW = KeyEvent.VK_M;
 	public int DROPITEM = KeyEvent.VK_Q;
 	public int BUILDMODE = KeyEvent.VK_B;
+	public int MAPLINK = KeyEvent.VK_ENTER;
+	public int CRAFTING = KeyEvent.VK_C;
 	
 	public String toString() {
 		String ret = "CONSOLE: " + KeyEvent.getKeyText(CONSOLE) + "\n";
@@ -18,6 +20,8 @@ public class Keybindings {
 		ret += "TOGGLEMAPVIEW: " + KeyEvent.getKeyText(TOGGLEMAPVIEW) + "\n";
 		ret += "DROPITEM: " + KeyEvent.getKeyText(DROPITEM) + "\n";
 		ret += "BUILDMODE: " + KeyEvent.getKeyText(BUILDMODE) + "\n";
+		ret += "MAPLINK: " + KeyEvent.getKeyText(MAPLINK) + "\n";
+		ret += "CRAFTING: " + KeyEvent.getKeyText(CRAFTING) + "\n";
 		return ret;
 	}
 }

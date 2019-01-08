@@ -6,14 +6,16 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import entities.items.Hatchet;
 import entities.items.Item;
+import entities.items.Pickaxe;
+import entities.items.Shovel;
 import framework.UrfQuest;
 import game.Inventory;
-import game.InventoryEntry;
 
 public class Player extends Mob {
 
@@ -37,6 +39,9 @@ public class Player extends Mob {
 		}
 		velocity = 0.05;
 		health = 100.0;
+		inventory.addItem(new Shovel(0, 0));
+		inventory.addItem(new Pickaxe(0, 0));
+		inventory.addItem(new Hatchet(0, 0));
 	}
 	
 	private void initPlayer() {
@@ -216,8 +221,10 @@ public class Player extends Mob {
 		}
 		
 		// update each entry (cooldown) in the inventory
-		for (InventoryEntry e : inventory.getInventoryEntries()) {
-			e.update();
+		for (Item i : inventory.getItems()) {
+			if (i != null) {
+				i.update();
+			}
 		}
 		
 		// process the tile the player is currently on
@@ -343,8 +350,12 @@ public class Player extends Mob {
 	}
 	
 	// inventory methods
-	public Collection<InventoryEntry> getInventory() {
-		return inventory.getInventoryEntries();
+	public Inventory getInventory() {
+		return inventory;
+	}
+	
+	public ArrayList<Item> getInventoryItems() {
+		return inventory.getItems();
 	}
 	
 	public boolean addItem(Item i) {

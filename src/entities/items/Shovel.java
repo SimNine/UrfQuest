@@ -26,6 +26,7 @@ public class Shovel extends Item {
 		itemPic = shovelPic;
 	}
 	
+	// manipulation methods
 	public void use(Mob m) {
 		if (m.tileTypeAtDistance(0) == 2) {
 			int[] coords = m.tileCoordsAtDistance(0);
@@ -52,22 +53,25 @@ public class Shovel extends Item {
 			}
 		}
 	}
+
+	public Shovel clone() {
+		return new Shovel(this.getPos()[0], this.getPos()[1]);
+	}
 	
 	// getters and setters
-	public int getCooldown() {
-		return 100;
-	}
-
 	public boolean isConsumable() {
 		return false;
 	}
 
-	public boolean isStackable() {
-		return false;
+	public int getMaxCooldown() {
+		return 100;
 	}
 
-	public void update() {
-		// nothing here
+	public int maxStackSize() {
+		return 1;
 	}
 
+	public int getMaxDurability() {
+		return 100;
+	}
 }

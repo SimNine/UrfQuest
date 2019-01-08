@@ -24,24 +24,29 @@ public class Gem extends Item {
 		itemPic = gemPic;
 	}
 
-	public void update() {
-		// nothing here
-	}
-
+	// manipulation methods
 	public void use(Mob m) {
 		// nothing here
 	}
+	
+	public Gem clone() {
+		return new Gem(this.getPos()[0], this.getPos()[1]);
+	}
 
+	// getters and setters
 	public boolean isConsumable() {
 		return false;
 	}
 
-	public int getCooldown() {
+	public int getMaxCooldown() {
 		return -1;
 	}
 
-	public boolean isStackable() {
-		return true;
+	public int maxStackSize() {
+		return 100;
 	}
 
+	public int getMaxDurability() {
+		return -1;
+	}
 }

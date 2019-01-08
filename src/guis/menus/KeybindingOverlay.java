@@ -77,12 +77,32 @@ public class KeybindingOverlay extends Overlay {
 			}
 		});
 		
-		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 30, GUIObject.CENTER) {
+		guiObjects.add(new TextBox("Map Link: ", 30, -160, 30, GUIObject.CENTER));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.MAPLINK), 30, 120, 30, GUIObject.CENTER) {
+			public void setKey(int k) {
+				text = KeyEvent.getKeyText(k);
+				keybindings.MAPLINK = k;
+				boxToWaitFor = null;
+				setWaiting(false);
+			}
+		});
+		
+		guiObjects.add(new TextBox("Crafting menu: ", 30, -160, 60, GUIObject.CENTER));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CRAFTING), 30, 120, 60, GUIObject.CENTER) {
+			public void setKey(int k) {
+				text = KeyEvent.getKeyText(k);
+				keybindings.CRAFTING = k;
+				boxToWaitFor = null;
+				setWaiting(false);
+			}
+		});
+		
+		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER) {
 			public void click() {
 				UrfQuest.debug = !UrfQuest.debug;
 			}
 		});
-		guiObjects.add(new TextButton("Back", 30, -80, 60, GUIObject.CENTER) {
+		guiObjects.add(new TextButton("Back", 30, -80, 120, GUIObject.CENTER) {
 			public void click() {
 				if (boxToWaitFor == null) {
 					UrfQuest.panel.swap(OverlayInit.newOptionsOverlay());

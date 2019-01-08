@@ -24,6 +24,7 @@ public class Hatchet extends Item {
 		itemPic = hatchetPic;
 	}
 	
+	// manipulation methods
 	public void use(Mob m) {
 		if (m.tileTypeAtDistance(1.0) == 7) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
@@ -32,21 +33,24 @@ public class Hatchet extends Item {
 		}
 	}
 	
-	// getters and setters
-	public int getCooldown() {
-		return 100;
+	public Hatchet clone() {
+		return new Hatchet(this.getPos()[0], this.getPos()[1]);
 	}
-
+	
+	// getters and setters
 	public boolean isConsumable() {
 		return false;
 	}
 
-	public boolean isStackable() {
-		return false;
+	public int getMaxCooldown() {
+		return 100;
 	}
 
-	public void update() {
-		// nothing here
+	public int maxStackSize() {
+		return 1;
 	}
 
+	public int getMaxDurability() {
+		return 100;
+	}
 }

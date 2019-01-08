@@ -3,7 +3,6 @@ package entities.items;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 
 import entities.Entity;
@@ -15,40 +14,30 @@ import framework.UrfQuest;
 public abstract class Item extends Entity {
 	protected BufferedImage itemPic;
 	protected static final String assetPath = "/assets/items/";
+	protected int cooldown = 0;
+	protected int durability = 1;
+	protected int stackSize = 1;
 	
 	protected Item(double x, double y) {
 		super(x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		if (this.degrades()) {
+			durability = this.getMaxDurability();
+		}
 	}
 	
+	// manipulation methods
 	public abstract void use(Mob m);
 	
-	public abstract boolean isConsumable();
-	
-	public abstract void update();
-	
-	public abstract int getCooldown();
-	
-	public Item clone() {
-		double[] pos = this.getPos();
-		Item ret = null;
-		if (this instanceof Key) {
-			ret = new Key(pos[0], pos[1]);
-		} else if (this instanceof Pistol) {
-			ret = new Pistol(pos[0], pos[1]);
-		} else if (this instanceof SMG){
-			ret = new SMG(pos[0], pos[1]);
-		} else if (this instanceof Gem) {
-			ret = new Gem(pos[0], pos[1]);
-		} else if (this instanceof Cheese) {
-			ret = new Cheese(pos[0], pos[1]);
-		} else if (this instanceof Bone) {
-			ret = new Bone(pos[0], pos[1]);
+	public void update() {
+		if (getMaxCooldown() > -1) {
+			if (cooldown > 0) {
+				cooldown--;
+			}
 		}
-		ret.itemPic = this.itemPic;
-		ret.bounds = (Double) this.bounds.clone();
-		return ret;
 	}
+	
+	public abstract Item clone();
 	
 	// drawing methods
 	protected void drawEntity(Graphics g) {
@@ -75,5 +64,71 @@ public abstract class Item extends Entity {
 		return itemPic;
 	}
 	
-	public abstract boolean isStackable();
+	public abstract boolean isConsumable();
+	
+	public abstract int getMaxCooldown();
+	
+	public int getCooldown() {
+		return cooldown;
+	}
+	
+	public void setCooldown(int i) {
+		if (getMaxCooldown() > -1) {
+			cooldown = i;
+		} else {
+			throw new IllegalArgumentException("This item has no cooldown");
+		}
+	}
+	
+	public double getCooldownPercentage() {
+		return (cooldown/(double)getMaxCooldown());
+	}
+	
+	public boolean isUsable() {
+		return (getMaxCooldown() > -1);
+	}
+	
+	public abstract int getMaxDurability();
+	
+	public int getDurability() {
+		return durability;
+	}
+	
+	public void setDurability(int i) {
+		if (getMaxDurability() > -1) {
+			if (i < 0) {
+				durability = 0;
+			} else {
+				durability = i;
+			}
+		} else {
+			throw new IllegalArgumentException("This item has no durability");
+		}
+	}
+	
+	public void incDurability(int i) {
+		setDurability(durability + i);
+	}
+	
+	public double getDurabilityPercentage() {
+		return (durability/(double)getMaxDurability());
+	}
+	
+	public boolean degrades() {
+		return (getMaxDurability() > -1);
+	}
+	
+	public int currStackSize() {
+		return stackSize;
+	}
+	
+	public void incStackSize(int i) {
+		if (stackSize + i < 0) {
+			stackSize = 0;
+		} else {
+			stackSize += i;
+		}
+	}
+	
+	public abstract int maxStackSize();
 }
