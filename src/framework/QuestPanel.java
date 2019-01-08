@@ -60,6 +60,12 @@ public class QuestPanel extends JPanel {
 				if (e.getKeyCode() == KeyEvent.VK_L) {
 					Loader.loadGame();
 				}
+				if (e.getKeyCode() == KeyEvent.VK_Z) {
+					UrfQuest.game.cycleMinimapZoom();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_X) {
+					UrfQuest.game.cycleMinimapSize();
+				}
 			}
 			public void keyTyped(KeyEvent e) {}
 		});

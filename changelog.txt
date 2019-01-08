@@ -109,3 +109,9 @@ NOTE: MapLoader is completely fucked
 
 0.8.1 - 11/25/16
 -Fixed Loader; it now saves and loads the locations of keys
+
+0.9.0 - 12/9/16
+-Added a minimap; it can be easily changed in size by modifying mapWidth and mapHeight in the drawMinimap(g) method
+-Added Tiles.minimapColor(t) which gets the color to be shown on the minimap for a certain type of tile
+-Added functions to cycle through minimap size multipliers and zoom multipliers
+-Added keyListener to listen for keypress of Z, which toggles map zoom, and X, which toggles map size

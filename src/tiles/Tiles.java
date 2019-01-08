@@ -23,7 +23,7 @@ public class Tiles {
 	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
-	private static boolean[][] tileProperties = 
+	private static boolean[][] tileBooleanProperties = 
 		   //walkable
 		{ {true},//0
 		  {false},
@@ -34,6 +34,18 @@ public class Tiles {
 		  {true},
 		  {false},
 		  {false} };
+	
+	private static int[][] tileIntProperties = 
+		   //minimapColor
+		{ {new Color(179, 136, 37).getRGB()},//0
+		  {Color.LIGHT_GRAY.getRGB()},
+		  {Color.GREEN.darker().getRGB()},
+		  {Color.BLUE.getRGB()},
+		  {Color.RED.getRGB()},//4
+		  {Color.DARK_GRAY.getRGB()},
+		  {Color.GREEN.getRGB()},
+		  {Color.GREEN.brighter().getRGB()},
+		  {Color.BLUE.getRGB()} };
 	
 	public static void initGraphics() {
 		try {
@@ -175,6 +187,12 @@ public class Tiles {
 	// gets properties of tiles from boolean array
 	public static boolean isWalkable(int t) {
 		if (t == -1) return false; // if this tile is blank
-		else return tileProperties[t][0];
+		else return tileBooleanProperties[t][0];
+	}
+	
+	// gets the color of the pixel representing this tile to be displayed on the minimap
+	public static int minimapColor(int t) {
+		if (t == -1) return Color.BLACK.getRGB();
+		else return tileIntProperties[t][0];
 	}
 }
