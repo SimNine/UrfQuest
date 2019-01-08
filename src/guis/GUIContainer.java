@@ -97,4 +97,8 @@ public class GUIContainer extends GUIObject implements Clickable {
 	public void addAllObjects(Set<GUIObject> o) {
 		guiObjects.addAll(o);
 	}
+	
+	public void removeAllObjects() {
+		guiObjects.clear();
+	}
 }

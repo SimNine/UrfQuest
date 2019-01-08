@@ -2,23 +2,7 @@ package framework;
 
 import javax.swing.JOptionPane;
 
-import entities.items.AstralRune;
-import entities.items.Cheese;
-import entities.items.ChickenLeg;
-import entities.items.CosmicRune;
-import entities.items.Gem;
-import entities.items.GrenadeItem;
-import entities.items.Hatchet;
-import entities.items.Key;
-import entities.items.LawRune;
-import entities.items.Log;
-import entities.items.Mic;
-import entities.items.Pickaxe;
-import entities.items.Pistol;
-import entities.items.RPG;
-import entities.items.SMG;
-import entities.items.Shotgun;
-import entities.items.Shovel;
+import entities.items.Item;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Player;
@@ -71,42 +55,42 @@ public class CommandProcessor {
 			}
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("pistol")) {
-					p.addItem(new Pistol(0, 0, m));
+					p.addItem(new Item(0, 0, 13, m));
 				} else if (args[1].equals("smg")) {
-					p.addItem(new SMG(0, 0, m));
+					p.addItem(new Item(0, 0, 16, m));
 				} else if (args[1].equals("cheese")) {
-					p.addItem(new Cheese(0, 0, m));
+					p.addItem(new Item(0, 0, 5, m));
 				} else if (args[1].equals("gem")) {
-					p.addItem(new Gem(0, 0, m));
+					p.addItem(new Item(0, 0, 7, m));
 				} else if (args[1].equals("key")) {
-					p.addItem(new Key(0, 0, m));
+					p.addItem(new Item(0, 0, 11, m));
 				} else if (args[1].equals("hatchet")) {
-					p.addItem(new Hatchet(0, 0, m));
+					p.addItem(new Item(0, 0, 18, m));
 				} else if (args[1].equals("chickenleg")) {
-					p.addItem(new ChickenLeg(0, 0, m));
+					p.addItem(new Item(0, 0, 4, m));
 				} else if (args[1].equals("log")) {
-					p.addItem(new Log(0, 0, m));
+					p.addItem(new Item(0, 0, 8, m));
 				} else if (args[1].equals("shovel")) {
-					p.addItem(new Shovel(0, 0, m));
+					p.addItem(new Item(0, 0, 19, m));
 				} else if (args[1].equals("pickaxe")) {
-					p.addItem(new Pickaxe(0, 0, m));
+					p.addItem(new Item(0, 0, 17, m));
 				} else if (args[1].equals("shotgun")) {
-					p.addItem(new Shotgun(0, 0, m));
+					p.addItem(new Item(0, 0, 15, m));
 				} else if (args[1].equals("grenade")) {
-					p.addItem(new GrenadeItem(0, 0, m));
+					p.addItem(new Item(0, 0, 12, m));
 				} else if (args[1].equals("lawrune")) {
-					p.addItem(new LawRune(0, 0, m));
+					p.addItem(new Item(0, 0, 3, m));
 				} else if (args[1].equals("cosmicrune")) {
-					p.addItem(new CosmicRune(0, 0, m));
+					p.addItem(new Item(0, 0, 2, m));
 				} else if (args[1].equals("astralrune")) {
-					p.addItem(new AstralRune(0, 0, m));
+					p.addItem(new Item(0, 0, 1, m));
 				} else if (args[1].equals("rpg")) {
-					p.addItem(new RPG(0, 0, m));
+					p.addItem(new Item(0, 0, 14, m));
 				} else if (args[1].equals("mic")) {
-					p.addItem(new Mic(0, 0, m));
+					p.addItem(new Item(0, 0, 10, m));
 				} else if (args[1].equals("head")) {
 					for (int l = 0; l < 100; l++) {
-						p.addItem(new Cheese(0, 0, m));
+						p.addItem(new Item(0, 0, 5, m));
 					}
 				}
 			}
@@ -141,9 +125,13 @@ public class CommandProcessor {
 		} else if (args[0].equals("tprel")) {
 			p.move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else if (args[0].equals("toolkit")) {
-			p.addItem(new Pickaxe(0, 0, m));
-			p.addItem(new Hatchet(0, 0, m));
-			p.addItem(new Shovel(0, 0, m));
+			p.addItem(new Item(0, 0, 17, m));
+			p.addItem(new Item(0, 0, 18, m));
+			p.addItem(new Item(0, 0, 19, m));
+		} else if (args[0].equals("tick")) {
+			for (int t = 0; t < Integer.parseInt(args[1]); t++) {
+				UrfQuest.game.tick();
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

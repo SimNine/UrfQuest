@@ -102,15 +102,32 @@ public class GameBoardOverlay extends GUIContainer {
 		int mouseX = (int) mouseCoordX;
 		int mouseY = (int) mouseCoordY;
 		
+		// convenience
+		Player p = UrfQuest.game.getPlayer();
+		
 		// draw the highlight of the selected tile
-		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
-			int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
-			int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
-			g.setColor(new Color(255, 255, 255, selectedTileTransparency));
-			g.fillRect(xRoot, yRoot, TILE_WIDTH, TILE_WIDTH);
-			g.setColor(Color.WHITE);
-			for (int i = 0; i < 3; i++) {
-				g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
+		if (UrfQuest.gameRunning && !UrfQuest.panel.isGUIOpen()) {
+			if (UrfQuest.game.isBuildMode()) {
+				int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
+				int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
+				g.setColor(new Color(255, 255, 255, selectedTileTransparency));
+				g.fillRect(xRoot, yRoot, TILE_WIDTH, TILE_WIDTH);
+				g.setColor(Color.WHITE);
+				for (int i = 0; i < 3; i++) {
+					g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
+				}
+			} else if (mouseX < p.getPos()[0] + 3 &&
+					   mouseX > p.getPos()[0] - 3 &&
+					   mouseY < p.getPos()[1] + 3 &&
+					   mouseY > p.getPos()[1] - 3) {
+				int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
+				int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
+				g.setColor(new Color(255, 0, 0, selectedTileTransparency));
+				g.fillRect(xRoot, yRoot, TILE_WIDTH, TILE_WIDTH);
+				g.setColor(Color.RED);
+				for (int i = 0; i < 3; i++) {
+					g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
+				}
 			}
 		}
 		
@@ -141,7 +158,7 @@ public class GameBoardOverlay extends GUIContainer {
 		int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
 		int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
 		
-		if (UrfQuest.game.isBuildMode() && !UrfQuest.panel.isGUIOpen()) {
+		if (UrfQuest.game.isBuildMode() && UrfQuest.gameRunning && !UrfQuest.panel.isGUIOpen()) {
 			UrfQuest.game.getCurrMap().setTileAt(mouseX, mouseY, 15);
 			return true;
 		} else if (UrfQuest.game.getCurrMap().getTileAt(mouseX, mouseY) == 7) {

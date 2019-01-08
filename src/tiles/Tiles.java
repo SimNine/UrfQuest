@@ -11,8 +11,28 @@ import framework.QuestPanel;
 import framework.UrfQuest;
 
 public class Tiles {
-	private static String tileRoot = "/assets/tiles/";
-	private static String errMsg = "Could not find image: ";
+	public static String tileRoot = "/asset/tiles/";
+	public static String errMsg = "Could not find image: ";
+	
+	public static final int VOID = -1;
+	public static final int DIRT = 0;
+	public static final int BEDROCK = 1;
+	public static final int GRASS = 2;
+	public static final int MANA_PAD = 3;
+	public static final int HEALTH_PAD = 4;
+	public static final int HURT_PAD = 5;
+	public static final int SPEED_PAD = 6;
+	public static final int TREE = 7;
+	public static final int WATER = 8;
+	public static final int SAND = 9;
+	public static final int GRASS_BOULDER = 10;
+	public static final int WATER_BOULDER = 11;
+	public static final int SAND_BOULDER = 12;
+	public static final int DIRT_HOLE = 13;
+	public static final int DIRT_BOULDER = 14;
+	public static final int STONE = 15;
+	public static final int IRONORE_STONE = 16;
+	public static final int COPPERORE_STONE = 17;
 	
 	private static BufferedImage[] tileImages = new BufferedImage[18];
 	private static BufferedImage[] waterImages = new BufferedImage[3];
@@ -62,51 +82,14 @@ public class Tiles {
 	public static void initGraphics() {
 		try {
 			tileImages[0] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "dirt.png");
-		}
-		
-		try {
-			tileImages[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "grass.png");
-		}
-		
-		try {
 			tileImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "bedrock.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "bedrock.png");
-		}
-		
-		try {
-			tileImages[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "healthPad.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "healthPad.png");
-		}
-		
-		try {
+			tileImages[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
 			tileImages[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "manaPad.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "manaPad.png");
-		}
-		
-		try {
+			tileImages[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "healthPad.png"));
+			tileImages[5] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hurtPad.png"));
 			tileImages[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "speedPad.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "speedPad.png");
-		}
-		
-		try {
-			tileImages[5] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hurtPad.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "hurtPad.png");
 		}
 		
 		try {

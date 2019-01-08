@@ -135,7 +135,7 @@ public class Inventory {
 	private int findIndexOfEntry(Item i) {
 		for (int j = 0; j < entries.length; j++) {
 			if (entries[j] != null && 
-				entries[j].getClass() == i.getClass()) {
+				entries[j].getType() == i.getType()) {
 				return j;
 			}
 		}

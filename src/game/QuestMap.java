@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import entities.items.Cheese;
-import entities.items.Gem;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Mob;
@@ -567,9 +565,9 @@ public class QuestMap {
 				if (map[x][y] == 2 && Math.random() < 0.005) {
 					double rand = Math.random();
 					if (rand > .9975) {
-						items.add(new Cheese(x, y, this));
+						items.add(new Item(x, y, Item.CHEESE, this));
 					} else {
-						items.add(new Gem(x, y, this));
+						items.add(new Item(x, y, Item.GEM, this));
 					}
 				}
 			}

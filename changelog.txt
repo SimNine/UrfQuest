@@ -398,3 +398,25 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 -Added new copper ore tile, can be mined to get copper ore
 -Redid cave system; now generates much like the upper world generates, but with closed-off spaces and minable spaces
 -Added RPG crafting recipe: 100 gems -> 1 RPG
+
+0.18.0_pre2 - 2/21/17
+-Added new "tick" command
+--Ticks the game a given number of times (without re-rendering each time)
+-Overhauled the item system
+--Items no longer have their own classes and are now generic
+--Items have an "itemType" property which determines what effects and properties they have
+--Much like the tile system now
+-Redid the crafting GUI
+--It's a bit hackish
+--A display window is added within the crafting window
+--The display window displays the inputs of whichever recipe is selected
+-Added a new "tile interaction" highlight
+--Highlights whatever tile the mouse is over within three tiles of the player
+NOTE:
+This build was originally going to be compiled sometime around 2/11/17,
+but I ran into a compilation problem. Despite the game running fine when
+launched out of Eclipse, it would not run when being run through the
+compiled jar. Using command prompt to view the stack trace, the cause
+of this appeared to be the item PNGs not being read properly. No idea why,
+but a fix for this was to rename the "assets" folder to "asset" and
+update the "assetPath" variables in all relevant classes.

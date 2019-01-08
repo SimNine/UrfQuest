@@ -7,8 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import entities.items.Bone;
-import entities.items.Shotgun;
+import entities.items.Item;
 import entities.mobs.ai.routines.IdleRoutine;
 import entities.mobs.ai.routines.AttackRoutine;
 import framework.QuestPanel;
@@ -20,7 +19,7 @@ public class Cyclops extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	private Shotgun shotgun;
+	private Item shotgun;
 
 	public Cyclops(double x, double y, QuestMap m) {
 		super(x, y, m);
@@ -41,7 +40,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Shotgun(0, 0, m);
+		shotgun = new Item(0, 0, 15, m);
 		intelligence = 50;
 		routine = new IdleRoutine(this);
 		thinkingDelay = intelligence;
@@ -105,6 +104,6 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		UrfQuest.game.getCurrMap().addItem(new Bone(bounds.getCenterX(), bounds.getCenterY(), map));
+		UrfQuest.game.getCurrMap().addItem(new Item(bounds.getCenterX(), bounds.getCenterY(), 6, map));
 	}
 }

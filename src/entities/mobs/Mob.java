@@ -11,7 +11,7 @@ import game.QuestMap;
 import tiles.Tiles;
 
 public abstract class Mob extends Entity {
-	protected final static String assetPath = "/assets/entities/";
+	protected final static String assetPath = "/asset/entities/";
 	protected int direction = 0;
 	protected double velocity;
 	protected double defaultVelocity;

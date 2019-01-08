@@ -12,10 +12,7 @@ import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
-import entities.items.Hatchet;
 import entities.items.Item;
-import entities.items.Pickaxe;
-import entities.items.Shovel;
 import framework.UrfQuest;
 import game.Inventory;
 import game.MapLink;
@@ -25,7 +22,7 @@ public class Player extends Mob {
 
 	// img[0] is east, img[1] is SE, img[2] is S, etc
 	private static BufferedImage[][] img = new BufferedImage[8][8];
-	private final static String assetPath = "/assets/player/";
+	private final static String assetPath = "/asset/player/";
 	
 	private String name;
 	private int statCounter = 200;
@@ -47,9 +44,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Shovel(0, 0, currMap));
-		inventory.addItem(new Pickaxe(0, 0, currMap));
-		inventory.addItem(new Hatchet(0, 0, currMap));
+		inventory.addItem(new Item(0, 0, 19, currMap));
+		inventory.addItem(new Item(0, 0, 17, currMap));
+		inventory.addItem(new Item(0, 0, 18, currMap));
 		
 		this.name = name;
 	}

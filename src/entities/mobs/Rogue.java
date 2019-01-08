@@ -12,9 +12,6 @@ import java.util.Collection;
 import javax.imageio.ImageIO;
 
 import entities.items.Item;
-import entities.items.Pistol;
-import entities.items.SMG;
-import entities.items.Shotgun;
 import entities.mobs.ai.routines.AttackRoutine;
 import entities.mobs.ai.routines.IdleRoutine;
 import framework.UrfQuest;
@@ -52,9 +49,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new SMG(0, 0, m));
-		inventory.addItem(new Shotgun(0, 0, m));
-		inventory.addItem(new Pistol(0, 0, m));
+		inventory.addItem(new Item(0, 0, 16, m));
+		inventory.addItem(new Item(0, 0, 15, m));
+		inventory.addItem(new Item(0, 0, 13, m));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(this);
@@ -198,7 +195,7 @@ public class Rogue extends Mob {
 	protected void drawEntity(Graphics g) {
 		final int STEP_SIZE = 15;
 		
-		if (animStage/STEP_SIZE == 8) {
+		if (animStage/STEP_SIZE >= 8) {
 			animStage = 0;
 		}
 		
