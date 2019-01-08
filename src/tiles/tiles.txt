@@ -13,3 +13,5 @@ Tile Types:
 10 - GrassBoulder
 11 - WaterBoulder
 12 - SandBoulder
+13 - DirtHole
+14 - DirtBoulder

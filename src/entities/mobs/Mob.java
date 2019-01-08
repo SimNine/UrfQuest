@@ -54,6 +54,25 @@ public abstract class Mob extends Entity {
 		bounds.setRect(newX - bounds.getWidth()/2.0, newY - bounds.getHeight()/2.0, bounds.getWidth(), bounds.getHeight());
 		return ret;
 	}
+	
+	// returns the tile ID of whatever is at distance 'd' away from the center of this mob, in the direction it is facing
+	public int tileTypeAtDistance(double d) {
+		double xComp = d*Math.cos(Math.toRadians(direction));
+		double yComp = d*Math.sin(Math.toRadians(direction));
+		return UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
+	}
+	
+	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
+	public int[] tileCoordsAtDistance(double d) {
+		double xComp = d*Math.cos(Math.toRadians(direction));
+		double yComp = d*Math.sin(Math.toRadians(direction));
+		
+		int[] ret = new int[2];
+		ret[0] = (int)(bounds.getCenterX() + xComp);
+		ret[1] = (int)(bounds.getCenterY() + yComp);
+		
+		return ret;
+	}
 
 	// drawing methods
 	protected abstract void drawEntity(Graphics g);
@@ -92,6 +111,15 @@ public abstract class Mob extends Entity {
 		g.drawString(("action: " + routine.getCurrentAction().getClass().getSimpleName() + " duration: " + routine.getCurrentAction().getDuration()),
 		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
 		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+20);
+//		g.drawString(("angleTo: " + player.angleTo(this)),
+//		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+//		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+30);
+//		g.drawString(("distTo: " + player.distanceTo(this)),
+//		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+//		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+40);
+//		g.drawString(("hasClearPath: " + this.hasClearPathTo(player)),
+//		 		 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+//		 		 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+50);
 	};
 
 	// setters, getters, and incrementers

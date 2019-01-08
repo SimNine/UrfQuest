@@ -30,15 +30,16 @@ public class FleeRoutine extends MobRoutine {
 	
 	private void addAction() {
 		if (other != null) {
-			double denom = other.getCenter()[0] - mob.getCenter()[0];
-			double num = other.getCenter()[1] - mob.getCenter()[1];
-			
-			int angle = 0;
-			if (denom > 0) {
-				angle += 180;
-			}
-			
-			angle += (int)(Math.toDegrees(Math.atan(num / denom)) + Math.random()*30);
+//			double denom = other.getCenter()[0] - mob.getCenter()[0];
+//			double num = other.getCenter()[1] - mob.getCenter()[1];
+//			
+//			int angle = 0;
+//			if (denom > 0) {
+//				angle += 180;
+//			}
+//			
+//			angle += (int)(Math.toDegrees(Math.atan(num / denom)) + Math.random()*30);
+			int angle = other.angleTo(mob) + (int)(Math.random()*30);
 			actions.add(new MoveAction(50, angle, mob.getVelocity()*1.5));
 		} else {
 			actions.add(new IdleAction(10));

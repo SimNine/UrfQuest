@@ -3,10 +3,15 @@ package framework;
 import javax.swing.JOptionPane;
 
 import entities.items.Cheese;
+import entities.items.ChickenLeg;
 import entities.items.Gem;
+import entities.items.Hatchet;
 import entities.items.Key;
+import entities.items.Log;
+import entities.items.Pickaxe;
 import entities.items.Pistol;
 import entities.items.SMG;
+import entities.items.Shovel;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Player;
@@ -37,7 +42,8 @@ public class CommandProcessor {
 					+ "\"set (health/mana/speed) (0-100)\"\n"
 					+ "\"tp (xpos) (ypos)\"\n"
 					+ "\"tprel (xoffset) (yoffset)\"\n"
-					+ "\"home\"", 
+					+ "\"home\""
+					+ "\"toolkit\"", 
 					"command help", JOptionPane.INFORMATION_MESSAGE);
 		} else if (args[0].equals("give")) {
 			if (args.length < 2) {
@@ -62,6 +68,16 @@ public class CommandProcessor {
 					UrfQuest.game.getPlayer().addItem(new Gem(0, 0));
 				} else if (args[1].equals("key")) {
 					UrfQuest.game.getPlayer().addItem(new Key(0, 0));
+				} else if (args[1].equals("hatchet")) {
+					UrfQuest.game.getPlayer().addItem(new Hatchet(0, 0));
+				} else if (args[1].equals("chickenleg")) {
+					UrfQuest.game.getPlayer().addItem(new ChickenLeg(0, 0));
+				} else if (args[1].equals("log")) {
+					UrfQuest.game.getPlayer().addItem(new Log(0, 0));
+				} else if (args[1].equals("shovel")) {
+					UrfQuest.game.getPlayer().addItem(new Shovel(0, 0));
+				} else if (args[1].equals("pickaxe")) {
+					UrfQuest.game.getPlayer().addItem(new Pickaxe(0, 0));
 				}
 			}
 		} else if (args[0].equals("spawn")) {
@@ -93,6 +109,10 @@ public class CommandProcessor {
 			UrfQuest.game.getPlayer().setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else if (args[0].equals("tprel")) {
 			UrfQuest.game.getPlayer().move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+		} else if (args[0].equals("toolkit")) {
+			UrfQuest.game.getPlayer().addItem(new Pickaxe(0, 0));
+			UrfQuest.game.getPlayer().addItem(new Hatchet(0, 0));
+			UrfQuest.game.getPlayer().addItem(new Shovel(0, 0));
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

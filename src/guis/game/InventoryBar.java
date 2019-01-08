@@ -38,7 +38,7 @@ public class InventoryBar extends GUIObject {
 		// draw entries
 		int xTemp = bounds.x + borderWidth + gapWidth;
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
-		for (InventoryEntry e : UrfQuest.game.getPlayer().getInventory()) {
+		for (InventoryEntry e : UrfQuest.game.getPlayer().getInventory()) { // for each entry
 			if (e.isSelected()) { // draw the grey box (lighter if this entry is selected)
 				g.setColor(new Color(192, 192, 192));
 			} else {

@@ -2,6 +2,7 @@ package game;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import entities.items.Cheese;
 import entities.items.Gem;
@@ -22,10 +23,14 @@ public class QuestMap {
 	public static final int SIMPLEX_MAP = 5001;
 	public static final int SAVANNAH_MAP = 5002;
 	public static final int TEMPLATE_MAP = 5003;
+	public static final int CAVE_MAP = 5004;
 	
 	private int[][] map;
 	private BufferedImage minimap;
 	private int[] homeCoords = new int[2];
+	
+	private HashMap<MapLink, MapLink> links = new HashMap<MapLink, MapLink>();
+	
 	public ArrayList<Mob> mobs = new ArrayList<Mob>();
 	public ArrayList<Item> items = new ArrayList<Item>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
@@ -47,10 +52,15 @@ public class QuestMap {
 		case TEMPLATE_MAP:
 			generateTemplateMap();
 			break;
+		case CAVE_MAP:
+			generateCaveMap();
+			break;
 		}
 		
 		if (type != EMPTY_MAP) {
-			generateStartingArea();
+			if (type != CAVE_MAP) {
+				generateStartingArea();
+			}
 			generateBorderWall();
 			generateMinimap();
 		}
@@ -209,28 +219,68 @@ public class QuestMap {
 		}
 		for (int x = 1; x < width - 1; x++) {
 			for (int y = 1; y < height - 1; y++) {
-				if (Math.random() < .1) end[x][y] = 2;
+				if (Math.random() < .1) end[x][y] = 0;
 			}
 		}
 		for (int x = 2; x < width - 2; x++) {
 			for (int y = 2; y < height - 2; y++) {
-				if (Math.random() < .2) end[x][y] = 2;
+				if (Math.random() < .2) end[x][y] = 0;
 			}
 		}
 		for (int x = 3; x < width - 3; x++) {
 			for (int y = 3; y < height - 3; y++) {
-				if (Math.random() < .4) end[x][y] = 2;
+				if (Math.random() < .4) end[x][y] = 0;
 			}
 		}
 		for (int x = 4; x < width - 4; x++) {
 			for (int y = 4; y < height - 4; y++) {
-				if (Math.random() < .9) end[x][y] = 2;
+				if (Math.random() < .9) end[x][y] = 0;
 			}
 		}
 		for (int x = 5; x < width - 5; x++) {
 			for (int y = 5; y < height - 5; y++) {
-				if (Math.random() < .1) end[x][y] = 7;
-				else end[x][y] = 2;
+				if (Math.random() < .1) end[x][y] = 14;
+				else end[x][y] = 0;
+			}
+		}
+		
+		this.map = end;
+	}
+	
+	public void generateCaveMap() {
+		int width = map.length;
+		int height = map[0].length;
+		int[][] end = new int[width][height];
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				end[x][y] = 1;
+			}
+		}
+		for (int x = 1; x < width - 1; x++) {
+			for (int y = 1; y < height - 1; y++) {
+				if (Math.random() < .1) end[x][y] = 0;
+			}
+		}
+		for (int x = 2; x < width - 2; x++) {
+			for (int y = 2; y < height - 2; y++) {
+				if (Math.random() < .2) end[x][y] = 0;
+			}
+		}
+		for (int x = 3; x < width - 3; x++) {
+			for (int y = 3; y < height - 3; y++) {
+				if (Math.random() < .4) end[x][y] = 0;
+			}
+		}
+		for (int x = 4; x < width - 4; x++) {
+			for (int y = 4; y < height - 4; y++) {
+				if (Math.random() < .9) end[x][y] = 0;
+			}
+		}
+		for (int x = 5; x < width - 5; x++) {
+			for (int y = 5; y < height - 5; y++) {
+				if (Math.random() < .1) end[x][y] = 14;
+				else end[x][y] = 0;
 			}
 		}
 		
@@ -378,6 +428,14 @@ public class QuestMap {
 	
 	public int[] getHomeCoords() {
 		return homeCoords;
+	}
+	
+	public HashMap<MapLink, MapLink> getLinks() {
+		return links;
+	}
+	
+	public void addLink(MapLink here, MapLink there) {
+		links.put(here, there);
 	}
 	
 	public void setNewMap(int w, int h) {

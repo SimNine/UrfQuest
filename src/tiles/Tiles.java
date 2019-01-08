@@ -14,7 +14,7 @@ public class Tiles {
 	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
-	private static BufferedImage[] tileImages = new BufferedImage[13];
+	private static BufferedImage[] tileImages = new BufferedImage[15];
 	
 	private static boolean[][] tileBooleanProperties = 
 		   //walkable	//penetrable
@@ -30,7 +30,9 @@ public class Tiles {
 		  {true,		true},
 		  {false,		false},//10
 		  {false,		false},
-		  {false,		false}};//12
+		  {false,		false},//12
+		  {true,		true},
+		  {false,		false} };
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
@@ -46,7 +48,9 @@ public class Tiles {
 		  {Color.YELLOW.brighter().getRGB()},
 		  {Color.GRAY.getRGB()},//10
 		  {Color.GRAY.getRGB()},
-		  {Color.GRAY.getRGB()}	};//12
+		  {Color.GRAY.getRGB()},//12
+		  {Color.BLACK.getRGB()},
+		  {new Color(107, 40, 7).getRGB()} };
 	
 	public static void initGraphics() {
 		try {
@@ -157,6 +161,30 @@ public class Tiles {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
 			System.out.println(errMsg + tileRoot + "water.png");
+		}
+		
+		try {
+			// here, the hole sprite is drawn onto the dirt sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hole_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[13] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "hole_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "dirt.png");
+		}
+		
+		try {
+			// here, the boulder sprite is drawn onto the dirt sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[14] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "dirt.png");
 		}
 	}
 	

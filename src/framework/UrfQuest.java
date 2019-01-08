@@ -17,7 +17,7 @@ import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.15.1";
+    private static final String VERSION = "0.16.0_pre1";
     private static final String GAME_NAME = "UrfQuest";
     
     // should never need to be accessed

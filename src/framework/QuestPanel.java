@@ -113,6 +113,8 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 							swap(mapView);
 							guiOpen = true;
+						} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+							UrfQuest.game.tryMapLink();
 						}
 					}
 				} else {

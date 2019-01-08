@@ -253,3 +253,27 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 -Player now contains a hunger counter with default size of 1000, drains hunger by one point per 1000 ticks
 --Health drains by one point per 1000 ticks once fullness is empty
 -Eating chicken legs increases fullness by 5, cheese increases fullness to max
+
+0.16.0_pre1 - 1/26/17
+(Gameplay Update 2)
+-Added three methods to entity:
+--distanceTo(e): gets the direct distance from this entity to entity e
+--angleTo(e): gets the angle from this entity to entity e
+--hasClearPathTo(e): computes whether this entity has a direct path to entity e
+-Added two methods to mob:
+--tileCoordsAtDistance(d): returns the coords of the tile 'd' away from the center of this mob in the direction it is facing
+--tileTypeAtDistance(d): returns the type of the tile 'd' away from the center of this mob in the direction it is facing
+-Added several new items:
+--Added log item
+--Added hatchet item
+---When hatchet is used, if the tile one unit in front of the player is a tree, the tree is removed and a log is dropped
+--Added stone item
+--Added pickaxe item
+---When pickaxe is used, if the tile one unit in front of the player is a boulder, the boulder is removed and stone is dropped
+--Added shovel item
+---When shovel is used, if the tile under the player is grass, it becomes dirt, with a 5% chance of a hole being generated
+-Minimap is now generated properly; if the map is smaller than the minimap display window, the minimap is centered in the window
+-When holes are created, "cave" maps are generated; each hole links to a unique cave map
+-Inter-map link system created
+--Each map now stores a hashmap of links to other maps
+-Added new "hole" and "dirtboulder" tiles

@@ -14,6 +14,6 @@ public class MapViewOverlay extends Overlay {
 		
 		// add the map
 		QuestMap map = UrfQuest.game.getCurrMap();
-		guiObjects.add(new Minimap(-map.getWidth()/2, -map.getHeight()/2, map.getWidth() + 10, map.getHeight() + 10, GUIObject.CENTER, map));
+		guiObjects.add(new Minimap(-map.getWidth()/2, -map.getHeight()/2, map.getWidth() + 10, map.getHeight() + 10, GUIObject.CENTER));
 	}
 }

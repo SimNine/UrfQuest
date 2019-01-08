@@ -8,25 +8,25 @@ import entities.items.Item;
 import entities.mobs.Mob;
 import entities.mobs.Player;
 import framework.UrfQuest;
-import game.QuestMap;
 import guis.Clickable;
 import guis.GUIObject;
 
 public class Minimap extends GUIObject implements Clickable {
-	private QuestMap map;
+	// the coordinates of the pixel in the upper-left corner
+	private int xRoot;
+	private int yRoot;
 	
 	// the coordinates of the block in the upper-left corner of the minimap
 	// NOT the coordinates of pixel in the upper-left corner
 	private int xCrop;
 	private int yCrop;
 
-	public Minimap(int xDisp, int yDisp, int width, int height, int anchorPoint, QuestMap map) {
+	public Minimap(int xDisp, int yDisp, int width, int height, int anchorPoint) {
 		super(anchorPoint, xDisp, yDisp, width, height);
-		this.map = map;
 	}
 
 	public void draw(Graphics g) {
-		BufferedImage minimap = map.getMinimap();
+		BufferedImage minimap = UrfQuest.game.getCurrMap().getMinimap();
 		Player player = UrfQuest.game.getPlayer();
 		
 		int borderWidth = 3;
@@ -40,24 +40,37 @@ public class Minimap extends GUIObject implements Clickable {
 			g.drawRect(bounds.x + i, bounds.y + i, bounds.width - i*2, bounds.height - i*2);
 		}
 		
-		int xRoot = bounds.x + borderWidth + gapWidth;
-		int yRoot = bounds.y + borderWidth + gapWidth;
+		xRoot = bounds.x + borderWidth + gapWidth;
+		yRoot = bounds.y + borderWidth + gapWidth;
 		int width = bounds.width - 2*(borderWidth + gapWidth);
 		int height = bounds.height - 2*(borderWidth + gapWidth);
 		
-		xCrop = (int)player.getPos()[0] - width/2;
-		yCrop = (int)player.getPos()[1] - height/2;
-		if (xCrop < 0) {
+		if (minimap.getWidth() <= width) {
+			xRoot += (width - minimap.getWidth())/2;
 			xCrop = 0;
+			width = minimap.getWidth();
+		} else {
+			xCrop = (int)player.getPos()[0] - width/2;
+			if (xCrop < 0) {
+				xCrop = 0;
+			}
+			if (xCrop + width > minimap.getWidth()) {
+				xCrop = minimap.getWidth() - width;
+			}
 		}
-		if (yCrop < 0) {
+		
+		if (minimap.getHeight() <= height) {
+			yRoot += (height - minimap.getHeight())/2;
 			yCrop = 0;
-		}
-		if (xCrop + width > minimap.getWidth()) {
-			xCrop = minimap.getWidth() - width;
-		}
-		if (yCrop + height > minimap.getHeight()) {
-			yCrop = minimap.getHeight() - height;
+			height = minimap.getHeight();
+		} else {
+			yCrop = (int)player.getPos()[1] - height/2;
+			if (yCrop < 0) {
+				yCrop = 0;
+			}
+			if (yCrop + height > minimap.getHeight()) {
+				yCrop = minimap.getHeight() - height;
+			}
 		}
 		
 		// crop the map's minimap to fit the current size
@@ -66,7 +79,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each item currently on the minimap
 		g.setColor(Color.RED);
-		for (Item i : map.items) {
+		for (Item i : UrfQuest.game.getCurrMap().items) {
 			if ((int)i.getPos()[0] > xCrop && (int)i.getPos()[0] < xCrop + width &&
 				(int)i.getPos()[1] > yCrop && (int)i.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)i.getPos()[0]-xCrop) - 1, 
@@ -76,7 +89,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each npc currently on the minimap
 		g.setColor(Color.YELLOW);
-		for (Mob m : map.mobs) {
+		for (Mob m : UrfQuest.game.getCurrMap().mobs) {
 			if ((int)m.getPos()[0] > xCrop && (int)m.getPos()[0] < xCrop + width &&
 				(int)m.getPos()[1] > yCrop && (int)m.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)m.getPos()[0]-xCrop) - 1, 
@@ -97,8 +110,8 @@ public class Minimap extends GUIObject implements Clickable {
 	
 	public void click() {
 		if (UrfQuest.debug) {
-			int xPos = UrfQuest.mousePos[0] - bounds.x - 5 + xCrop;
-			int yPos = UrfQuest.mousePos[1] - bounds.y - 5 + yCrop;
+			int xPos = UrfQuest.mousePos[0] - xRoot + xCrop;
+			int yPos = UrfQuest.mousePos[1] - yRoot + yCrop;
 			
 			System.out.println(xPos + ", " + yPos);
 			UrfQuest.game.getPlayer().setPos(xPos, yPos);

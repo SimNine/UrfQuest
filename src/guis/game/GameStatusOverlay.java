@@ -54,7 +54,7 @@ public class GameStatusOverlay extends Overlay {
 //									200, 
 //									200,
 //									GUIObject.TOP_LEFT);
-		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIObject.TOP_RIGHT);
 		invBar = new InventoryBar(GUIObject.BOTTOM_LEFT, 3, -inventoryBarHeight - spacing, 40);
 		
 		guiObjects.add(fullnessBar);
@@ -67,17 +67,17 @@ public class GameStatusOverlay extends Overlay {
 	
 	public void cycleMinimapSize() {
 		if (!guiObjects.contains(minimap)) {
-			minimap = new Minimap(-(100 + spacing), spacing, 100, 100, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+			minimap = new Minimap(-(100 + spacing), spacing, 100, 100, GUIObject.TOP_RIGHT);
 			guiObjects.add(minimap);
 			return;
 		}
 		
 		guiObjects.remove(minimap);
 		if (minimap.getSize() == 100) {
-			minimap = new Minimap(-(200 + spacing), spacing, 200, 200, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+			minimap = new Minimap(-(200 + spacing), spacing, 200, 200, GUIObject.TOP_RIGHT);
 			guiObjects.add(minimap);
 		} else if (minimap.getSize() == 200) {
-			minimap = new Minimap(-(300 + spacing), spacing, 300, 300, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
+			minimap = new Minimap(-(300 + spacing), spacing, 300, 300, GUIObject.TOP_RIGHT);
 			guiObjects.add(minimap);
 		} else { //if (minimap.getSize() == 300) {
 			// don't re-add the minimap
