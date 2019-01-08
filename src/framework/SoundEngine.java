@@ -1,6 +1,5 @@
 package framework;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.sound.sampled.*;
@@ -10,7 +9,7 @@ public class SoundEngine {
 
 	public static int musicVol;
 	
-	private static String soundPath = "src/assets/sounds/";
+	private static String soundPath = "/assets/sounds/";
     private static Clip clip;
 	private static AudioInputStream mouseover, mouseclick;
 	
@@ -22,13 +21,13 @@ public class SoundEngine {
 		}
 		
         try {
-        	mouseover = AudioSystem.getAudioInputStream(new File(soundPath + "mouseover.wav"));
+        	mouseover = AudioSystem.getAudioInputStream(UrfQuest.quest.getClass().getResourceAsStream(soundPath + "mouseover.wav"));
         } catch (UnsupportedAudioFileException | IOException e) {
 			e.printStackTrace();
 		}
 		
         try {
-        	mouseclick = AudioSystem.getAudioInputStream(new File(soundPath + "mouseclick.wav"));
+        	mouseclick = AudioSystem.getAudioInputStream(UrfQuest.quest.getClass().getResourceAsStream(soundPath + "mouseclick.wav"));
         } catch (UnsupportedAudioFileException | IOException e) {
 			e.printStackTrace();
 		}

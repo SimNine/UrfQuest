@@ -79,3 +79,9 @@ NOTE: MapLoader is completely fucked
 	This method has been modified to provide a different result every time by permuting the "perm[]" array
 -Player is now placed in an automatically generated open area with no trees
 -Gameplay GUI (status bars, etc) is hidden while in menus
+	
+0.7.1 - 11/22/16
+-Player's graphics are now initialized the same way as tiles and sounds
+-All graphics are now imported using an input stream sourced at the main class,
+	allowing importing to work properly when in runnable jar form
+-The running instance of the main class is now accessible at UrfQuest.quest

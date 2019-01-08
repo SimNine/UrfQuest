@@ -11,14 +11,17 @@ import java.util.Set;
 
 import javax.swing.*;
 
+import entities.characters.Player;
 import framework.QuestPanel;
 import game.QuestGame;
 import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.7.0";
+    private static final String VERSION = "0.7.1";
     private static final String GAME_NAME = "UrfQuest";
+    
+	public static UrfQuest quest;
     
     public static final boolean debug = false;
     public static final JFrame frame = new JFrame(GAME_NAME + " " + VERSION);
@@ -41,6 +44,10 @@ public class UrfQuest implements Runnable {
 	    System.out.println(GAME_NAME + " " + VERSION);
         System.out.println("---------------------");
         System.out.println();
+		
+		Tiles.initGraphics();
+		SoundEngine.initSounds();
+		Player.initPlayer();
 	    
         frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         frame.setMinimumSize(new Dimension(700, 600));
@@ -54,12 +61,10 @@ public class UrfQuest implements Runnable {
                 panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
             }
         });
-		
-		Tiles.initGraphics();
-		SoundEngine.initSounds();
 	}
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new UrfQuest());
+		quest = new UrfQuest();
+		SwingUtilities.invokeLater(quest);
 	}
 }

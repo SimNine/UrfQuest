@@ -3,12 +3,12 @@ package tiles;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import framework.QuestPanel;
+import framework.UrfQuest;
 
 public class Tiles {
 	private static BufferedImage grassTile;
@@ -20,7 +20,7 @@ public class Tiles {
 	private static BufferedImage hurtPadTile;
 	private static BufferedImage treeTile;
 	private static BufferedImage waterTile;
-	private static String tileRoot = "src/assets/tiles/";
+	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
 	private static boolean[][] tileProperties = 
@@ -37,63 +37,63 @@ public class Tiles {
 	
 	public static void initGraphics() {
 		try {
-			grassTile = ImageIO.read(new File(tileRoot + "grass.png"));
+			grassTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "grass.png");
 		}
 		
 		try {
-			stoneTile = ImageIO.read(new File(tileRoot + "stone.png"));
+			stoneTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "stone.png");
 		}
 		
 		try {
-			dirtTile = ImageIO.read(new File(tileRoot + "dirt.png"));
+			dirtTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "dirt.png");
 		}
 		
 		try {
-			healthPadTile = ImageIO.read(new File(tileRoot + "healthPad.png"));
+			healthPadTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "healthPad.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "healthPad.png");
 		}
 		
 		try {
-			manaPadTile = ImageIO.read(new File(tileRoot + "manaPad.png"));
+			manaPadTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "manaPad.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "manaPad.png");
 		}
 		
 		try {
-			speedPadTile = ImageIO.read(new File(tileRoot + "speedPad.png"));
+			speedPadTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "speedPad.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "speedPad.png");
 		}
 		
 		try {
-			hurtPadTile = ImageIO.read(new File(tileRoot + "hurtPad.png"));
+			hurtPadTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hurtPad.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "hurtPad.png");
 		}
 		
 		try {
-			treeTile = ImageIO.read(new File(tileRoot + "tree_scaled.png"));
+			treeTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "tree_scaled.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "tree_scaled.png");
 		}
 		
 		try {
-			waterTile = ImageIO.read(new File(tileRoot + "water.png"));
+			waterTile = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "water.png");

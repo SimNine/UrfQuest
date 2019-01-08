@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -16,7 +15,7 @@ import game.QuestMap;
 import tiles.Tiles;
 
 public class Player extends Entity{
-	private BufferedImage NW1, NW2, NW3, NW4, NW5, NW6, NW7, NW8,
+	private static BufferedImage NW1, NW2, NW3, NW4, NW5, NW6, NW7, NW8,
 						  N1, N2, N3, N4, N5, N6, N7, N8,
 						  NE1, NE2, NE3, NE4, NE5, NE6, NE7, NE8,
 						  E1, E2, E3, E4, E5, E6, E7, E8,
@@ -26,7 +25,7 @@ public class Player extends Entity{
 						  W1, W2, W3, W4, W5, W6, W7, W8,
 						  temp;
 	
-	private final String assetPath = "src/assets/player/";
+	private final static String assetPath = "/assets/player/";
 	
 	private double health = 100.0;
 	private double mana = 100.0;
@@ -37,34 +36,36 @@ public class Player extends Entity{
 		type = "player";
 		
 		bounds = new Rectangle2D.Double(x, y, 30, 30);
-		
+	}
+	
+	public static void initPlayer() {
 		// Load east-west
 		try {
-			E1 = E5 = W1 = W5 = ImageIO.read(new File(assetPath + "E1.png"));
+			E1 = E5 = W1 = W5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E1.png");
 		}
 		try {
-			E2 = E4 = W2 = W4 = ImageIO.read(new File(assetPath + "E2.png"));
+			E2 = E4 = W2 = W4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E2.png");
 		}
 		try {
-			E3 = W3 = ImageIO.read(new File(assetPath + "E3.png"));
+			E3 = W3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E3.png");
 		}
 		try {
-			E6 = E8 = W6 = W8 = ImageIO.read(new File(assetPath + "E6.png"));
+			E6 = E8 = W6 = W8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E6.png");
 		}
 		try {
-			E7 = W7 = ImageIO.read(new File(assetPath + "E7.png"));
+			E7 = W7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "E7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "E7.png");
@@ -72,31 +73,31 @@ public class Player extends Entity{
 		
 		// Load NE-SW
 		try {
-			NE1 = NE5 = SW1 = SW5 = ImageIO.read(new File(assetPath + "NE1.png"));
+			NE1 = NE5 = SW1 = SW5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE1.png");
 		}
 		try {
-			NE2 = NE4 = SW2 = SW4 = ImageIO.read(new File(assetPath + "NE2.png"));
+			NE2 = NE4 = SW2 = SW4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE2.png");
 		}
 		try {
-			NE3 = SW3 = ImageIO.read(new File(assetPath + "NE3.png"));
+			NE3 = SW3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE3.png");
 		}
 		try {
-			NE6 = NE8 = SW6 = SW8 = ImageIO.read(new File(assetPath + "NE6.png"));
+			NE6 = NE8 = SW6 = SW8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE6.png");
 		}
 		try {
-			NE7 = SW7 = ImageIO.read(new File(assetPath + "NE7.png"));
+			NE7 = SW7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NE7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NE7.png");
@@ -104,31 +105,31 @@ public class Player extends Entity{
 		
 		// Load NW-SE
 		try {
-			NW1 = NW5 = SE1 = SE5 = ImageIO.read(new File(assetPath + "NW1.png"));
+			NW1 = NW5 = SE1 = SE5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW1.png");
 		}
 		try {
-			NW2 = NW4 = SE2 = SE4 = ImageIO.read(new File(assetPath + "NW2.png"));
+			NW2 = NW4 = SE2 = SE4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW2.png");
 		}
 		try {
-			NW3 = SE3 = ImageIO.read(new File(assetPath + "NW3.png"));
+			NW3 = SE3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW3.png");
 		}
 		try {
-			NW6 = NW8 = SE6 = SE8 = ImageIO.read(new File(assetPath + "NW6.png"));
+			NW6 = NW8 = SE6 = SE8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW6.png");
 		}
 		try {
-			NW7 = SE7 = ImageIO.read(new File(assetPath + "NW7.png"));
+			NW7 = SE7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "NW7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "NW7.png");
@@ -136,31 +137,31 @@ public class Player extends Entity{
 		
 		// Load north-south
 		try {
-			N1 = N5 = S1 = S5 = ImageIO.read(new File(assetPath + "N1.png"));
+			N1 = N5 = S1 = S5 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N1.png");
 		}
 		try {
-			N2 = N4 = S2 = S4 = ImageIO.read(new File(assetPath + "N2.png"));
+			N2 = N4 = S2 = S4 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N2.png");
 		}
 		try {
-			N3 = S3 = ImageIO.read(new File(assetPath + "N3.png"));
+			N3 = S3 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N3.png");
 		}
 		try {
-			N6 = N8 = S6 = S8 = ImageIO.read(new File(assetPath + "N6.png"));
+			N6 = N8 = S6 = S8 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N6.png");
 		}
 		try {
-			N7 = S7 = ImageIO.read(new File(assetPath + "N7.png"));
+			N7 = S7 = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "N7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "N7.png");
