@@ -1,7 +1,7 @@
 package game;
 
 import entities.Entity;
-import entities.Player;
+import entities.characters.Player;
 import framework.V;
 
 public class QuestGame {

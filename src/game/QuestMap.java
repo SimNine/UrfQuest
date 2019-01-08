@@ -3,21 +3,20 @@ package game;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import entities.Ball;
 import entities.Entity;
-import entities.Square;
+import entities.shapes.Ball;
+import entities.shapes.Square;
 import framework.V;
 
+@SuppressWarnings("unused")
 public class QuestMap {
 	
 	private int[][] map;
-	private ArrayList<Entity> enList;
 	
 	public QuestMap(int width, int height) {
 		map = generateMap(width, height);
-		enList = generateEntities(200);
 		
-		V.entities = enList;
+		V.entities = generateEntities(0);
 		V.qMap = this;
 	}
 	

@@ -1,9 +1,7 @@
-package entities;
+package entities.shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 import framework.V;
@@ -21,8 +19,9 @@ public class Square extends Shape{
 	// Draw methods
 	protected void drawEntity(Graphics g) {
 		g.setColor(color);
-		g.fillRect((int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.scale*10 - V.scale*diameter*.5),
-				   (int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.scale*10 - V.scale*diameter*.5), (int)(V.scale*diameter), (int)(V.scale*diameter));
+		g.fillRect((int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.tileWidth - V.tileWidth*diameter*.05),
+				   (int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.tileWidth - V.tileWidth*diameter*.05), 
+				   (int)(V.tileWidth*0.1*diameter), (int)(V.tileWidth*0.1*diameter));
 	}
 	
 	// Update methods

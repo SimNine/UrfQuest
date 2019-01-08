@@ -9,11 +9,12 @@ import javax.swing.*;
 import display.QuestPanel;
 import game.QuestGame;
 import game.QuestMap;
+import tiles.Tiles;
 
 /** Main class that specifies the frame and widgets of the GUI
  */
 public class UrfQuest implements Runnable {
-    private String version = "0.4.2";
+    private String version = "0.5.0";
     private String gameName = "UrfQuest";
     
 	public void run() {
@@ -38,6 +39,8 @@ public class UrfQuest implements Runnable {
                 questPanel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
             }
         });
+		
+		Tiles.initGraphics();
 		
 		final QuestMap questMap = new QuestMap(500, 500);
 		V.qMap = questMap;

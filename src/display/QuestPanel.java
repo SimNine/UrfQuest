@@ -5,13 +5,14 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import tiles.Tiles;
+
 import framework.MapLoader;
 import framework.V;
 
 import javax.swing.JPanel;
 
 import entities.Entity;
-import pixelart.Sprites;
 
 @SuppressWarnings("serial")
 public class QuestPanel extends JPanel {
@@ -54,36 +55,35 @@ public class QuestPanel extends JPanel {
 	}
 	
 	private void drawBoard(Graphics g) {
-		int tileWidth = V.scale*10;
-		int tempX = (int)((V.player.getPosition()[0] % 1)*tileWidth);
-		int tempY = (int)((V.player.getPosition()[1] % 1)*tileWidth);
+		int tempX = (int)((V.player.getPosition()[0] % 1)*V.tileWidth);
+		int tempY = (int)((V.player.getPosition()[1] % 1)*V.tileWidth);
 		for (int x = -(int)Math.floor(V.dispTileWidth/2.0); x < Math.ceil(V.dispTileWidth/2.0); x++) {
 			for (int y = -(int)Math.floor(V.dispTileHeight/2.0); y < Math.ceil(V.dispTileHeight/2.0); y++) {
 				switch (V.qMap.getTileAt((int)V.player.getPosition()[0] + x, (int)V.player.getPosition()[1] + y)) {
 				case -1:
 					g.setColor(Color.BLACK);
-					g.fillRect(V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, tileWidth, tileWidth);
+					g.fillRect(V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth, V.tileWidth, V.tileWidth);
 					break;
 				case 0:
-					pixelart.Tiles.drawDirtBlock(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawDirtBlock(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth);
 					break;
 				case 1:
-					pixelart.Tiles.drawStoneBlock(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawStoneBlock(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth);
 					break;
 				case 2:
-					pixelart.Tiles.drawGrassBlock(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawGrassBlock(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth);
 					break;
 				case 3:
-					pixelart.Tiles.drawManaPad(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawManaPad(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth, V.tileWidth);
 					break;
 				case 4:
-					pixelart.Tiles.drawHealthPad(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawHealthPad(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth, V.tileWidth);
 					break;
 				case 5:
-					pixelart.Tiles.drawHurtPad(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawHurtPad(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth, V.tileWidth);
 					break;
 				case 6:
-					pixelart.Tiles.drawSpeedPad(g, V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, V.scale);
+					Tiles.drawSpeedPad(g, V.dispCenterX - tempX + x*V.tileWidth, V.dispCenterY - tempY + y*V.tileWidth, V.tileWidth);
 					break;
 				}
 			}
@@ -103,10 +103,10 @@ public class QuestPanel extends JPanel {
 	}
 	
 	private void drawSprites(Graphics g) {
-		V.player.draw(g);
 		for (Entity e : V.entities) {
 			e.draw(g);
 		}
+		V.player.draw(g);
 	}
 
 	private void drawCrosshair(Graphics g) {
@@ -116,17 +116,17 @@ public class QuestPanel extends JPanel {
 	}
 	
 	private void drawStatusBars(Graphics g) {
-		QuestGUI.drawStatusBar(g, Color.RED, V.player.getHealth(), 100, V.scale, V.scale*10, getHeight() - V.scale*15);
-		QuestGUI.drawStatusBar(g, Color.BLUE, V.player.getMana(), 100, V.scale, V.scale*10, getHeight() - V.scale*25);
+		QuestGUI.drawStatusBar(g, Color.RED, V.player.getHealth(), 100, (int)(V.tileWidth*0.1), V.tileWidth, getHeight() - (int)(V.tileWidth*1.5));
+		QuestGUI.drawStatusBar(g, Color.BLUE, V.player.getMana(), 100, (int)(V.tileWidth*0.1), V.tileWidth, getHeight() - (int)(V.tileWidth*2.5));
 	}
 	
-	// Panel methods
+	// sets the dimensions of the panel, in pixels
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
 		V.dispCenterX = w/2;
 		V.dispCenterY = h/2;
-		V.dispTileWidth = (int)Math.ceil(w/(V.scale*10))+2;
-		V.dispTileHeight = (int)Math.ceil(h/(V.scale*10))+2;
+		V.dispTileWidth = (int)Math.ceil(w/(V.tileWidth))+2;
+		V.dispTileHeight = (int)Math.ceil(h/(V.tileWidth))+2;
 		System.out.println("DisplayCenter: " + V.dispCenterX + ", " + V.dispCenterY);
 		System.out.println("DisplayTileDims: " + V.dispTileWidth + ", " + V.dispTileHeight);
 		repaint();

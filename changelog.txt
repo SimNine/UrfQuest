@@ -54,3 +54,9 @@
 -Deglobalized all player-related variables; they are now accessed through the player entity
 -Fixed debugging graphics appearing even when V.debug was false
 NOTE: MapLoader is completely fucked
+
+0.5.0 - 8/16/16
+-Completely replaced hardcoded "player" with player entity
+-Player no longer converts grass to dirt
+-Replaced all tile and entity procedurally drawn graphics with .png images
+-New bug? game now lags considerably (might be due to running on battery power)
