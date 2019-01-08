@@ -234,3 +234,15 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 -StatusBar GUIObject must now be instantiated with an anonymous getPercentage() method in order to display information
 -Moved the full map view into its own overlay, MapViewOverlay
 -When debugging, clicking on a minimap will tp the player to the point clicked
+
+0.15.0 - 1/10/17
+(The GUI/AI Update, continued)
+-Added a "build mode" to QuestGame; if buildmode is activated, the player's mouse highlights the current block
+-Added helper methods in QuestPanel to convert screen coordinates to game coordinates, and vice versa (some are broken)
+-Clicking or dragging while in build mode puts a grass tile down on the spot clicked
+-Decreased bullet size from .2 to .15
+-Bullets now spawn from the center of the player sprite
+-Added a fullscreen toggle which generates a new JFrame and JPanel when called
+-Added class "Keybindings", a container for keybindings to toggle in-game functions
+-Added keybinding GUI, which allows the user to bind keys to all functions
+-Created another timer; one to tick the game, and one to render everything (surprise: speedup due to multithreading)

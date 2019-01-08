@@ -190,14 +190,21 @@ public class Player extends Mob {
 	}
 
 	public void update() {
+		if (UrfQuest.panel.isGUIOpen()) {
+			return;
+		}
+		
+		// use the selected item if space is down
 		if (UrfQuest.keys.contains(KeyEvent.VK_SPACE)) {
 			useSelectedItem();
 		}
 		
+		// update each entry (cooldown) in the inventory
 		for (InventoryEntry e : inventory.getInventoryEntries()) {
 			e.update();
 		}
 		
+		// process the tile the player is currently on
 		processCurrentTile();
 		
 		// get the direction indicated by the current keys pressed
@@ -227,6 +234,7 @@ public class Player extends Mob {
 			return;
 		}
 	
+		// try to move in the current direction with the current velocity
 		attemptMove(newDir, velocity);
 		if (newDir == direction) {
 			this.animStage++;
@@ -238,8 +246,8 @@ public class Player extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getX() + bounds.getWidth()/2.0),
-													 (int)(bounds.getY() + bounds.getHeight()/2.0))) {
+		switch (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getCenterX()),
+													 (int)(bounds.getCenterY()))) {
 		case 0:
 			//nothing
 			break;

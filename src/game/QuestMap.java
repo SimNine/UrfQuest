@@ -78,11 +78,11 @@ public class QuestMap {
 		
 		// check for the player colliding with items
 		for (Item i : items) {
-			if (UrfQuest.game.player.collides(i)) {
+			if (UrfQuest.game.getPlayer().collides(i)) {
 				if (UrfQuest.debug) {
 					System.out.println("player collided with object: " + i.getClass().getName());
 				}
-				if (UrfQuest.game.player.addItem(i)) {
+				if (UrfQuest.game.getPlayer().addItem(i)) {
 					removeItems.add(i);
 				} else {
 					continue;
@@ -93,7 +93,7 @@ public class QuestMap {
 		// update mobs and check for the player colliding with mobs
 		for (Mob m : mobs) {
 			m.update();
-			if (UrfQuest.game.player.collides(m)) {
+			if (UrfQuest.game.getPlayer().collides(m)) {
 				if (UrfQuest.debug) {
 					System.out.println("player collided with object: " + m.getClass().getName());
 				}

@@ -8,7 +8,8 @@ import guis.Clickable;
 import guis.GUIObject;
 
 public class Slider extends GUIObject implements Clickable {
-	private int sliderPos = 100;
+	private int sliderPos = 0;
+	private int lineThickness = 3;
 	
 	public Slider(int size, int xDisp, int yDisp, int anchor) {
 		super(anchor, xDisp, yDisp, size*5, size);
@@ -16,13 +17,26 @@ public class Slider extends GUIObject implements Clickable {
 	
 	public void draw(Graphics g) {
 		g.setColor(Color.WHITE);
-		g.drawLine(bounds.x, bounds.y, bounds.x, bounds.y + bounds.height);
-		g.drawLine(bounds.x + bounds.width, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-		g.drawLine(bounds.x, bounds.y + bounds.height/2, bounds.x + bounds.width, bounds.y + bounds.height/2);
 		
-		// Draw the slidebar
+		// draw crossbar
+		for (int i = -lineThickness/2; i < lineThickness/2 + 1; i++) {
+			g.drawLine(bounds.x, bounds.y + bounds.height/2 + i, bounds.x + bounds.width, bounds.y + bounds.height/2 + i);
+		}
+		
+		// draw left side bar
+		for (int i = 0; i < lineThickness; i++) {
+			g.drawLine(bounds.x + i, bounds.y, bounds.x + i, bounds.y + bounds.height);
+		}
+		
+		// draw right side bar
+		for (int i = 0; i < lineThickness; i++) {
+			g.drawLine(bounds.x + bounds.width - i, bounds.y, bounds.x + bounds.width - i, bounds.y + bounds.height);
+		}
+		
+		// Draw the slider
+		int sliderWidth = 20;
 		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(bounds.x + (int)((this.sliderPos/100.0)*(bounds.width - 20)), bounds.y, 20, bounds.height);
+		g.fillRect(bounds.x + sliderPos - sliderWidth/2, bounds.y, sliderWidth, bounds.height + 1);
 		
 		if (UrfQuest.debug) {
 			drawDebug(g);
@@ -33,7 +47,12 @@ public class Slider extends GUIObject implements Clickable {
 	 * representing the percentage of the slider to the left of the mouse
 	 */
 	public void setSliderPosition() {
-		this.sliderPos = (int)(((UrfQuest.mousePos[0] - (xAnchor() + this.xDisplacement))/(bounds.width))*100);
+		this.sliderPos = UrfQuest.mousePos[0] - bounds.x;
+		//this.sliderPos = (int)(((UrfQuest.mousePos[0] - (xAnchor() + this.xDisplacement))/(bounds.width))*100);
+	}
+	
+	public double getPercentage() {
+		return (((double)sliderPos - bounds.x)/(double)bounds.width);
 	}
 
 	public void click() {}

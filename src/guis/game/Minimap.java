@@ -27,7 +27,7 @@ public class Minimap extends GUIObject implements Clickable {
 
 	public void draw(Graphics g) {
 		BufferedImage minimap = map.getMinimap();
-		Player player = UrfQuest.game.player;
+		Player player = UrfQuest.game.getPlayer();
 		
 		int borderWidth = 3;
 		int gapWidth = 2;
@@ -101,7 +101,7 @@ public class Minimap extends GUIObject implements Clickable {
 			int yPos = UrfQuest.mousePos[1] - bounds.y - 5 + yCrop;
 			
 			System.out.println(xPos + ", " + yPos);
-			UrfQuest.game.player.setPos(xPos, yPos);
+			UrfQuest.game.getPlayer().setPos(xPos, yPos);
 		}
 	}
 

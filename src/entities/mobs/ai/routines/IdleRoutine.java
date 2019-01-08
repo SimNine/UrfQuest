@@ -34,7 +34,7 @@ public class IdleRoutine extends MobRoutine {
 									   (int)(Math.random()*360), 
 									   (mob.getVelocity() + mob.getVelocity()*((Math.random() - 0.5)/10.0))));
 		} else {
-			actions.add(new IdleAction(250 + (int)(Math.random()*250)));
+			actions.add(new IdleAction(100 + (int)(Math.random()*100)));
 		}
 	}
 }

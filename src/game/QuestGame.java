@@ -9,7 +9,8 @@ public class QuestGame {
 
 	private QuestMap currMap;
 	private ArrayList<QuestMap> maps;
-	public Player player;
+	private Player player;
+	private boolean buildMode = false;
 
 	public QuestGame() {
 		currMap = new QuestMap(500, 500, QuestMap.SIMPLEX_MAP);
@@ -41,6 +42,14 @@ public class QuestGame {
 
 	public void setAllMaps(ArrayList<QuestMap> maps) {
 		this.maps = maps;
+	}
+	
+	public void toggleBuildMode() {
+		buildMode = !buildMode;
+	}
+	
+	public boolean isBuildMode() {
+		return buildMode;
 	}
 
 	public Player getPlayer() {

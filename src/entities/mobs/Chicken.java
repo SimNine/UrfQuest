@@ -45,8 +45,8 @@ public class Chicken extends Mob {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.drawImage(pic, 
-					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth), 
-					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.getPlayer().getPos()[0] - bounds.getX())*tileWidth), 
+					(int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.getPlayer().getPos()[1] - bounds.getY())*tileWidth), 
 					null);
 		drawHealthBar(g);
 	}
@@ -70,8 +70,8 @@ public class Chicken extends Mob {
 	
 	private void think() {
 		// if the chicken is within 10 blocks of the player, and it isn't fleeing already, flee
-		if (Math.abs(getPos()[0] - UrfQuest.game.player.getPos()[0]) < 5 &&
-			Math.abs(getPos()[1] - UrfQuest.game.player.getPos()[1]) < 5) {
+		if (Math.abs(getPos()[0] - UrfQuest.game.getPlayer().getPos()[0]) < 5 &&
+			Math.abs(getPos()[1] - UrfQuest.game.getPlayer().getPos()[1]) < 5) {
 			if (!(routine instanceof FleeRoutine)) {
 				routine = new FleeRoutine(this, UrfQuest.game.getPlayer());
 			}

@@ -53,15 +53,15 @@ public class CommandProcessor {
 			}
 			for (int i = 0; i < count; i++) {
 				if (args[1].equals("pistol")) {
-					UrfQuest.game.player.addItem(new Pistol(0, 0));
+					UrfQuest.game.getPlayer().addItem(new Pistol(0, 0));
 				} else if (args[1].equals("smg")) {
-					UrfQuest.game.player.addItem(new SMG(0, 0));
+					UrfQuest.game.getPlayer().addItem(new SMG(0, 0));
 				} else if (args[1].equals("cheese")) {
-					UrfQuest.game.player.addItem(new Cheese(0, 0));
+					UrfQuest.game.getPlayer().addItem(new Cheese(0, 0));
 				} else if (args[1].equals("gem")) {
-					UrfQuest.game.player.addItem(new Gem(0, 0));
+					UrfQuest.game.getPlayer().addItem(new Gem(0, 0));
 				} else if (args[1].equals("key")) {
-					UrfQuest.game.player.addItem(new Key(0, 0));
+					UrfQuest.game.getPlayer().addItem(new Key(0, 0));
 				}
 			}
 		} else if (args[0].equals("spawn")) {
@@ -81,18 +81,18 @@ public class CommandProcessor {
 			}
 		} else if (args[0].equals("set")) {
 			if (args[1].equals("health")) {
-				UrfQuest.game.player.setHealth(Double.parseDouble(args[2]));
+				UrfQuest.game.getPlayer().setHealth(Double.parseDouble(args[2]));
 			} else if (args[1].equals("mana")) {
-				UrfQuest.game.player.setMana(Double.parseDouble(args[2]));
+				UrfQuest.game.getPlayer().setMana(Double.parseDouble(args[2]));
 			} else if (args[1].equals("speed")) {
-				UrfQuest.game.player.setVelocity(Double.parseDouble(args[2])/100.0);
+				UrfQuest.game.getPlayer().setVelocity(Double.parseDouble(args[2])/100.0);
 			}
 		} else if (args[0].equals("home")) {
-			UrfQuest.game.player.setPos(250, 250);
+			UrfQuest.game.getPlayer().setPos(250, 250);
 		} else if (args[0].equals("tp")) {
-			UrfQuest.game.player.setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+			UrfQuest.game.getPlayer().setPos(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else if (args[0].equals("tprel")) {
-			UrfQuest.game.player.move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+			UrfQuest.game.getPlayer().move(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

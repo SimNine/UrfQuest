@@ -28,7 +28,7 @@ public class GameStatusOverlay extends Overlay {
 								new Color(0, 0, 255, 180), 
 								true) {
 				public double getPercentage() {
-					return UrfQuest.game.player.getMana()/100.0;
+					return UrfQuest.game.getPlayer().getMana()/100.0;
 				}
 		};
 		healthBar = new StatusBar(spacing, -(spacing*2 + statusBarHeight + inventoryBarHeight), 
@@ -37,7 +37,7 @@ public class GameStatusOverlay extends Overlay {
 								  new Color(255, 0, 0, 180), 
 								  true) {
 			public double getPercentage() {
-				return UrfQuest.game.player.getHealth()/100.0;
+				return UrfQuest.game.getPlayer().getHealth()/100.0;
 			}
 		};
 		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIObject.TOP_RIGHT, UrfQuest.game.getCurrMap());
