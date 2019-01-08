@@ -27,8 +27,8 @@ public class SMG extends Item {
 	}
 
 	public void use() {
-		double[] pos = UrfQuest.game.getPlayer().getPos();
-		int dir = UrfQuest.game.getPlayer().getDirection() + (int)((Math.random() - 0.5)*20);
+		double[] pos = UrfQuest.game.player.getPos();
+		int dir = UrfQuest.game.player.getDirection() + (int)((Math.random() - 0.5)*20);
 		UrfQuest.game.getCurrMap().addParticle(new Particle(pos[0], pos[1], dir));
 	}
 	

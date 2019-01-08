@@ -17,7 +17,7 @@ import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.15.0";
+    private static final String VERSION = "0.15.0_pre2";
     private static final String GAME_NAME = "UrfQuest";
     
     // should never need to be accessed
@@ -32,27 +32,14 @@ public class UrfQuest implements Runnable {
     public static QuestGame game;
 	public static Set<Integer> keys;
 	public static int[] mousePos;
-	public static boolean mouseDown;
+	public static boolean mousePressed;
 	
-	// frame properties
-	public static boolean isFullscreen;
-	
-	// tickers
-    public static Timer gameTimer = new Timer(5, new ActionListener() { // gameticker
+    public static Timer time = new Timer(5, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-        	if (gameRunning) {
-                game.tick();
-        	}
-        }
-    });
-    public static Timer renderTimer = new Timer(5, new ActionListener() { // renderticker
-        public void actionPerformed(ActionEvent e) {
+            game.tick();
             panel.repaint();
         }
     });
-    
-    // game properties
-    public static boolean gameRunning;
     
 	public void run() {
         System.out.println();
@@ -67,41 +54,15 @@ public class UrfQuest implements Runnable {
         UrfQuest.game = new QuestGame();
         UrfQuest.keys = new HashSet<Integer>(0);
         UrfQuest.mousePos = new int[2];
-        UrfQuest.mouseDown = false;
-        UrfQuest.gameRunning = false;
-
-        // the game must be initialized before the display can be initialized
+        UrfQuest.mousePressed = false;
+        
+        // the game must be initialized before the gui can be initialized
+        UrfQuest.frame = new JFrame(GAME_NAME + " " + VERSION);
         UrfQuest.panel = new QuestPanel();
         panel.initOverlays();
-        resetFrame(true);
-        gameTimer.start();
-        renderTimer.start();
-	}
-
-	public static void main(String[] args) {
-		quest = new UrfQuest();
-		SwingUtilities.invokeLater(quest);
-	}
-	
-	public static void resetFrame(boolean fullscreen) {
-		if (frame != null) {
-			frame.dispose();
-		}
-		
-        frame = new JFrame(GAME_NAME + " " + VERSION);
-
-        if (fullscreen) {
-    		frame.setResizable(false);
-    		frame.setUndecorated(true);
-    		isFullscreen = true;
-        } else {
-            frame.setMinimumSize(new Dimension(700, 600));
-    		frame.setResizable(true);
-    		frame.setExtendedState(JFrame.NORMAL);
-    		frame.setUndecorated(false);
-    		isFullscreen = false;
-        }
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    
+        frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        frame.setMinimumSize(new Dimension(700, 600));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setBackground(Color.BLACK);
@@ -112,5 +73,10 @@ public class UrfQuest implements Runnable {
                 panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
             }
         });
+	}
+
+	public static void main(String[] args) {
+		quest = new UrfQuest();
+		SwingUtilities.invokeLater(quest);
 	}
 }

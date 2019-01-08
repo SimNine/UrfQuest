@@ -15,7 +15,6 @@ public class OverlayInit {
 	
 	public static Overlay newMainMenu() {
 		Set<GUIObject> mainObjects = new HashSet<GUIObject>();
-		mainObjects.add(new TextBox("UrfQuest", 60, -160, -120, GUIObject.CENTER));
 		mainObjects.add(new TextButton("Play", 30, -80, -60, GUIObject.CENTER) {
 			public void click() {
 				UrfQuest.panel.unpause();
@@ -28,7 +27,7 @@ public class OverlayInit {
 		});
 		mainObjects.add(new TextButton("Options", 30, -80, 0, GUIObject.CENTER) {
 			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.optionsMenu);
+				UrfQuest.panel.swap(newOptionsOverlay());
 			}
 		});
 		mainObjects.add(new TextButton("Quit", 30, -80, 30, GUIObject.CENTER) {
@@ -36,6 +35,7 @@ public class OverlayInit {
 				System.exit(0);
 			}
 		});
+		mainObjects.add(new TextBox("UrfQuest", 60, -160, -120, GUIObject.CENTER));
 		return new Overlay("main", new Color(128, 128, 128, 128), mainObjects);
 	}
 
@@ -43,7 +43,7 @@ public class OverlayInit {
 		Set<GUIObject> titleObjects = new HashSet<GUIObject>();
 		titleObjects.add(new ImageButton("src/resources/arcanists2.png", 1, -185, 80) {
 			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.mainMenu);
+				UrfQuest.panel.swap(newMainMenu());
 			}
 		});
 		return new Overlay("title", Color.BLACK, titleObjects);
@@ -51,33 +51,29 @@ public class OverlayInit {
 	
 	public static Overlay newOptionsOverlay() {	
 		Set<GUIObject> optionsObjects = new HashSet<GUIObject>();
-		optionsObjects.add(new TextBox("Sound:", 30, -160, -60, GUIObject.CENTER));
-		optionsObjects.add(new Slider(30, 0, -60, GUIObject.CENTER) {
+		optionsObjects.add(new TextBox("Sound:", 30, -160, -40, GUIObject.CENTER));
+		optionsObjects.add(new Slider(30, 0, -40, GUIObject.CENTER) {
 			public void click() {
 				this.setSliderPosition();
 				//SoundEngine.soundVol = this.sliderPos;
 			}
 		});
-		optionsObjects.add(new TextBox("Music:", 30, -160, -30, GUIObject.CENTER));
-		optionsObjects.add(new Slider(30, 0, -30, GUIObject.CENTER) {
+		optionsObjects.add(new TextBox("Music:", 30, -160, 0, GUIObject.CENTER));
+		optionsObjects.add(new Slider(30, 0, 0, GUIObject.CENTER) {
 			public void click() {
 				this.setSliderPosition();
 				//SoundEngine.musicVol = this.sliderPos;
 			}
 		});
-		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 0, GUIObject.CENTER) {
+		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 40, GUIObject.CENTER) {
 			public void click() {
-				UrfQuest.debug = !UrfQuest.debug;
+				if (UrfQuest.debug) UrfQuest.debug = false;
+				else UrfQuest.debug = true;
 			}
 		});
-		optionsObjects.add(new TextButton("Select Keybindings", 30, -80, 30, GUIObject.CENTER) {
+		optionsObjects.add(new TextButton("Back", 30, -80, 80, GUIObject.CENTER) {
 			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.keybindingOverlay);
-			}
-		});
-		optionsObjects.add(new TextButton("Back", 30, -80, 60, GUIObject.CENTER) {
-			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.pauseMenu);
+				UrfQuest.panel.swap(newMainMenu());
 			}
 		});
 		return new Overlay("options", new Color(128, 128, 128, 128), optionsObjects);
@@ -85,7 +81,6 @@ public class OverlayInit {
 	
 	public static Overlay newPauseMenu() {
 		Set<GUIObject> pauseObjects = new HashSet<GUIObject>();
-		pauseObjects.add(new TextBox("Paused", 60, -160, -120, GUIObject.CENTER));
 		pauseObjects.add(new TextButton("Resume", 30, -80, -60, GUIObject.CENTER) {
 			public void click() {
 				UrfQuest.panel.unpause();
@@ -93,7 +88,7 @@ public class OverlayInit {
 		});
 		pauseObjects.add(new TextButton("Options", 30, -80, -30, GUIObject.CENTER) {
 			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.optionsMenu);
+				UrfQuest.panel.swap(newOptionsOverlay());
 			}
 		});
 		pauseObjects.add(new TextButton("Save", 30, -80, 0, GUIObject.CENTER) {
@@ -108,7 +103,7 @@ public class OverlayInit {
 		});
 		pauseObjects.add(new TextButton("Main Menu", 30, -80, 60, GUIObject.CENTER) {
 			public void click() {
-				UrfQuest.panel.swap(UrfQuest.panel.mainMenu);
+				UrfQuest.panel.swap(newMainMenu());
 			}
 		});
 		pauseObjects.add(new TextButton("Quit Game", 30, -80, 90, GUIObject.CENTER) {
@@ -116,6 +111,7 @@ public class OverlayInit {
 				System.exit(0);
 			}
 		});
+		pauseObjects.add(new TextBox("Paused", 60, -160, -120, GUIObject.CENTER));
 		return new Overlay("pause", new Color(128, 128, 128, 128), pauseObjects);
 	}
 	

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import entities.Entity;
+import entities.mobs.Player;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -13,7 +14,7 @@ public class Particle extends Entity {
 
 	public Particle(double x, double y, int dir) {
 		super(x, y);
-		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
+		bounds.setRect(bounds.getX(), bounds.getY(), 0.2, 0.2);
 		velocity = Math.random()*0.05 + 0.05;
 		direction = dir;
 	}
@@ -22,20 +23,21 @@ public class Particle extends Entity {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.setColor(Color.BLACK);
-		g.fillOval(UrfQuest.panel.gameToWindowX(bounds.getX()), 
-				   UrfQuest.panel.gameToWindowY(bounds.getY()),
-				   (int)(bounds.getWidth()*tileWidth), 
+		g.fillOval((int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth),
+				   (int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth),
+				   (int)(bounds.getWidth()*tileWidth),
 				   (int)(bounds.getHeight()*tileWidth));
 	}
 	
 	public void drawDebug(Graphics g) {
+		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
-		g.drawString("velocity: " + velocity, 
-					 UrfQuest.panel.gameToWindowX(bounds.getX()),
-					 UrfQuest.panel.gameToWindowY(bounds.getY()));
-		g.drawString("direction: " + direction, 
-					 UrfQuest.panel.gameToWindowX(bounds.getX()),
-					 UrfQuest.panel.gameToWindowY(bounds.getY())+10);
+		g.drawString("velocity: " + velocity,
+					 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+					 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH));
+		g.drawString("direction: " + direction,
+				 (int)(UrfQuest.panel.dispCenterX - (player.getPos()[0] - bounds.getX())*QuestPanel.TILE_WIDTH),
+				 (int)(UrfQuest.panel.dispCenterY - (player.getPos()[1] - bounds.getY())*QuestPanel.TILE_WIDTH)+10);
 	}
 
 	@Override
