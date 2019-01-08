@@ -85,3 +85,11 @@ NOTE: MapLoader is completely fucked
 -All graphics are now imported using an input stream sourced at the main class,
 	allowing importing to work properly when in runnable jar form
 -The running instance of the main class is now accessible at UrfQuest.quest
+
+0.7.2 - 11/23/16
+-MapLoader renamed Loader, and has been fixed
+-Loader can now be used through GUI menus
+-Walking off the edge of the map no longer crashes the game, it simply becomes impassable
+-The edge of the map additionally has an automatically generated border wall
+-Extra getters/setters added to QuestGame in order to facilitate loading and saving
+-Work begun on a minimap

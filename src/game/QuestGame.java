@@ -12,6 +12,7 @@ import framework.QuestPanel;
 import tiles.Tiles;
 
 public class QuestGame {
+	
 	private QuestMap currMap;
 	private ArrayList<QuestMap> maps;
 	private Player player;
@@ -37,8 +38,24 @@ public class QuestGame {
 		return currMap;
 	}
 	
+	public void setCurrMap(QuestMap map) {
+		currMap = map;
+	}
+	
+	public ArrayList<QuestMap> getAllMaps() {
+		return maps;
+	}
+	
+	public void setAllMaps(ArrayList<QuestMap> maps) {
+		this.maps = maps;
+	}
+	
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public void setPlayer(Player p) {
+		this.player = p;
 	}
 	
 	public void toggleGUIVisible() {
@@ -56,7 +73,9 @@ public class QuestGame {
 	public void drawGame(Graphics g) {
 		drawBoard(g);
 		drawSprites(g);
+		
 		if (guiVisible) {
+			//drawMinimap(g);
 			drawStatusBars(g);
 		}
 		
@@ -110,6 +129,11 @@ public class QuestGame {
 		g.setColor(Color.WHITE);
 		g.drawLine(dispCenterX - 10, dispCenterY, dispCenterX + 10, dispCenterY);
 		g.drawLine(dispCenterX, dispCenterY - 10, dispCenterX, dispCenterY + 10);
+	}
+	
+	private void drawMinimap(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.drawOval(UrfQuest.panel.getWidth() - 220, 20, 200, 200);
 	}
 	
 	private void drawStatusBars(Graphics g) {

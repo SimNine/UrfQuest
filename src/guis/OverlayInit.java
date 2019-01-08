@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
+import framework.Loader;
 import framework.SoundEngine;
 import framework.UrfQuest;
 
@@ -93,12 +94,12 @@ public class OverlayInit {
 		});
 		mainObjects.add(new TextButton("Save", 30, -80, 0) {
 			public void click() {
-				//System.exit(0);
+				Loader.saveGame();
 			}
 		});
 		mainObjects.add(new TextButton("Load", 30, -80, 30) {
 			public void click() {
-				//System.exit(0);
+				Loader.loadGame();
 			}
 		});
 		mainObjects.add(new TextButton("Main Menu", 30, -80, 60) {

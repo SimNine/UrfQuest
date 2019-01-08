@@ -53,6 +53,13 @@ public class QuestPanel extends JPanel {
 						repaint();
 					}
 				}
+				
+				if (e.getKeyCode() == KeyEvent.VK_S) {
+					Loader.saveGame();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_L) {
+					Loader.loadGame();
+				}
 			}
 			public void keyTyped(KeyEvent e) {}
 		});

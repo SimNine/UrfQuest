@@ -174,6 +174,7 @@ public class Tiles {
 	
 	// gets properties of tiles from boolean array
 	public static boolean isWalkable(int t) {
-		return tileProperties[t][0];
+		if (t == -1) return false; // if this tile is blank
+		else return tileProperties[t][0];
 	}
 }

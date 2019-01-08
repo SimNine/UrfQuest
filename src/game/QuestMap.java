@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import entities.Entity;
-import entities.shapes.Ball;
 import entities.shapes.Square;
 import framework.SimplexNoise;
 
-@SuppressWarnings("unused")
 public class QuestMap {
 	
 	private int[][] map;
@@ -19,17 +17,11 @@ public class QuestMap {
 		entities = generateEntities(0);
 	}
 	
-	public QuestMap(String levelfile) {
-		//map = load(levelfile);
-		//V.qMap = this;
-	}
-	
 	public static int[][] generateSimplexNoiseMap(int width, int height) {
 		int[][] end = new int[width][height];
-		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height);
-		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		
 		// generate land and water
+		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (terrainNoise[x][y] > .5f) {
@@ -41,6 +33,7 @@ public class QuestMap {
 		}
 		
 		// generate trees (only on land tiles)
+		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (treeNoise[x][y]*2 -1 > Math.random() && end[x][y] == 2) {
@@ -49,17 +42,8 @@ public class QuestMap {
 			}
 		}
 		
-		// generate starting pad
-		for (int x = 240; x < 260; x++) {
-			for (int y = 240; y < 260; y++) {
-				end[x][y] = 2;
-			}
-		}
-		
-		end[245][245] = 3;
-		end[245][255] = 4;
-		end[255][255] = 5;
-		end[255][245] = 6;
+		generateStartingArea(end);
+		generateBorderWall(end);
 		
 		return end;
 	}
@@ -99,10 +83,8 @@ public class QuestMap {
 			}
 		}
 		
-		end[245][245] = 3;
-		end[245][255] = 4;
-		end[255][255] = 5;
-		end[255][245] = 6;
+		generateStartingArea(end);
+		generateBorderWall(end);
 		
 		return end;
 	}
@@ -140,10 +122,8 @@ public class QuestMap {
 			}
 		}
 		
-		end[245][245] = 3;
-		end[245][255] = 4;
-		end[255][255] = 5;
-		end[255][245] = 6;
+		generateStartingArea(end);
+		generateBorderWall(end);
 		
 		return end;
 	}
@@ -156,6 +136,31 @@ public class QuestMap {
 						 (int)(Math.random()*100)));
 		}
 		return entities;
+	}
+	
+	private static void generateStartingArea(int[][] map) {
+		for (int x = -3; x < 4; x++) {
+			for (int y = -3; y < 4; y++) {
+				map[map.length/2+x][map[0].length/2+y] = 2;
+			}
+		}
+		
+		map[map.length/2-2][map[0].length/2-2] = 3;
+		map[map.length/2-2][map[0].length/2+2] = 4;
+		map[map.length/2+2][map[0].length/2-2] = 5;
+		map[map.length/2+2][map[0].length/2+2] = 6;
+	}
+	
+	private static void generateBorderWall(int[][] map) {
+		for (int i = 0; i < map.length; i++) {
+			map[i][0] = 1;
+			map[i][map[0].length-1] = 1;
+		}
+		
+		for (int i = 0; i < map[0].length; i++) {
+			map[0][i] = 1;
+			map[map.length-1][i] = 1;
+		}
 	}
 	
 	// Getters and setters

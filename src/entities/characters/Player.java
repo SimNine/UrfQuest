@@ -14,7 +14,8 @@ import framework.UrfQuest;
 import game.QuestMap;
 import tiles.Tiles;
 
-public class Player extends Entity{
+public class Player extends Entity {
+
 	private static BufferedImage NW1, NW2, NW3, NW4, NW5, NW6, NW7, NW8,
 						  N1, N2, N3, N4, N5, N6, N7, N8,
 						  NE1, NE2, NE3, NE4, NE5, NE6, NE7, NE8,
