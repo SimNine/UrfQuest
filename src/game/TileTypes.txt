@@ -2,3 +2,7 @@ Tile Types:
 0 - Dirt
 1 - Stone
 2 - Grass
+3 - ManaPad
+4 - HealthPad
+5 - HurtPad
+6 - SpeedPad

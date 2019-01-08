@@ -21,29 +21,35 @@ public class QuestMap {
 		}
 		for (int x = 1; x < width - 1; x++) {
 			for (int y = 1; y < height - 1; y++) {
-				if (Math.random() < .1) end[x][y] = 0;
+				if (Math.random() < .1) end[x][y] = 2;
 			}
 		}
 		for (int x = 2; x < width - 2; x++) {
 			for (int y = 2; y < height - 2; y++) {
-				if (Math.random() < .2) end[x][y] = 0;
+				if (Math.random() < .2) end[x][y] = 2;
 			}
 		}
 		for (int x = 3; x < width - 3; x++) {
 			for (int y = 3; y < height - 3; y++) {
-				if (Math.random() < .4) end[x][y] = 0;
+				if (Math.random() < .4) end[x][y] = 2;
 			}
 		}
 		for (int x = 4; x < width - 4; x++) {
 			for (int y = 4; y < height - 4; y++) {
-				if (Math.random() < .9) end[x][y] = 0;
+				if (Math.random() < .9) end[x][y] = 2;
 			}
 		}
 		for (int x = 5; x < width - 5; x++) {
 			for (int y = 5; y < height - 5; y++) {
-				end[x][y] = 0;
+				end[x][y] = 2;
 			}
 		}
+		
+		end[245][245] = 3;
+		end[245][255] = 4;
+		end[255][255] = 5;
+		end[255][245] = 6;
+		
 		return end;
 	}
 	

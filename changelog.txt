@@ -25,3 +25,10 @@
 -The cursor can no longer enter stone or null tiles
 -The movement-per-tick of the cursor is now constrained to a variable "speed" in questGame
 -Movement of the curson in each direction is now constrained to a method "attemptMove()"
+
+0.3.0 - 2/8/16
+-Created procedurally generated "character" sprite (placeholder) that looks like an arrow
+-Created a new class "StatusBar", customizable with color, max value, and of course, scale
+-Added two StatusBars, one for "mana" and one for "health"
+-Added four new blocks, one which increases speed, one which increases mana, one that increases health, one that drains all three
+-Added a new method in QuestGame to react to the block the player is currently on

@@ -17,6 +17,8 @@ public class QuestGame {
 	private int gameCenterBlockY;
 	
 	private double speed = 0.05;
+	private int health = 100;
+	private int mana = 100;
 	
 	private QuestMap qMap;
 	private QuestPanel qPanel;
@@ -43,24 +45,33 @@ public class QuestGame {
 	
 	private void tick() {
 		Set<Integer> keys = qPanel.getKeys();
+		int dir = 0;
+		
+		processCurrentTile();
 		
 		if (keys.contains(KeyEvent.VK_UP)) {
 			attemptMove(1);
+			dir -= 1;
 		}
 		if (keys.contains(KeyEvent.VK_DOWN)) {
 			attemptMove(2);
+			dir += 1;
 		}
 		if (keys.contains(KeyEvent.VK_LEFT)) {
 			attemptMove(3);
+			dir -= 3;
 		}
 		if (keys.contains(KeyEvent.VK_RIGHT)) {
 			attemptMove(4);
+			dir += 3;
 		}
 		
 		gameCenterBlockX = (int)(gameCenterX);
 		gameCenterBlockY = (int)(gameCenterY);
 		
-		qPanel.setRenderVars(gameCenterX, gameCenterY, gameCenterBlockX, gameCenterBlockY);
+		qPanel.setPlayerLocation(gameCenterX, gameCenterY, gameCenterBlockX, gameCenterBlockY);
+		qPanel.setPlayerStatus(mana, health);
+		qPanel.setCharDir(dir);
 		qPanel.repaint();
 	}
 	
@@ -143,6 +154,36 @@ public class QuestGame {
 			}
 			break;
 		default:
+			break;
+		}
+	}
+	
+	private void processCurrentTile() {
+		switch (qMap.getTileAt(gameCenterBlockX, gameCenterBlockY)) {
+		case 0:
+			//zilch
+			break;
+		case 1:
+			//impossible
+			break;
+		case 2:
+			qMap.setTileAt(gameCenterBlockX, gameCenterBlockY, 0);
+			break;
+		case 3:
+			if (mana < 100) mana++;
+			break;
+		case 4:
+			if (health < 100) health++;
+			break;
+		case 5:
+			if (health > 0) health--;
+			if (mana > 0) mana--;
+			if (speed > 0.01) speed -= .001;
+			break;
+		case 6:
+			if (speed < 1) speed += .001;
+		default:
+			//zilch
 			break;
 		}
 	}
