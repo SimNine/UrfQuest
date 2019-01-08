@@ -53,8 +53,11 @@ public class QuestPanel extends JPanel {
 				case KeyEvent.VK_X:
 					UrfQuest.game.cycleMinimapSize();
 					break;
-				case KeyEvent.VK_SPACE:
+				case KeyEvent.VK_Q:
 					UrfQuest.game.dropOneOfSelectedItem();
+					break;
+				case KeyEvent.VK_SPACE:
+					UrfQuest.game.useSelectedItem();
 					break;
 				case KeyEvent.VK_1:
 					UrfQuest.game.setSelectedEntry(0);

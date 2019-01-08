@@ -8,7 +8,9 @@ import java.util.ArrayList;
 
 import entities.Entity;
 import entities.characters.Player;
+import entities.items.SMG;
 import entities.items.Item;
+import entities.particles.Particle;
 import framework.UrfQuest;
 import guis.QuestGUI;
 import framework.QuestPanel;
@@ -23,15 +25,16 @@ public class QuestGame {
 	public Player player;
 
 	public QuestGame() {
-		currMap = new QuestMap(500, 500);
-		currMap.generateSimplexNoiseMap();
-		currMap.generateMinimap();
+		currMap = new QuestMap(500, 500, QuestMap.SIMPLEX_MAP);
 		currMap.generateItems();
+		currMap.generateEntities();
 
 		maps = new ArrayList<QuestMap>();
 		maps.add(currMap);
 		player = new Player(currMap.getWidth() / 2.0, currMap.getHeight() / 2.0);
 		guiVisible = false;
+		
+		//player.addItem(new SMG(0, 0));
 	}
 
 	public void tick() {
@@ -85,13 +88,49 @@ public class QuestGame {
 		}
 	}
 	
+	public void useSelectedItemConstantly() {
+		Item i = player.getSelectedItem();
+		
+		if (i == null) {
+			return;
+		}
+
+		switch (i.getType()) {
+		case "smg":
+			currMap.addParticle(new Particle(player.getPosition()[0], player.getPosition()[1]));
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void useSelectedItem() {
+		Item i = player.getSelectedItem();
+		
+		if (i == null) {
+			return;
+		}
+		
+		switch (i.getType()) {
+		case "pistol":
+			currMap.addParticle(new Particle(player.getPosition()[0], player.getPosition()[1]));
+			if (UrfQuest.debug) {
+				System.out.println("used item: " + i.getType());
+			}
+			break;
+		}
+	}
+	
 	public void dropOneOfSelectedItem() {
 		Item i = player.dropOneOfSelectedItem();
-		if (i != null) {
-			double[] playerPos = player.getPosition();
-			i.setPosition(playerPos[0], playerPos[1]-1);
-			currMap.addItem(i);
+		
+		if (i == null) {
+			return;
 		}
+		
+		double[] playerPos = player.getPosition();
+		i.setPosition(playerPos[0], playerPos[1]-1);
+		currMap.addItem(i);
 	}
 	
 	public void setSelectedEntry(int i) {
@@ -100,7 +139,7 @@ public class QuestGame {
 
 	public void drawGame(Graphics g) {
 		drawBoard(g);
-		drawSprites(g);
+		drawEntities(g);
 
 		if (guiVisible) {
 			drawMinimap(g);
@@ -108,10 +147,10 @@ public class QuestGame {
 			drawInventoryBar(g);
 		}
 
-		if (UrfQuest.debug)
+		if (UrfQuest.debug) {
 			drawCrosshair(g);
-		if (UrfQuest.debug)
 			drawDebug(g);
+		}
 	}
 
 	private void drawBoard(Graphics g) {
@@ -134,7 +173,7 @@ public class QuestGame {
 
 	private void drawDebug(Graphics g) {
 		g.setColor(new Color(128, 128, 128, 128));
-		g.fillRect(0, 0, 200, 100);
+		g.fillRect(0, 0, 600, 150);
 
 		g.setColor(Color.WHITE);
 		g.drawString(UrfQuest.keys.toString(), 10, 10);
@@ -148,15 +187,30 @@ public class QuestGame {
 		g.drawString("CharacterHealth: " + player.getHealth(), 10, 70);
 		g.drawString("CharacterMana: " + player.getMana(), 10, 80);
 		g.drawString("CharacterSpeed: " + player.getSpeed(), 10, 90);
+		g.drawString("Number of entities: " + currMap.entities.size(), 10, 100);
+		g.drawString("Number of items: " + currMap.items.size(), 10, 110);
+		g.drawString("Number of particles: " + currMap.particles.size(), 10, 120);
 	}
 
-	private void drawSprites(Graphics g) {
+	private void drawEntities(Graphics g) {
 		for (Entity e : currMap.entities) {
+			if (e.getPosition()[0] > player.getPosition()[0] - 30 &&
+				e.getPosition()[0] < player.getPosition()[0] + 30 &&
+				e.getPosition()[1] > player.getPosition()[1] - 30 &&
+				e.getPosition()[1] < player.getPosition()[1] + 30)
 			e.draw(g);
 		}
 
 		for (Item i : currMap.items) {
+			if (i.getPosition()[0] > player.getPosition()[0] - 30 &&
+				i.getPosition()[0] < player.getPosition()[0] + 30 &&
+				i.getPosition()[1] > player.getPosition()[1] - 30 &&
+				i.getPosition()[1] < player.getPosition()[1] + 30)
 			i.draw(g);
+		}
+		
+		for (Particle p : currMap.particles) {
+			p.draw(g);
 		}
 
 		player.draw(g);
@@ -205,6 +259,16 @@ public class QuestGame {
 				(int)i.getPosition()[1] > cropY && (int)i.getPosition()[1] < cropY + minimapSize) {
 				g.fillRect(rootX + ((int)i.getPosition()[0]-cropX) - 1, 
 						   rootY + ((int)i.getPosition()[1]-cropY) - 1, 3, 3);
+			}
+		}
+		
+		// draw a square for each npc currently on the minimap
+		g.setColor(Color.YELLOW);
+		for (Entity e : currMap.entities) {
+			if ((int)e.getPosition()[0] > cropX && (int)e.getPosition()[0] < cropX + minimapSize &&
+				(int)e.getPosition()[1] > cropY && (int)e.getPosition()[1] < cropY + minimapSize) {
+				g.fillRect(rootX + ((int)e.getPosition()[0]-cropX) - 1, 
+						   rootY + ((int)e.getPosition()[1]-cropY) - 1, 3, 3);
 			}
 		}
 		

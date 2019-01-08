@@ -13,7 +13,7 @@ import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Item extends Entity {
-	public static BufferedImage keyPic, gunPic, gemPic, cheesePic;
+	public static BufferedImage keyPic, gunPic, gemPic, cheesePic, smgPic;
 	protected BufferedImage itemPic;
 	protected boolean isStackable;
 	protected static final String assetPath = "/assets/items/";
@@ -43,6 +43,12 @@ public abstract class Item extends Entity {
 			System.out.println("Image could not be read at: " + assetPath + "cheese_scaled_30px.png");
 			e.printStackTrace();
 		}
+		try {
+			smgPic = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(assetPath + "smg_scaled_30px.png"));
+		} catch (IOException e) {
+			System.out.println("Image could not be read at: " + assetPath + "smg_scaled_30px.png");
+			e.printStackTrace();
+		}
 	}
 	
 	public Item clone() {
@@ -50,8 +56,10 @@ public abstract class Item extends Entity {
 		Item ret = null;
 		if (this instanceof Key) {
 			ret = new Key(pos[0], pos[1]);
-		} else if (this instanceof Gun) {
-			ret = new Gun(pos[0], pos[1]);
+		} else if (this instanceof Pistol) {
+			ret = new Pistol(pos[0], pos[1]);
+		} else if (this instanceof SMG){
+			ret = new SMG(pos[0], pos[1]);
 		} else if (this instanceof Gem) {
 			ret = new Gem(pos[0], pos[1]);
 		} else if (this instanceof Cheese) {

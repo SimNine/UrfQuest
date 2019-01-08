@@ -1,10 +1,10 @@
 package entities.items;
 
-public class Gun extends Item {
+public class Pistol extends Item {
 
-	public Gun(double x, double y) {
+	public Pistol(double x, double y) {
 		super(x, y, gunPic);
-		type = "gun";
+		type = "pistol";
 		isStackable = false;
 	}
 

@@ -4,26 +4,52 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import entities.Entity;
+import entities.characters.Chicken;
 import entities.items.Cheese;
 import entities.items.Gem;
-import entities.items.Gun;
+import entities.items.Pistol;
+import entities.items.SMG;
 import entities.items.Item;
 import entities.items.Key;
+import entities.particles.Particle;
 import framework.SimplexNoise;
 import framework.UrfQuest;
 import tiles.Tiles;
 
 public class QuestMap {
+	public static final int EMPTY_MAP = 5000;
+	public static final int SIMPLEX_MAP = 5001;
+	public static final int SAVANNAH_MAP = 5002;
+	public static final int TEMPLATE_MAP = 5003;
 	
 	private int[][] map;
 	private BufferedImage minimap;
-	public ArrayList<Entity> entities;
-	public ArrayList<Item> items;
+	public ArrayList<Entity> entities = new ArrayList<Entity>();
+	public ArrayList<Item> items = new ArrayList<Item>();
+	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	
-	public QuestMap(int width, int height) {
+	public QuestMap(int width, int height, int type) {
 		map = new int[width][height];
-		entities = new ArrayList<Entity>();
-		items = new ArrayList<Item>();
+		
+		switch (type) {
+		case EMPTY_MAP:
+			break;
+		case SIMPLEX_MAP:
+			generateSimplexNoiseMap();
+			break;
+		case SAVANNAH_MAP:
+			generateSavannahMap();
+			break;
+		case TEMPLATE_MAP:
+			generateTemplateMap();
+			break;
+		}
+		
+		if (type != EMPTY_MAP) {
+			generateStartingArea();
+			generateBorderWall();
+			generateMinimap();
+		}
 	}
 	
 	public void generateMinimap() {
@@ -40,26 +66,57 @@ public class QuestMap {
 		return minimap;
 	}
 	
-	// checks for collisions with the player
+	// updates entities and checks for collisions
 	public void update() {
-		//int count = 0;
-		ArrayList<Item> remove = new ArrayList<Item>();
+		ArrayList<Item> removeItems = new ArrayList<Item>();
+		ArrayList<Particle> removeParticles = new ArrayList<Particle>();
+		ArrayList<Entity> removeEntities = new ArrayList<Entity>();
+		
+		// check for the player colliding with items
 		for (Item i : items) {
 			if (UrfQuest.game.player.collides(i)) {
 				if (UrfQuest.debug) {
 					System.out.println("player collided with object: " + i.getType());
 				}
 				if (UrfQuest.game.player.addItem(i)) {
-					remove.add(i);
+					removeItems.add(i);
 				} else {
 					continue;
 				}
 			}
-			//count++;
 		}
-		//System.out.println("checking " + count + " potential collisions");
-		items.removeAll(remove);
-		remove.clear();
+		
+		// update entities and check for the player colliding with entities
+		for (Entity e : entities) {
+			e.update();
+			if (UrfQuest.game.player.collides(e)) {
+				if (UrfQuest.debug) {
+					System.out.println("player collided with object: " + e.getType());
+				}
+			}
+		}
+		
+		// update particles
+		for (Particle p : particles) {
+			if (p.isDead()) {
+				removeParticles.add(p);
+			}
+			p.update();
+		}
+		
+		// check for collisions between particles and entities
+		for (Particle p : particles) {
+			for (Entity e : entities) {
+				if (p.collides(e)) {
+					removeEntities.add(e);
+					removeParticles.add(p);
+				}
+			}
+		}
+
+		particles.removeAll(removeParticles);
+		items.removeAll(removeItems);
+		entities.removeAll(removeEntities);
 	}
 	
 	// map generation methods
@@ -89,9 +146,6 @@ public class QuestMap {
 				}
 			}
 		}
-		
-		generateStartingArea(end);
-		generateBorderWall(end);
 		
 		this.map = end;
 	}
@@ -133,9 +187,6 @@ public class QuestMap {
 			}
 		}
 		
-		generateStartingArea(end);
-		generateBorderWall(end);
-		
 		this.map = end;
 	}
 	
@@ -175,17 +226,14 @@ public class QuestMap {
 			}
 		}
 		
-		generateStartingArea(end);
-		generateBorderWall(end);
-		
 		this.map = end;
 	}
 	
 	// helper generation methods
-	private static void generateStartingArea(int[][] map) {
+	private void generateStartingArea() {
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				map[map.length/2+x][map[0].length/2+y] = 2;
+				map[(map.length/2)+x][(map[0].length/2)+y] = 2;
 			}
 		}
 		
@@ -195,7 +243,7 @@ public class QuestMap {
 		map[map.length/2+2][map[0].length/2+2] = 6;
 	}
 	
-	private static void generateBorderWall(int[][] map) {
+	private void generateBorderWall() {
 		for (int i = 0; i < map.length; i++) {
 			map[i][0] = 1;
 			map[i][map[0].length-1] = 1;
@@ -208,10 +256,14 @@ public class QuestMap {
 	}
 	
 	// entity generation methods
-	public void generateEntities(int num) {
+	public void generateEntities() {
 		ArrayList<Entity> entities = new ArrayList<Entity>();
-		for (int i = 0; i < num; i++) {
-			//nothing, atm
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				if (map[x][y] == 2 && Math.random() < 0.001) {
+					entities.add(new Chicken(x, y));
+				}
+			}
 		}
 		this.entities = entities;
 	}
@@ -227,7 +279,11 @@ public class QuestMap {
 					} else if (rand > .9875) {
 						items.add(new Key(x, y));
 					} else if (rand > .9375) {
-						items.add(new Gun(x, y));
+						if (Math.random() > .1) {
+							items.add(new Pistol(x, y));
+						} else {
+							items.add(new SMG(x, y));
+						}
 					} else {
 						items.add(new Gem(x, y));
 					}
@@ -262,5 +318,9 @@ public class QuestMap {
 	
 	public void addItem(Item i) {
 		items.add(i);
+	}
+	
+	public void addParticle(Particle p) {
+		particles.add(p);
 	}
 }

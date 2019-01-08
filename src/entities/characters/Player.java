@@ -227,6 +227,11 @@ public class Player extends Entity {
 
 	@Override
 	public void update() {
+		
+		if (UrfQuest.keys.contains(KeyEvent.VK_SPACE)) {
+			UrfQuest.game.useSelectedItemConstantly();
+		}
+		
 		processCurrentTile();
 		
 		String newOrientation = "";
@@ -378,6 +383,10 @@ public class Player extends Entity {
 	
 	public boolean addItem(Item i) {
 		return inventory.addItem(i);
+	}
+	
+	public Item getSelectedItem() {
+		return inventory.getSelectedItem();
 	}
 	
 	public Item dropOneOfSelectedItem() {

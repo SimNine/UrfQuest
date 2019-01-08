@@ -156,3 +156,17 @@ NOTE: Inventory code is a bit messy. Might be good idea to rewrite item system.
 -Added very rare cheese
 -Added minimap player location indicator
 -Added minimap item location indicator
+
+0.12.0 - 12/31/16
+(The Gameplay Update)
+-Added new chicken entity
+-Modified game rendering so that only entities and items within 30 blocks of the player are rendered (speedup)
+-Added entities (other than the player) minimap location indicator
+-Added very elementary movement for the chicken
+-Added new "particle" entity type
+-Added SMG weapon item
+-Added ability to shoot guns (SMG and pistol); bullets currently go in random directions
+-Changed keybindings; space now uses items, Q now drops items
+-Pistol shoots one bullet per keypress of space, SMG shoots bullets constantly
+-Changed mapbuilding method privacy settings, rewrote QuestMap constructor for cleaner code
+-Debug display now indicated number of items, entities, and particles currently on the map

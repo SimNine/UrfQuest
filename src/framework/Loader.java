@@ -156,7 +156,7 @@ public class Loader {
 			// for each map
 			for (int i = 0; i < numMaps; i++) {
 				// read this map's width and height
-				QuestMap map = new QuestMap(bis.readInt(), bis.readInt());
+				QuestMap map = new QuestMap(bis.readInt(), bis.readInt(), QuestMap.EMPTY_MAP);
 
 				// read the encoding map
 				HashMap<String, Character> encodings = new HashMap<String, Character>();

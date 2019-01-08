@@ -82,8 +82,8 @@ public class OverlayInit {
 	}
 	
 	public static Overlay newPauseMenu() {
-		Set<GUIObject> mainObjects = new HashSet<GUIObject>();
-		mainObjects.add(new TextButton("Resume", 30, -80, -60) {
+		Set<GUIObject> pauseObjects = new HashSet<GUIObject>();
+		pauseObjects.add(new TextButton("Resume", 30, -80, -60) {
 			public void click() {
 				UrfQuest.panel.currOverlay = null;
 				if (!UrfQuest.time.isRunning()) {
@@ -94,34 +94,34 @@ public class OverlayInit {
 				}
 			}
 		});
-		mainObjects.add(new TextButton("Options", 30, -80, -30) {
+		pauseObjects.add(new TextButton("Options", 30, -80, -30) {
 			public void click() {
 				UrfQuest.panel.currOverlay = newOptionsOverlay();
 				UrfQuest.panel.prevOverlay = newPauseMenu();
 			}
 		});
-		mainObjects.add(new TextButton("Save", 30, -80, 0) {
+		pauseObjects.add(new TextButton("Save", 30, -80, 0) {
 			public void click() {
 				Loader.saveGame();
 			}
 		});
-		mainObjects.add(new TextButton("Load", 30, -80, 30) {
+		pauseObjects.add(new TextButton("Load", 30, -80, 30) {
 			public void click() {
 				Loader.loadGame();
 			}
 		});
-		mainObjects.add(new TextButton("Main Menu", 30, -80, 60) {
+		pauseObjects.add(new TextButton("Main Menu", 30, -80, 60) {
 			public void click() {
 				UrfQuest.panel.currOverlay = newMainMenu();
 			}
 		});
-		mainObjects.add(new TextButton("Quit Game", 30, -80, 90) {
+		pauseObjects.add(new TextButton("Quit Game", 30, -80, 90) {
 			public void click() {
 				System.exit(0);
 			}
 		});
-		mainObjects.add(new TextBox("Paused", 60, -160, -100));
-		return new Overlay("pause", new Color(128, 128, 128, 128), mainObjects);
+		pauseObjects.add(new TextBox("Paused", 60, -160, -100));
+		return new Overlay("pause", new Color(128, 128, 128, 128), pauseObjects);
 	}
 	
 }

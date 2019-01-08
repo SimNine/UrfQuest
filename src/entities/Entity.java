@@ -9,16 +9,15 @@ import framework.QuestPanel;
 import framework.UrfQuest;
 
 public abstract class Entity {
-	protected String type;
-	
 	protected Rectangle2D.Double bounds;
-	
-	protected String orientation;
+
+	// default values
+	protected String type = "entity";
+	protected String orientation = "N";
 	protected int animStage = 0;
 	
 	protected Entity(double x, double y) {
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		orientation = "N";
 	}
 	
 	// Drawing methods
@@ -30,7 +29,7 @@ public abstract class Entity {
 	
 	protected abstract void drawEntity(Graphics g);
 	
-	protected void drawDebug(Graphics g) {
+	private void drawDebug(Graphics g) {
 		Player player = UrfQuest.game.getPlayer();
 		g.setColor(Color.WHITE);
 		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
@@ -52,14 +51,23 @@ public abstract class Entity {
 	// Updating methods
 	public abstract void update();
 	
+	// returns true if this entity's bounds intersect with another entity's bounds
 	public boolean collides(Entity e) {
 		return bounds.intersects(e.bounds);
 	}
 	
+	// sets the entity's position, NOT checking for validity of move
 	public void setPosition(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 	}
 	
+	// moves the entity, NOT checking for validity of move
+	// object's position is incremented according to the parameters
+	public void move(double x, double y) {
+		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
+	}
+	
+	// gets the object's position as a double array with length 2 (x, y)
 	public double[] getPosition() {
 		double[] ret = new double[2];
 		ret[0] = bounds.getX();
@@ -67,6 +75,7 @@ public abstract class Entity {
 		return ret;
 	}
 	
+	// returns a string representing the type of entity
 	public String getType() {
 		return type;
 	}

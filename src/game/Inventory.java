@@ -71,6 +71,10 @@ public class Inventory {
 		}
 	}
 	
+	public Item getSelectedItem() {
+		return entries[selectedEntry].getItem();
+	}
+	
 	public void removeSelectedEntry() {
 		entries[selectedEntry] = new InventoryEntry();
 		occupiedSlots.remove(selectedEntry);
