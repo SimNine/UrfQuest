@@ -5,11 +5,12 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import framework.MapLoader;
 import framework.V;
-import game.Entity;
 
 import javax.swing.JPanel;
 
+import entities.Entity;
 import pixelart.Sprites;
 
 @SuppressWarnings("serial")
@@ -31,6 +32,12 @@ public class QuestPanel extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				V.keys.remove(e.getKeyCode());
 				repaint();
+
+				if (e.getKeyChar() == 's') {
+					MapLoader.saveLevel();
+				} else if (e.getKeyChar() == 'l') {
+					MapLoader.loadLevel();
+				}
 			}
 			public void keyTyped(KeyEvent e) {}
 		});
@@ -39,19 +46,20 @@ public class QuestPanel extends JPanel {
 	// Paint methods
 	public void paintComponent(Graphics g) {
 		drawBoard(g);
-		drawDebug(g);
 		drawSprites(g);
 		drawStatusBars(g);
+		
 		drawCrosshair(g);
+		drawDebug(g);
 	}
 	
 	private void drawBoard(Graphics g) {
 		int tileWidth = V.scale*10;
-		int tempX = (int)((V.gameCenterX % 1)*tileWidth);
-		int tempY = (int)((V.gameCenterY % 1)*tileWidth);
+		int tempX = (int)((V.playerPositionX % 1)*tileWidth);
+		int tempY = (int)((V.playerPositionY % 1)*tileWidth);
 		for (int x = -(int)Math.floor(V.dispTileWidth/2.0); x < Math.ceil(V.dispTileWidth/2.0); x++) {
 			for (int y = -(int)Math.floor(V.dispTileHeight/2.0); y < Math.ceil(V.dispTileHeight/2.0); y++) {
-				switch (V.qMap.getTileAt(V.gameCenterTileX + x, V.gameCenterTileY + y)) {
+				switch (V.qMap.getTileAt((int)V.playerPositionX + x, (int)V.playerPositionY + y)) {
 				case -1:
 					g.setColor(Color.BLACK);
 					g.fillRect(V.dispCenterX - tempX + x*tileWidth, V.dispCenterY - tempY + y*tileWidth, tileWidth, tileWidth);
@@ -85,17 +93,17 @@ public class QuestPanel extends JPanel {
 	private void drawDebug (Graphics g) {
 		g.setColor(Color.WHITE);
 		g.drawString(V.keys.toString(), 10, 10);
-		g.drawString("GameCenter: " + V.gameCenterX + ", " + V.gameCenterY, 10, 20);
-		g.drawString("GameCenterBlock: " + V.gameCenterTileX + ", " + V.gameCenterTileY, 10, 30);
+		g.drawString("GameCenter: " + V.playerPositionX + ", " + V.playerPositionY, 10, 20);
+		g.drawString("GameCenterBlock: " + (int)V.playerPositionX + ", " + (int)V.playerPositionY, 10, 30);
 		g.drawString("DisplayCenter: " + V.dispCenterX + ", " + V.dispCenterY, 10, 40);
 		g.drawString("DisplayDimensions: " + V.dispTileWidth + ", " + V.dispTileHeight, 10, 50);
-		g.drawString("CharacterDirection: " + V.facing, 10, 60);
+		g.drawString("CharacterDirection: " + V.playerOrientation, 10, 60);
 		g.drawString("CharacterHealth: " + V.health, 10, 70);
 		g.drawString("CharacterMana: " + V.mana, 10, 80);
 	}
 	
 	private void drawSprites(Graphics g) {
-		Sprites.drawCharacter(g, V.dispCenterX - 5*V.scale, V.dispCenterY - 5*V.scale, V.scale, V.facing);
+		Sprites.drawCharacterPlaceholder(g, V.dispCenterX - 5*V.scale, V.dispCenterY - 5*V.scale, V.scale, V.playerOrientation);
 		for (Entity e : V.entities) {
 			e.draw(g);
 		}

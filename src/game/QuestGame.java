@@ -2,6 +2,7 @@ package game;
 
 import java.awt.event.KeyEvent;
 
+import entities.Entity;
 import framework.V;
 
 public class QuestGame {
@@ -9,14 +10,12 @@ public class QuestGame {
 	public QuestGame() {
 		V.qGame = this;
 		
-		V.gameCenterX = V.qMap.getWidth()/2.0;
-		V.gameCenterY = V.qMap.getHeight()/2.0;
-		V.gameCenterTileX = (int)V.gameCenterX;
-		V.gameCenterTileY = (int)V.gameCenterY;
+		V.playerPositionX = V.qMap.getWidth()/2.0;
+		V.playerPositionY = V.qMap.getHeight()/2.0;
 	}
 	
 	public void tick() {
-		int dir = 0;
+		String dir = "";
 		
 		processCurrentTile();
 		
@@ -26,101 +25,102 @@ public class QuestGame {
 		
 		if (V.keys.contains(KeyEvent.VK_UP)) {
 			attemptMove(1);
-			dir -= 1;
+			dir += "N";
 		}
 		if (V.keys.contains(KeyEvent.VK_DOWN)) {
 			attemptMove(2);
-			dir += 1;
+			dir += "S";
 		}
 		if (V.keys.contains(KeyEvent.VK_LEFT)) {
 			attemptMove(3);
-			dir -= 3;
+			dir += "W";
 		}
 		if (V.keys.contains(KeyEvent.VK_RIGHT)) {
 			attemptMove(4);
-			dir += 3;
+			dir += "E";
+		}
+		if (dir.isEmpty()) {
+			dir += "X";
 		}
 		
-		V.gameCenterTileX = (int)(V.gameCenterX);
-		V.gameCenterTileY = (int)(V.gameCenterY);
-		V.facing = dir;
+		V.playerOrientation = dir;
 	}
 	
 	private void attemptMove(int dir) { // 1 = up, 2 = down, 3 = left, 4 = right
 		switch (dir) {
 		case 1:
-			switch (V.qMap.getTileAt(V.gameCenterTileX, (int)(V.gameCenterY - V.speed))) {
+			switch (V.qMap.getTileAt((int)V.playerPositionX, (int)(V.playerPositionY - V.speed))) {
 			case -1:
-				V.gameCenterY = (int)(V.gameCenterY) + 0.0000001;
+				V.playerPositionY = (int)(V.playerPositionY) + 0.0000001;
 				break;
 			case 0:
-				V.gameCenterY -= V.speed;
+				V.playerPositionY -= V.speed;
 				break;
 			case 1:
-				V.gameCenterY = (int)Math.floor(V.gameCenterY) + 0.0000001;
+				V.playerPositionY = (int)Math.floor(V.playerPositionY) + 0.0000001;
 				break;
 			case 2:
-				V.gameCenterY -= V.speed;
+				V.playerPositionY -= V.speed;
 				break;
 			default:
-				V.gameCenterY -= V.speed;
+				V.playerPositionY -= V.speed;
 				break;
 			}
 			break;
 		case 2:
-			switch (V.qMap.getTileAt(V.gameCenterTileX, (int)(V.gameCenterY + V.speed))) {
+			switch (V.qMap.getTileAt((int)V.playerPositionX, (int)(V.playerPositionY + V.speed))) {
 			case -1:
-				V.gameCenterY = (int)Math.ceil(V.gameCenterY) - 0.0000001;
+				V.playerPositionY = (int)Math.ceil(V.playerPositionY) - 0.0000001;
 				break;
 			case 0:
-				V.gameCenterY += V.speed;
+				V.playerPositionY += V.speed;
 				break;
 			case 1:
-				V.gameCenterY = (int)Math.ceil(V.gameCenterY) - 0.0000001;
+				V.playerPositionY = (int)Math.ceil(V.playerPositionY) - 0.0000001;
 				break;
 			case 2:
-				V.gameCenterY += V.speed;
+				V.playerPositionY += V.speed;
 				break;
 			default:
-				V.gameCenterY += V.speed;
+				V.playerPositionY += V.speed;
 				break;
 			}
 			break;
 		case 3:
-			switch (V.qMap.getTileAt((int)(V.gameCenterX - V.speed), V.gameCenterTileY)) {
+			switch (V.qMap.getTileAt((int)(V.playerPositionX - V.speed), (int)V.playerPositionY)) {
 			case -1:
-				V.gameCenterX = (int)Math.floor(V.gameCenterX) + 0.0000001;
+				V.playerPositionX = (int)Math.floor(V.playerPositionX) + 0.0000001;
 				break;
 			case 0:
-				V.gameCenterX -= V.speed;
+				V.playerPositionX -= V.speed;
 				break;
 			case 1:
-				V.gameCenterX = (int)Math.floor(V.gameCenterX) + 0.0000001;
+				V.playerPositionX = (int)Math.floor(V.playerPositionX) + 0.0000001;
 				break;
 			case 2:
-				V.gameCenterX -= V.speed;
+				V.playerPositionX -= V.speed;
 				break;
 			default:
-				V.gameCenterX -= V.speed;
+				V.playerPositionX -= V.speed;
 				break;
 			}
 			break;
 		case 4:
-			switch (V.qMap.getTileAt((int)(V.gameCenterX + V.speed), V.gameCenterTileY)) {
+			switch (V.qMap.getTileAt((int)(V.playerPositionX + V.speed), (int)V.playerPositionY)) {
 			case -1:
-				V.gameCenterX = (int)Math.ceil(V.gameCenterX) - 0.0000001;
+				V.playerPositionX = (int)Math.ceil(V.playerPositionX) - 0.0000001;
 				break;
 			case 0:
-				V.gameCenterX += V.speed;
+				V.playerPositionX += V.speed;
 				break;
 			case 1:
-				V.gameCenterX = (int)Math.ceil(V.gameCenterX) - 0.0000001;
+				V.playerPositionX = (int)Math.ceil(V.playerPositionX) - 0.0000001;
 				break;
 			case 2:
-				V.gameCenterX += V.speed;
+				V.playerPositionX += V.speed;
 				break;
 			default:
-				V.gameCenterX += V.speed;
+				V.playerPositionX += V.speed;
 				break;
 			}
 			break;
@@ -130,7 +130,7 @@ public class QuestGame {
 	}
 	
 	private void processCurrentTile() {
-		switch (V.qMap.getTileAt(V.gameCenterTileX, V.gameCenterTileY)) {
+		switch (V.qMap.getTileAt((int)V.playerPositionX, (int)V.playerPositionY)) {
 		case 0:
 			//zilch
 			break;
@@ -138,7 +138,7 @@ public class QuestGame {
 			//impossible
 			break;
 		case 2:
-			V.qMap.setTileAt(V.gameCenterTileX, V.gameCenterTileY, 0);
+			V.qMap.setTileAt((int)V.playerPositionX, (int)V.playerPositionY, 0);
 			break;
 		case 3:
 			if (V.mana < 100) V.mana += 0.1;

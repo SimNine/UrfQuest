@@ -42,3 +42,9 @@
 -The framework for making different types of entities is now in place
 -Entities' logic is now a rudimentary 2D physics simulation
 -Entity's constructor now allows for its position, size, and color
+
+0.4.1 - 8/9/16
+-Removed the need for a "player tile position" global variable
+-Level loader no longer saves player facings
+-Replaced integer-based directional facings with string-based
+-Separated entities' physics getters and setters into pos, vel, and acc

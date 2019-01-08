@@ -1,25 +1,32 @@
 package game;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
+import entities.Ball;
+import entities.Entity;
+import entities.Square;
 import framework.V;
 
 public class QuestMap {
 	
 	private int[][] map;
+	private ArrayList<Entity> enList;
 	
 	public QuestMap(int width, int height) {
-		map = generate(width, height);
-		addEntities(500);
+		map = generateMap(width, height);
+		enList = generateEntities(200);
+		
+		V.entities = enList;
 		V.qMap = this;
 	}
 	
 	public QuestMap(String levelfile) {
-	//	map = load(levelfile);
-	// V.qMap = this;
+		//map = load(levelfile);
+		//V.qMap = this;
 	}
 	
-	public static int[][] generate(int width, int height) {
+	public static int[][] generateMap(int width, int height) {
 		int[][] end = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -60,15 +67,17 @@ public class QuestMap {
 		return end;
 	}
 	
-	private void addEntities(int num) {
-		V.entities = new Entity[num];
+	private ArrayList<Entity> generateEntities(int num) {
+		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < num; i++) {
-			V.entities[i] = new Entity(Math.random()*map.length, Math.random()*map[0].length,
-									   new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)),
-									   (int)(Math.random()*100));
+			entities.add(new Square(Math.random()*map.length, Math.random()*map[0].length,
+						 new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)),
+						 (int)(Math.random()*100)));
 		}
+		return entities;
 	}
 	
+	// Getters and setters
 	public int getTileAt(int x, int y) {
 		if (x < 0 || y < 0) return -1;
 		if (x >= map.length || y >= map[0].length) return -1;
@@ -77,6 +86,10 @@ public class QuestMap {
 	
 	public void setTileAt(int x, int y, int t) {
 		map[x][y] = t;
+	}
+	
+	public void setNewMap(int w, int h) {
+		map = new int[w][h];
 	}
 	
 	public int getWidth() {

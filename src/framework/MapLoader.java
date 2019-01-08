@@ -1,19 +1,28 @@
 package framework;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import game.QuestMap;
+import javax.swing.JOptionPane;
+
+import entities.Ball;
+import entities.Entity;
+import entities.Square;
 
 public class MapLoader {
 
-	public static void saveLevel(QuestMap map, String filename) {
+	public static void saveLevel() {
+		V.time.stop();
         File levelDir = new File("levels");
         if (!levelDir.exists())
             levelDir.mkdir();
+        
+        String filename = JOptionPane.showInputDialog(V.qPanel,
+                "Save Level", null) + ".urf";
         
         File level = new File(levelDir, filename);
         
@@ -27,17 +36,37 @@ public class MapLoader {
             level.createNewFile();
             FileOutputStream fos = new FileOutputStream(level);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeInt(board.getBoardWidth()); // width byte
-            oos.writeInt(board.getBoardHeight()); // height byte
-            oos.writeInt(board.getScale()); // scale byte
-            oos.writeInt(board.getWaterRemaining()); // waterRemaining byte
-            oos.writeInt(board.getWaterNeeded()); // waterNeeded byte
-            oos.writeInt(board.getWaterExisting()); // waterExisting byte
-            for (int w = 0; w < board.getBoardWidth(); w++) {
-                for (int h = 0; h < board.getBoardHeight(); h++) {
-                    oos.writeByte(board.getBlockAt(w, h)); // block's type
-                }
+            
+            oos.writeInt(V.scale);
+            oos.writeDouble(V.playerPositionX);
+            oos.writeDouble(V.playerPositionY);
+            //oos.writeInt(V.playerOrientation);
+            oos.writeDouble(V.health);
+            oos.writeDouble(V.mana);
+            oos.writeDouble(V.speed);
+            
+            for (Entity e : V.entities) {
+            	oos.writeBoolean(true);
+            	oos.writeInt(e.getType());
+            	oos.writeObject(e.getColor());
+            	oos.writeDouble(e.getDiameter());
+            	oos.writeDouble(e.getPhysics()[0]);
+            	oos.writeDouble(e.getPhysics()[1]);
+            	oos.writeDouble(e.getPhysics()[2]);
+            	oos.writeDouble(e.getPhysics()[3]);
+            	oos.writeDouble(e.getPhysics()[4]);
+            	oos.writeDouble(e.getPhysics()[5]);
             }
+            oos.writeBoolean(false);
+            
+            oos.writeInt(V.qMap.getWidth());
+            oos.writeInt(V.qMap.getHeight());
+            for (int x = 0; x < V.qMap.getWidth(); x++) {
+            	for (int y = 0; y < V.qMap.getHeight(); y++) {
+            		oos.writeInt(V.qMap.getTileAt(x, y));
+            	}
+            }
+            
             oos.flush();
             oos.close();
             System.out.println("Current game saved.");
@@ -46,35 +75,65 @@ public class MapLoader {
             e.printStackTrace();
             System.exit(1);
         }
+        V.time.start();
     }
     
     @SuppressWarnings("resource")
-    public static void loadLevel(GamePanel board, String filename) {
+    public static void loadLevel() {
+    	V.time.stop();
+        String filename = JOptionPane.showInputDialog(null,
+                "Load a level...", null) + ".urf";
         try {
             System.out.print("Loading " + filename + "... ");
             File file = new File("levels", filename);
             FileInputStream fos = new FileInputStream(file);
             ObjectInputStream oos = new ObjectInputStream(fos);
-            int width = oos.readInt();
-            int height = oos.readInt();
-            board.setBoardGrid(new int[width][height]);
-            int scale = oos.readInt();
-            board.setScale(scale);
-            int waterRemaining = oos.readInt();
-            board.setWaterRemaining(waterRemaining);
-            int waterNeeded = oos.readInt();
-            board.setWaterNeeded(waterNeeded);
-            int waterExisting = oos.readInt();
-            board.setWaterExisting(waterExisting);
-            while (oos.available() != 0) {
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        board.setBlockAt(x, y, oos.readByte());
-                        if (board.getBlockAt(x, y) == 2)
-                            board.setWaterExisting(board.getWaterExisting() + 1);
-                    }
-                }
+            
+            V.scale = oos.readInt();
+            V.playerPositionX = oos.readDouble();
+            V.playerPositionY = oos.readDouble();
+            //V.playerOrientation = oos.readInt();
+            V.health = oos.readDouble();
+            V.mana = oos.readDouble();
+            V.speed = oos.readDouble();
+            
+            V.entities.clear();
+            while (oos.readBoolean() == true) {
+            	int type = oos.readInt();
+            	Color tempCol = (Color)oos.readObject();
+            	double diameter = oos.readDouble();
+            	double posX = oos.readDouble();
+            	double posY = oos.readDouble();
+            	double velX = oos.readDouble();
+            	double velY = oos.readDouble();
+            	double accX = oos.readDouble();
+            	double accY = oos.readDouble();
+            	
+            	switch (type) {
+            	case 0:
+                	Entity temp = new Ball(posX, posY, tempCol, diameter);
+                	temp.setPhysics(posX, posY, velX, velY, accX, accY);
+                	V.entities.add(temp);
+                	break;
+            	case 1:
+            		Entity temp1 = new Square(posX, posY, tempCol, diameter);
+                	temp1.setPhysics(posX, posY, velX, velY, accX, accY);
+                	V.entities.add(temp1);
+                	break;
+                default:
+                	continue;
+            	}
             }
+            
+            int mapWidth = oos.readInt();
+            int mapHeight = oos.readInt();
+            V.qMap.setNewMap(mapWidth, mapHeight);
+            for (int x = 0; x < mapWidth; x++) {
+            	for (int y = 0; y < mapHeight; y++) {
+            		V.qMap.setTileAt(x, y, oos.readInt());
+            	}
+            }
+            
             System.out.println("success");
         } catch (Exception e) {
             System.out.println("failed");
@@ -82,5 +141,6 @@ public class MapLoader {
             e.printStackTrace();
             System.exit(1);
         }
+        V.time.start();
     }
 }
