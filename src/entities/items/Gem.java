@@ -1,10 +1,10 @@
 package entities.items;
 
-public class Key extends Item {
+public class Gem extends Item {
 
-	public Key(double x, double y) {
-		super(x, y, keyPic);
-		type = "key";
+	public Gem(double x, double y) {
+		super(x, y, gemPic);
+		type = "gem";
 		isStackable = true;
 	}
 

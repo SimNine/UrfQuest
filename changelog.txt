@@ -136,3 +136,18 @@ NOTE: MapLoader is completely fucked
 0.10.1 - 12/24/16
 -Fixed bug where the minimap didn't regenerate after loading a level
 -Fixed bug where the GUI wouldn't reappear after loading a level
+
+0.11.0 - 12/26/16
+(The Inventory Update)
+-A few minor drawing fixes in GUIstatusbar
+-Added inventory class
+-Added inventoryEntry class
+-Each "player" now has a unique inventory
+-Added gun item
+-Added "isStackable" property to items
+-Removed keycount display (it's obsolete with the addition of inventory)
+-Added inventory GUI
+-Added dropping of selected items with spacebar
+-Added selecting active item with number keys 0-9
+NOTE: Loader does not yet save inventory or varied item types
+NOTE: Inventory code is a bit messy. Might be good idea to rewrite item system.

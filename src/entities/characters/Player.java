@@ -6,11 +6,15 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
 import entities.Entity;
+import entities.items.Item;
 import framework.UrfQuest;
+import game.Inventory;
+import game.InventoryEntry;
 import game.QuestMap;
 import tiles.Tiles;
 
@@ -31,11 +35,12 @@ public class Player extends Entity {
 	private double health = 100.0;
 	private double mana = 100.0;
 	private double speed = 0.05;
+	
+	private Inventory inventory = new Inventory();
 
 	public Player(double x, double y) {
 		super(x, y);
 		type = "player";
-		
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
@@ -365,6 +370,22 @@ public class Player extends Entity {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public Collection<InventoryEntry> getInventory() {
+		return inventory.getInventoryEntries();
+	}
+	
+	public boolean addItem(Item i) {
+		return inventory.addItem(i);
+	}
+	
+	public Item dropOneOfSelectedItem() {
+		return inventory.removeOneOfSelectedItem();
+	}
+	
+	public void setSelectedEntry(int i) {
+		inventory.setSelectedEntry(i);
 	}
 	
 	// This is used in case the player's sprites somehow can't be loaded

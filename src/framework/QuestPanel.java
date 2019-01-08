@@ -38,23 +38,56 @@ public class QuestPanel extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				UrfQuest.keys.remove(e.getKeyCode());
 				
-				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_ESCAPE:
 					if (currOverlay == null && UrfQuest.time.isRunning()) {
 						UrfQuest.time.stop();
 						currOverlay = OverlayInit.newPauseMenu();
 						UrfQuest.game.hideGUI();
-						repaint();
 					} else if (currOverlay.getName() == "pause" && !UrfQuest.time.isRunning()) {
 						UrfQuest.time.start();
 						currOverlay = null;
 						UrfQuest.game.showGUI();
-						repaint();
 					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_X) {
+					break;
+				case KeyEvent.VK_X:
 					UrfQuest.game.cycleMinimapSize();
-					repaint();
+					break;
+				case KeyEvent.VK_SPACE:
+					UrfQuest.game.dropOneOfSelectedItem();
+					break;
+				case KeyEvent.VK_1:
+					UrfQuest.game.setSelectedEntry(0);
+					break;
+				case KeyEvent.VK_2:
+					UrfQuest.game.setSelectedEntry(1);
+					break;
+				case KeyEvent.VK_3:
+					UrfQuest.game.setSelectedEntry(2);
+					break;
+				case KeyEvent.VK_4:
+					UrfQuest.game.setSelectedEntry(3);
+					break;
+				case KeyEvent.VK_5:
+					UrfQuest.game.setSelectedEntry(4);
+					break;
+				case KeyEvent.VK_6:
+					UrfQuest.game.setSelectedEntry(5);
+					break;
+				case KeyEvent.VK_7:
+					UrfQuest.game.setSelectedEntry(6);
+					break;
+				case KeyEvent.VK_8:
+					UrfQuest.game.setSelectedEntry(7);
+					break;
+				case KeyEvent.VK_9:
+					UrfQuest.game.setSelectedEntry(8);
+					break;
+				case KeyEvent.VK_0:
+					UrfQuest.game.setSelectedEntry(9);
+					break;
 				}
+				repaint();
 			}
 			public void keyTyped(KeyEvent e) {}
 		});

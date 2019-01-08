@@ -110,9 +110,6 @@ public class Loader {
 				}
 			}
 
-			// write the current keyCount
-			bos.writeInt(UrfQuest.game.getKeyCount());
-
 			// get the player
 			Player p = UrfQuest.game.getPlayer();
 
@@ -211,9 +208,6 @@ public class Loader {
 
 			// set all maps
 			UrfQuest.game.setAllMaps(allMaps);
-
-			// read current keyCount
-			UrfQuest.game.setKeyCount(bis.readInt());
 
 			// read player data
 			double xPos = bis.readDouble();

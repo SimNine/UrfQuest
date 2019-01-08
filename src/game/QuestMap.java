@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import entities.Entity;
+import entities.items.Gem;
+import entities.items.Gun;
 import entities.items.Item;
 import entities.items.Key;
 import framework.SimplexNoise;
@@ -37,14 +39,18 @@ public class QuestMap {
 		return minimap;
 	}
 	
+	// checks for collisions
 	public void update() {
 		ArrayList<Item> remove = new ArrayList<Item>();
 		for (Item i : items) {
-			if (UrfQuest.game.player.collides(i) && i.getType().equals("key")) {
-				remove.add(i);
-				UrfQuest.game.incKeyCount(1);
+			if (UrfQuest.game.player.collides(i)) {
 				if (UrfQuest.debug) {
 					System.out.println("player collided with object: " + i.getType());
+				}
+				if (UrfQuest.game.player.addItem(i)) {
+					remove.add(i);
+				} else {
+					continue;
 				}
 			}
 		}
@@ -171,27 +177,6 @@ public class QuestMap {
 		this.map = end;
 	}
 	
-	// entity generation methods
-	public void generateEntities(int num) {
-		ArrayList<Entity> entities = new ArrayList<Entity>();
-		for (int i = 0; i < num; i++) {
-			//nothing, atm
-		}
-		this.entities = entities;
-	}
-	
-	public void generateKeys() {
-		ArrayList<Item> items = new ArrayList<Item>();
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				if (map[x][y] == 2 && Math.random() < 0.005) {
-					items.add(new Key(x, y));
-				}
-			}
-		}
-		this.items = items;
-	}
-	
 	// helper generation methods
 	private static void generateStartingArea(int[][] map) {
 		for (int x = -3; x < 4; x++) {
@@ -218,6 +203,34 @@ public class QuestMap {
 		}
 	}
 	
+	// entity generation methods
+	public void generateEntities(int num) {
+		ArrayList<Entity> entities = new ArrayList<Entity>();
+		for (int i = 0; i < num; i++) {
+			//nothing, atm
+		}
+		this.entities = entities;
+	}
+	
+	public void generateItems() {
+		ArrayList<Item> items = new ArrayList<Item>();
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				if (map[x][y] == 2 && Math.random() < 0.005) {
+					double rand = Math.random();
+					if (rand > .99) {
+						items.add(new Key(x, y));
+					} else if (rand > .95) {
+						items.add(new Gun(x, y));
+					} else {
+						items.add(new Gem(x, y));
+					}
+				}
+			}
+		}
+		this.items = items;
+	}
+	
 	// Getters and setters
 	public int getTileAt(int x, int y) {
 		if (x < 0 || y < 0) return -1;
@@ -239,5 +252,9 @@ public class QuestMap {
 	
 	public int getHeight() {
 		return map[0].length;
+	}
+	
+	public void addItem(Item i) {
+		items.add(i);
 	}
 }

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import entities.Entity;
 import entities.characters.Player;
 import entities.items.Item;
-import entities.items.Key;
 import framework.UrfQuest;
 import guis.QuestGUI;
 import framework.QuestPanel;
@@ -23,13 +22,11 @@ public class QuestGame {
 	private boolean guiVisible;
 	public Player player;
 
-	private int keyCount = 0;
-
 	public QuestGame() {
 		currMap = new QuestMap(500, 500);
 		currMap.generateSimplexNoiseMap();
 		currMap.generateMinimap();
-		currMap.generateKeys();
+		currMap.generateItems();
 
 		maps = new ArrayList<QuestMap>();
 		maps.add(currMap);
@@ -66,18 +63,6 @@ public class QuestGame {
 		this.player = p;
 	}
 
-	public int getKeyCount() {
-		return keyCount;
-	}
-
-	public void setKeyCount(int i) {
-		keyCount = i;
-	}
-
-	public void incKeyCount(int i) {
-		keyCount += i;
-	}
-
 	public boolean isGUIVisible() {
 		return guiVisible;
 	}
@@ -99,6 +84,19 @@ public class QuestGame {
 			minimapSize = 100;
 		}
 	}
+	
+	public void dropOneOfSelectedItem() {
+		Item i = player.dropOneOfSelectedItem();
+		if (i != null) {
+			double[] playerPos = player.getPosition();
+			i.setPosition(playerPos[0], playerPos[1]-1);
+			currMap.addItem(i);
+		}
+	}
+	
+	public void setSelectedEntry(int i) {
+		player.setSelectedEntry(i);
+	}
 
 	public void drawGame(Graphics g) {
 		drawBoard(g);
@@ -106,8 +104,8 @@ public class QuestGame {
 
 		if (guiVisible) {
 			drawMinimap(g);
-			drawKeyCounter(g);
 			drawStatusBars(g);
+			drawInventoryBar(g);
 		}
 
 		if (UrfQuest.debug)
@@ -199,29 +197,34 @@ public class QuestGame {
 		minimap = minimap.getSubimage(cropX, cropY, minimapSize, minimapSize);
 		g.drawImage(minimap, rootX, rootY, null);
 	}
-
-	private void drawKeyCounter(Graphics g) {
-		g.setColor(new Color(128, 128, 128, 180));
-		g.fillRect(UrfQuest.panel.getWidth() - 120, UrfQuest.panel.getHeight() - 80, 120, 80);
-
-		g.drawImage(Key.getPic(), UrfQuest.panel.getWidth() - 115, UrfQuest.panel.getHeight() - 70, 50, 50, null);
-
-		g.setColor(Color.YELLOW);
-		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
-		g.drawString("" + keyCount, UrfQuest.panel.getWidth() - 65, UrfQuest.panel.getHeight() - 30);
-		g.setColor(Color.WHITE);
-		g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
-
+	
+	private void drawInventoryBar(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, UrfQuest.panel.getHeight()-50, 500, 50);
+		
+		int tempx = 0;
+		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
+		for (InventoryEntry e : player.getInventory()) {
+			if (e.isSelected()) {
+				g.setColor(new Color(192, 192, 192));
+			} else {
+				g.setColor(new Color(128, 128, 128));
+			}
+			g.fillRect(tempx + 5, UrfQuest.panel.getHeight()-45, 40, 40);
+			if (!e.isEmpty()) {
+				g.drawImage(e.getPic(), tempx + 5, UrfQuest.panel.getHeight()-45, 40, 40, null);
+				if (e.isStack()) {
+					g.setColor(Color.BLACK);
+					g.drawString("" + e.getNumItems(), tempx + 5, UrfQuest.panel.getHeight()-35);
+				}
+			}
+			tempx += 50;
+		}
 	}
 
 	private void drawStatusBars(Graphics g) {
-		g.setColor(new Color(128, 128, 128, 180));
-		g.fillRect(0, UrfQuest.panel.getHeight() - 110, 380, 110);
-
-		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
-		QuestGUI.drawStatusBar(g, Color.RED, player.getHealth(), 100, (int) (TILE_WIDTH * 0.1), TILE_WIDTH,
-				UrfQuest.panel.getHeight() - (int) (TILE_WIDTH * 1.5));
-		QuestGUI.drawStatusBar(g, Color.BLUE, player.getMana(), 100, (int) (TILE_WIDTH * 0.1), TILE_WIDTH,
-				UrfQuest.panel.getHeight() - (int) (TILE_WIDTH * 2.5));
+		QuestGUI.drawStatusBar(g, Color.RED, player.getHealth(), 100, 3, 0,	UrfQuest.panel.getHeight() - 80);
+		QuestGUI.drawStatusBar(g, Color.BLUE, player.getMana(), 100, 3, 0, UrfQuest.panel.getHeight() - 65);
+		//QuestGUI.drawStatusBar(g, Color.GREEN, player.getSpeed(), 1, 3, 0, UrfQuest.panel.getHeight() - 95);
 	}
 }
