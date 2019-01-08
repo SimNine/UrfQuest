@@ -21,6 +21,7 @@ public class QuestGame {
 	private QuestMap currMap;
 	private ArrayList<QuestMap> maps;
 	private boolean guiVisible;
+	private boolean mapView;
 	public Player player;
 
 	public QuestGame() {
@@ -30,8 +31,9 @@ public class QuestGame {
 
 		maps = new ArrayList<QuestMap>();
 		maps.add(currMap);
-		player = new Player(currMap.getWidth() / 2.0, currMap.getHeight() / 2.0);
+		player = new Player(currMap.getHomeCoords()[0], currMap.getHomeCoords()[1]);
 		guiVisible = false;
+		mapView = false;
 	}
 
 	public void tick() {
@@ -75,6 +77,16 @@ public class QuestGame {
 		guiVisible = true;
 	}
 	
+	public void toggleMapView() {
+		if (mapView) {
+			showGUI();
+			mapView = false;
+		} else {
+			hideGUI();
+			mapView = true;
+		}
+	}
+	
 	public void cycleMinimapSize() {
 		if (minimapSize == 100) {
 			minimapSize = 200;
@@ -105,15 +117,17 @@ public class QuestGame {
 		drawBoard(g);
 		drawEntities(g);
 
+		if (UrfQuest.debug) {
+			drawCrosshair(g);
+			drawDebug(g);
+		}
+
 		if (guiVisible) {
 			drawMinimap(g);
 			drawStatusBars(g);
 			drawInventoryBar(g);
-		}
-
-		if (UrfQuest.debug) {
-			drawCrosshair(g);
-			drawDebug(g);
+		} else if (mapView) {
+			drawMapView(g);
 		}
 	}
 
@@ -275,5 +289,38 @@ public class QuestGame {
 		QuestGUI.drawStatusBar(g, Color.RED, player.getHealth(), 100, 3, 0,	UrfQuest.panel.getHeight() - 80);
 		QuestGUI.drawStatusBar(g, Color.BLUE, player.getMana(), 100, 3, 0, UrfQuest.panel.getHeight() - 65);
 		//QuestGUI.drawStatusBar(g, Color.GREEN, player.getSpeed(), 1, 3, 0, UrfQuest.panel.getHeight() - 95);
+	}
+	
+	private void drawMapView(Graphics g) {
+		g.setColor(new Color(128, 128, 128, 128));
+		g.fillRect(0, 0, UrfQuest.panel.getWidth(), UrfQuest.panel.getHeight());
+		
+		BufferedImage map = currMap.getMinimap();
+		int xRoot = UrfQuest.panel.dispCenterX - map.getWidth()/2;
+		int yRoot = UrfQuest.panel.dispCenterY - map.getHeight()/2;
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(xRoot - 3, yRoot - 3, map.getWidth() + 6, map.getHeight() + 6);
+		g.drawImage(map, xRoot, yRoot, null);
+		
+		// draw a square for each item currently on the minimap
+		g.setColor(Color.RED);
+		for (Item i : currMap.items) {
+				g.fillRect(xRoot + (int)i.getPos()[0] - 1, 
+						   yRoot + (int)i.getPos()[1] - 1, 3, 3);
+		}
+		
+		// draw a square for each npc currently on the minimap
+		g.setColor(Color.YELLOW);
+		for (Mob m : currMap.mobs) {
+			g.fillRect(xRoot + (int)m.getPos()[0] - 1, 
+					   yRoot + (int)m.getPos()[1] - 1, 3, 3);
+		}
+		
+		// draw a square for the player
+		g.setColor(Color.BLACK);
+		int playerIndX = xRoot + (int)player.getPos()[0];
+		int playerIndY = yRoot + (int)player.getPos()[1];
+		g.fillRect(playerIndX-2, playerIndY-2, 5, 5);
 	}
 }

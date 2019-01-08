@@ -14,7 +14,7 @@ public class Tiles {
 	private static String tileRoot = "/assets/tiles/";
 	private static String errMsg = "Could not find image: ";
 	
-	private static BufferedImage[] tileImages = new BufferedImage[10];
+	private static BufferedImage[] tileImages = new BufferedImage[13];
 	
 	private static boolean[][] tileBooleanProperties = 
 		   //walkable	//penetrable
@@ -27,7 +27,10 @@ public class Tiles {
 		  {true,		true},//6
 		  {false,		false},
 		  {false,		true},//8
-		  {true,		true}};
+		  {true,		true},
+		  {false,		false},//10
+		  {false,		false},
+		  {false,		false}};//12
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
@@ -40,7 +43,10 @@ public class Tiles {
 		  {Color.GREEN.getRGB()},//6
 		  {Color.GREEN.darker().darker().getRGB()},
 		  {Color.BLUE.getRGB()},//8
-		  {Color.YELLOW.brighter().getRGB()}	};
+		  {Color.YELLOW.brighter().getRGB()},
+		  {Color.GRAY.getRGB()},//10
+		  {Color.GRAY.getRGB()},
+		  {Color.GRAY.getRGB()}	};//12
 	
 	public static void initGraphics() {
 		try {
@@ -115,6 +121,42 @@ public class Tiles {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "sand.png");
+		}
+		
+		try {
+			// here, the boulder sprite is drawn onto the grass sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[10] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "grass.png");
+		}
+		
+		try {
+			// here, the boulder sprite is drawn onto the sand sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "sand.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[12] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "sand.png");
+		}
+		
+		try {
+			// here, the boulder sprite is drawn onto the water sprite, and that becomes the new tile
+			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
+			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water.png"));
+			bottom.createGraphics().drawImage(top, 0, 0, null);
+			tileImages[11] = bottom;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
+			System.out.println(errMsg + tileRoot + "water.png");
 		}
 	}
 	

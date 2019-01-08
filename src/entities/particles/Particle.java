@@ -23,7 +23,7 @@ public class Particle extends Entity {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.setColor(Color.BLACK);
-		g.fillRect((int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth),
+		g.fillOval((int)(UrfQuest.panel.dispCenterX - (UrfQuest.game.player.getPos()[0] - bounds.getX())*tileWidth),
 				   (int)(UrfQuest.panel.dispCenterY - (UrfQuest.game.player.getPos()[1] - bounds.getY())*tileWidth),
 				   (int)(bounds.getWidth()*tileWidth),
 				   (int)(bounds.getHeight()*tileWidth));

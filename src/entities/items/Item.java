@@ -46,6 +46,8 @@ public abstract class Item extends Entity {
 			ret = new Gem(pos[0], pos[1]);
 		} else if (this instanceof Cheese) {
 			ret = new Cheese(pos[0], pos[1]);
+		} else if (this instanceof Bone) {
+			ret = new Bone(pos[0], pos[1]);
 		}
 		ret.isStackable = this.isStackable;
 		ret.itemPic = this.itemPic;

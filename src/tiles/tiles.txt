@@ -10,3 +10,6 @@ Tile Types:
 7 - Tree
 8 - Water
 9 - Sand
+10 - GrassBoulder
+11 - WaterBoulder
+12 - SandBoulder

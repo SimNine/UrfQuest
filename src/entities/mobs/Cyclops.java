@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.items.Bone;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -71,6 +72,10 @@ public class Cyclops extends Mob {
 		}
 		animStage++;
 		attemptMove(direction);
+	}
+	
+	public void onDeath() {
+		UrfQuest.game.getCurrMap().addItem(new Bone(bounds.getCenterX(), bounds.getCenterY()));
 	}
 
 }

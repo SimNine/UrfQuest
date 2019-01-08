@@ -25,6 +25,7 @@ public class QuestMap {
 	
 	private int[][] map;
 	private BufferedImage minimap;
+	private int[] homeCoords = new int[2];
 	public ArrayList<Mob> mobs = new ArrayList<Mob>();
 	public ArrayList<Item> items = new ArrayList<Item>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
@@ -34,6 +35,8 @@ public class QuestMap {
 		
 		switch (type) {
 		case EMPTY_MAP:
+			homeCoords[0] = map.length/2;
+			homeCoords[1] = map[0].length/2;
 			break;
 		case SIMPLEX_MAP:
 			generateSimplexNoiseMap();
@@ -118,6 +121,7 @@ public class QuestMap {
 		// clean up dead mobs
 		for (Mob m : mobs) {
 			if (m.isDead()) {
+				m.onDeath();
 				removeMobs.add(m);
 			}
 		}
@@ -133,10 +137,27 @@ public class QuestMap {
 		int height = map[0].length;
 		int[][] end = new int[width][height];
 		
+		// terrain distortion params
+		boolean enableDistortion = true;
+		double distortWeight = 0.25;
+		int distortFreq = 20;
+		boolean enableDistortionDistribution = false;
+		int distortDistributionFreq = 20;
+		
 		// generate land and water
-		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height);
+		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height, 5);
+		float[][] distortionNoise = SimplexNoise.generateSimplexNoise(width, height, distortFreq);
+		float[][] distortionDistribution = SimplexNoise.generateSimplexNoise(width, height, distortDistributionFreq);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+				if (enableDistortionDistribution && distortionDistribution[x][y] > .5) {
+					distortionNoise[x][y] *= (distortionDistribution[x][y] - 0.5)*2;
+				}
+				if (enableDistortion) {
+					terrainNoise[x][y] += distortionNoise[x][y]*distortWeight;
+					terrainNoise[x][y] /= (1 + distortWeight);
+				}
+				
 				if (terrainNoise[x][y] > .55f) {
 					end[x][y] = 2;
 				} else if (terrainNoise[x][y] > .5f) {
@@ -147,11 +168,27 @@ public class QuestMap {
 			}
 		}
 		
+		// generate boulders
+		float[][] boulderNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (boulderNoise[x][y]*2 - 1.6 > Math.random()) {
+					if (end[x][y] == 2) {
+						end[x][y] = 10;
+					} else if (end[x][y] == 8) {
+						end[x][y] = 11;
+					} else if (end[x][y] == 9) {
+						end[x][y] = 12;
+					}
+				}
+			}
+		}
+		
 		// generate trees (only on land tiles)
 		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (treeNoise[x][y]*2 -1 > Math.random() && end[x][y] == 2) {
+				if (treeNoise[x][y]*2 - 1 > Math.random() && end[x][y] == 2) {
 					end[x][y] = 7;
 				}
 			}
@@ -241,16 +278,27 @@ public class QuestMap {
 	
 	// helper generation methods
 	private void generateStartingArea() {
+		int spawnCenterX = map.length/2;
+		int spawnCenterY = map[0].length/2;
+		
+		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
+			spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
+			spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+		}
+		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				map[(map.length/2)+x][(map[0].length/2)+y] = 2;
+				map[spawnCenterX+x][spawnCenterY+y] = 2;
 			}
 		}
 		
-		map[map.length/2-2][map[0].length/2-2] = 3;
-		map[map.length/2-2][map[0].length/2+2] = 4;
-		map[map.length/2+2][map[0].length/2-2] = 5;
-		map[map.length/2+2][map[0].length/2+2] = 6;
+		map[spawnCenterX-2][spawnCenterY-2] = 3;
+		map[spawnCenterX-2][spawnCenterY+2] = 4;
+		map[spawnCenterX+2][spawnCenterY-2] = 5;
+		map[spawnCenterX+2][spawnCenterY+2] = 6;
+		
+		homeCoords[0] = spawnCenterX;
+		homeCoords[1] = spawnCenterY;
 	}
 	
 	private void generateBorderWall() {
@@ -316,6 +364,20 @@ public class QuestMap {
 	
 	public void setTileAt(int x, int y, int t) {
 		map[x][y] = t;
+	}
+	
+	public boolean setHomeCoords(int x, int y) {
+		if (Tiles.isWalkable(getTileAt(x, y))) {
+			homeCoords[0] = x;
+			homeCoords[1] = y;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public int[] getHomeCoords() {
+		return homeCoords;
 	}
 	
 	public void setNewMap(int w, int h) {

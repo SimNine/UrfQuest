@@ -23,6 +23,10 @@ public abstract class Mob extends Entity {
 
 	public abstract void update();
 	
+	public void onDeath() {
+		// do nothing by default
+	}
+	
 	// returns true if the move is valid (in one or both directions), returns false if not
 	protected boolean attemptMove(int dir) {
 		QuestMap currMap = UrfQuest.game.getCurrMap();

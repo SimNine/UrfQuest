@@ -33,6 +33,10 @@ public class InventoryEntry {
 	}
 	
 	public void useItem() {
+		if (isEmpty) {
+			return;
+		}
+		
 		if (item.getCooldown() == -1) {
 			return; // the item isn't usable
 		}
