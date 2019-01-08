@@ -128,7 +128,7 @@ public class QuestPanel extends JPanel {
 							swap(craftingView);
 							guiOpen = true;
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
-							UrfQuest.game.getPlayer().tryMapLink();
+							UrfQuest.game.getPlayer().useTileUnderneath();
 						} else if (e.getKeyCode() == KeyEvent.VK_P) {
 							UrfQuest.game.switchPlayer();
 							camera = UrfQuest.game.getPlayer();

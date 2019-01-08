@@ -36,6 +36,7 @@ public class CommandProcessor {
 					+ "\"give (item name) [amount]\"\n"
 					+ "\"spawn (mob name) [amount]\"\n"
 					+ "\"set (health/mana/speed) (0-100)\"\n"
+					+ "\"setblock (x) (y) (blockID)\"\n"
 					+ "\"tp (xpos) (ypos)\"\n"
 					+ "\"tprel (xoffset) (yoffset)\"\n"
 					+ "\"home\"\n"
@@ -132,6 +133,11 @@ public class CommandProcessor {
 			for (int t = 0; t < Integer.parseInt(args[1]); t++) {
 				UrfQuest.game.tick();
 			}
+		} else if (args[0].equals("setblock")) {
+			int x = Integer.parseInt(args[1]);
+			int y = Integer.parseInt(args[2]);
+			int t = Integer.parseInt(args[3]);
+			UrfQuest.game.getCurrMap().setTileAt(x, y, t);
 		} else {
 			JOptionPane.showMessageDialog(null, "invalid command", "error", JOptionPane.INFORMATION_MESSAGE);
 		}

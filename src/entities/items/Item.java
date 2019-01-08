@@ -16,12 +16,12 @@ import entities.projectiles.GrenadeProjectile;
 import entities.projectiles.Rocket;
 import entities.projectiles.RocketExplosion;
 import framework.UrfQuest;
-import game.MapLink;
 import game.QuestMap;
+import tiles.MapLink;
 import tiles.Tiles;
 
 public class Item extends Entity {
-	public static final String assetPath = "/asset/items/";
+	public static final String assetPath = "/assets/items/";
 	
 	public static final int EMPTY_ITEM = 0;
 	public static final int ASTRAL_RUNE = 1;
@@ -46,9 +46,9 @@ public class Item extends Entity {
 	public static final int IRON_ORE = 20;
 	public static final int COPPER_ORE = 21;
 	
-	private static BufferedImage[] itemImages = new BufferedImage[21];
+	public static final BufferedImage[] itemImages = new BufferedImage[21];
 	
-	private static boolean[][] itemBooleanProperties = 
+	public static final boolean[][] itemBooleanProperties = 
 			   //consumable
 			{ {true},//1
 			  {true},//2
@@ -72,7 +72,7 @@ public class Item extends Entity {
 			  {false},//20
 			  {false} };
 		
-	private static int[][] itemIntProperties = 
+	public static final int[][] itemIntProperties = 
 			   //maxCooldown	//maxDurability	//maxStackSize
 			{ {1000, 			-1,				10},
 			  {1000,			-1,				10},//2
@@ -100,6 +100,11 @@ public class Item extends Entity {
 	private int durability;
 	private int stackSize;
 	private int itemType;
+	
+	private double xVel = 0;
+	private double yVel = 0;
+	
+	private int dropTimeout = 500;
 	
 	public Item(double x, double y, int type, QuestMap m) {
 		this(x, y, type, 1, -1, m);
@@ -387,11 +392,10 @@ public class Item extends Entity {
 					int yHome = newCaveMap.getHomeCoords()[1];
 					newCaveMap.setTileAt(xHome, yHome, 13);
 					
-					//generate and add links
-					MapLink currLink = new MapLink(m.getMap(), coords[0], coords[1]);
-					MapLink newLink = new MapLink(newCaveMap, xHome, yHome);
-					m.getMap().addLink(currLink, newLink);
-					newCaveMap.addLink(newLink, currLink);
+					//generate and add new link
+					MapLink newLink = new MapLink(m.getMap(), coords[0], coords[1], newCaveMap, xHome, yHome);
+					m.getMap().setActiveTile(coords[0], coords[1], newLink);
+					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
 					if (UrfQuest.debug) {
@@ -415,10 +419,44 @@ public class Item extends Entity {
 	}
 	
 	public void update() {
+		move(xVel, yVel);
+		
 		if (getMaxCooldown() > -1) {
 			if (cooldown > 0) {
 				cooldown--;
 			}
+		}
+		
+		if (xVel != 0) {
+			xVel -= xVel*0.02;
+		}
+		if (yVel != 0) {
+			yVel -= yVel*0.02;
+		}
+		
+		if (dropTimeout > 0) {
+			dropTimeout--;
+		}
+	}
+	
+	public void accelerateTowards(Mob m) {
+		double xDiff = (m.getCenter()[0] - this.getCenter()[0]);
+		double yDiff = (m.getCenter()[1] - this.getCenter()[1]);
+		
+		if (xDiff > 0) { // if m is east of this
+			xVel += 0.002;
+		} else if (xDiff < 0) { // if m is west of this
+			xVel -= 0.002;
+		} else {
+			// nada
+		}
+		
+		if (yDiff > 0) { // if m is south of this
+			yVel += 0.002;
+		} else if (yDiff < 0) { // if m is north of this
+			yVel -= 0.002;
+		} else {
+			// nada
 		}
 	}
 	
@@ -545,5 +583,13 @@ public class Item extends Entity {
 	
 	public int getType() {
 		return itemType;
+	}
+	
+	public void resetDropTimeout() {
+		dropTimeout = 500;
+	}
+	
+	public boolean isPickupable() {
+		return (dropTimeout == 0);
 	}
 }

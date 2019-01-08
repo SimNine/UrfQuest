@@ -158,11 +158,19 @@ public class GameBoardOverlay extends GUIContainer {
 		int mouseX = (int) UrfQuest.panel.windowToGameX(UrfQuest.mousePos[0]);
 		int mouseY = (int) UrfQuest.panel.windowToGameY(UrfQuest.mousePos[1]);
 		
+		Player p = UrfQuest.game.getPlayer();
+		if (mouseX < p.getPos()[0] + 3 &&
+				   mouseX > p.getPos()[0] - 3 &&
+				   mouseY < p.getPos()[1] + 3 &&
+				   mouseY > p.getPos()[1] - 3) {
+			p.getMap().useActiveTile(mouseX, mouseY, p);
+		}
+		
 		if (UrfQuest.game.isBuildMode() && UrfQuest.gameRunning && !UrfQuest.panel.isGUIOpen()) {
 			UrfQuest.game.getCurrMap().setTileAt(mouseX, mouseY, 15);
 			return true;
 		} else if (UrfQuest.game.getCurrMap().getTileAt(mouseX, mouseY) == 7) {
-			UrfQuest.game.getPlayer().incrementHealth(-5.0);
+			p.incrementHealth(-5.0);
 			return true;
 		} else {
 			return false;

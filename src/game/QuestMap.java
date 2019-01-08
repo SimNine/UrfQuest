@@ -2,7 +2,7 @@ package game;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
@@ -13,8 +13,10 @@ import entities.particles.Particle;
 import entities.projectiles.Projectile;
 import entities.items.Item;
 import framework.UrfQuest;
+import tiles.ActiveTile;
 import tiles.Tiles;
 import urf.SimplexNoise;
+import urf.Pair;
 
 public class QuestMap {
 	public static final int EMPTY_MAP = 5000;
@@ -23,11 +25,13 @@ public class QuestMap {
 	public static final int TEMPLATE_MAP = 5003;
 	public static final int CAVE_MAP = 5004;
 	
-	private int[][] map;
+	private int[][] tileTypes;
+	private int[][] tileSubtypes;
+	
 	private BufferedImage minimap;
 	private int[] homeCoords = new int[2];
 	
-	private HashMap<MapLink, MapLink> links = new HashMap<MapLink, MapLink>();
+	private ActiveTile[][] activeTiles;
 
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Mob> mobs = new ArrayList<Mob>();
@@ -48,12 +52,14 @@ public class QuestMap {
 	private ArrayList<Particle> removeParticles = new ArrayList<Particle>();
 	
 	public QuestMap(int width, int height, int type) {
-		map = new int[width][height];
+		tileTypes = new int[width][height];
+		tileSubtypes = new int[width][height];
+		activeTiles = new ActiveTile[width][height];
 		
 		switch (type) {
 		case EMPTY_MAP:
-			homeCoords[0] = map.length/2;
-			homeCoords[1] = map[0].length/2;
+			homeCoords[0] = tileTypes.length/2;
+			homeCoords[1] = tileTypes[0].length/2;
 			break;
 		case SIMPLEX_MAP:
 			generateSimplexNoiseMap();
@@ -87,7 +93,6 @@ public class QuestMap {
 	 */
 	
 	public void update() {
-		
 		// update particles
 		for (Particle p : particles) {
 			p.update();
@@ -103,20 +108,36 @@ public class QuestMap {
 			m.update();
 		}
 		
-		// checks for players colliding with items
+		// update items
 		for (Item i : items) {
-			for (Player p : players) {
-				if (p.collides(i)) {
+			i.update();
+		}
+		
+		// check for items near players
+		for (Player p : players) {
+			for (Item i : items) {
+				if (p.isWithinDistance(i, 5.0) && i.isPickupable()) {
+					i.accelerateTowards(p);
+				}
+			}
+		}
+		
+		// check for players colliding with items (NEW)
+		for (Player p : players) {
+			HashSet<Item> removeNow = new HashSet<Item>();
+			for (Item i : items) {
+				if (p.collides(i) && i.isPickupable()) {
 					if (UrfQuest.debug) {
 						System.out.println(p.getName() + " collided with object: " + i.getClass().getName());
 					}
 					if (p.addItem(i)) {
-						removeItems.add(i);
+						removeNow.add(i);
 					} else {
 						continue;
 					}
 				}
 			}
+			items.removeAll(removeNow);
 		}
 		
 		// check for the player colliding with mobs
@@ -197,6 +218,56 @@ public class QuestMap {
 		addProjectiles.clear();
 		addPlayers.clear();
 		addParticles.clear();
+		
+		updateTiles();
+	}
+	
+	private void updateTiles() {
+		HashSet<Pair<Integer, Integer>> set = new HashSet<Pair<Integer, Integer>>();
+		for (int i = 0; i < 20; i++) {
+			int x = (int)(Math.random()*tileTypes.length);
+			int y = (int)(Math.random()*tileTypes[0].length);
+			set.add(new Pair<Integer, Integer>(x, y));
+		}
+		
+		for (Pair<Integer, Integer> p : set) {
+			int t = getTileAt(p.a, p.b);
+			switch (t) {
+			case 0:
+				double chance = 0;
+				if (getTileAt(p.a, p.b + 1) == 2) {
+					chance += 0.25;
+				}
+				if (getTileAt(p.a, p.b - 1) == 2) {
+					chance += 0.25;
+				}
+				if (getTileAt(p.a + 1, p.b) == 2) {
+					chance += 0.25;
+				}
+				if (getTileAt(p.a - 1, p.b) == 2) {
+					chance += 0.25;
+				}
+				if (chance > Math.random()) {
+					setTileAt(p.a, p.b, 2);
+				}
+				break;
+			case 2:
+				if (getTileAt(p.a, p.b + 1) == 7 ||
+					getTileAt(p.a, p.b - 1) == 7 ||
+					getTileAt(p.a + 1, p.b) == 7 ||
+					getTileAt(p.a - 1, p.b) == 7) {
+					if (Math.random() < 0.1) {
+						setTileAt(p.a, p.b, 7);
+					}
+				}
+				break;
+			case 7:
+				if (Math.random() < 0.18) {
+					setTileAt(p.a, p.b, 2);
+				}
+				break;
+			}
+		}
 	}
 	
 	/*
@@ -204,8 +275,8 @@ public class QuestMap {
 	 */
 	
 	public void generateSimplexNoiseMap() {
-		int width = map.length;
-		int height = map[0].length;
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
 		int[][] end = new int[width][height];
 		
 		// terrain distortion params
@@ -265,12 +336,12 @@ public class QuestMap {
 			}
 		}
 		
-		this.map = end;
+		this.tileTypes = end;
 	}
 	
 	public void generateSavannahMap() {
-		int width = map.length;
-		int height = map[0].length;
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
 		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
@@ -305,12 +376,12 @@ public class QuestMap {
 			}
 		}
 		
-		this.map = end;
+		this.tileTypes = end;
 	}
 	
 	public void generateOldCaveMap() {
-		int width = map.length;
-		int height = map[0].length;
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
 		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
@@ -347,12 +418,12 @@ public class QuestMap {
 		
 		this.homeCoords[0] = width/2;
 		this.homeCoords[1] = height/2;
-		this.map = end;
+		this.tileTypes = end;
 	}
 	
 	public void generateCaveMap() {
-		int width = map.length;
-		int height = map[0].length;
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
 		int[][] end = new int[width][height];
 		
 		// terrain distortion params
@@ -406,12 +477,12 @@ public class QuestMap {
 			}
 		}
 		
-		this.map = end;
+		this.tileTypes = end;
 	}
 	
 	public void generateTemplateMap() {
-		int width = map.length;
-		int height = map[0].length;
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
 		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
@@ -445,7 +516,7 @@ public class QuestMap {
 			}
 		}
 		
-		this.map = end;
+		this.tileTypes = end;
 	}
 	
 	/*
@@ -453,35 +524,35 @@ public class QuestMap {
 	 */
 	
 	private void generateStartingArea() {
-		int spawnCenterX = map.length/2;
-		int spawnCenterY = map[0].length/2;
+		int spawnCenterX = tileTypes.length/2;
+		int spawnCenterY = tileTypes[0].length/2;
 		
 		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
-			spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
-			spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+			spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
+			spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		}
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				map[spawnCenterX+x][spawnCenterY+y] = 2;
+				tileTypes[spawnCenterX+x][spawnCenterY+y] = 2;
 			}
 		}
 		
-		map[spawnCenterX-2][spawnCenterY-2] = 3;
-		map[spawnCenterX-2][spawnCenterY+2] = 4;
-		map[spawnCenterX+2][spawnCenterY-2] = 5;
-		map[spawnCenterX+2][spawnCenterY+2] = 6;
+		tileTypes[spawnCenterX-2][spawnCenterY-2] = 3;
+		tileTypes[spawnCenterX-2][spawnCenterY+2] = 4;
+		tileTypes[spawnCenterX+2][spawnCenterY-2] = 5;
+		tileTypes[spawnCenterX+2][spawnCenterY+2] = 6;
 		
 		homeCoords[0] = spawnCenterX;
 		homeCoords[1] = spawnCenterY;
 	}
 	
 	private void findHomeCoords() {
-		int spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
-		int spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+		int spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
+		int spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
-			spawnCenterX = (int)(Math.random()*(map.length - 20)) + 10;
-			spawnCenterY = (int)(Math.random()*(map.length - 20)) + 10;
+			spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
+			spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		}
 		
 		homeCoords[0] = spawnCenterX;
@@ -489,14 +560,14 @@ public class QuestMap {
 	}
 	
 	private void generateBorderWall() {
-		for (int i = 0; i < map.length; i++) {
-			map[i][0] = 1;
-			map[i][map[0].length-1] = 1;
+		for (int i = 0; i < tileTypes.length; i++) {
+			tileTypes[i][0] = 1;
+			tileTypes[i][tileTypes[0].length-1] = 1;
 		}
 		
-		for (int i = 0; i < map[0].length; i++) {
-			map[0][i] = 1;
-			map[map.length-1][i] = 1;
+		for (int i = 0; i < tileTypes[0].length; i++) {
+			tileTypes[0][i] = 1;
+			tileTypes[tileTypes.length-1][i] = 1;
 		}
 	}
 	
@@ -505,9 +576,9 @@ public class QuestMap {
 	 */
 	
 	public void generateMinimap() {
-		minimap = new BufferedImage(map.length, map[0].length, BufferedImage.TYPE_4BYTE_ABGR);
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
+		minimap = new BufferedImage(tileTypes.length, tileTypes[0].length, BufferedImage.TYPE_4BYTE_ABGR);
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
 				int color = Tiles.minimapColor(this.getTileAt(x, y));
 				minimap.setRGB(x, y, color);
 			}
@@ -518,15 +589,19 @@ public class QuestMap {
 		return minimap;
 	}
 	
+	public void setMinimapAt(int x, int y, int type) {
+		minimap.setRGB(x, y, Tiles.minimapColor(type));
+	}
+	
 	/*
 	 * Entity generation
 	 */
 	
 	public void generateChickens() {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
+				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.001) {
 					mobs.add(new Chicken(x, y, this));
 				}
 			}
@@ -536,9 +611,9 @@ public class QuestMap {
 	
 	public void generateCyclopses() {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.001) {
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
+				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.001) {
 					mobs.add(new Cyclops(x, y, this));
 				}
 			}
@@ -548,9 +623,9 @@ public class QuestMap {
 	
 	public void generateRogues() {
 		ArrayList<Mob> mobs = new ArrayList<Mob>();
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.0005) {
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
+				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.0005) {
 					mobs.add(new Rogue(x, y, this));
 				}
 			}
@@ -560,9 +635,9 @@ public class QuestMap {
 	
 	public void generateItems() {
 		ArrayList<Item> items = new ArrayList<Item>();
-		for (int x = 0; x < map.length; x++) {
-			for (int y = 0; y < map[0].length; y++) {
-				if (map[x][y] == 2 && Math.random() < 0.005) {
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
+				if (tileTypes[x][y] == 2 && Math.random() < 0.005) {
 					double rand = Math.random();
 					if (rand > .9975) {
 						items.add(new Item(x, y, Item.CHEESE, this));
@@ -581,12 +656,13 @@ public class QuestMap {
 	
 	public int getTileAt(int x, int y) {
 		if (x < 0 || y < 0) return -1;
-		if (x >= map.length || y >= map[0].length) return -1;
-		return map[x][y];
+		if (x >= tileTypes.length || y >= tileTypes[0].length) return -1;
+		return tileTypes[x][y];
 	}
 	
 	public void setTileAt(int x, int y, int t) {
-		map[x][y] = t;
+		tileTypes[x][y] = t;
+		setMinimapAt(x, y, t);
 	}
 	
 	public boolean setHomeCoords(int x, int y) {
@@ -603,24 +679,34 @@ public class QuestMap {
 		return homeCoords;
 	}
 	
-	public HashMap<MapLink, MapLink> getLinks() {
-		return links;
-	}
-	
-	public void addLink(MapLink here, MapLink there) {
-		links.put(here, there);
-	}
-	
 	public void setNewMap(int w, int h) {
-		map = new int[w][h];
+		tileTypes = new int[w][h];
 	}
 	
 	public int getWidth() {
-		return map.length;
+		return tileTypes.length;
 	}
 	
 	public int getHeight() {
-		return map[0].length;
+		return tileTypes[0].length;
+	}
+	
+	/*
+	 * ActiveTile management
+	 */
+
+	public void setActiveTile(int x, int y, ActiveTile at) {
+		activeTiles[x][y] = at;
+	}
+	
+	public ActiveTile getActiveTile(int x, int y) {
+		return activeTiles[x][y];
+	}
+	
+	public void useActiveTile(int x, int y, Mob m) {
+		if (activeTiles[x][y] != null) {
+			activeTiles[x][y].use(m);
+		}
 	}
 	
 	/*

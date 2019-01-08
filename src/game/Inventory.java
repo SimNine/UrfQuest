@@ -183,4 +183,14 @@ public class Inventory {
 	public int getSelectedIndex() {
 		return selectedEntry;
 	}
+	
+	public void setItemAtIndex(int index, Item i) {
+		if (i == null) {
+			occupiedEntries.remove(index);
+			entries[index] = null;
+		} else {
+			occupiedEntries.add(index);
+			entries[index] = i;
+		}
+	}
 }

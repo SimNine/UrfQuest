@@ -18,3 +18,5 @@ Tile Types:
 15 - Stone
 16 - IronOreStone
 17 - CopperOreStone
+18 - Chest
+19 - Furnace

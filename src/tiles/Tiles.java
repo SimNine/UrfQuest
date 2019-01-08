@@ -11,7 +11,7 @@ import framework.QuestPanel;
 import framework.UrfQuest;
 
 public class Tiles {
-	public static String tileRoot = "/asset/tiles/";
+	public static String tileRoot = "/assets/tiles/";
 	public static String errMsg = "Could not find image: ";
 	
 	public static final int VOID = -1;
@@ -33,8 +33,9 @@ public class Tiles {
 	public static final int STONE = 15;
 	public static final int IRONORE_STONE = 16;
 	public static final int COPPERORE_STONE = 17;
+	public static final int CHEST = 18;
 	
-	private static BufferedImage[] tileImages = new BufferedImage[18];
+	private static BufferedImage[] tileImages = new BufferedImage[19];
 	private static BufferedImage[] waterImages = new BufferedImage[3];
 	
 	private static boolean[][] tileBooleanProperties = 
@@ -56,7 +57,8 @@ public class Tiles {
 		  {false,		false},//14
 		  {false,		false},
 		  {false,		false},//16
-		  {false,		false}};
+		  {false,		false},
+		  {false, 		false}};
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
@@ -77,7 +79,8 @@ public class Tiles {
 		  {new Color(107, 40, 7).getRGB()},//14
 		  {Color.LIGHT_GRAY.getRGB()},
 		  {Color.LIGHT_GRAY.darker().getRGB()},//16
-		  {Color.LIGHT_GRAY.darker().getRGB()} };
+		  {Color.LIGHT_GRAY.darker().getRGB()},
+		  {Color.GRAY.getRGB()} };
 	
 	public static void initGraphics() {
 		try {
@@ -209,6 +212,12 @@ public class Tiles {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "copperore_scaled_30px.png");
 			System.out.println(errMsg + tileRoot + "stone.png");
+		}
+		
+		try {
+			tileImages[18] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "chest_scaled_30px.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

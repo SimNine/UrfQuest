@@ -11,7 +11,7 @@ import game.QuestMap;
 import tiles.Tiles;
 
 public abstract class Mob extends Entity {
-	protected final static String assetPath = "/asset/entities/";
+	protected final static String assetPath = "/assets/entities/";
 	protected int direction = 0;
 	protected double velocity;
 	protected double defaultVelocity;
@@ -39,7 +39,6 @@ public abstract class Mob extends Entity {
 	// returns true if the move is valid (in one or both directions), returns false if not
 	// if move is valid, moves the mob
 	protected boolean attemptMove(int dir, double velocity) {
-		QuestMap currMap = UrfQuest.game.getCurrMap();
 		double newX = bounds.getCenterX();
 		double newY = bounds.getCenterY();
 		double xComp = velocity*Math.cos(Math.toRadians(dir));
@@ -48,13 +47,13 @@ public abstract class Mob extends Entity {
 		boolean ret = false;
 		
 		// attempt to move on the x-axis
-		if (Tiles.isWalkable(currMap.getTileAt((int)(newX + xComp), (int)newY))) {
+		if (Tiles.isWalkable(map.getTileAt((int)(newX + xComp), (int)newY))) {
 			newX += xComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
 		// attempt to move on the y-axis
-		if (Tiles.isWalkable(currMap.getTileAt((int)newX, (int)(newY + yComp)))) {
+		if (Tiles.isWalkable(map.getTileAt((int)newX, (int)(newY + yComp)))) {
 			newY += yComp;
 			ret = true;
 		} // else (if collision) do nothing
@@ -67,7 +66,7 @@ public abstract class Mob extends Entity {
 	public int tileTypeAtDistance(double d) {
 		double xComp = d*Math.cos(Math.toRadians(direction));
 		double yComp = d*Math.sin(Math.toRadians(direction));
-		return UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
+		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
@@ -208,5 +207,11 @@ public abstract class Mob extends Entity {
 	
 	public boolean isDead() {
 		return health <= 0;
+	}
+	
+	public void setMap(QuestMap m) {
+		map.removeMob(this);
+		m.addMob(this);
+		map = m;
 	}
 }

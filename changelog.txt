@@ -420,3 +420,19 @@ compiled jar. Using command prompt to view the stack trace, the cause
 of this appeared to be the item PNGs not being read properly. No idea why,
 but a fix for this was to rename the "assets" folder to "asset" and
 update the "assetPath" variables in all relevant classes.
+
+0.18.0_pre3 - 2/23/17
+-Fixed bug causing the game to crash when digging into a cave
+-Added ambient blockchanges; done by helper method that executes during QuestMap's update()
+-Added new setblock command:
+--Syntax: setblock x y type
+-Minimap now updates immediately once a tile is changed
+-MapLink has been generalized to ActiveTile
+-QuestMap now contains a grid of "ActiveTile"s (most of which are null)
+	that will contain the locations on-grid of MapLinks, Chests, Furnaces,
+	and all interactive tiles
+-Added magnetic item effect: items are now drawn towards all players within a certain radius
+-Added item pickup delay: items can only be picked up after a certain number of ticks (500) of being on the ground
+-Added a 'held' item: this refers to an item that is held by the mouse pointer
+	this feature will be more useful once more/better crafting GUIs are implemented
+-Fixed a bug that allowed two players to pick up the same one item

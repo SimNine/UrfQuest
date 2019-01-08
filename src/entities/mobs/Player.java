@@ -15,18 +15,18 @@ import javax.imageio.ImageIO;
 import entities.items.Item;
 import framework.UrfQuest;
 import game.Inventory;
-import game.MapLink;
 import game.QuestMap;
 
 public class Player extends Mob {
 
 	// img[0] is east, img[1] is SE, img[2] is S, etc
 	private static BufferedImage[][] img = new BufferedImage[8][8];
-	private final static String assetPath = "/asset/player/";
+	private final static String assetPath = "/assets/player/";
 	
 	private String name;
 	private int statCounter = 200;
 	private Inventory inventory;
+	private Item heldItem;
 
 	public Player(double x, double y, QuestMap currMap, String name) {
 		super(x, y, currMap);
@@ -396,7 +396,8 @@ public class Player extends Mob {
 		}
 		
 		double[] playerPos = getPos();
-		i.setPos(playerPos[0], playerPos[1]-1);
+		i.setPos(playerPos[0], playerPos[1]);
+		i.resetDropTimeout();
 		map.addItem(i);
 	}
 	
@@ -412,23 +413,19 @@ public class Player extends Mob {
 		inventory.tryCrafting(input, output);
 	}
 	
+	public void setHeldItem(Item i) {
+		heldItem = i;
+	}
+	
+	public Item getHeldItem() {
+		return heldItem;
+	}
+	
 	/*
-	 * MapLink methods
+	 * Misc
 	 */
 	
-	public void tryMapLink() {
-		MapLink ml = null;
-		for (MapLink l : map.getLinks().keySet()) {
-			if (l.getCoords()[0] == (int)getCenter()[0] &&
-				l.getCoords()[1] == (int)getCenter()[1]) {
-				ml = l;
-			}
-		}
-		
-		if (ml != null) {
-			MapLink endPoint = map.getLinks().get(ml);
-			setMap(endPoint.getMap());
-			setPos(endPoint.getCoords()[0], endPoint.getCoords()[1]);
-		}
+	public void useTileUnderneath() {
+		map.useActiveTile((int)getCenter()[0], (int)getCenter()[1], this);
 	}
 }

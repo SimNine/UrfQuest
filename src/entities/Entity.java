@@ -102,6 +102,18 @@ public abstract class Entity {
 		return bounds.intersects(e.bounds);
 	}
 	
+	// returns whether this entity's center is within a certain distance of another's
+	public boolean isWithinDistance(Entity other, double distance) {
+		if (other.getCenter()[0] > this.getCenter()[0] + distance ||
+			other.getCenter()[0] < this.getCenter()[0] - distance ||
+			other.getCenter()[1] > this.getCenter()[1] + distance ||
+			other.getCenter()[1] < this.getCenter()[1] - distance) {
+			return false;
+		} else {
+			return (distanceTo(other) <= distance);
+		}
+	}
+	
 	// returns the distance from this entity's center to another's
 	public double distanceTo(Entity e) {
 		return Math.sqrt(

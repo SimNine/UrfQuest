@@ -1,7 +1,9 @@
 package guis.game;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
+import entities.items.Item;
 import framework.UrfQuest;
 import guis.GUIContainer;
 import guis.GUIObject;
@@ -84,6 +86,14 @@ public class GameStatusOverlay extends GUIContainer {
 			guiObjects.add(minimap);
 		} else { //if (minimap.getSize() == 300) {
 			// don't re-add the minimap
+		}
+	}
+	
+	public void draw(Graphics g) {
+		super.draw(g);
+		Item heldItem = UrfQuest.game.getPlayer().getHeldItem();
+		if (heldItem != null) {
+			g.drawImage(heldItem.getPic(), UrfQuest.mousePos[0], UrfQuest.mousePos[1], null);
 		}
 	}
 }
