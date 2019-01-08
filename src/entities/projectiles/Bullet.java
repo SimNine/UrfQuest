@@ -3,13 +3,14 @@ package entities.projectiles;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import entities.Entity;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
 public class Bullet extends Projectile {
 
-	public Bullet(double x, double y, int dir) {
-		super(x, y);
+	public Bullet(double x, double y, int dir, Entity source) {
+		super(x, y, source);
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
 		velocity = Math.random()*0.03 + 0.07;
 		direction = dir;

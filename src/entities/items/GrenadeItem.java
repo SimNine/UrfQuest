@@ -27,7 +27,12 @@ public class GrenadeItem extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
-		UrfQuest.game.getCurrMap().addParticle(new GrenadeProjectile(m.getCenter()[0], m.getCenter()[1]));
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
+		UrfQuest.game.getCurrMap().addParticle(new GrenadeProjectile(m.getCenter()[0], m.getCenter()[1], m));
 		return true;
 	}
 	

@@ -33,7 +33,7 @@ public class IdleRoutine extends MobRoutine {
 		if (rand > .60) {
 			actions.add(new MoveAction((50 + (int)(Math.random()*50)), 
 									   (int)(Math.random()*360), 
-									   (mob.getVelocity() + mob.getVelocity()*((Math.random() - 0.5)/10.0))));
+									   (mob.getDefaultVelocity() + mob.getDefaultVelocity()*((Math.random() - 0.5)/10.0))));
 		} else {
 			actions.add(new IdleAction(100 + (int)(Math.random()*100)));
 		}

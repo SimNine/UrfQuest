@@ -98,29 +98,29 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.CYCLEMINIMAP) {
 							gameStatus.cycleMinimapSize();
 						} else if (e.getKeyCode() == keybindings.DROPITEM) {
-							UrfQuest.game.dropOneOfSelectedItem();
+							UrfQuest.game.getPlayer().dropOneOfSelectedItem();
 						} else if (e.getKeyCode() == keybindings.BUILDMODE) {
 							UrfQuest.game.toggleBuildMode();
 						} else if (e.getKeyCode() == KeyEvent.VK_1) {
-							UrfQuest.game.setSelectedEntry(0);
+							UrfQuest.game.getPlayer().setSelectedEntry(0);
 						} else if (e.getKeyCode() == KeyEvent.VK_2) {
-							UrfQuest.game.setSelectedEntry(1);
+							UrfQuest.game.getPlayer().setSelectedEntry(1);
 						} else if (e.getKeyCode() == KeyEvent.VK_3) {
-							UrfQuest.game.setSelectedEntry(2);
+							UrfQuest.game.getPlayer().setSelectedEntry(2);
 						} else if (e.getKeyCode() == KeyEvent.VK_4) {
-							UrfQuest.game.setSelectedEntry(3);
+							UrfQuest.game.getPlayer().setSelectedEntry(3);
 						} else if (e.getKeyCode() == KeyEvent.VK_5) {
-							UrfQuest.game.setSelectedEntry(4);
+							UrfQuest.game.getPlayer().setSelectedEntry(4);
 						} else if (e.getKeyCode() == KeyEvent.VK_6) {
-							UrfQuest.game.setSelectedEntry(5);
+							UrfQuest.game.getPlayer().setSelectedEntry(5);
 						} else if (e.getKeyCode() == KeyEvent.VK_7) {
-							UrfQuest.game.setSelectedEntry(6);
+							UrfQuest.game.getPlayer().setSelectedEntry(6);
 						} else if (e.getKeyCode() == KeyEvent.VK_8) {
-							UrfQuest.game.setSelectedEntry(7);
+							UrfQuest.game.getPlayer().setSelectedEntry(7);
 						} else if (e.getKeyCode() == KeyEvent.VK_9) {
-							UrfQuest.game.setSelectedEntry(8);
+							UrfQuest.game.getPlayer().setSelectedEntry(8);
 						} else if (e.getKeyCode() == KeyEvent.VK_0) {
-							UrfQuest.game.setSelectedEntry(9);
+							UrfQuest.game.getPlayer().setSelectedEntry(9);
 						} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 							swap(mapView);
 							guiOpen = true;
@@ -128,7 +128,10 @@ public class QuestPanel extends JPanel {
 							swap(craftingView);
 							guiOpen = true;
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
-							UrfQuest.game.tryMapLink();
+							UrfQuest.game.getPlayer().tryMapLink();
+						} else if (e.getKeyCode() == KeyEvent.VK_P) {
+							UrfQuest.game.switchPlayer();
+							camera = UrfQuest.game.getPlayer();
 						}
 					}
 				} else {

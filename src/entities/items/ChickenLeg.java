@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
-import entities.mobs.Player;
 import framework.UrfQuest;
 
 public class ChickenLeg extends Item {
@@ -27,13 +26,17 @@ public class ChickenLeg extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
-		if (m instanceof Player) {
-			if (((Player) m).getFullness() > 0.95) {
-				((Player) m).setFullness(((Player) m).getMaxFullness());
-				return true;
-			}
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
+		if (m.getFullness() > 0.95) {
+			m.setFullness(m.getMaxFullness());
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 	
 	public ChickenLeg clone() {

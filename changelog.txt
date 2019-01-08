@@ -355,3 +355,24 @@ The checkpoint is to ensure I don't break the code and not know how to fix it.
 --When a CraftingRecipie is clicked, the player finds out if the appropriate items are available
 	If they are, the required items are removed, and the product items are added
 --Added recipe for Hatchet and Pickaxe
+
+0.17.0 - 2/9/17
+(The Internals Update)
+-Added a second Player entity
+-Enabled switching between the original player and the backup player by hitting 'p'
+-Each player has independent inventory
+-Players now have an associated current map, and maps now contain a list of players
+-Projectiles now remember their source, and damage any mob other than their source
+-The client will only control whichever player is selected
+-Gave hunger and mana fields to all mobs
+-All items can now be (theoretically) used by all mobs
+-Gave cyclopses a shotgun. Because why not
+--The cyclops fires the shotgun when it is 10u away from the current player and it has a line of sight
+-Cyclops now spawns in caves
+-Cooldowns are now managed within items themselves
+--Inventory no longer has to manage item cooldowns
+-Added "Rogue" mob
+--Copied largely from player
+--Given a shotgun, a pistol, and an SMG; chooses a different one each time it stops
+--Attacks in the same manner as cyclops, but is a bit faster
+--Has a chance of spawning in caves

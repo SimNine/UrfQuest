@@ -15,9 +15,10 @@ public class Tiles {
 	private static String errMsg = "Could not find image: ";
 	
 	private static BufferedImage[] tileImages = new BufferedImage[15];
+	private static BufferedImage[] waterImages = new BufferedImage[3];
 	
 	private static boolean[][] tileBooleanProperties = 
-		   //walkable	//penetrable
+		   //walkable	//penetrable	//animated
 		{ {true,		true},//0
 		  {false,		false},
 		  {true,		true},//2
@@ -115,6 +116,9 @@ public class Tiles {
 		
 		try {
 			tileImages[8] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water.png"));
+			waterImages[0] = tileImages[8];
+			waterImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water_2.png"));
+			waterImages[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water_3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(errMsg + tileRoot + "water.png");
@@ -195,6 +199,14 @@ public class Tiles {
 			g.fillRect(x, y, QuestPanel.TILE_WIDTH, QuestPanel.TILE_WIDTH);
 		} else {
 			g.drawImage(tileImages[blockType], x, y, null);
+		}
+	}
+	
+	public static void drawTile(Graphics g, int x, int y, int blockType, int stage) {
+		if (blockType != 8) {
+			drawTile(g, x, y, blockType);
+		} else {
+			g.drawImage(waterImages[stage], x, y, null);
 		}
 	}
 	

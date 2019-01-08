@@ -14,7 +14,7 @@ public class AttackRoutine extends MobRoutine {
 
 	public void update() {
 		if (actions.isEmpty()) {
-			actions.add(new MoveAction(50, mob.angleTo(other), 0.05));
+			actions.add(new MoveAction(50, mob.angleTo(other), mob.getDefaultVelocity()*3.0));
 		}
 		
 		if (actions.peek().shouldEnd()) {

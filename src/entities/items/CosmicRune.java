@@ -27,11 +27,16 @@ public class CosmicRune extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
-		if (UrfQuest.game.getPlayer().getMana() < 5.0) {
+		if (m.getMana() < 5.0) {
 			return false;
 		} // else
-		UrfQuest.game.getPlayer().incrementMana(-5.0);
-		double[] pos = UrfQuest.game.getPlayer().getPos();
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
+		m.incrementMana(-5.0);
+		double[] pos = m.getPos();
 		UrfQuest.game.getCurrMap().addMob(new Chicken(pos[0], pos[1]));
 		return true;
 	}

@@ -9,6 +9,8 @@ import entities.items.Gem;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Mob;
+import entities.mobs.Player;
+import entities.mobs.Rogue;
 import entities.projectiles.Projectile;
 import entities.items.Item;
 import framework.UrfQuest;
@@ -27,15 +29,18 @@ public class QuestMap {
 	private int[] homeCoords = new int[2];
 	
 	private HashMap<MapLink, MapLink> links = new HashMap<MapLink, MapLink>();
-	
+
+	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Mob> mobs = new ArrayList<Mob>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-	
+
+	private ArrayList<Player> addPlayers = new ArrayList<Player>();
 	private ArrayList<Mob> addMobs = new ArrayList<Mob>();
 	private ArrayList<Item> addItems = new ArrayList<Item>();
 	private ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
-	
+
+	private ArrayList<Player> removePlayers = new ArrayList<Player>();
 	private ArrayList<Item> removeItems = new ArrayList<Item>();
 	private ArrayList<Mob> removeMobs = new ArrayList<Mob>();
 	private ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
@@ -59,6 +64,8 @@ public class QuestMap {
 			break;
 		case CAVE_MAP:
 			generateCaveMap();
+			generateRogues();
+			generateCyclopses();
 			break;
 		}
 		
@@ -77,45 +84,71 @@ public class QuestMap {
 	
 	public void update() {
 		
-		// check for the player colliding with items
-		for (Item i : items) {
-			if (UrfQuest.game.getPlayer().collides(i)) {
-				if (UrfQuest.debug) {
-					System.out.println("player collided with object: " + i.getClass().getName());
-				}
-				if (UrfQuest.game.getPlayer().addItem(i)) {
-					removeItems.add(i);
-				} else {
-					continue;
-				}
-			}
-		}
-		
-		// update mobs and check for the player colliding with mobs
-		for (Mob m : mobs) {
-			m.update();
-			if (UrfQuest.game.getPlayer().collides(m)) {
-				if (UrfQuest.debug) {
-					System.out.println("player collided with object: " + m.getClass().getName());
-				}
-			}
-		}
-		
 		// update particles
 		for (Projectile p : projectiles) {
-			if (p.isDead()) {
-				removeProjectiles.add(p);
-			}
 			p.update();
+		}
+		
+		// update mobs
+		for (Mob m : mobs) {
+			m.update();
+		}
+		
+		// checks for players colliding with items
+		for (Item i : items) {
+			for (Player p : players) {
+				if (p.collides(i)) {
+					if (UrfQuest.debug) {
+						System.out.println(p.getName() + " collided with object: " + i.getClass().getName());
+					}
+					if (p.addItem(i)) {
+						removeItems.add(i);
+					} else {
+						continue;
+					}
+				}
+			}
+		}
+		
+		// check for the player colliding with mobs
+		for (Mob m : mobs) {
+			for (Player p : players) {
+				if (p.collides(m)) {
+					if (UrfQuest.debug) {
+						System.out.println(p.getName() + " collided with object: " + m.getClass().getName());
+					}
+				}
+			}
 		}
 		
 		// check for collisions between particles and mobs
 		for (Projectile p : projectiles) {
 			for (Mob m : mobs) {
-				if (p.collides(m)) {
+				if (p.getSource() == m) {
+					continue;
+				} else if (p.collides(m)) {
 					m.incrementHealth(-5.0);
 					removeProjectiles.add(p);
 				}
+			}
+		}
+		
+		// check for collisions between projectiles and players
+		for (Player p : players) {
+			for (Projectile j : projectiles) {
+				if (j.getSource() == p) {
+					continue;
+				} else if (j.collides(p)) {
+					p.incrementHealth(-5.0);
+					removeProjectiles.add(j);
+				}
+			}
+		}
+		
+		// clean up dead projectiles
+		for (Projectile p : projectiles) {
+			if (p.isDead()) {
+				removeProjectiles.add(p);
 			}
 		}
 		
@@ -130,18 +163,22 @@ public class QuestMap {
 		items.removeAll(removeItems);
 		mobs.removeAll(removeMobs);
 		projectiles.removeAll(removeProjectiles);
+		players.removeAll(removePlayers);
 		
 		removeItems.clear();
 		removeMobs.clear();
 		removeProjectiles.clear();
+		removePlayers.clear();
 		
 		items.addAll(addItems);
 		mobs.addAll(addMobs);
 		projectiles.addAll(addProjectiles);
+		players.addAll(addPlayers);
 		
 		addItems.clear();
 		addMobs.clear();
 		addProjectiles.clear();
+		addPlayers.clear();
 	}
 	
 	/*
@@ -422,6 +459,18 @@ public class QuestMap {
 		this.mobs.addAll(mobs);
 	}
 	
+	public void generateRogues() {
+		ArrayList<Mob> mobs = new ArrayList<Mob>();
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[0].length; y++) {
+				if (Tiles.isWalkable(map[x][y]) && Math.random() < 0.0005) {
+					mobs.add(new Rogue(x, y));
+				}
+			}
+		}
+		this.mobs.addAll(mobs);
+	}
+	
 	public void generateItems() {
 		ArrayList<Item> items = new ArrayList<Item>();
 		for (int x = 0; x < map.length; x++) {
@@ -503,6 +552,10 @@ public class QuestMap {
 		addProjectiles.add(p);
 	}
 	
+	public void addPlayer(Player p) {
+		addPlayers.add(p);
+	}
+	
 	public void removeItem(Item i) {
 		removeItems.add(i);
 	}
@@ -513,6 +566,10 @@ public class QuestMap {
 	
 	public void removeParticle(Projectile p) {
 		removeProjectiles.add(p);
+	}
+	
+	public void removePlayers(Player p) {
+		removePlayers.add(p);
 	}
 	
 	public ArrayList<Item> getItems() {
@@ -527,6 +584,10 @@ public class QuestMap {
 		return projectiles;
 	}
 	
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+	
 	public int getNumItems() {
 		return items.size();
 	}
@@ -537,5 +598,9 @@ public class QuestMap {
 	
 	public int getNumProjectiles() {
 		return projectiles.size();
+	}
+	
+	public int getNumPlayers() {
+		return players.size();
 	}
 }

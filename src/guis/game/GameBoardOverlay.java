@@ -18,6 +18,7 @@ import tiles.Tiles;
 public class GameBoardOverlay extends GUIContainer {
 	private int selectedTileTransparency = 255;
 	private boolean transparencyIncreasing = false;
+	private int tileAnimStage = 0;
 
 	public GameBoardOverlay() {
 		super(GUIObject.TOP_LEFT, 
@@ -36,6 +37,11 @@ public class GameBoardOverlay extends GUIContainer {
 		if (UrfQuest.debug) {
 			drawDebugText(g);
 			drawCrosshair(g);
+		}
+		
+		tileAnimStage++;
+		if (tileAnimStage == 150) {
+			tileAnimStage = 0;
 		}
 	}
 	
@@ -68,6 +74,7 @@ public class GameBoardOverlay extends GUIContainer {
 			for (int y = 0; y < dispTileHeight + 2; y++) {
 				int yRoot = - rootY + y * TILE_WIDTH;
 				int currTile = (currMap.getTileAt(ulX + x, ulY + y));
+				//Tiles.drawTile(g, xRoot, yRoot, currTile, tileAnimStage/50);
 				Tiles.drawTile(g, xRoot, yRoot, currTile);
 			}
 		}
@@ -175,12 +182,13 @@ public class GameBoardOverlay extends GUIContainer {
 			p.draw(g);
 		}
 
-		Player player = UrfQuest.game.getPlayer();
-		if (player.getCenter()[0] > camera.getPos()[0] - 30 &&
-			player.getCenter()[0] < camera.getPos()[0] + 30 &&
-			player.getCenter()[1] > camera.getPos()[1] - 30 &&
-			player.getCenter()[1] < camera.getPos()[1] + 30) {
-			player.draw(g);
+		for (Player player : currMap.getPlayers()) {
+			if (player.getCenter()[0] > camera.getPos()[0] - 30 &&
+				player.getCenter()[0] < camera.getPos()[0] + 30 &&
+				player.getCenter()[1] > camera.getPos()[1] - 30 &&
+				player.getCenter()[1] < camera.getPos()[1] + 30) {
+				player.draw(g);
+			}
 		}
 	}
 

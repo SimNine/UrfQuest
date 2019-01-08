@@ -104,8 +104,7 @@ public class Inventory {
 		if (entry == null) {
 			return;
 		}
-		if (entry.getCooldown() == 0 && entry.use(owner)) {// if the item is cooled and usable
-			entry.setCooldown(entry.getMaxCooldown());
+		if (entry.use(owner)) {// if the item is cooled and usable
 			if (entry.isConsumable()) {
 				entry.incStackSize(-1);
 			}

@@ -26,10 +26,15 @@ public class Hatchet extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
+		if (cooldown > 0) {
+			return false;
+		} // else
 		if (m.tileTypeAtDistance(1.0) == 7) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
 			UrfQuest.game.getCurrMap().addItem(new Log(coords[0], coords[1]));
+			
+			cooldown = getMaxCooldown();
 			return true;
 		} else {
 			return false;

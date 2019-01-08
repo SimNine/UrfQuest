@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.mobs.Mob;
+import entities.mobs.Player;
 import framework.UrfQuest;
 
 public class AstralRune extends Item {
@@ -26,11 +27,18 @@ public class AstralRune extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
-		if (UrfQuest.game.getPlayer().getMana() < 50.0) {
+		if (m.getMana() < 50.0) {
 			return false;
 		} // else
-		UrfQuest.game.getPlayer().incrementMana(-50.0);
-		UrfQuest.game.initiateAstral();
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
+		m.incrementMana(-50.0);
+		if (m instanceof Player) {
+			((Player) m).initiateAstral();
+		}
 		return true;
 	}
 	

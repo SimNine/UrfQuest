@@ -28,6 +28,9 @@ public class Shovel extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
+		if (cooldown > 0) {
+			return false;
+		} // else
 		if (m.tileTypeAtDistance(0) == 2) {
 			int[] coords = m.tileCoordsAtDistance(0);
 			if (Math.random() > .05) {
@@ -51,6 +54,8 @@ public class Shovel extends Item {
 				System.out.println("soruce: " + coords[0] + ", " + coords[1]);
 				System.out.println("exit: " + caveSize/2 + ", " + caveSize/2);
 			}
+			
+			cooldown = getMaxCooldown();
 			return true;
 		} else {
 			return false;

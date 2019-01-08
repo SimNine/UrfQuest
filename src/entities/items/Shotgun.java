@@ -27,13 +27,18 @@ public class Shotgun extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
 		double[] pos = m.getCenter();
 		int dir;
 		int numShots = 15 + (int)(Math.random()*5);
 		
 		for (int i = 0; i < numShots; i++) {
 			dir = m.getDirection() + (int)((Math.random() - 0.5)*20);
-			UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir));
+			UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir, m));
 		}
 		
 		return true;

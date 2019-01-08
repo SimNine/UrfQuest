@@ -3,7 +3,6 @@ package entities.mobs;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -12,37 +11,37 @@ import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
-import entities.items.Hatchet;
 import entities.items.Item;
-import entities.items.Pickaxe;
-import entities.items.Shovel;
+import entities.items.Pistol;
+import entities.items.SMG;
+import entities.items.Shotgun;
+import entities.mobs.ai.routines.AttackRoutine;
+import entities.mobs.ai.routines.IdleRoutine;
 import framework.UrfQuest;
 import game.Inventory;
-import game.MapLink;
-import game.QuestMap;
 
-public class Player extends Mob {
+public class Rogue extends Mob {
 
 	// img[0] is east, img[1] is SE, img[2] is S, etc
 	private static BufferedImage[][] img = new BufferedImage[8][8];
 	private final static String assetPath = "/assets/player/";
 	
-	private String name;
+	private String name = "ROGUE";
 	private int statCounter = 200;
 	
-	private Inventory inventory;
-	private QuestMap currMap;
+	private int thinkingDelay;
+	private final int intelligence;
 	
-	private int astralCounter = -1;
-	private CameraMob astralCamera = null;
+	private Inventory inventory;
 
-	public Player(double x, double y, QuestMap currMap, String name) {
+	public Rogue(double x, double y) {
 		super(x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		if (img[0][0] == null) {
 			initPlayer();
 		}
-		velocity = 0.05;
+		velocity = 0.013;
+		defaultVelocity = 0.013;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -52,13 +51,13 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Shovel(0, 0));
-		inventory.addItem(new Pickaxe(0, 0));
-		inventory.addItem(new Hatchet(0, 0));
+		inventory.addItem(new SMG(0, 0));
+		inventory.addItem(new Shotgun(0, 0));
+		inventory.addItem(new Pistol(0, 0));
 		
-		this.currMap = currMap;
-		
-		this.name = name;
+		intelligence = 50;
+		routine = new IdleRoutine(this);
+		thinkingDelay = intelligence;
 	}
 	
 	private void initPlayer() {
@@ -199,7 +198,14 @@ public class Player extends Mob {
 		final int STEP_SIZE = 15;
 		
 		if (animStage/STEP_SIZE == 8) {
-			animStage = -1;
+			animStage = 0;
+		}
+		
+		if (direction/45 < 0) {
+			System.out.println("direction " + direction/45);
+		}
+		if (animStage/STEP_SIZE < 0) {
+			System.out.println("animstage " + animStage/STEP_SIZE);
 		}
 		
 		g.drawImage(img[direction/45][animStage/STEP_SIZE], 
@@ -215,31 +221,15 @@ public class Player extends Mob {
 		
 		drawHealthBar(g);
 	}
-	
-	public void drawDebug(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.drawString("direction: " + this.direction, 
-					 UrfQuest.panel.gameToWindowX(bounds.getX()), 
-					 UrfQuest.panel.gameToWindowY(bounds.getY()));
-		g.drawString("moveStage: " + this.animStage, 
-					 UrfQuest.panel.gameToWindowX(bounds.getX()), 
-					 UrfQuest.panel.gameToWindowY(bounds.getY()) + 10);
-	}
 
 	/*
 	 * per-tick updater
 	 */
 	
 	public void update() {
-		if (UrfQuest.panel.isGUIOpen()) {
-			return;
-		}
-		
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
-		
-		this.updateAstral();
 		
 		// update hunger and health mechanics
 		if (statCounter > 0) {
@@ -274,50 +264,45 @@ public class Player extends Mob {
 		// process the tile the player is currently on
 		processCurrentTile();
 		
-		// if this player isn't the player currently being controlled, stop
-		if (this != UrfQuest.game.getPlayer()) {
-			return;
+		// if the rogue can think again
+		thinkingDelay--;
+		if (thinkingDelay <= 0) {
+			think();
+			thinkingDelay = intelligence;
 		}
 		
-		// use the selected item if space is down
-		if (UrfQuest.keys.contains(KeyEvent.VK_SPACE)) {
-			useSelectedItem();
+		// get new movement vector
+		routine.update();
+		direction = routine.suggestedDirection();
+		if (routine.suggestedVelocity() == 0) {
+			animStage = 0;
+			inventory.setSelectedEntry((int)(Math.random()*3));
+		} else {
+			animStage++;
 		}
+		velocity = routine.suggestedVelocity();
+		while (direction < 0) {
+			direction += 360;
+		}
+		attemptMove(direction, velocity);
 		
-		// get the direction indicated by the current keys pressed
-		int newDir;
-		if (UrfQuest.keys.contains(KeyEvent.VK_W)) {
-			if (UrfQuest.keys.contains(KeyEvent.VK_D)) {
-				newDir = 315;
-			} else if (UrfQuest.keys.contains(KeyEvent.VK_A)) {
-				newDir = 225;
-			} else {
-				newDir = 270;
-			}
-		} else if (UrfQuest.keys.contains(KeyEvent.VK_S)) {
-			if (UrfQuest.keys.contains(KeyEvent.VK_D)) {
-				newDir = 45;
-			} else if (UrfQuest.keys.contains(KeyEvent.VK_A)) {
-				newDir = 135;
-			} else {
-				newDir = 90;
-			}
-		} else if (UrfQuest.keys.contains(KeyEvent.VK_D)) {
-			newDir = 0;
-		} else if (UrfQuest.keys.contains(KeyEvent.VK_A)) {
-			newDir = 180;
-		} else { // returns if no keys are pressed
-			this.animStage = 0;
-			return;
+		// try firing a weapon
+		if (this.distanceTo(UrfQuest.game.getPlayer()) < 10 && this.hasClearPathTo(UrfQuest.game.getPlayer())) {
+			inventory.useSelectedItem();
 		}
+	}
 	
-		// try to move in the current direction with the current velocity
-		attemptMove(newDir, velocity);
-		if (newDir == direction) {
-			this.animStage++;
-		} else { // if (newOrientation != orientation)
-			this.animStage = 0;
-			direction = newDir;
+	private void think() {
+		if (Math.abs(getPos()[0] - UrfQuest.game.getPlayer().getPos()[0]) < 20 &&
+			Math.abs(getPos()[1] - UrfQuest.game.getPlayer().getPos()[1]) < 20 &&
+			this.hasClearPathTo(UrfQuest.game.getPlayer())) {
+			if (!(routine instanceof AttackRoutine)) {
+				routine = new AttackRoutine(this, UrfQuest.game.getPlayer());
+			}
+		} else {
+			if (!(routine instanceof IdleRoutine)){
+				routine = new IdleRoutine(this);
+			}
 		}
 	}
 	
@@ -374,16 +359,6 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public QuestMap getMap() {
-		return currMap;
-	}
-	
-	public void setMap(QuestMap m) {
-		currMap.removePlayers(this);
-		m.addPlayer(this);
-		currMap = m;
-	}
-	
 	/*
 	 * Inventory management
 	 */
@@ -413,7 +388,6 @@ public class Player extends Mob {
 		
 		double[] playerPos = getPos();
 		i.setPos(playerPos[0], playerPos[1]-1);
-		currMap.addItem(i);
 	}
 	
 	public void setSelectedEntry(int i) {
@@ -426,48 +400,5 @@ public class Player extends Mob {
 	
 	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
 		inventory.tryCrafting(input, output);
-	}
-	
-	/*
-	 * MapLink methods
-	 */
-	
-	public void tryMapLink() {
-		MapLink ml = null;
-		for (MapLink l : currMap.getLinks().keySet()) {
-			if (l.getCoords()[0] == (int)getCenter()[0] &&
-				l.getCoords()[1] == (int)getCenter()[1]) {
-				ml = l;
-			}
-		}
-		
-		if (ml != null) {
-			MapLink endPoint = currMap.getLinks().get(ml);
-			setMap(endPoint.getMap());
-			setPos(endPoint.getCoords()[0], endPoint.getCoords()[1]);
-		}
-	}
-	
-	/*
-	 * Astral rune special effect
-	 */
-	
-	private void updateAstral() {
-		if (astralCounter > -1) {
-			astralCounter--;
-		}
-		
-		if (astralCounter == 0) {
-			UrfQuest.panel.setCamera(this);
-			currMap.removeMob(astralCamera);
-		}
-	}
-	
-	public void initiateAstral() {
-		CameraMob cm = new CameraMob(getPos()[0], getPos()[1], CameraMob.STILL_MODE);
-		UrfQuest.panel.setCamera(cm);
-		astralCamera = cm;
-		currMap.addMob(cm);
-		astralCounter = 1000;
 	}
 }

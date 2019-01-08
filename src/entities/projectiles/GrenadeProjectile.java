@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.Entity;
 import framework.QuestPanel;
 import framework.UrfQuest;
 
@@ -13,8 +14,8 @@ public class GrenadeProjectile extends Projectile {
 	public static BufferedImage grenadePic;
 	public static String assetPath = "/assets/items/";
 
-	public GrenadeProjectile(double x, double y) {
-		super(x, y);
+	public GrenadeProjectile(double x, double y, Entity source) {
+		super(x, y, source);
 		
 		if (grenadePic == null) {
 			try {
@@ -40,7 +41,7 @@ public class GrenadeProjectile extends Projectile {
 		animStage++;
 		if (animStage > 1000) {
 			for (int i = 0; i < 20; i++) {
-				UrfQuest.game.getCurrMap().addParticle(new Bullet(bounds.getCenterX(), bounds.getCenterY(), (int)(Math.random()*360)));
+				UrfQuest.game.getCurrMap().addParticle(new Bullet(bounds.getCenterX(), bounds.getCenterY(), (int)(Math.random()*360), source));
 			}
 		}
 	}

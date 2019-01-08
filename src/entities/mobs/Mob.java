@@ -13,10 +13,17 @@ import tiles.Tiles;
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
 	protected int direction = 0;
-	protected double velocity = 0;
-	protected double health = 0;
-	protected double maxHealth = 0;
+	protected double velocity;
+	protected double defaultVelocity;
+	
+	protected double health;
+	protected double mana;
+	protected double fullness;
+	protected double maxHealth;
+	protected double maxMana;
+	protected double maxFullness;
 	protected int healthbarVisibility = 0;
+	
 	protected MobRoutine routine;
 
 	protected Mob(double x, double y) {
@@ -96,7 +103,7 @@ public abstract class Mob extends Entity {
 		g.setColor(new Color(0, 0, 0, vis));
 		g.fillRect(topLeftX, topLeftY, 52, 5);
 		g.setColor(new Color(255, 0, 0, vis));
-		g.fillRect(topLeftX+1, topLeftY+1, (int)(50*(health/maxHealth)), 3);
+		g.fillRect(topLeftX+1, topLeftY+1, (int)(50.0*(health/maxHealth)), 3);
 	}
 
 	protected void drawDebug(Graphics g) {
@@ -147,12 +154,56 @@ public abstract class Mob extends Entity {
 		return velocity;
 	}
 	
+	public double getDefaultVelocity() {
+		return defaultVelocity;
+	}
+	
 	public void incrementHealth(double amt) {
 		setHealth(health + amt);
 	}
 	
 	public void incrementVelocity(double amt) {
 		setVelocity(velocity + amt);
+	}
+	
+	public void incrementMana(double amt) {
+		setMana(mana + amt);
+	}
+	
+	public void setMana(double m) {
+		if (m > maxMana) {
+			mana = maxMana;
+		} else {
+			mana = m;
+		}
+	}
+	
+	public double getMana() {
+		return mana;
+	}
+	
+	public double getMaxMana() {
+		return maxMana;
+	}
+	
+	public void incrementFullness(double amt) {
+		setFullness(fullness + amt);
+	}
+	
+	public void setFullness(double f) {
+		if (f > maxFullness) {
+			fullness = maxFullness;
+		} else {
+			fullness = f;
+		}
+	}
+	
+	public double getFullness() {
+		return fullness;
+	}
+	
+	public double getMaxFullness() {
+		return maxFullness;
 	}
 	
 	public boolean isDead() {

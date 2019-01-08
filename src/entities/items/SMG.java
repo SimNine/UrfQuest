@@ -27,9 +27,14 @@ public class SMG extends Item {
 
 	// manipulation methods
 	public boolean use(Mob m) {
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
 		double[] pos = m.getCenter();
 		int dir = m.getDirection() + (int)((Math.random() - 0.5)*10);
-		UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir));
+		UrfQuest.game.getCurrMap().addParticle(new Bullet(pos[0], pos[1], dir, m));
 		return true;
 	}
 	

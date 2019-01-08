@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.items.Bone;
+import entities.items.Shotgun;
 import entities.mobs.ai.routines.IdleRoutine;
 import entities.mobs.ai.routines.AttackRoutine;
 import framework.QuestPanel;
@@ -17,6 +18,8 @@ public class Cyclops extends Mob {
 	private static BufferedImage pic;
 	private int thinkingDelay;
 	private final int intelligence;
+	
+	private Shotgun shotgun = new Shotgun(0, 0);
 
 	public Cyclops(double x, double y) {
 		super(x, y);
@@ -28,11 +31,18 @@ public class Cyclops extends Mob {
 										pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 										pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		velocity = 0.01;
+		defaultVelocity = 0.01;
+		
 		health = 50.0;
 		maxHealth = 50.0;
-		intelligence = 50;
+		mana = 0.0;
+		maxMana = 0.0;
+		fullness = 0.0;
+		maxFullness = 0.0;
 		
+		intelligence = 50;
 		routine = new IdleRoutine(this);
+		thinkingDelay = intelligence;
 	}
 	
 	public static void initCyclops() {
@@ -57,15 +67,24 @@ public class Cyclops extends Mob {
 			healthbarVisibility--;
 		}
 		
-		// if the chicken can think again
+		// if the cyclops can think again
 		thinkingDelay--;
 		if (thinkingDelay <= 0) {
 			think();
 			thinkingDelay = intelligence;
 		}
 	
+		// get new movement vector
 		routine.update();
-		attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
+		direction = routine.suggestedDirection();
+		velocity = routine.suggestedVelocity();
+		attemptMove(direction, velocity);
+		
+		// try firing shotgun
+		if (this.distanceTo(UrfQuest.game.getPlayer()) < 10 && this.hasClearPathTo(UrfQuest.game.getPlayer())) {
+			shotgun.use(this);
+		}
+		shotgun.update();
 	}
 	
 	private void think() {

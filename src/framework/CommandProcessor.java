@@ -20,6 +20,7 @@ import entities.items.Shovel;
 import entities.mobs.Chicken;
 import entities.mobs.Cyclops;
 import entities.mobs.Player;
+import entities.mobs.Rogue;
 
 public class CommandProcessor {
 
@@ -108,6 +109,8 @@ public class CommandProcessor {
 					UrfQuest.game.getCurrMap().addMob(new Chicken(p.getPos()[0], p.getPos()[1]));
 				} else if (args[1].equals("cyclops")) {
 					UrfQuest.game.getCurrMap().addMob(new Cyclops(p.getPos()[0], p.getPos()[1]));
+				} else if (args[1].equals("rogue")) {
+					UrfQuest.game.getCurrMap().addMob(new Rogue(p.getPos()[0], p.getPos()[1]));
 				}
 			}
 		} else if (args[0].equals("set")) {

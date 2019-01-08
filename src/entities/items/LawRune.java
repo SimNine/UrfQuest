@@ -26,12 +26,17 @@ public class LawRune extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
-		if (UrfQuest.game.getPlayer().getMana() < 30.0) {
+		if (m.getMana() < 30.0) {
 			return false;
 		}
-		UrfQuest.game.getPlayer().incrementMana(-30.0);
+		if (cooldown > 0) {
+			return false;
+		} // else
+		cooldown = getMaxCooldown();
+		
+		m.incrementMana(-30.0);
 		int[] home = UrfQuest.game.getCurrMap().getHomeCoords();
-		UrfQuest.game.getPlayer().setPos(home[0], home[1]);
+		m.setPos(home[0], home[1]);
 		return true;
 	}
 	

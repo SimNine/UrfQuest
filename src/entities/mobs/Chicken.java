@@ -18,15 +18,21 @@ public class Chicken extends Mob {
 	
 	public Chicken(double x, double y) {
 		super(x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		animStage = (int)(Math.random()*200.0);
-		velocity = 0.02;
-		health = 10.0;
-		maxHealth = 10.0;
-		
 		if (pic == null) {
 			initChicken();
 		}
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		
+		velocity = 0.02;
+		defaultVelocity = 0.02;
+		
+		health = 10.0;
+		maxHealth = 10.0;
+		mana = 0.0;
+		maxMana = 0.0;
+		fullness = 0.0;
+		maxFullness = 0.0;
 		
 		routine = new IdleRoutine(this);
 		intelligence = 50;

@@ -9,9 +9,11 @@ import framework.UrfQuest;
 public abstract class Projectile extends Entity {
 	protected double velocity;
 	protected int direction;
+	protected Entity source;
 
-	protected Projectile(double x, double y) {
+	protected Projectile(double x, double y, Entity source) {
 		super(x, y);
+		this.source = source;
 	}
 
 	protected abstract void drawEntity(Graphics g);
@@ -30,4 +32,7 @@ public abstract class Projectile extends Entity {
 	
 	public abstract boolean isDead();
 
+	public Entity getSource() {
+		return source;
+	}
 }

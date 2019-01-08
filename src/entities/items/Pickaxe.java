@@ -26,20 +26,29 @@ public class Pickaxe extends Item {
 	
 	// manipulation methods
 	public boolean use(Mob m) {
+		if (cooldown > 0) {
+			return false;
+		} // else
 		if (m.tileTypeAtDistance(1.0) == 10) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 2);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			
+			cooldown = getMaxCooldown();
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 11) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 8);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+			
+			cooldown = getMaxCooldown();
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 12) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
 			UrfQuest.game.getCurrMap().setTileAt(coords[0], coords[1], 9);
 			UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
+
+			cooldown = getMaxCooldown();			
 			return true;
 		} else if (m.tileTypeAtDistance(1.0) == 14) {
 			int[] coords = m.tileCoordsAtDistance(1.0);
@@ -60,6 +69,8 @@ public class Pickaxe extends Item {
 			} else {
 				UrfQuest.game.getCurrMap().addItem(new Stone(coords[0], coords[1]));
 			}
+
+			cooldown = getMaxCooldown();			
 			return true;
 		} else {
 			return false;
