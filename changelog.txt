@@ -48,3 +48,9 @@
 -Level loader no longer saves player facings
 -Replaced integer-based directional facings with string-based
 -Separated entities' physics getters and setters into pos, vel, and acc
+
+0.4.2 - 8/10/16
+-Made the player a subclass of entity
+-Deglobalized all player-related variables; they are now accessed through the player entity
+-Fixed debugging graphics appearing even when V.debug was false
+NOTE: MapLoader is completely fucked

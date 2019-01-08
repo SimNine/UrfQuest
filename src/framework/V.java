@@ -23,13 +23,6 @@ public class V {
 	public static int dispTileWidth; // the number of blocks needed to fill the screen
 	public static int dispTileHeight;
 	
-	public static double playerPositionX;
-	public static double playerPositionY;
-	public static String playerOrientation;
-	public static double health = 100.0;
-	public static double mana = 100.0;
-	public static double speed = 0.05;
-	
 	public static Player player;
 	public static ArrayList<Entity> entities;
 	

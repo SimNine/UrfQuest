@@ -13,7 +13,7 @@ import game.QuestMap;
 /** Main class that specifies the frame and widgets of the GUI
  */
 public class UrfQuest implements Runnable {
-    private String version = "0.4.1";
+    private String version = "0.4.2";
     private String gameName = "UrfQuest";
     
 	public void run() {

@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
 
 import framework.V;
 
-public class Square extends Entity{
+public class Square extends Shape{
 
 	public Square(double x, double y, Color c, double diameter) {
 		super(x, y, c, diameter);
@@ -21,20 +21,20 @@ public class Square extends Entity{
 	// Draw methods
 	protected void drawEntity(Graphics g) {
 		g.setColor(color);
-		g.fillRect((int)(V.dispCenterX - (V.playerPositionX - Xpos)*V.scale*10 - V.scale*diameter*.5),
-				   (int)(V.dispCenterY - (V.playerPositionY - Ypos)*V.scale*10 - V.scale*diameter*.5), (int)(V.scale*diameter), (int)(V.scale*diameter));
+		g.fillRect((int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.scale*10 - V.scale*diameter*.5),
+				   (int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.scale*10 - V.scale*diameter*.5), (int)(V.scale*diameter), (int)(V.scale*diameter));
 	}
 	
 	// Update methods
 	public void update() {
-		if (Xpos > V.playerPositionX) {
+		if (Xpos > V.player.getPosition()[0]) {
 			Xpos -= Xvelocity;
-		} else if (Xpos < V.playerPositionX) {
+		} else if (Xpos < V.player.getPosition()[0]) {
 			Xpos += Xvelocity;
 		}
-		if (Ypos > V.playerPositionY) {
+		if (Ypos > V.player.getPosition()[1]) {
 			Ypos -= Yvelocity;
-		} else if (Ypos < V.playerPositionY) {
+		} else if (Ypos < V.player.getPosition()[1]) {
 			Ypos += Yvelocity;
 		}
 		

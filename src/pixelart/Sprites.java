@@ -3,6 +3,8 @@ package pixelart;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import framework.V;
+
 public class Sprites {
 
 	public static void drawCharacterPlaceholder(Graphics g, int x, int y, int s, String dir) {
@@ -138,6 +140,6 @@ public class Sprites {
 			g.fillRect(x + s*3, y + s*3, s*4, s*4);
 			break;
 		}
-		g.drawString(dir + "", x, y);
+		if (V.debug) g.drawString(dir + "", x, y);
 	}	
 }

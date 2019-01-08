@@ -11,8 +11,7 @@ import framework.V;
 public abstract class Entity {
 	protected String type;
 	
-	protected Color color;
-	protected double diameter;
+	protected String orientation;
 	protected Shape bounds;
 	protected double moveStage = 0;
 
@@ -23,11 +22,9 @@ public abstract class Entity {
 	protected double Xacceleration = 0;
 	protected double Yacceleration = 0;
 
-	public Entity(double x, double y, Color col, double dia) {
+	public Entity(double x, double y) {
 		Xpos = x;
 		Ypos = y;
-		color = col;
-		diameter = dia;
 	}
 	
 	// Drawing methods
@@ -41,14 +38,14 @@ public abstract class Entity {
 	private void drawPhysics(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawString("["+Xpos+","+Ypos+"]",
-					(int)(V.dispCenterX - (V.playerPositionX - Xpos)*V.scale*10 - V.scale*diameter*.5),
-					(int)(V.dispCenterY - (V.playerPositionY - Ypos)*V.scale*10 + 10 - V.scale*diameter*.5));
+					(int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.scale*10),
+					(int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.scale*10 + 10));
 		g.drawString("["+Xvelocity+","+Yvelocity+"]",
-					(int)(V.dispCenterX - (V.playerPositionX - Xpos)*V.scale*10 - V.scale*diameter*.5),
-					(int)(V.dispCenterY - (V.playerPositionY - Ypos)*V.scale*10 + 20 - V.scale*diameter*.5));
+					(int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.scale*10),
+					(int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.scale*10 + 20));
 		g.drawString("["+Xacceleration+","+Yacceleration+"]",
-					(int)(V.dispCenterX - (V.playerPositionX - Xpos)*V.scale*10 - V.scale*diameter*.5),
-					(int)(V.dispCenterY - (V.playerPositionY - Ypos)*V.scale*10 + 30 - V.scale*diameter*.5));
+					(int)(V.dispCenterX - (V.player.getPosition()[0] - Xpos)*V.scale*10),
+					(int)(V.dispCenterY - (V.player.getPosition()[1] - Ypos)*V.scale*10 + 30));
 	}
 	
 	// Updating methods
@@ -92,13 +89,5 @@ public abstract class Entity {
 	
 	public String getType() {
 		return type;
-	}
-	
-	public Color getColor() {
-		return color;
-	}
-	
-	public double getDiameter() {
-		return diameter;
 	}
 }
