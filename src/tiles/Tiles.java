@@ -1,7 +1,6 @@
 package tiles;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -18,28 +17,46 @@ public class Tiles {
 	public static final int DIRT = 0;
 	public static final int BEDROCK = 1;
 	public static final int GRASS = 2;
+		public static final int GRASS_DEF = 0;
+		public static final int GRASS_FLOWERS = 1;
+		public static final int GRASS_SNOW = 2;
 	public static final int MANA_PAD = 3;
 	public static final int HEALTH_PAD = 4;
 	public static final int HURT_PAD = 5;
 	public static final int SPEED_PAD = 6;
 	public static final int TREE = 7;
+		public static final int TREE_DEF = 0;
+		public static final int TREE_SNOW = 1;
 	public static final int WATER = 8;
 	public static final int SAND = 9;
-	public static final int GRASS_BOULDER = 10;
-	public static final int WATER_BOULDER = 11;
-	public static final int SAND_BOULDER = 12;
-	public static final int DIRT_HOLE = 13;
-	public static final int DIRT_BOULDER = 14;
-	public static final int STONE = 15;
-	public static final int IRONORE_STONE = 16;
-	public static final int COPPERORE_STONE = 17;
-	public static final int CHEST = 18;
+	public static final int BOULDER = 10;
+		public static final int GRASS_BOULDER = 0;
+		public static final int WATER_BOULDER = 1;
+		public static final int SAND_BOULDER = 2;
+		public static final int DIRT_BOULDER = 3;
+	public static final int DIRT_HOLE = 11;
+	public static final int STONE = 12;
+		public static final int STONE_DEF = 0;
+		public static final int IRONORE_STONE = 1;
+		public static final int COPPERORE_STONE = 2;
+	public static final int CHEST = 13;
 	
-	private static BufferedImage[] tileImages = new BufferedImage[19];
-	private static BufferedImage[] waterImages = new BufferedImage[3];
+	/*
+	 * given indices [x][y][z],
+	 * x = tile type
+	 * y = tile subtype
+	 * z = animation stage
+	 * 
+	 * if a tile type doesn't have any subtypes or animstages, they are index 0
+	 */
+	private static BufferedImage[][][] tileImage = new BufferedImage[14][4][3];
+	private static BufferedImage nullImage = new BufferedImage(
+			QuestPanel.TILE_WIDTH, 
+			QuestPanel.TILE_WIDTH, 
+			BufferedImage.TYPE_3BYTE_BGR);
 	
 	private static boolean[][] tileBooleanProperties = 
-		   //walkable	//penetrable	//animated
+		   //walkable	//penetrable
 		{ {true,		true},//0
 		  {false,		false},
 		  {true,		true},//2
@@ -50,15 +67,10 @@ public class Tiles {
 		  {false,		false},
 		  {false,		true},//8
 		  {true,		true},
-		  {false,		false},//10
-		  {false,		false},
-		  {false,		false},//12
+		  {false,		true},//10
 		  {true,		true},
-		  {false,		false},//14
-		  {false,		false},
-		  {false,		false},//16
-		  {false,		false},
-		  {false, 		false}};
+		  {false,		false},//12
+		  {false,		true}};
 	
 	private static int[][] tileIntProperties = 
 		   //minimapColor
@@ -73,164 +85,67 @@ public class Tiles {
 		  {Color.BLUE.getRGB()},//8
 		  {Color.YELLOW.brighter().getRGB()},
 		  {Color.GRAY.getRGB()},//10
-		  {Color.GRAY.getRGB()},
-		  {Color.GRAY.getRGB()},//12
 		  {Color.BLACK.getRGB()},
-		  {new Color(107, 40, 7).getRGB()},//14
-		  {Color.LIGHT_GRAY.getRGB()},
-		  {Color.LIGHT_GRAY.darker().getRGB()},//16
-		  {Color.LIGHT_GRAY.darker().getRGB()},
-		  {Color.GRAY.getRGB()} };
+		  {Color.GRAY.getRGB()},//12
+		  {Color.ORANGE.getRGB()} };
 	
 	public static void initGraphics() {
-		try {
-			tileImages[0] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
-			tileImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "bedrock.png"));
-			tileImages[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
-			tileImages[3] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "manaPad.png"));
-			tileImages[4] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "healthPad.png"));
-			tileImages[5] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hurtPad.png"));
-			tileImages[6] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "speedPad.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			// here, the tree sprite is drawn onto the grass sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "tree_scaled.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[7] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "tree_scaled.png");
-		}
-		
-		try {
-			tileImages[8] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water.png"));
-			waterImages[0] = tileImages[8];
-			waterImages[1] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water_2.png"));
-			waterImages[2] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water_3.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "water.png");
-		}
-		
-		try {
-			tileImages[9] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "sand.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "sand.png");
-		}
-		
-		try {
-			// here, the boulder sprite is drawn onto the grass sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "grass.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[10] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "grass.png");
-		}
-		
-		try {
-			// here, the boulder sprite is drawn onto the sand sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "sand.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[12] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "sand.png");
-		}
-		
-		try {
-			// here, the boulder sprite is drawn onto the water sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "water.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[11] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "water.png");
-		}
-		
-		try {
-			// here, the hole sprite is drawn onto the dirt sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "hole_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[13] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "hole_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "dirt.png");
-		}
-		
-		try {
-			// here, the boulder sprite is drawn onto the dirt sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "boulder_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "dirt.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[14] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "boulder_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "dirt.png");
-		}
-		
-		try {
-			tileImages[15] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "stone.png");
-		}
-		
-		try {
-			// here, the ore sprite is drawn onto the stone sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "ironore_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[16] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "ironore_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "stone.png");
-		}
-		
-		try {
-			// here, the ore sprite is drawn onto the stone sprite, and that becomes the new tile
-			BufferedImage top = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "copperore_scaled_30px.png"));
-			BufferedImage bottom = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "stone.png"));
-			bottom.createGraphics().drawImage(top, 0, 0, null);
-			tileImages[17] = bottom;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(errMsg + tileRoot + "copperore_scaled_30px.png");
-			System.out.println(errMsg + tileRoot + "stone.png");
-		}
-		
-		try {
-			tileImages[18] = ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + "chest_scaled_30px.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		tileImage[0][0][0] = loadImage("dirt.png");
+		tileImage[1][0][0] = loadImage("bedrock.png");
+		tileImage[2][0][0] = loadImage("grass.png");
+			tileImage[2][1][0] = loadImage("grass_flowers.png");
+			tileImage[2][2][0] = loadImage("grass_snow.png");
+		tileImage[3][0][0] = loadImage("manaPad.png");
+		tileImage[4][0][0] = loadImage("healthPad.png");
+		tileImage[5][0][0] = loadImage("hurtPad.png");
+		tileImage[6][0][0] = loadImage("speedPad.png");
+		tileImage[7][0][0] = loadOverlayedImage("tree_scaled.png", "grass.png");
+			tileImage[7][1][0] = loadOverlayedImage("tree_scaled_snow.png", "grass_snow.png");
+		tileImage[8][0][0] = loadImage("water.png");
+			tileImage[8][0][1] = loadImage("water_2.png");
+			tileImage[8][0][2] = loadImage("water_3.png");
+		tileImage[9][0][0] = loadImage("sand.png");
+		tileImage[10][0][0] = loadOverlayedImage("boulder_scaled_30px.png", "grass.png");
+			tileImage[10][1][0] = loadOverlayedImage("boulder_scaled_30px.png", "water.png");
+			tileImage[10][2][0] = loadOverlayedImage("boulder_scaled_30px.png", "sand.png");
+			tileImage[10][3][0] = loadOverlayedImage("boulder_scaled_30px.png", "dirt.png");
+		tileImage[11][0][0] = loadOverlayedImage("hole_scaled_30px.png", "dirt.png");
+		tileImage[12][0][0] = loadImage("stone.png");
+			tileImage[12][1][0] = loadOverlayedImage("ironore_scaled_30px.png", "stone.png");
+			tileImage[12][2][0] = loadOverlayedImage("copperore_scaled_30px.png", "stone.png");
+		tileImage[13][0][0] = loadImage("chest_scaled_30px.png");
 	}
 	
-	// draws a tile with a specified ID
-	public static void drawTile(Graphics g, int x, int y, int blockType, int stage) {
-		if (blockType == -1) {
-			g.setColor(Color.BLACK);
-			g.fillRect(x, y, QuestPanel.TILE_WIDTH, QuestPanel.TILE_WIDTH);
-		} else if (blockType == 8) {
-			g.drawImage(waterImages[(stage/30) % 3], x, y, null);
-		} else {
-			g.drawImage(tileImages[blockType], x, y, null);
+	/*
+	 * initialization helpers
+	 */
+	
+	private static BufferedImage loadImage(String s) {
+		try {
+			return ImageIO.read(UrfQuest.quest.getClass().getResourceAsStream(tileRoot + s));
+		} catch (IOException e) {
+			System.out.println("this was unable to be loaded: " + s);
+			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	private static BufferedImage loadOverlayedImage(String top, String bottom) {
+		BufferedImage topImg = loadImage(top);
+		BufferedImage bottomImg = loadImage(bottom);
+		bottomImg.createGraphics().drawImage(topImg, 0, 0, null);
+		return bottomImg;
+	}
+	
+	/*
+	 * methods for getting info on a particular tile
+	 */
+	
+	public static BufferedImage getTileImage(int type, int subtype, int animStage) {
+		if (type == -1) {
+			return nullImage;
+		}
+		return tileImage[type][subtype][animStage];
 	}
 	
 	// returns whether mobs can walk on this tile

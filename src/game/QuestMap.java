@@ -28,10 +28,10 @@ public class QuestMap {
 	private int[][] tileTypes;
 	private int[][] tileSubtypes;
 	
+	private ActiveTile[][] activeTiles;
+	
 	private BufferedImage minimap;
 	private int[] homeCoords = new int[2];
-	
-	private ActiveTile[][] activeTiles;
 
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Mob> mobs = new ArrayList<Mob>();
@@ -55,6 +55,8 @@ public class QuestMap {
 		tileTypes = new int[width][height];
 		tileSubtypes = new int[width][height];
 		activeTiles = new ActiveTile[width][height];
+		
+		generateMinimap();
 		
 		switch (type) {
 		case EMPTY_MAP:
@@ -84,7 +86,6 @@ public class QuestMap {
 				generateStartingArea();
 			}
 			generateBorderWall();
-			generateMinimap();
 		}
 	}
 	
@@ -116,13 +117,13 @@ public class QuestMap {
 		// check for items near players
 		for (Player p : players) {
 			for (Item i : items) {
-				if (p.isWithinDistance(i, 5.0) && i.isPickupable()) {
+				if (p.isWithinDistance(i, p.getPickupRange()) && i.isPickupable()) {
 					i.accelerateTowards(p);
 				}
 			}
 		}
 		
-		// check for players colliding with items (NEW)
+		// check for players colliding with items
 		for (Player p : players) {
 			HashSet<Item> removeNow = new HashSet<Item>();
 			for (Item i : items) {
@@ -222,6 +223,7 @@ public class QuestMap {
 		updateTiles();
 	}
 	
+	// helper function -- updates a number of tiles each tick
 	private void updateTiles() {
 		HashSet<Pair<Integer, Integer>> set = new HashSet<Pair<Integer, Integer>>();
 		for (int i = 0; i < 20; i++) {
@@ -231,39 +233,39 @@ public class QuestMap {
 		}
 		
 		for (Pair<Integer, Integer> p : set) {
-			int t = getTileAt(p.a, p.b);
+			int t = getTileTypeAt(p.a, p.b);
 			switch (t) {
-			case 0:
+			case Tiles.DIRT:
 				double chance = 0;
-				if (getTileAt(p.a, p.b + 1) == 2) {
+				if (getTileTypeAt(p.a, p.b + 1) == Tiles.GRASS) {
 					chance += 0.25;
 				}
-				if (getTileAt(p.a, p.b - 1) == 2) {
+				if (getTileTypeAt(p.a, p.b - 1) == Tiles.GRASS) {
 					chance += 0.25;
 				}
-				if (getTileAt(p.a + 1, p.b) == 2) {
+				if (getTileTypeAt(p.a + 1, p.b) == Tiles.GRASS) {
 					chance += 0.25;
 				}
-				if (getTileAt(p.a - 1, p.b) == 2) {
+				if (getTileTypeAt(p.a - 1, p.b) == Tiles.GRASS) {
 					chance += 0.25;
 				}
 				if (chance > Math.random()) {
-					setTileAt(p.a, p.b, 2);
+					setTileAt(p.a, p.b, Tiles.GRASS);
 				}
 				break;
-			case 2:
-				if (getTileAt(p.a, p.b + 1) == 7 ||
-					getTileAt(p.a, p.b - 1) == 7 ||
-					getTileAt(p.a + 1, p.b) == 7 ||
-					getTileAt(p.a - 1, p.b) == 7) {
+			case Tiles.GRASS:
+				if (getTileTypeAt(p.a, p.b + 1) == Tiles.TREE ||
+					getTileTypeAt(p.a, p.b - 1) == Tiles.TREE ||
+					getTileTypeAt(p.a + 1, p.b) == Tiles.TREE ||
+					getTileTypeAt(p.a - 1, p.b) == Tiles.TREE) {
 					if (Math.random() < 0.1) {
-						setTileAt(p.a, p.b, 7);
+						setTileAt(p.a, p.b, Tiles.TREE);
 					}
 				}
 				break;
-			case 7:
+			case Tiles.TREE:
 				if (Math.random() < 0.18) {
-					setTileAt(p.a, p.b, 2);
+					setTileAt(p.a, p.b, Tiles.GRASS);
 				}
 				break;
 			}
@@ -274,10 +276,9 @@ public class QuestMap {
 	 * Map generation methods
 	 */
 	
-	public void generateSimplexNoiseMap() {
+	private void generateSimplexNoiseMap() {
 		int width = tileTypes.length;
 		int height = tileTypes[0].length;
-		int[][] end = new int[width][height];
 		
 		// terrain distortion params
 		boolean enableDistortion = true;
@@ -301,11 +302,11 @@ public class QuestMap {
 				}
 				
 				if (terrainNoise[x][y] > .55f) {
-					end[x][y] = 2;
+					setTileAt(x, y, Tiles.GRASS);
 				} else if (terrainNoise[x][y] > .5f) {
-					end[x][y] = 9;
+					setTileAt(x, y, Tiles.SAND);
 				} else {
-					end[x][y] = 8;
+					setTileAt(x, y, Tiles.WATER);
 				}
 			}
 		}
@@ -315,12 +316,24 @@ public class QuestMap {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (boulderNoise[x][y]*2 - 1.6 > Math.random()) {
-					if (end[x][y] == 2) {
-						end[x][y] = 10;
-					} else if (end[x][y] == 8) {
-						end[x][y] = 11;
-					} else if (end[x][y] == 9) {
-						end[x][y] = 12;
+					if (getTileTypeAt(x, y) == Tiles.GRASS) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.GRASS_BOULDER);
+					} else if (getTileTypeAt(x, y) == Tiles.WATER) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.WATER_BOULDER);
+					} else if (getTileTypeAt(x, y) == Tiles.SAND) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.SAND_BOULDER);
+					}
+				}
+			}
+		}
+		
+		// generate flowers
+		float[][] flowerNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (flowerNoise[x][y]*2 - 1.6 > Math.random()) {
+					if (getTileTypeAt(x, y) == Tiles.GRASS) {
+						setTileAt(x, y, Tiles.GRASS, Tiles.GRASS_FLOWERS);
 					}
 				}
 			}
@@ -330,101 +343,157 @@ public class QuestMap {
 		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (treeNoise[x][y]*2 - 1 > Math.random() && end[x][y] == 2) {
-					end[x][y] = 7;
+				if (treeNoise[x][y]*2 - 1 > Math.random() && getTileTypeAt(x, y) == Tiles.GRASS) {
+					setTileAt(x, y, Tiles.TREE);
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private void generateColdSimplexNoiseMap() {
+		int width = tileTypes.length;
+		int height = tileTypes[0].length;
+		
+		// terrain distortion params
+		boolean enableDistortion = true;
+		double distortWeight = 0.25;
+		int distortFreq = 20;
+		boolean enableDistortionDistribution = false;
+		int distortDistributionFreq = 20;
+		
+		// generate land and water
+		float[][] terrainNoise = SimplexNoise.generateSimplexNoise(width, height, 5);
+		float[][] distortionNoise = SimplexNoise.generateSimplexNoise(width, height, distortFreq);
+		float[][] distortionDistribution = SimplexNoise.generateSimplexNoise(width, height, distortDistributionFreq);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (enableDistortionDistribution && distortionDistribution[x][y] > .5) {
+					distortionNoise[x][y] *= (distortionDistribution[x][y] - 0.5)*2;
+				}
+				if (enableDistortion) {
+					terrainNoise[x][y] += distortionNoise[x][y]*distortWeight;
+					terrainNoise[x][y] /= (1 + distortWeight);
+				}
+				
+				if (terrainNoise[x][y] > .55f) {
+					setTileAt(x, y, Tiles.GRASS, Tiles.GRASS_SNOW);
+				} else if (terrainNoise[x][y] > .5f) {
+					setTileAt(x, y, Tiles.SAND);
+				} else {
+					setTileAt(x, y, Tiles.WATER);
 				}
 			}
 		}
 		
-		this.tileTypes = end;
+		// generate boulders
+		float[][] boulderNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (boulderNoise[x][y]*2 - 1.6 > Math.random()) {
+					if (getTileTypeAt(x, y) == Tiles.GRASS) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.GRASS_BOULDER);
+					} else if (getTileTypeAt(x, y) == Tiles.WATER) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.WATER_BOULDER);
+					} else if (getTileTypeAt(x, y) == Tiles.SAND) {
+						setTileAt(x, y, Tiles.BOULDER, Tiles.SAND_BOULDER);
+					}
+				}
+			}
+		}
+		
+		// generate trees (only on land tiles)
+		float[][] treeNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (treeNoise[x][y]*2 - 1 > Math.random() && getTileTypeAt(x, y) == Tiles.GRASS) {
+					setTileAt(x, y, Tiles.TREE, Tiles.TREE_SNOW);
+				}
+			}
+		}
 	}
 	
-	public void generateSavannahMap() {
+	private void generateSavannahMap() {
 		int width = tileTypes.length;
 		int height = tileTypes[0].length;
-		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				end[x][y] = 1;
+				setTileAt(x, y, Tiles.BEDROCK);
 			}
 		}
 		for (int x = 1; x < width - 1; x++) {
 			for (int y = 1; y < height - 1; y++) {
-				if (Math.random() < .1) end[x][y] = 0;
+				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 2; x < width - 2; x++) {
 			for (int y = 2; y < height - 2; y++) {
-				if (Math.random() < .2) end[x][y] = 0;
+				if (Math.random() < .2) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 3; x < width - 3; x++) {
 			for (int y = 3; y < height - 3; y++) {
-				if (Math.random() < .4) end[x][y] = 0;
+				if (Math.random() < .4) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 4; x < width - 4; x++) {
 			for (int y = 4; y < height - 4; y++) {
-				if (Math.random() < .9) end[x][y] = 0;
+				if (Math.random() < .9) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 5; x < width - 5; x++) {
 			for (int y = 5; y < height - 5; y++) {
-				if (Math.random() < .1) end[x][y] = 14;
-				else end[x][y] = 0;
+				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT_BOULDER);
+				else setTileAt(x, y, Tiles.DIRT);
 			}
 		}
-		
-		this.tileTypes = end;
 	}
 	
-	public void generateOldCaveMap() {
+	@SuppressWarnings("unused")
+	private void generateOldCaveMap() {
 		int width = tileTypes.length;
 		int height = tileTypes[0].length;
-		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				end[x][y] = 1;
+				setTileAt(x, y, Tiles.BEDROCK);
 			}
 		}
 		for (int x = 1; x < width - 1; x++) {
 			for (int y = 1; y < height - 1; y++) {
-				if (Math.random() < .1) end[x][y] = 0;
+				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 2; x < width - 2; x++) {
 			for (int y = 2; y < height - 2; y++) {
-				if (Math.random() < .2) end[x][y] = 0;
+				if (Math.random() < .2) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 3; x < width - 3; x++) {
 			for (int y = 3; y < height - 3; y++) {
-				if (Math.random() < .4) end[x][y] = 0;
+				if (Math.random() < .4) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 4; x < width - 4; x++) {
 			for (int y = 4; y < height - 4; y++) {
-				if (Math.random() < .9) end[x][y] = 0;
+				if (Math.random() < .9) setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		for (int x = 5; x < width - 5; x++) {
 			for (int y = 5; y < height - 5; y++) {
-				if (Math.random() < .1) end[x][y] = 14;
-				else end[x][y] = 0;
+				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT_BOULDER);
+				else setTileAt(x, y, Tiles.DIRT);
 			}
 		}
 		
 		this.homeCoords[0] = width/2;
 		this.homeCoords[1] = height/2;
-		this.tileTypes = end;
 	}
 	
-	public void generateCaveMap() {
+	private void generateCaveMap() {
 		int width = tileTypes.length;
 		int height = tileTypes[0].length;
-		int[][] end = new int[width][height];
 		
 		// terrain distortion params
 		boolean enableDistortion = true;
@@ -448,11 +517,11 @@ public class QuestMap {
 				}
 				
 				if (terrainNoise[x][y] > .55f) {
-					end[x][y] = 0;
+					setTileAt(x, y, Tiles.DIRT);
 				} else if (terrainNoise[x][y] > .5f) {
-					end[x][y] = 1;
+					setTileAt(x, y, Tiles.BEDROCK);
 				} else {
-					end[x][y] = -1;
+					setTileAt(x, y, Tiles.VOID);
 				}
 			}
 		}
@@ -461,8 +530,8 @@ public class QuestMap {
 		float[][] stoneNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (stoneNoise[x][y]*2 - 1 > Math.random() && end[x][y] == 0) {
-					end[x][y] = 15;
+				if (stoneNoise[x][y]*2 - 1 > Math.random() && getTileTypeAt(x, y) == Tiles.DIRT) {
+					setTileAt(x, y, Tiles.STONE);
 				}
 			}
 		}
@@ -471,52 +540,47 @@ public class QuestMap {
 		float[][] oreNoise = SimplexNoise.generateSimplexNoise(width, height, 20);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (oreNoise[x][y] > 0.80f && end[x][y] == 15) {
-					end[x][y] = 16;
+				if (oreNoise[x][y] > 0.80f && getTileTypeAt(x, y) == Tiles.STONE) {
+					setTileAt(x, y, Tiles.STONE, Tiles.IRONORE_STONE);
 				}
 			}
 		}
-		
-		this.tileTypes = end;
 	}
 	
-	public void generateTemplateMap() {
+	private void generateTemplateMap() {
 		int width = tileTypes.length;
 		int height = tileTypes[0].length;
-		int[][] end = new int[width][height];
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				end[x][y] = 1;
+				setTileAt(x, y, Tiles.BEDROCK);
 			}
 		}
 		for (int x = 1; x < width - 1; x++) {
 			for (int y = 1; y < height - 1; y++) {
-				if (Math.random() < .1) end[x][y] = 2;
+				if (Math.random() < .1) setTileAt(x, y, Tiles.GRASS);
 			}
 		}
 		for (int x = 2; x < width - 2; x++) {
 			for (int y = 2; y < height - 2; y++) {
-				if (Math.random() < .2) end[x][y] = 2;
+				if (Math.random() < .2) setTileAt(x, y, Tiles.GRASS);
 			}
 		}
 		for (int x = 3; x < width - 3; x++) {
 			for (int y = 3; y < height - 3; y++) {
-				if (Math.random() < .4) end[x][y] = 2;
+				if (Math.random() < .4) setTileAt(x, y, Tiles.GRASS);
 			}
 		}
 		for (int x = 4; x < width - 4; x++) {
 			for (int y = 4; y < height - 4; y++) {
-				if (Math.random() < .9) end[x][y] = 2;
+				if (Math.random() < .9) setTileAt(x, y, Tiles.GRASS);
 			}
 		}
 		for (int x = 5; x < width - 5; x++) {
 			for (int y = 5; y < height - 5; y++) {
-				end[x][y] = 2;
+				setTileAt(x, y, Tiles.GRASS);
 			}
 		}
-		
-		this.tileTypes = end;
 	}
 	
 	/*
@@ -527,21 +591,21 @@ public class QuestMap {
 		int spawnCenterX = tileTypes.length/2;
 		int spawnCenterY = tileTypes[0].length/2;
 		
-		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
+		while (!Tiles.isWalkable(getTileTypeAt(spawnCenterX, spawnCenterY))) {
 			spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 			spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		}
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				tileTypes[spawnCenterX+x][spawnCenterY+y] = 2;
+				setTileAt(spawnCenterX+x, spawnCenterY+y, Tiles.GRASS);
 			}
 		}
-		
-		tileTypes[spawnCenterX-2][spawnCenterY-2] = 3;
-		tileTypes[spawnCenterX-2][spawnCenterY+2] = 4;
-		tileTypes[spawnCenterX+2][spawnCenterY-2] = 5;
-		tileTypes[spawnCenterX+2][spawnCenterY+2] = 6;
+
+		setTileAt(spawnCenterX-2, spawnCenterY-2, Tiles.HEALTH_PAD);
+		setTileAt(spawnCenterX-2, spawnCenterY+2, Tiles.HURT_PAD);
+		setTileAt(spawnCenterX+2, spawnCenterY-2, Tiles.MANA_PAD);
+		setTileAt(spawnCenterX+2, spawnCenterY+2, Tiles.SPEED_PAD);
 		
 		homeCoords[0] = spawnCenterX;
 		homeCoords[1] = spawnCenterY;
@@ -550,7 +614,7 @@ public class QuestMap {
 	private void findHomeCoords() {
 		int spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		int spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
-		while (!Tiles.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
+		while (!Tiles.isWalkable(getTileTypeAt(spawnCenterX, spawnCenterY))) {
 			spawnCenterX = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 			spawnCenterY = (int)(Math.random()*(tileTypes.length - 20)) + 10;
 		}
@@ -561,13 +625,13 @@ public class QuestMap {
 	
 	private void generateBorderWall() {
 		for (int i = 0; i < tileTypes.length; i++) {
-			tileTypes[i][0] = 1;
-			tileTypes[i][tileTypes[0].length-1] = 1;
+			setTileAt(i, 0, Tiles.BEDROCK);
+			setTileAt(i, tileTypes[0].length-1, Tiles.BEDROCK);
 		}
 		
 		for (int i = 0; i < tileTypes[0].length; i++) {
-			tileTypes[0][i] = 1;
-			tileTypes[tileTypes.length-1][i] = 1;
+			setTileAt(0, i, Tiles.BEDROCK);
+			setTileAt(tileTypes.length-1, i, Tiles.BEDROCK);
 		}
 	}
 	
@@ -579,7 +643,7 @@ public class QuestMap {
 		minimap = new BufferedImage(tileTypes.length, tileTypes[0].length, BufferedImage.TYPE_4BYTE_ABGR);
 		for (int x = 0; x < tileTypes.length; x++) {
 			for (int y = 0; y < tileTypes[0].length; y++) {
-				int color = Tiles.minimapColor(this.getTileAt(x, y));
+				int color = Tiles.minimapColor(this.getTileTypeAt(x, y));
 				minimap.setRGB(x, y, color);
 			}
 		}
@@ -651,22 +715,42 @@ public class QuestMap {
 	}
 	
 	/*
-	 * Misc map manipulation
+	 * Tile manipulation
 	 */
 	
-	public int getTileAt(int x, int y) {
+	public int getTileTypeAt(int x, int y) {
 		if (x < 0 || y < 0) return -1;
 		if (x >= tileTypes.length || y >= tileTypes[0].length) return -1;
 		return tileTypes[x][y];
 	}
 	
-	public void setTileAt(int x, int y, int t) {
-		tileTypes[x][y] = t;
-		setMinimapAt(x, y, t);
+	public int getTileSubtypeAt(int x, int y) {
+		if (x < 0 || y < 0) return 0;
+		if (x >= tileTypes.length || y >= tileTypes[0].length) return 0;
+		return tileSubtypes[x][y];
 	}
 	
+	public int[] getTileAt(int x, int y) {
+		return new int[] {getTileTypeAt(x, y), getTileSubtypeAt(x, y)};
+	}
+	
+	public void setTileAt(int x, int y, int type) {
+		tileTypes[x][y] = type;
+		tileSubtypes[x][y] = 0;
+		setMinimapAt(x, y, type);
+	}
+	
+	public void setTileAt(int x, int y, int type, int subtype) {
+		setTileAt(x, y, type);
+		tileSubtypes[x][y] = subtype;
+	}
+	
+	/*
+	 * Misc map manipulation
+	 */
+	
 	public boolean setHomeCoords(int x, int y) {
-		if (Tiles.isWalkable(getTileAt(x, y))) {
+		if (Tiles.isWalkable(getTileTypeAt(x, y))) {
 			homeCoords[0] = x;
 			homeCoords[1] = y;
 			return true;

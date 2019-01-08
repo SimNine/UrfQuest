@@ -16,6 +16,7 @@ import guis.OverlayInit;
 import guis.game.CraftingOverlay;
 import guis.game.GameBoardOverlay;
 import guis.game.GameStatusOverlay;
+import guis.game.GameWeatherOverlay;
 import guis.game.MapViewOverlay;
 import guis.menus.KeybindingOverlay;
 
@@ -33,6 +34,7 @@ public class QuestPanel extends JPanel {
 	private ArrayDeque<GUIContainer> overlays = new ArrayDeque<GUIContainer>();
 	public GameStatusOverlay gameStatus;
 	public GameBoardOverlay gameBoard;
+	public GameWeatherOverlay gameWeather;
 	public MapViewOverlay mapView;
 	public CraftingOverlay craftingView;
 	public KeybindingOverlay keybindingView;
@@ -223,6 +225,7 @@ public class QuestPanel extends JPanel {
 	public void initOverlays() {
 		gameBoard = new GameBoardOverlay();
 		gameStatus = new GameStatusOverlay();
+		gameWeather = new GameWeatherOverlay();
 		mapView = new MapViewOverlay();
 		keybindingView = new KeybindingOverlay();
 		craftingView = new CraftingOverlay();
@@ -231,6 +234,7 @@ public class QuestPanel extends JPanel {
 		optionsMenu = OverlayInit.newOptionsOverlay();
 		
 		overlays.add(gameBoard);
+		//overlays.add(gameWeather);
 		overlays.add(gameStatus);
 		overlays.add(mainMenu);
 	}

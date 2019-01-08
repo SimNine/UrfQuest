@@ -17,7 +17,7 @@ import tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
-    private static final String VERSION = "0.18.0_pre3";
+    private static final String VERSION = "0.18.0_pre4";
     private static final String GAME_NAME = "UrfQuest";
     
     // should never need to be accessed
@@ -45,7 +45,7 @@ public class UrfQuest implements Runnable {
         	}
         }
     });
-    public static Timer renderTimer = new Timer(10, new ActionListener() { // renderticker
+    public static Timer renderTimer = new Timer(30, new ActionListener() { // renderticker
         public void actionPerformed(ActionEvent e) {
             panel.repaint();
         }

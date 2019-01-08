@@ -44,7 +44,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		}
 	}
 	
-	public boolean click() { // returns true if an object in this overlay was clicked
+	public boolean click() { // returns true if an object in this container was clicked
 		boolean ret = false;
 		for (GUIObject o : guiObjects) {
 			if (o instanceof Clickable && o.isMouseOver()) {

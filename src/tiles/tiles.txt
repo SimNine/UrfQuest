@@ -3,6 +3,8 @@ Tile Types:
 0 - Dirt
 1 - Bedrock
 2 - Grass
+	0 - Grass Default
+	1 - Grass w/ Flowers
 3 - ManaPad
 4 - HealthPad
 5 - HurtPad
@@ -10,13 +12,14 @@ Tile Types:
 7 - Tree
 8 - Water
 9 - Sand
-10 - GrassBoulder
-11 - WaterBoulder
-12 - SandBoulder
-13 - DirtHole
-14 - DirtBoulder
-15 - Stone
-16 - IronOreStone
-17 - CopperOreStone
-18 - Chest
-19 - Furnace
+10 - Boulder
+	0 - Grass Boulder
+	1 - Water Boulder
+	2 - Sand Boulder
+	3 - Dirt Boulder
+11 - DirtHole
+12 - Stone
+	0 - Stone Default
+	1 - Stone w/ Iron Ore
+	2 - Stone w/ Copper Ore
+13 - Chest

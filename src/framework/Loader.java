@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import entities.items.Item;
-import entities.items.Key;
 import entities.mobs.Player;
 import game.QuestMap;
 import urf.BinaryIn;

@@ -299,76 +299,56 @@ public class Item extends Entity {
 			m.getMap().addProjectile(new Bullet(pos5[0], pos5[1], dir5, Bullet.getDefaultVelocity(), m, map));
 			return true;
 		case Item.PICKAXE:
-			if (m.tileTypeAtDistance(1.0) == Tiles.GRASS_BOULDER) {
+			int[] tile = m.tileAtDistance(1.0);
+			if (tile[0] == Tiles.BOULDER) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 2);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
-				
-				cooldown = getMaxCooldown();
-				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.WATER_BOULDER) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 8);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
-				
-				cooldown = getMaxCooldown();
-				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.SAND_BOULDER) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 9);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
-
-				cooldown = getMaxCooldown();			
-				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.DIRT_BOULDER) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 0);
-				double rand = Math.random();
-				if (rand > .95) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.LAW_RUNE, map));
-				} else if (rand > .90) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.COSMIC_RUNE, map));
-				} else if (rand > .85) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.ASTRAL_RUNE, map));
-				} else if (rand > .82) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.SHOTGUN, map));
-				} else if (rand > .79) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.SMG, map));
-				} else if (rand > .75) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.GRENADE_ITEM, map));
-				} else {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
+				if (tile[1] == Tiles.GRASS_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
+				} else if (tile[1] == Tiles.WATER_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tiles.WATER);
+				} else if (tile[1] == Tiles.SAND_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tiles.SAND);
+				} else if (tile[1] == Tiles.DIRT_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
+					double rand = Math.random();
+					if (rand > .95) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.LAW_RUNE, map));
+					} else if (rand > .90) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.COSMIC_RUNE, map));
+					} else if (rand > .85) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.ASTRAL_RUNE, map));
+					} else if (rand > .82) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.SHOTGUN, map));
+					} else if (rand > .79) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.SMG, map));
+					} else if (rand > .75) {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.GRENADE_ITEM, map));
+					} else {
+						m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
+					}
 				}
-
-				cooldown = getMaxCooldown();			
+				m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
+				cooldown = getMaxCooldown();
 				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.COPPERORE_STONE) {
+			} else if (tile[0] == Tiles.STONE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 0);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.COPPER_ORE, map));
-
-				cooldown = getMaxCooldown();			
-				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.IRONORE_STONE) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 0);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.IRON_ORE, map));
-
-				cooldown = getMaxCooldown();			
-				return true;
-			} else if (m.tileTypeAtDistance(1.0) == Tiles.STONE) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 0);
-
+				if (tile[1] == Tiles.STONE_DEF) {
+					// nothing else
+				} else if (tile[1] == Tiles.COPPERORE_STONE) {
+					m.getMap().addItem(new Item(coords[0], coords[1], Item.COPPER_ORE, map));
+				} else if (tile[1] == Tiles.IRONORE_STONE) {
+					m.getMap().addItem(new Item(coords[0], coords[1], Item.IRON_ORE, map));
+				}
+				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 				cooldown = getMaxCooldown();			
 				return true;
 			} else {
 				return false;
 			}
 		case Item.HATCHET:
-			if (m.tileTypeAtDistance(1.0) == Tiles.TREE) {
+			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], 2);
+				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
 				m.getMap().addItem(new Item(coords[0], coords[1], Item.LOG, map));
 				
 				cooldown = getMaxCooldown();
@@ -377,7 +357,7 @@ public class Item extends Entity {
 				return false;
 			}
 		case Item.SHOVEL:
-			if (m.tileTypeAtDistance(0) == Tiles.GRASS) {
+			if (m.tileAtDistance(0)[0] == Tiles.GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
 				if (Math.random() > .05) {
 					m.getMap().setTileAt(coords[0], coords[1], 0);

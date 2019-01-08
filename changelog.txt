@@ -436,3 +436,18 @@ update the "assetPath" variables in all relevant classes.
 -Added a 'held' item: this refers to an item that is held by the mouse pointer
 	this feature will be more useful once more/better crafting GUIs are implemented
 -Fixed a bug that allowed two players to pick up the same one item
+
+0.18.0_pre4 - 9/16/17
+-Changed magnetic pickup to have a range specific to each player
+-Redid tile display system
+--Tile images are now stored in a 3d array: [type][subtype][animStage]
+--"Type" is the overall type of the tile; all tiles of a type have the same collision properties
+--"Subtype" affects the appearance of a tile, and what items it drops
+--"animStage" represents all the frames
+-Added a subtype of grass: grass_flower
+-Moved the render ticker back to having a delay of 5ms between renders
+-Added preliminary "winter mode" - purely aesthetic so far
+-Added new GameWeatherOverlay
+--functions as a visual filter applied overtop of the board
+--currently adds a blue tint to the board and projects snowflakes
+--drawback: adding this overlay considerably drops framerate

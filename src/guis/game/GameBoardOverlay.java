@@ -65,13 +65,14 @@ public class GameBoardOverlay extends GUIContainer {
 		int ulX = ((int)camera.getPos()[0] - dispTileWidth/2) - 1;
 		int ulY = ((int)camera.getPos()[1] - dispTileHeight/2) - 1;
 		
-		// draw grid tiles
+		// draw the tiles
 		for (int x = 0; x < dispTileWidth + 2; x++) {
 			int xRoot = - rootX + x * TILE_WIDTH;
 			for (int y = 0; y < dispTileHeight + 2; y++) {
 				int yRoot = - rootY + y * TILE_WIDTH;
-				int currTile = (currMap.getTileAt(ulX + x, ulY + y));
-				Tiles.drawTile(g, xRoot, yRoot, currTile, tileAnimStage);
+				int[] tile = currMap.getTileAt(ulX + x, ulY + y);
+				int animStage = getAnimStage(tile[0], tile[1]);
+				g.drawImage(Tiles.getTileImage(tile[0], tile[1], animStage), xRoot, yRoot, null);
 			}
 		}
 
@@ -169,9 +170,6 @@ public class GameBoardOverlay extends GUIContainer {
 		if (UrfQuest.game.isBuildMode() && UrfQuest.gameRunning && !UrfQuest.panel.isGUIOpen()) {
 			UrfQuest.game.getCurrMap().setTileAt(mouseX, mouseY, 15);
 			return true;
-		} else if (UrfQuest.game.getCurrMap().getTileAt(mouseX, mouseY) == 7) {
-			p.incrementHealth(-5.0);
-			return true;
 		} else {
 			return false;
 		}
@@ -245,5 +243,14 @@ public class GameBoardOverlay extends GUIContainer {
 		g.setColor(Color.WHITE);
 		g.drawLine(dispCenterX + 5, dispCenterY + 15, dispCenterX + 25, dispCenterY + 15);
 		g.drawLine(dispCenterX + 15, dispCenterY + 5, dispCenterX + 15, dispCenterY + 25);
+	}
+	
+	// gets the appropriate animstage for Tiles.getTileImage(type, subtype, animstage)
+	private int getAnimStage(int type, int subtype) {
+		if (type == Tiles.WATER) {
+			return (tileAnimStage / 30) % 3;
+		} else {
+			return 0;
+		}
 	}
 }

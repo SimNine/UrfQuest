@@ -31,7 +31,7 @@ public class Rocket extends Projectile {
 
 	public void update() {
 		this.move(velocity*Math.cos(Math.toRadians(direction)), velocity*Math.sin(Math.toRadians(direction)));
-		if(!Tiles.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
+		if(!Tiles.isPenetrable(map.getTileTypeAt((int)bounds.x, (int)bounds.y))) {
 			animStage = 1000;
 			explode();
 		}

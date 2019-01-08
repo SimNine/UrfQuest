@@ -27,6 +27,8 @@ public class Player extends Mob {
 	private int statCounter = 200;
 	private Inventory inventory;
 	private Item heldItem;
+	
+	private double pickupRange = 3.0;
 
 	public Player(double x, double y, QuestMap currMap, String name) {
 		super(x, y, currMap);
@@ -311,8 +313,8 @@ public class Player extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (map.getTileAt((int)(bounds.getCenterX()),
-							  (int)(bounds.getCenterY()))) {
+		switch (map.getTileTypeAt((int)(bounds.getCenterX()),
+							  	  (int)(bounds.getCenterY()))) {
 		case 0:
 			//nothing
 			break;
@@ -427,5 +429,13 @@ public class Player extends Mob {
 	
 	public void useTileUnderneath() {
 		map.useActiveTile((int)getCenter()[0], (int)getCenter()[1], this);
+	}
+	
+	public double getPickupRange() {
+		return pickupRange;
+	}
+	
+	public void setPickupRange(double d) {
+		pickupRange = d;
 	}
 }

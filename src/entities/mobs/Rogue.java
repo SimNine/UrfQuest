@@ -311,7 +311,7 @@ public class Rogue extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.getCenterX()),
+		switch (UrfQuest.game.getCurrMap().getTileTypeAt((int)(bounds.getCenterX()),
 													 (int)(bounds.getCenterY()))) {
 		case 0:
 			//nothing

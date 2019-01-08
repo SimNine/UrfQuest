@@ -25,14 +25,14 @@ public class CameraMob extends Mob {
 
 	public void update() {
 		if (mode == DEMO_MODE) {
-			if (UrfQuest.game.getCurrMap().getTileAt((int)(bounds.x + velocity), (int)bounds.y) == -1) {
+			if (UrfQuest.game.getCurrMap().getTileTypeAt((int)(bounds.x + velocity), (int)bounds.y) == -1) {
 				if (0 <= direction && direction <= 180) {
 					direction = (90 - direction) + 90;
 				} else { // if (
 					direction = (270 - direction) + 270;
 				}
 			}
-			if (UrfQuest.game.getCurrMap().getTileAt((int)bounds.x, (int)(bounds.y + velocity)) == -1) {
+			if (UrfQuest.game.getCurrMap().getTileTypeAt((int)bounds.x, (int)(bounds.y + velocity)) == -1) {
 				if (0 <= direction && direction <= 90) {
 					direction = 360 - direction;
 				} else if (90 < direction && direction < 270) {

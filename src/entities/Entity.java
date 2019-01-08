@@ -151,7 +151,7 @@ public abstract class Entity {
 		double xCurr = this.getCenter()[0];
 		double yCurr = this.getCenter()[1];
 		for (int i = 0; i < numSteps; i++) {
-			if (!Tiles.isWalkable(UrfQuest.game.getCurrMap().getTileAt((int) xCurr, (int) yCurr))) {
+			if (!Tiles.isWalkable(UrfQuest.game.getCurrMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
 				return false;
 			}
 			xCurr += xComp;
