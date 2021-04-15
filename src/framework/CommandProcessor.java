@@ -2,12 +2,12 @@ package framework;
 
 import javax.swing.JOptionPane;
 
-import entities.items.Item;
-import entities.mobs.Chicken;
-import entities.mobs.Cyclops;
-import entities.mobs.Player;
-import entities.mobs.Rogue;
-import game.QuestMap;
+import server.entities.items.Item;
+import server.entities.mobs.Chicken;
+import server.entities.mobs.Cyclops;
+import server.entities.mobs.Player;
+import server.entities.mobs.Rogue;
+import server.game.QuestMap;
 
 public class CommandProcessor {
 

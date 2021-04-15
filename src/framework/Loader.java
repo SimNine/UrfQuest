@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 import entities.items.Item;
 import entities.mobs.Player;
-import game.QuestMap;
+import server.game.QuestMap;
 import urf.BinaryIn;
 import urf.BinaryOut;
 import urf.QuickHuffman;

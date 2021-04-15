@@ -12,8 +12,8 @@ import java.util.Set;
 import javax.swing.*;
 
 import framework.QuestPanel;
-import game.QuestGame;
-import tiles.Tiles;
+import server.Server;
+import server.tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
@@ -28,8 +28,9 @@ public class UrfQuest implements Runnable {
     public static boolean debug;
     
     // commonly accessed
+    public static Server server;
+    
     public static QuestPanel panel;
-    public static QuestGame game;
 	public static Set<Integer> keys;
 	public static int[] mousePos;
 	public static boolean mouseDown;
@@ -38,21 +39,11 @@ public class UrfQuest implements Runnable {
 	public static boolean isFullscreen;
 	
 	// tickers
-    public static Timer gameTimer = new Timer(5, new ActionListener() { // gameticker
-        public void actionPerformed(ActionEvent e) {
-        	if (gameRunning) {
-                game.tick();
-        	}
-        }
-    });
     public static Timer renderTimer = new Timer(30, new ActionListener() { // renderticker
         public void actionPerformed(ActionEvent e) {
             panel.repaint();
         }
     });
-    
-    // game properties
-    public static boolean gameRunning;
     
 	public void run() {
         System.out.println();
@@ -64,17 +55,15 @@ public class UrfQuest implements Runnable {
 		Tiles.initGraphics();
         
         UrfQuest.debug = false;
-        UrfQuest.game = new QuestGame();
+        UrfQuest.server = new Server(true, 0);
         UrfQuest.keys = new HashSet<Integer>(0);
         UrfQuest.mousePos = new int[2];
         UrfQuest.mouseDown = false;
-        UrfQuest.gameRunning = false;
 
         // the game must be initialized before the display can be initialized
         UrfQuest.panel = new QuestPanel();
         panel.initOverlays();
         resetFrame(true);
-        gameTimer.start();
         renderTimer.start();
 	}
 
