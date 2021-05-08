@@ -12,8 +12,6 @@ import java.util.Set;
 import javax.swing.*;
 
 import framework.QuestPanel;
-import server.Server;
-import server.tiles.Tiles;
 
 // The main class, where everything else is initialized
 public class UrfQuest implements Runnable {
@@ -24,11 +22,12 @@ public class UrfQuest implements Runnable {
 	public static UrfQuest quest;
     public static JFrame frame;
     
-    // debugging toggler
+    // debugging toggle
     public static boolean debug;
     
     // commonly accessed
     public static Server server;
+    public static Client client;
     
     public static QuestPanel panel;
 	public static Set<Integer> keys;
