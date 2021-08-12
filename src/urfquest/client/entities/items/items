@@ -1,0 +1,23 @@
+Item types:
+0 - No item
+1 - AstralRune
+2 - CosmicRune
+3 - LawRune
+4 - ChickenLeg
+5 - Cheese
+6 - Bone
+7 - Gem
+8 - Log
+9 - Stone
+10 - Mic
+11 - Key
+12 - GrenadeItem
+13 - Pistol
+14 - RPG
+15 - Shotgun
+16 - SMG
+17 - Pickaxe
+18 - Hatchet
+19 - Shovel
+20 - IronOre
+21 - CopperOre
