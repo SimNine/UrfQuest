@@ -63,6 +63,12 @@ public class QuestPanel extends JPanel {
             Main.panel.repaint();
         }
     });
+    
+    public Timer inputScanTimer = new Timer(30, new ActionListener() {
+    	public void actionPerformed(ActionEvent e) {
+    		scanHeldKeys();
+    	}
+    });
 	
 	public QuestPanel() {
 		this(640, 480);
@@ -150,16 +156,6 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
 							Main.client.getState().getPlayer().useTileUnderneath();
 						}
-						
-						else if (e.getKeyCode() == KeyEvent.VK_W) {
-							Main.client.getState().getPlayer().move(0, -0.5);
-						} else if (e.getKeyCode() == KeyEvent.VK_S) {
-							Main.client.getState().getPlayer().move(0, 0.5);
-						} else if (e.getKeyCode() == KeyEvent.VK_A) {
-							Main.client.getState().getPlayer().move(-0.5, 0);
-						} else if (e.getKeyCode() == KeyEvent.VK_D) {
-							Main.client.getState().getPlayer().move(0.5, 0);
-						}
 					}
 				} else {
 					if (!(overlays.getLast() instanceof KeybindingOverlay)) {
@@ -207,6 +203,20 @@ public class QuestPanel extends JPanel {
 				}
 			}
 		});
+	}
+	
+	private void scanHeldKeys() {
+		if (keys.contains(KeyEvent.VK_W)) {
+			Main.client.getState().getPlayer().move(0, -0.5);
+		} else if (keys.contains(KeyEvent.VK_S)) {
+			Main.client.getState().getPlayer().move(0, 0.5);
+		}
+		
+		if (keys.contains(KeyEvent.VK_A)) {
+			Main.client.getState().getPlayer().move(-0.5, 0);
+		} else if (keys.contains(KeyEvent.VK_D)) {
+			Main.client.getState().getPlayer().move(0.5, 0);
+		}
 	}
 	
 	public void setGUIOpen(boolean b) {

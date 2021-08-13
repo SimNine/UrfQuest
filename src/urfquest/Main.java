@@ -109,6 +109,7 @@ public class Main implements Runnable {
         panel.initOverlays();
         resetFrame(true);
         panel.renderTimer.start();
+        panel.inputScanTimer.start();
 	}
 	
 	public static void resetFrame(boolean fullscreen) {
