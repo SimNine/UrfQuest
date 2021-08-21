@@ -19,13 +19,14 @@ public class Server {
 	
 	private Random random;
 	
-	private int port = 7096;
+	private int port;
 	private ServerSocket serverSocket = null;
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
 
-	public Server(int seed) {
+	public Server(int seed, int port) {
 		this.random = new Random(seed);
+		this.port = port;
 		
 		this.setGame(new State());
         this.getGame().setGameRunning(true);

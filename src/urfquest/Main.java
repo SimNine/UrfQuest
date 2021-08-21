@@ -56,22 +56,28 @@ public class Main implements Runnable {
 		// start either the client, the server, or both
 		if (mode == 0) {
 			// client and server
+			int portMirror = port;
 			new Thread(() -> {
-				startServer(0);
+				startServer(0, portMirror);
 			}).start();
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			startClient(ip, port);
 		} else if (mode == 1) {
 			// client only
 			startClient(ip, port);
 		} else if (mode == 2) {
 			// server only
-			startServer(0);
+			startServer(0, port);
 		}
 	}
 	
-	public static void startServer(int seed) {
+	public static void startServer(int seed, int port) {
 		System.out.println("starting UrfQuest server");
-		Main.server = new Server(seed);
+		Main.server = new Server(seed, port);
 		Main.server.processMessages();
 	}
 	
