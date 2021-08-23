@@ -11,7 +11,7 @@ import urfquest.client.tiles.Tiles;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
-	protected int direction = 0;
+	protected double direction = 0;
 	protected double velocity;
 	protected double defaultVelocity;
 	
@@ -28,7 +28,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract void update();
-	
+
 	public void onDeath() {
 		// do nothing by default
 	}
@@ -92,7 +92,7 @@ public abstract class Mob extends Entity {
 		velocity = s;
 	}
 	
-	public int getDirection() {
+	public double getDirection() {
 		return direction;
 	}
 	

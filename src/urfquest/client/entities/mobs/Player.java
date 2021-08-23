@@ -186,12 +186,40 @@ public class Player extends Mob {
 	}
 	
 	public void move(double x, double y) {
+		if (x == 0) {
+			if (y == 1) {
+				direction = 90;
+			} else if (y == -1) {
+				direction = 270;
+			}
+		} else if (x == 1) {
+			if (y == 1) {
+				direction = 45;
+			} else if (y == -1) {
+				direction = 315;
+			} else if (y == 0) {
+				direction = 0;
+			}
+		} else if (x == -1) {
+			if (y == 1) {
+				direction = 135;
+			} else if (y == -1) {
+				direction = 225;
+			} else if (y == 0) {
+				direction = 180;
+			}
+		}
+		
+		double dirRadians = Math.toRadians(direction);
+		double xComp = velocity*Math.cos(dirRadians);
+		double yComp = velocity*Math.sin(dirRadians);
+		
 		Message m = new Message();
 		m.type = MessageType.PLAYER_MOVE;
-		m.pos = new double[]{x, y};
+		m.pos = new double[]{xComp, yComp};
 		Main.client.send(m);
 		
-		super.move(x, y);
+		super.move(xComp, yComp);
 	}
 	
 	public void setPos(double x, double y) {
@@ -222,7 +250,7 @@ public class Player extends Mob {
 	/*
 	 * per-tick updater
 	 */
-	
+	 
 	public void update() {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
@@ -355,7 +383,7 @@ public class Player extends Mob {
 			animStage = -1;
 		}
 		
-		g.drawImage(img[direction/45][animStage/STEP_SIZE], 
+		g.drawImage(img[(int)direction/45][animStage/STEP_SIZE], 
 					Main.panel.gameToWindowX(bounds.getX()), 
 					Main.panel.gameToWindowY(bounds.getY()), 
 					null);

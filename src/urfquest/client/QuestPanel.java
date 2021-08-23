@@ -206,16 +206,29 @@ public class QuestPanel extends JPanel {
 	}
 	
 	private void scanHeldKeys() {
+		double xDiff = 0;
+		double yDiff = 0;
+		
+		boolean keysHeld = false;
+		
 		if (keys.contains(KeyEvent.VK_W)) {
-			Main.client.getState().getPlayer().move(0, -0.5);
+			yDiff += -1;
+			keysHeld = true;
 		} else if (keys.contains(KeyEvent.VK_S)) {
-			Main.client.getState().getPlayer().move(0, 0.5);
+			yDiff += 1;
+			keysHeld = true;
 		}
 		
 		if (keys.contains(KeyEvent.VK_A)) {
-			Main.client.getState().getPlayer().move(-0.5, 0);
+			xDiff += -1;
+			keysHeld = true;
 		} else if (keys.contains(KeyEvent.VK_D)) {
-			Main.client.getState().getPlayer().move(0.5, 0);
+			xDiff += 1;
+			keysHeld = true;
+		}
+		
+		if (keysHeld) {
+			Main.client.getState().getPlayer().move(xDiff, yDiff);
 		}
 	}
 	

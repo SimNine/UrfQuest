@@ -76,5 +76,4 @@ public class ClientThread implements Runnable {
 	public int getID() {
 		return this.id;
 	}
-	
 }
