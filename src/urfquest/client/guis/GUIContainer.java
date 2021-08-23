@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
+import urfquest.Logger;
 import urfquest.Main;
 
 public class GUIContainer extends GUIObject implements Clickable {
@@ -39,7 +40,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		for (GUIObject o : guiObjects) {
 			o.draw(g);
 		}
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() >= Logger.LOG_DEBUG) {
 			this.drawDebug(g);
 		}
 	}
@@ -50,9 +51,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 			if (o instanceof Clickable && o.isMouseOver()) {
 				((Clickable) o).click();
 				ret = true;
-				if (Main.debug) {
-					System.out.println("GUIObject " + o.getClass().getSimpleName() + " clicked");
-				}
+				Main.logger.debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
 			}
 		}
 		return ret;

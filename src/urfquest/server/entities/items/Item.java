@@ -333,8 +333,8 @@ public class Item extends Entity {
 					
 					//debug
 					if (Main.debug) {
-						System.out.println("soruce: " + coords[0] + ", " + coords[1]);
-						System.out.println("exit: " + xHome + ", " + yHome);
+						Main.logger.debug("soruce: " + coords[0] + ", " + coords[1]);
+						Main.logger.debug("exit: " + xHome + ", " + yHome);
 					}
 				}
 				

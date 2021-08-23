@@ -256,7 +256,7 @@ public class Map {
 		MapChunk[][] newLocalChunks = new MapChunk[localChunks.length][localChunks[0].length];
 		
 		// copy existing chunks over that are within bounds
-		System.out.println("copying existing chunks");
+		Main.logger.debug("Copying existing chunks");
 		for (int x = 0; x < localChunks.length; x++) {
 			for (int y = 0; y < localChunks[0].length; y++) {
 				int xChunkOld = x + xChunkOriginDiff;

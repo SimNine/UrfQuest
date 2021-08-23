@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Mob;
@@ -104,17 +105,17 @@ public class Minimap extends GUIObject implements Clickable {
 		int playerIndY = yRoot + ((int)player.getPos()[1]-yCrop);
 		g.fillRect(playerIndX-2, playerIndY-2, 5, 5);
 		
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			drawDebug(g);
 		}
 	}
 	
 	public boolean click() {
-		if (Main.debug) {
-			int xPos = Main.panel.mousePos[0] - xRoot + xCrop;
-			int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
-			
-			System.out.println(xPos + ", " + yPos);
+		int xPos = Main.panel.mousePos[0] - xRoot + xCrop;
+		int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
+		Main.logger.debug(xPos + ", " + yPos);
+		
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			Main.client.getState().getPlayer().setPos(xPos, yPos);
 		}
 		return true;

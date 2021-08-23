@@ -3,6 +3,7 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Player;
@@ -76,7 +77,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 			}
 		}
 		
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			this.drawDebug(g);
 		}
 	}

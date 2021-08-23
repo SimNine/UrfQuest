@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
@@ -161,10 +162,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void keyReleased(KeyEvent e) {
 				keys.remove(e.getKeyCode());
-				
-				if (Main.debug) {
-					System.out.println("key released: " + e.getKeyChar());
-				}
+				Main.logger.debug("key released: " + e.getKeyChar());
 			}
 			public void keyTyped(KeyEvent e) {}
 		});
@@ -199,9 +197,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void mouseReleased(MouseEvent e) {
 				mouseDown = false;
-				if (Main.debug) {
-					System.out.println(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
-				}
+				Main.logger.debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
 			}
 		});
 	}
@@ -308,7 +304,7 @@ public class QuestPanel extends JPanel {
 			it.next().draw(g);
 		}
 		
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() >= Logger.LOG_DEBUG) {
 			g.setColor(Color.WHITE);
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());

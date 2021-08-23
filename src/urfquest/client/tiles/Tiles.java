@@ -124,7 +124,7 @@ public class Tiles {
 		try {
 			return ImageIO.read(Main.client.getClass().getResourceAsStream(tileRoot + s));
 		} catch (IOException e) {
-			System.out.println("this was unable to be loaded: " + s);
+			Main.logger.error("this was unable to be loaded: " + s);
 			e.printStackTrace();
 		}
 		return null;

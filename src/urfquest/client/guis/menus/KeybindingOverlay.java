@@ -105,20 +105,18 @@ public class KeybindingOverlay extends GUIContainer {
 			}
 		});
 		
-		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER, this) {
-			public boolean click() {
-				Main.debug = !Main.debug;
-				return true;
-			}
-		});
+//		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER, this) {
+//			public boolean click() {
+//				Main.debug = !Main.debug;
+//				return true;
+//			}
+//		});
 		guiObjects.add(new TextButton("Back", 30, -80, 120, GUIObject.CENTER, this) {
 			public boolean click() {
 				if (boxToWaitFor == null) {
 					Main.panel.swap(OverlayInit.newOptionsOverlay());
 				}
-				if (Main.debug) {
-					System.out.println(keybindings);
-				}
+				Main.logger.debug(keybindings.toString());
 				return true;
 			}
 		});
@@ -137,9 +135,7 @@ public class KeybindingOverlay extends GUIContainer {
 					((Clickable) o).click();
 				}
 				ret = true;
-				if (Main.debug) {
-					System.out.println("GUIObject " + o.getClass().getSimpleName() + " clicked");
-				}
+				Main.logger.debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
 			}
 		}
 		return ret;

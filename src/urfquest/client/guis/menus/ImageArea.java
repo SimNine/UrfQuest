@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import urfquest.Main;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -18,7 +19,7 @@ public abstract class ImageArea extends GUIObject {
 			this.image = ImageIO.read(new File(source));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Image could not be read at: " + source);
+			Main.logger.error("Image could not be read at: " + source);
 		}
 		
 		this.setBounds(this.xDisplacement, this.yDisplacement, image.getWidth(), image.getHeight());

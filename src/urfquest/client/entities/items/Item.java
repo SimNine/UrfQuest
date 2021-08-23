@@ -84,7 +84,7 @@ public class Item extends Entity {
 			itemImages[19] = ImageIO.read(c.getResourceAsStream(assetPath + "ironore_scaled_30px.png"));
 			itemImages[20] = ImageIO.read(c.getResourceAsStream(assetPath + "copperore_scaled_30px.png"));
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			Main.logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 	}

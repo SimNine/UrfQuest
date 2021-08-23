@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import urfquest.Main;
 import urfquest.shared.message.Message;
 
 public class ClientThread implements Runnable {
@@ -44,18 +45,18 @@ public class ClientThread implements Runnable {
 				m.clientID = id;
 				this.server.intakeMessage(m);
 			} catch (IOException e) {
-				System.out.println("client " + id + " disconnected");
+				Main.logger.info("Client " + id + " disconnected");
 				stopped = true;
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				System.out.println("Message class not found");
+				Main.logger.warning("Message class not found");
 				e.printStackTrace();
 			}
 		}
 		
 		try {
 			socket.close();
-			System.out.println("connection closed");
+			Main.logger.info("connection closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

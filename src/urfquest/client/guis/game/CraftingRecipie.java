@@ -75,7 +75,7 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public boolean click() {
-		System.out.println("crafting attempted");
+		Main.logger.debug("crafting attempted");
 		Main.client.getState().getPlayer().tryCrafting(input, output);
 		return true;
 	}

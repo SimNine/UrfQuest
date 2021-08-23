@@ -2,6 +2,7 @@ package urfquest.client.guis.menus;
 
 import java.awt.Graphics;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.guis.Clickable;
 import urfquest.client.guis.GUIContainer;
@@ -17,7 +18,7 @@ public class ImageButton extends ImageArea implements Clickable {
 	public void draw(Graphics g) {
 		g.drawImage(this.image, bounds.x, bounds.y, null);
 		
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			drawDebug(g);
 		}
 	}

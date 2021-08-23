@@ -17,6 +17,9 @@ import urfquest.server.Server;
 
 public class Main implements Runnable {
 	
+	// logger
+	public static Logger logger;
+	
 	// game state container
 	public static Server server;
 	
@@ -29,14 +32,14 @@ public class Main implements Runnable {
     
     // for client-server communication
     public static Client client;
-    
-    // debugging toggle
-    public static boolean debug;
 	
 	// frame properties
 	public static boolean isFullscreen;
 	
 	public static void main(String[] args) {
+		logger = new Logger(Logger.LOG_DEBUG);
+		
+		// parse arguments
 		String ip = "localhost";
 		int port = 7096;
 		int mode = 0;
@@ -49,9 +52,6 @@ public class Main implements Runnable {
 		if (args.length > 2) {
 			mode = Integer.parseInt(args[2]);
 		}
-		
-		// set debug variable
-		Main.debug = true;
 		
 		// start either the client, the server, or both
 		if (mode == 0) {
@@ -76,13 +76,13 @@ public class Main implements Runnable {
 	}
 	
 	public static void startServer(int seed, int port) {
-		System.out.println("starting UrfQuest server");
+		logger.all("Starting UrfQuest server");
 		Main.server = new Server(seed, port);
 		Main.server.processMessages();
 	}
 	
 	public static void startClient(String ip, int port) {
-		System.out.println("starting UrfQuest client");
+		logger.all("Starting UrfQuest client");
 		root = new Main();
 		
 		// initialize the game client
@@ -96,9 +96,6 @@ public class Main implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        // set default debug variable
-        Main.debug = true;
         
         // initialize the networking engine
         client = new Client(socket);

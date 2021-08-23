@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import urfquest.Main;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
 import urfquest.shared.message.Message;
@@ -51,14 +52,15 @@ public class Server {
 		while (true) {
 			if (incomingMessages.size() > 0) {
 				Message m = incomingMessages.remove(0);
-				System.out.println(m.clientID + " - " + m.toString());
 				
 				switch (m.type) {
 				case PLAYER_MOVE:
+					Main.logger.verbose(m.clientID + " - " + m.toString());
 					// TODO: this handling is temporary. process before reflecting back to the client
 					game.getPlayer(m.clientID).move(m.pos[0], m.pos[1]);
 					break;
 				case CHUNK_LOAD:
+					Main.logger.debug(m.clientID + " - " + m.toString());
 					MapChunk c = game.getPlayer(m.clientID).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 					if (c == null) {
 						c = game.getPlayer(m.clientID).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -68,6 +70,7 @@ public class Server {
 					this.sendMessageToSingleClient(m, m.clientID);
 					break;
 				default:
+					Main.logger.debug(m.clientID + " - " + m.toString());
 					break;
 				}
 			}
@@ -126,13 +129,13 @@ public class Server {
 		@Override
 		public void run() {
 			// while the game is running, continue listening on the given socket
-			System.out.println("server listening on port: " + serverSocket.getLocalPort());
+			Main.logger.info("server listening on port: " + serverSocket.getLocalPort());
 			while (true) {
 				Socket socket = null;
 			    try {
 					socket = serverSocket.accept();
 					int clientID = random.nextInt();
-					System.out.println("new client has connected with id " + clientID);
+					Main.logger.info("new client has connected with id " + clientID);
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);
 					game.createPlayer(clientID);

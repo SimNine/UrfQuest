@@ -50,7 +50,7 @@ public class Cyclops extends Mob {
 			pic = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
+			Main.logger.error("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
 		}
 	}
 

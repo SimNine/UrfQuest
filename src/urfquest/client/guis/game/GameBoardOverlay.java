@@ -3,6 +3,7 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
@@ -35,7 +36,7 @@ public class GameBoardOverlay extends GUIContainer {
 	public void draw(Graphics g) {
 		drawBoard(g);
 		drawEntities(g);
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			drawDebugText(g);
 			drawCrosshair(g);
 		}
@@ -143,7 +144,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// when debugging, draw the grid itself
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			g.setColor(Color.BLACK);
 			for (int x = 0; x < dispTileWidth + 2; x++) {
 				g.drawLine(-rootX + x*TILE_WIDTH, 0, -rootX + x*TILE_WIDTH, Main.panel.getHeight());

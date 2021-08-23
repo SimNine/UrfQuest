@@ -3,6 +3,7 @@ package urfquest.client.guis.menus;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.guis.Clickable;
 import urfquest.client.guis.GUIContainer;
@@ -39,7 +40,7 @@ public class Slider extends GUIObject implements Clickable {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(bounds.x + sliderPos - sliderWidth/2, bounds.y, sliderWidth, bounds.height + 1);
 		
-		if (Main.debug) {
+		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
 			drawDebug(g);
 		};
 	}

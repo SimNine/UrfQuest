@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import urfquest.Main;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
 import urfquest.shared.message.Message;
@@ -26,7 +27,7 @@ public class Client implements Runnable {
 	        out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 			
-			System.out.println("initialized streams");
+			Main.logger.debug("Client: initialized streams");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -51,11 +52,12 @@ public class Client implements Runnable {
 	}
 	
 	private void processMessage(Message m) {
-		System.out.println(m);
 		switch (m.type) {
 		case PING:
+			Main.logger.verbose(m.toString());
 			break;
 		case CHUNK_LOAD:
+			Main.logger.debug(m.toString());
 			MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 			if (c == null) {
 				c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -64,9 +66,11 @@ public class Client implements Runnable {
 			c.setAllTileSubtypes((int[][])m.payload2);
 			break;
 		case PLAYER_SET_POS:
+			Main.logger.verbose(m.toString());
 			state.getPlayer().setPos(m.pos[0], m.pos[1]);
 			break;
 		default:
+			Main.logger.debug(m.toString());
 			break;
 		}
 	}
