@@ -26,7 +26,7 @@ public class Player extends Mob {
 	// img[0] is east, img[1] is SE, img[2] is S, etc
 	private static BufferedImage[][] img = new BufferedImage[8][8];
 	
-	public void initPlayer() {
+	public static void initGraphics() {
 		// Load E-W
 		try {
 			img[0][0] = img[0][4] = img[4][0] = img[4][4] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E1.png"));

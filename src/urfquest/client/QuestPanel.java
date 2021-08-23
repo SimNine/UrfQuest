@@ -17,6 +17,7 @@ import java.util.Set;
 
 import urfquest.Main;
 import urfquest.client.entities.Entity;
+import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.OverlayInit;
 import urfquest.client.guis.game.CraftingOverlay;
@@ -80,7 +81,7 @@ public class QuestPanel extends JPanel {
 		requestFocusInWindow();
 		setSize(initwidth, initheight);
 		
-		Tiles.initGraphics();
+		initAssets();
 		
 		addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -368,4 +369,9 @@ public class QuestPanel extends JPanel {
 //	public Entity getCamera() {
 //		return camera;
 //	}
+	
+	private void initAssets() {
+		Player.initGraphics();
+		Tiles.initGraphics();
+	}
 }

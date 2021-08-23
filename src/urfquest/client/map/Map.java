@@ -29,18 +29,9 @@ public class Map {
 	private ArrayList<Mob> mobs = new ArrayList<Mob>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
-
-	private ArrayList<Player> addPlayers = new ArrayList<Player>();
-	private ArrayList<Mob> addMobs = new ArrayList<Mob>();
-	private ArrayList<Item> addItems = new ArrayList<Item>();
-	private ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
 	private ArrayList<Particle> addParticles = new ArrayList<Particle>();
-
-	private ArrayList<Player> removePlayers = new ArrayList<Player>();
-	private ArrayList<Item> removeItems = new ArrayList<Item>();
-	private ArrayList<Mob> removeMobs = new ArrayList<Mob>();
-	private ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
 	private ArrayList<Particle> removeParticles = new ArrayList<Particle>();
 	
 	public Map(int loadedChunkSize) {
@@ -363,76 +354,86 @@ public class Map {
 	 */
 	
 	public void addItem(Item i) {
-		addItems.add(i);
-	}
-	
-	public void addMob(Mob m) {
-		addMobs.add(m);
-	}
-	
-	public void addProjectile(Projectile p) {
-		addProjectiles.add(p);
-	}
-	
-	public void addPlayer(Player p) {
-		addPlayers.add(p);
+		items.add(i);
 	}
 	
 	public void removeItem(Item i) {
-		removeItems.add(i);
-	}
-	
-	public void removeMob(Mob m) {
-		removeMobs.add(m);
-	}
-	
-	public void removeProjectile(Projectile p) {
-		removeProjectiles.add(p);
-	}
-	
-	public void removePlayer(Player p) {
-		removePlayers.add(p);
+		items.add(i);
 	}
 	
 	public ArrayList<Item> getItems() {
 		return items;
 	}
 	
-	public ArrayList<Mob> getMobs() {
-		return mobs;
-	}
-	
-	public ArrayList<Projectile> getProjectiles() {
-		return projectiles;
-	}
-	
-	public ArrayList<Player> getPlayers() {
-		return players;
-	}
-	
-	public ArrayList<Particle> getParticles() {
-		return particles;
-	}
-	
 	public int getNumItems() {
 		return items.size();
+	}
+	
+	
+	
+	public void addMob(Mob m) {
+		mobs.add(m);
+	}
+	
+	public void removeMob(Mob m) {
+		mobs.add(m);
+	}
+	
+	public ArrayList<Mob> getMobs() {
+		return mobs;
 	}
 	
 	public int getNumMobs() {
 		return mobs.size();
 	}
 	
+	
+	
+	public void addProjectile(Projectile p) {
+		projectiles.add(p);
+	}
+	
+	public void removeProjectile(Projectile p) {
+		projectiles.add(p);
+	}
+	
+	public ArrayList<Projectile> getProjectiles() {
+		return projectiles;
+	}
+	
 	public int getNumProjectiles() {
 		return projectiles.size();
+	}
+	
+	
+	
+	public void addPlayer(Player p) {
+		players.add(p);
+	}
+	
+	public void removePlayer(Player p) {
+		players.add(p);
+	}
+	
+	public ArrayList<Player> getPlayers() {
+		return players;
 	}
 	
 	public int getNumPlayers() {
 		return players.size();
 	}
 	
+	
+	
+	public ArrayList<Particle> getParticles() {
+		return particles;
+	}
+	
 	public int getNumParticles() {
 		return particles.size();
 	}
+	
+	
 	
 	/*
 	 * Special entity methods
