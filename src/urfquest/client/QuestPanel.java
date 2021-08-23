@@ -89,13 +89,6 @@ public class QuestPanel extends JPanel {
 				if (overlays.peek() instanceof KeybindingOverlay) {
 					keybindingView.keypress(e.getKeyCode());
 				}
-			}
-			public void keyReleased(KeyEvent e) {
-				keys.remove(e.getKeyCode());
-				
-				if (Main.debug) {
-					System.out.println("key released: " + e.getKeyChar());
-				}
 				
 				if (!(overlays.peek() instanceof KeybindingOverlay) && e.getKeyCode() == keybindings.FULLSCREEN) {
 					Main.resetFrame(!Main.isFullscreen);
@@ -163,6 +156,13 @@ public class QuestPanel extends JPanel {
 							unpause();
 						}
 					}
+				}
+			}
+			public void keyReleased(KeyEvent e) {
+				keys.remove(e.getKeyCode());
+				
+				if (Main.debug) {
+					System.out.println("key released: " + e.getKeyChar());
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
