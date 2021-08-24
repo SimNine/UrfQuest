@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Random;
 
 import urfquest.Main;
+import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
 import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
 
 public class Server {
     
@@ -77,27 +79,6 @@ public class Server {
 		}
 	}
 	
-//	private void initializeClient(ClientThread c) {
-//		// create a player for this client
-//		game.createPlayer(c.getID());
-//		
-//		// send initial chunks of map
-//		Map surfaceMap = game.getSurfaceMap();
-//		for (int x = -1; x < 1; x++) {
-//			for (int y = -1; y < 1; y++) {
-//				Message m = new Message();
-//				m.type = MessageType.CHUNK_LOAD;
-//				
-//				MapChunk chunk = surfaceMap.getChunk(x, y);
-//				m.payload = chunk.getAllTileTypes();
-//				m.payload2 = chunk.getAllTileSubtypes();
-//				m.xyChunk[0] = x;
-//				m.xyChunk[1] = y;
-//				c.send(m);
-//			}
-//		}
-//	}
-	
 	public void sendMessageToSingleClient(Message m, int id) {
 		ClientThread c = clients.get(id);
 		c.send(m);
@@ -139,7 +120,22 @@ public class Server {
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);
 					game.createPlayer(clientID);
-					// initializeClient(t);
+					
+					// send initial chunks of map
+					Map surfaceMap = game.getSurfaceMap();
+					for (int x = -1; x < 1; x++) {
+						for (int y = -1; y < 1; y++) {
+							Message m = new Message();
+							m.type = MessageType.CHUNK_LOAD;
+							
+							MapChunk chunk = surfaceMap.getChunk(x, y);
+							m.payload = chunk.getAllTileTypes();
+							m.payload2 = chunk.getAllTileSubtypes();
+							m.xyChunk[0] = x;
+							m.xyChunk[1] = y;
+							t.send(m);
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					System.exit(2);

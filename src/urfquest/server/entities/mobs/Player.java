@@ -24,7 +24,7 @@ public class Player extends Mob {
 	public Player(double x, double y, Map currMap, String name, int id) {
 		super(x, y, currMap);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = 0.05;
+		velocity = 0.15;
 		
 		health = 100.0;
 		maxHealth = 100.0;

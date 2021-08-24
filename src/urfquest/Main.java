@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import urfquest.client.Client;
@@ -16,6 +17,10 @@ import urfquest.client.QuestPanel;
 import urfquest.server.Server;
 
 public class Main implements Runnable {
+	
+	private static final int MODE_FULL = 0;
+	private static final int MODE_CLIENT = 1;
+	private static final int MODE_SERVER = 2;
 	
 	// logger
 	public static Logger logger;
@@ -42,7 +47,16 @@ public class Main implements Runnable {
 		// parse arguments
 		String ip = "localhost";
 		int port = 7096;
-		int mode = 0;
+		int mode = MODE_FULL;
+		if (args.length == 0) {
+			mode = Integer.parseInt(JOptionPane.showInputDialog("Server/Client mode:"));
+			if (mode == MODE_CLIENT) {
+				ip = JOptionPane.showInputDialog("Server IP:");
+				port = Integer.parseInt(JOptionPane.showInputDialog("Server port:"));
+			} else if (mode == MODE_SERVER) {
+				port = Integer.parseInt(JOptionPane.showInputDialog("Server port:"));
+			}
+		}
 		if (args.length > 0) {
 			ip = args[0];
 		}
@@ -54,7 +68,7 @@ public class Main implements Runnable {
 		}
 		
 		// start either the client, the server, or both
-		if (mode == 0) {
+		if (mode == MODE_FULL) {
 			// client and server
 			int portMirror = port;
 			new Thread(() -> {
@@ -66,23 +80,23 @@ public class Main implements Runnable {
 				e.printStackTrace();
 			}
 			startClient(ip, port);
-		} else if (mode == 1) {
+		} else if (mode == MODE_CLIENT) {
 			// client only
 			startClient(ip, port);
-		} else if (mode == 2) {
+		} else if (mode == MODE_SERVER) {
 			// server only
 			startServer(0, port);
 		}
 	}
 	
 	public static void startServer(int seed, int port) {
-		logger.all("Starting UrfQuest server");
+		logger.all("Starting UrfQuest server on port " + port);
 		Main.server = new Server(seed, port);
 		Main.server.processMessages();
 	}
 	
 	public static void startClient(String ip, int port) {
-		logger.all("Starting UrfQuest client");
+		logger.all("Starting UrfQuest client, connecting to " + ip + ":" + port);
 		root = new Main();
 		
 		// initialize the game client

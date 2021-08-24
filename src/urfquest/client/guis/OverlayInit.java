@@ -99,12 +99,12 @@ public class OverlayInit {
 				return true;
 			}
 		});
-		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 0, GUIObject.CENTER, optionsScreen) {
-			public boolean click() {
-				Main.debug = !Main.debug;
-				return true;
-			}
-		});
+//		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 0, GUIObject.CENTER, optionsScreen) {
+//			public boolean click() {
+//				Main.debug = !Main.debug;
+//				return true;
+//			}
+//		});
 		optionsObjects.add(new TextButton("Select Keybindings", 30, -80, 30, GUIObject.CENTER, optionsScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.keybindingView);
