@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Random;
 
 import urfquest.Main;
+import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
+import urfquest.shared.message.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -119,14 +121,15 @@ public class Server {
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);
 					
-					// create a player for this ID
-					game.createPlayer(clientID);
+					// create and send this client's player
+					Player p = game.createPlayer(clientID);
+					Message m = new Message();
 					
 					// send initial chunks of map
 					Map surfaceMap = game.getSurfaceMap();
-					for (int x = -1; x < 1; x++) {
-						for (int y = -1; y < 1; y++) {
-							Message m = new Message();
+					for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
+						for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
+							m = new Message();
 							m.type = MessageType.CHUNK_LOAD;
 							
 							MapChunk chunk = surfaceMap.getChunk(x, y);

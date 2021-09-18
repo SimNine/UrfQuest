@@ -124,7 +124,7 @@ public class Main implements Runnable {
 	public void run() {
         Main.panel = new QuestPanel();
         panel.initOverlays();
-        resetFrame(true);
+        resetFrame(false);
         panel.renderTimer.start();
         panel.inputScanTimer.start();
 	}
@@ -147,7 +147,7 @@ public class Main implements Runnable {
     		frame.setUndecorated(false);
     		isFullscreen = false;
         }
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setBackground(Color.BLACK);

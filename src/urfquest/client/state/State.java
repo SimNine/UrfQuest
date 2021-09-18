@@ -2,6 +2,7 @@ package urfquest.client.state;
 
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.Map;
+import urfquest.shared.message.Constants;
 
 public class State {
 	
@@ -17,7 +18,7 @@ public class State {
 		
 		// TODO: send request to create a player to the server, and only create it when a response is recieved
 		player = new Player(0, 0, currentMap, "Chris");
-		currentMap = new Map(10);
+		currentMap = new Map(Constants.localMapRadius);
 		
 		player.setMap(currentMap);
 		currentMap.addPlayer(player);

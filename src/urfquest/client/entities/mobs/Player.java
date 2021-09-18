@@ -16,6 +16,7 @@ import urfquest.client.entities.items.Item;
 import urfquest.client.map.Map;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.Inventory;
+import urfquest.shared.message.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -168,7 +169,7 @@ public class Player extends Mob {
 	public Player(double x, double y, Map currMap, String name) {
 		super(x, y, currMap);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = 0.15;
+		velocity = Constants.playerVelocity;
 		
 		health = 100.0;
 		maxHealth = 100.0;

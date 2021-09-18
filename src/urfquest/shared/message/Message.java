@@ -19,6 +19,12 @@ public class Message implements Serializable {
 	
 	public int clientID = 0;
 	
+	public int entityID = 0;
+	
+	public String entityName;
+	
+	public EntityType entityType;
+	
 	public String toString() {
 		String ret = type.name() + " - ";
 		
