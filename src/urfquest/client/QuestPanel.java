@@ -92,8 +92,17 @@ public class QuestPanel extends JPanel {
 					keybindingView.keypress(e.getKeyCode());
 				}
 				
-				if (!(overlays.peek() instanceof KeybindingOverlay) && e.getKeyCode() == keybindings.FULLSCREEN) {
-					Main.resetFrame(!Main.isFullscreen);
+				if (!(overlays.peek() instanceof KeybindingOverlay)) {
+					if (e.getKeyCode() == keybindings.FULLSCREEN) {
+						Main.resetFrame(!Main.isFullscreen);
+					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
+						// TODO: incorporate a method to cycle through all modes
+						if (Main.logger.getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
+							Main.logger.setLogLevel(Logger.LogLevel.LOG_WARNING);
+						} else {
+							Main.logger.setLogLevel(Logger.LogLevel.LOG_DEBUG);
+						}
+					}
 				}
 				
 				if (isUserIngame) {
@@ -116,7 +125,7 @@ public class QuestPanel extends JPanel {
 						if (e.getKeyCode() == keybindings.CONSOLE) {
 							//String command = JOptionPane.showInputDialog(UrfQuest.panel, "Command Prompt", null);
 							//CommandProcessor.process(command);
-						} else if (e.getKeyCode() == keybindings.CYCLEMINIMAP) {
+						} else if (e.getKeyCode() == keybindings.CYCLE_MINIMAP) {
 							gameStatus.cycleMinimapSize();
 						} else if (e.getKeyCode() == keybindings.DROPITEM) {
 							Main.client.getState().getPlayer().dropOneOfSelectedItem();
@@ -225,6 +234,7 @@ public class QuestPanel extends JPanel {
 		}
 		
 		if (keysHeld) {
+			// TODO: *attempt* to move before actually moving
 			Main.client.getState().getPlayer().move(xDiff, yDiff);
 		}
 	}
@@ -304,7 +314,7 @@ public class QuestPanel extends JPanel {
 			it.next().draw(g);
 		}
 		
-		if (Main.logger.getLogLevel() >= Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());

@@ -48,7 +48,7 @@ public abstract class StatusBar extends GUIObject {
 		int pixelLength = (int)((bounds.width - borderPlusGap*2)*getPercentage());
 		g.fillRect(bounds.x + borderPlusGap, bounds.y + borderPlusGap, pixelLength, bounds.height - borderPlusGap*2);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

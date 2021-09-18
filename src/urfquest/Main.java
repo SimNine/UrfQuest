@@ -42,7 +42,7 @@ public class Main implements Runnable {
 	public static boolean isFullscreen;
 	
 	public static void main(String[] args) {
-		logger = new Logger(Logger.LOG_DEBUG);
+		logger = new Logger(Logger.LogLevel.LOG_DEBUG);
 		
 		// parse arguments
 		String ip = "localhost";

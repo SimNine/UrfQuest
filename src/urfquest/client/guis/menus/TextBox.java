@@ -27,7 +27,7 @@ public class TextBox extends TextArea {
 		
 		g.drawString(this.text, bounds.x, bounds.y + bounds.height);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

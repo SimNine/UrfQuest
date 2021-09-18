@@ -6,19 +6,21 @@ import java.io.PrintWriter;
 
 public class Logger {
 	
-	public static int LOG_ALL = -1;
-	public static int LOG_NONE = 0;
-	public static int LOG_ERROR = 1;
-	public static int LOG_WARNING = 2;
-	public static int LOG_INFO = 3;
-	public static int LOG_DEBUG = 4;
-	public static int LOG_VERBOSE = 5;
+	public enum LogLevel {
+		LOG_ALL,
+		LOG_NONE,
+		LOG_ERROR,
+		LOG_WARNING,
+		LOG_INFO,
+		LOG_DEBUG,
+		LOG_VERBOSE
+	}
 	
-	private int logLevel = LOG_NONE;
+	private LogLevel logLevel = LogLevel.LOG_NONE;
 	
 	private PrintWriter writer;
 	
-	public Logger(int logLevel) {
+	public Logger(LogLevel logLevel) {
 		this.logLevel = logLevel;
 		
 		File logDir = new File("logs");
@@ -34,43 +36,47 @@ public class Logger {
 			System.exit(1);
 		}
         
-        this.all("Logger initialized");
+        this.all("Logger initialized with level: " + this.logLevel.name());
 	}
 	
-	public int getLogLevel() {
+	public LogLevel getLogLevel() {
 		return logLevel;
+	}
+	
+	public void setLogLevel(LogLevel level) {
+		this.logLevel = level;
 	}
 	
 	
 	
 	public void all(String s) {
-		log("ALL: " + s, LOG_ALL);
+		log("ALL: " + s, LogLevel.LOG_ALL);
 	}
 	
 	public void error(String s) {
-		log("ERROR: " + s, LOG_ERROR);
+		log("ERROR: " + s, LogLevel.LOG_ERROR);
 	}
 	
 	public void warning(String s) {
-		log("WARNING: " + s, LOG_WARNING);
+		log("WARNING: " + s, LogLevel.LOG_WARNING);
 	}
 	
 	public void info(String s) {
-		log("INFO: " + s, LOG_INFO);
+		log("INFO: " + s, LogLevel.LOG_INFO);
 	}
 	
 	public void debug(String s) {
-		log("DEBUG: " + s, LOG_DEBUG);
+		log("DEBUG: " + s, LogLevel.LOG_DEBUG);
 	}
 	
 	public void verbose(String s) {
-		log("VERBOSE: " + s, LOG_VERBOSE);
+		log("VERBOSE: " + s, LogLevel.LOG_VERBOSE);
 	}
 	
 	
 	
-	private void log(String s, int logLevel) {
-		if (logLevel <= this.logLevel) {
+	private void log(String s, LogLevel logLevel) {
+		if (logLevel.compareTo(this.logLevel) <= 0) {
 			s = System.currentTimeMillis() + ": " + s;
 			
 			System.out.println(s);

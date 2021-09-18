@@ -15,7 +15,7 @@ public class ImageBox extends ImageArea {
 	public void draw(Graphics g) {
 		g.drawImage(this.image,	bounds.x, bounds.y,	null);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

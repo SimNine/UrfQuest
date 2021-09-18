@@ -40,7 +40,7 @@ public class Slider extends GUIObject implements Clickable {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(bounds.x + sliderPos - sliderWidth/2, bounds.y, sliderWidth, bounds.height + 1);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		};
 	}

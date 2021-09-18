@@ -77,7 +77,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 			}
 		}
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}

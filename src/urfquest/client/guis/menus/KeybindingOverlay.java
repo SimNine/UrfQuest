@@ -46,10 +46,10 @@ public class KeybindingOverlay extends GUIContainer {
 		});
 		
 		guiObjects.add(new TextBox("Cycle minimap: ", 30, -160, -90, GUIObject.CENTER, this));
-		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CYCLEMINIMAP), 30, 120, -90, GUIObject.CENTER, this) {
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CYCLE_MINIMAP), 30, 120, -90, GUIObject.CENTER, this) {
 			public void setKey(int k) {
 				text = KeyEvent.getKeyText(k);
-				keybindings.CYCLEMINIMAP = k;
+				keybindings.CYCLE_MINIMAP = k;
 				boxToWaitFor = null;
 				setWaiting(false);
 			}

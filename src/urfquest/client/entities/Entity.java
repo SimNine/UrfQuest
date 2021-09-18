@@ -90,7 +90,7 @@ public abstract class Entity {
 	 */
 	public void draw(Graphics g) {
 		drawEntity(g);
-		if (Main.logger.getLogLevel() >= Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 			drawBounds(g);
 		}

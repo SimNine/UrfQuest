@@ -58,8 +58,7 @@ public class Server {
 				switch (m.type) {
 				case PLAYER_MOVE:
 					Main.logger.verbose(m.clientID + " - " + m.toString());
-					// TODO: this handling is temporary. process before reflecting back to the client
-					game.getPlayer(m.clientID).move(m.pos[0], m.pos[1]);
+					game.getPlayer(m.clientID).attemptMove(m.pos[0], m.pos[1]);
 					break;
 				case CHUNK_LOAD:
 					Main.logger.debug(m.clientID + " - " + m.toString());
@@ -119,6 +118,8 @@ public class Server {
 					Main.logger.info("new client has connected with id " + clientID);
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);
+					
+					// create a player for this ID
 					game.createPlayer(clientID);
 					
 					// send initial chunks of map

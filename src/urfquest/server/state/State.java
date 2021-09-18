@@ -55,8 +55,10 @@ public class State {
 	 * Player management
 	 */
 	public Player createPlayer(int id) {
-		Player newPlayer = new Player(0, 0, surfaceMap, "rando", id);
+		Player newPlayer = new Player(surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1], 
+									  surfaceMap, "rando", id);
 		players.put(id, newPlayer);
+		surfaceMap.addPlayer(newPlayer);
 		
 		return newPlayer;
 	}

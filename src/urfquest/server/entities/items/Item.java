@@ -2,6 +2,7 @@ package urfquest.server.entities.items;
 
 import java.awt.geom.Rectangle2D;
 
+import urfquest.Logger;
 import urfquest.Main;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Chicken;
@@ -332,7 +333,7 @@ public class Item extends Entity {
 					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
-					if (Main.debug) {
+					if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 						Main.logger.debug("soruce: " + coords[0] + ", " + coords[1]);
 						Main.logger.debug("exit: " + xHome + ", " + yHome);
 					}

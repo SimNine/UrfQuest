@@ -15,7 +15,7 @@ public class State {
 	public State() {
 		isGameRunning = false;
 		
-		// TODO: remove, this is a placeholder
+		// TODO: send request to create a player to the server, and only create it when a response is recieved
 		player = new Player(0, 0, currentMap, "Chris");
 		currentMap = new Map(10);
 		

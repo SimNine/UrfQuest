@@ -40,7 +40,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		for (GUIObject o : guiObjects) {
 			o.draw(g);
 		}
-		if (Main.logger.getLogLevel() >= Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}

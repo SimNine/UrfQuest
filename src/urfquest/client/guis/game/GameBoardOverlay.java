@@ -36,7 +36,7 @@ public class GameBoardOverlay extends GUIContainer {
 	public void draw(Graphics g) {
 		drawBoard(g);
 		drawEntities(g);
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebugText(g);
 			drawCrosshair(g);
 		}
@@ -144,7 +144,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// when debugging, draw the grid itself
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			g.setColor(Color.BLACK);
 			for (int x = 0; x < dispTileWidth + 2; x++) {
 				g.drawLine(-rootX + x*TILE_WIDTH, 0, -rootX + x*TILE_WIDTH, Main.panel.getHeight());

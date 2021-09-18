@@ -2,7 +2,6 @@ package urfquest.client.guis.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 import urfquest.Logger;
 import urfquest.Main;
@@ -105,7 +104,7 @@ public class Minimap extends GUIObject implements Clickable {
 		int playerIndY = yRoot + ((int)player.getPos()[1]-yCrop);
 		g.fillRect(playerIndX-2, playerIndY-2, 5, 5);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}
@@ -115,7 +114,7 @@ public class Minimap extends GUIObject implements Clickable {
 		int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
 		Main.logger.debug(xPos + ", " + yPos);
 		
-		if (Main.logger.getLogLevel() > Logger.LOG_DEBUG) {
+		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			Main.client.getState().getPlayer().setPos(xPos, yPos);
 		}
 		return true;

@@ -8,6 +8,7 @@ import urfquest.Main;
 import urfquest.server.entities.items.Item;
 import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
+import urfquest.server.tiles.Tiles;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -40,6 +41,33 @@ public class Player extends Mob {
 		
 		this.name = name;
 		this.id = id;
+	}
+	
+	public void attemptMove(double x, double y) {
+		double newX = bounds.getCenterX() + x;
+		double newY = bounds.getCenterY() + y;
+		
+		boolean canMove = true;
+		
+		// check if this move is valid on the x-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
+			canMove = false;
+		}
+		
+		// check if this move is valid on the y-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
+			canMove = false;
+		}
+				
+		if (canMove) {
+			this.move(x, y);
+		} else {
+			Message m = new Message();
+			m.type = MessageType.PLAYER_SET_POS;
+			m.pos[0] = bounds.getX();
+			m.pos[1] = bounds.getY();
+			Main.server.sendMessageToSingleClient(m, id);
+		}
 	}
 	
 	public void move(double x, double y) {

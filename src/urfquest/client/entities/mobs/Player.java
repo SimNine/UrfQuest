@@ -224,7 +224,7 @@ public class Player extends Mob {
 	
 	public void setPos(double x, double y) {
 		super.setPos(x, y);
-		
+
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
 		int[] localChunkOrigin = map.getLocalChunkOrigin();
