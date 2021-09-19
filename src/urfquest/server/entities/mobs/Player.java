@@ -64,7 +64,7 @@ public class Player extends Mob {
 			this.move(x, y);
 		} else {
 			Message m = new Message();
-			m.type = MessageType.PLAYER_SET_POS;
+			m.type = MessageType.ENTITY_SET_POS;
 			m.pos[0] = bounds.getX();
 			m.pos[1] = bounds.getY();
 			Main.server.sendMessageToSingleClient(m, id);
@@ -75,7 +75,7 @@ public class Player extends Mob {
 		super.move(x, y);
 		
 		Message m = new Message();
-		m.type = MessageType.PLAYER_SET_POS;
+		m.type = MessageType.ENTITY_SET_POS;
 		m.pos[0] = bounds.getX();
 		m.pos[1] = bounds.getY();
 		Main.server.sendMessageToSingleClient(m, id);

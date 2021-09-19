@@ -75,7 +75,7 @@ public class Main implements Runnable {
 				startServer(0, portMirror);
 			}).start();
 			try {
-				Thread.sleep(200);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -90,13 +90,13 @@ public class Main implements Runnable {
 	}
 	
 	public static void startServer(int seed, int port) {
-		logger.all("Starting UrfQuest server on port " + port);
+		logger.all("Starting server on port " + port);
 		Main.server = new Server(seed, port);
 		Main.server.processMessages();
 	}
 	
 	public static void startClient(String ip, int port) {
-		logger.all("Starting UrfQuest client, connecting to " + ip + ":" + port);
+		logger.all("Starting client, connecting to " + ip + ":" + port);
 		root = new Main();
 		
 		// initialize the game client
@@ -115,7 +115,9 @@ public class Main implements Runnable {
         client = new Client(socket);
         Thread clientThread = new Thread(client);
         clientThread.start();
-
+	}
+	
+	public static void initClientFrontend() {
         // initialize the display and java swing framework
 		SwingUtilities.invokeLater(root);
 	}

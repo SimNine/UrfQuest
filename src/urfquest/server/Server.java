@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import urfquest.Main;
@@ -15,6 +16,7 @@ import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
 import urfquest.shared.message.Constants;
+import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -58,6 +60,22 @@ public class Server {
 				Message m = incomingMessages.remove(0);
 				
 				switch (m.type) {
+				case PLAYER_REQUEST:
+					// - Creates a player with the requested name
+					// - Sends the newly created player to all clients
+					// TODO: check if the requesting client already has an assigned player
+					String playerName = m.entityName;
+					int clientID = m.clientID;
+					Player p = game.createPlayer(m.clientID, playerName);
+					m = new Message();
+					m.type = MessageType.ENTITY_INIT;
+					m.entityName = playerName;
+					m.entityType = EntityType.PLAYER;
+					m.pos = p.getPos();
+					m.clientID = clientID;
+					m.entityID = clientID;
+					this.sendMessageToAllClients(m);
+					break;
 				case PLAYER_MOVE:
 					Main.logger.verbose(m.clientID + " - " + m.toString());
 					game.getPlayer(m.clientID).attemptMove(m.pos[0], m.pos[1]);
@@ -86,7 +104,9 @@ public class Server {
 	}
 	
 	public void sendMessageToAllClients(Message m) {
-		
+		for (Entry<?, ClientThread> e : clients.entrySet()) {
+			e.getValue().send(m);
+		}
 	}
 	
 	public State getGame() {
@@ -121,9 +141,11 @@ public class Server {
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);
 					
-					// create and send this client's player
-					Player p = game.createPlayer(clientID);
+					// send a connection confirmation message
 					Message m = new Message();
+					m.type = MessageType.CONNECTION_CONFIRMED;
+					m.clientID = t.getID();
+					t.send(m);
 					
 					// send initial chunks of map
 					Map surfaceMap = game.getSurfaceMap();
