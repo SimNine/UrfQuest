@@ -13,7 +13,10 @@ public abstract class Entity {
 	protected Rectangle2D.Double bounds;
 	protected Map map;
 	
-	protected Entity(double x, double y, Map m) {
+	public int id;
+	
+	protected Entity(int id, Map m, double x, double y) {
+		this.id = id;
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		map = m;
 	}

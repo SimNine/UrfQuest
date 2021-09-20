@@ -3,11 +3,12 @@ package urfquest.server.entities.projectiles;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 
 public class GrenadeProjectile extends Projectile {
 
-	public GrenadeProjectile(double x, double y, Entity source, Map m) {
-		super(x, y, source, m);
+	public GrenadeProjectile(State s, Map m, double x, double y, Entity source) {
+		super(s, m, x, y, source);
 		
 		bounds.setFrame(bounds.x, bounds.y, 1, 1);
 	}

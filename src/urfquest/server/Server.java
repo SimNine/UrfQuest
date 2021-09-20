@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import urfquest.IDGenerator;
 import urfquest.Main;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -24,14 +23,13 @@ public class Server {
     
 	private State game;
 	
-	private int port;
 	private ServerSocket serverSocket = null;
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
+	
+	private HashMap<Integer, Integer> clientPlayers = new HashMap<>(); // clientID to playerID
 
 	public Server(int seed, int port) {
-		this.port = port;
-		
 		this.setGame(new State());
         this.getGame().setGameRunning(true);
 		
@@ -64,29 +62,31 @@ public class Server {
 					// TODO: check if the requesting client already has an assigned player
 					String playerName = m.entityName;
 					int clientID = m.clientID;
-					Player p = game.createPlayer(m.clientID, playerName);
+					Player p = game.createPlayer(playerName, clients.get(clientID));
+					clientPlayers.put(clientID, p.id);
+					
 					m = new Message();
 					m.type = MessageType.ENTITY_INIT;
 					m.entityName = playerName;
 					m.entityType = EntityType.PLAYER;
 					m.pos = p.getPos();
 					m.clientID = clientID;
-					m.entityID = clientID;
+					m.entityID = p.id;
 					this.sendMessageToAllClients(m);
 					break;
 				case PLAYER_MOVE:
+					Main.logger.verbose(m.clientID + " - " + m.toString());
 					// - Recieves a request from a client to move their player
 					// - Tests if the move is allowed; if so, does the move
-					Main.logger.verbose(m.clientID + " - " + m.toString());
-					game.getPlayer(m.clientID).attemptMove(m.pos[0], m.pos[1]);
+					game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
 					break;
 				case CHUNK_LOAD:
+					Main.logger.debug(m.clientID + " - " + m.toString());
 					// - Recieves a request from a client to load a chunk
 					// - Sends the chunk data back to the client
-					Main.logger.debug(m.clientID + " - " + m.toString());
-					MapChunk c = game.getPlayer(m.clientID).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+					MapChunk c = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 					if (c == null) {
-						c = game.getPlayer(m.clientID).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+						c = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 					}
 					m.payload = c.getAllTileTypes();
 					m.payload2 = c.getAllTileSubtypes();
@@ -138,15 +138,13 @@ public class Server {
 				Socket socket = null;
 			    try {
 					socket = serverSocket.accept();
-					int clientID = IDGenerator.newID();
-					Main.logger.info("new client has connected with id " + clientID);
-					ClientThread t = new ClientThread(s, socket, clientID);
-					clients.put(clientID, t);
+					ClientThread t = new ClientThread(s, socket);
+					clients.put(t.id, t);
 					
 					// send a connection confirmation message
 					Message m = new Message();
 					m.type = MessageType.CONNECTION_CONFIRMED;
-					m.clientID = t.getID();
+					m.clientID = t.id;
 					t.send(m);
 					
 					// send initial chunks of map
@@ -189,5 +187,4 @@ public class Server {
 			}
 		}
 	}
-	
 }

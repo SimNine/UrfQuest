@@ -204,7 +204,7 @@ public class GameBoardOverlay extends GUIContainer {
 		Map currMap = Main.client.getState().getCurrentMap();
 		Entity camera = Main.client.getState().getPlayer();
 		
-		for (Mob m : currMap.getMobs()) {
+		for (Mob m : currMap.getMobs().values()) {
 			if (m.getCenter()[0] > camera.getPos()[0] - 30 &&
 				m.getCenter()[0] < camera.getPos()[0] + 30 &&
 				m.getCenter()[1] > camera.getPos()[1] - 30 &&
@@ -212,7 +212,7 @@ public class GameBoardOverlay extends GUIContainer {
 			m.draw(g);
 		}
 
-		for (Item i : currMap.getItems()) {
+		for (Item i : currMap.getItems().values()) {
 			if (i.getCenter()[0] > camera.getPos()[0] - 30 &&
 				i.getCenter()[0] < camera.getPos()[0] + 30 &&
 				i.getCenter()[1] > camera.getPos()[1] - 30 &&
@@ -220,7 +220,7 @@ public class GameBoardOverlay extends GUIContainer {
 			i.draw(g);
 		}
 		
-		for (Projectile p : currMap.getProjectiles()) {
+		for (Projectile p : currMap.getProjectiles().values()) {
 			p.draw(g);
 		}
 		
@@ -228,7 +228,7 @@ public class GameBoardOverlay extends GUIContainer {
 			p.draw(g);
 		}
 
-		for (Player player : currMap.getPlayers()) {
+		for (Player player : currMap.getPlayers().values()) {
 			if (player.getCenter()[0] > camera.getPos()[0] - 30 &&
 				player.getCenter()[0] < camera.getPos()[0] + 30 &&
 				player.getCenter()[1] > camera.getPos()[1] - 30 &&

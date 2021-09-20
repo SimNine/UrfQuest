@@ -3,12 +3,13 @@ package urfquest.server.entities.projectiles;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 
 public class RocketExplosion extends Projectile {
 
-	public RocketExplosion(double x, double y, Entity source, Map m) {
-		super(x, y, source, m);
+	public RocketExplosion(State s, Map m, double x, double y, Entity source) {
+		super(s, m, x, y, source);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		this.velocity = 0;
 		this.direction = 0;

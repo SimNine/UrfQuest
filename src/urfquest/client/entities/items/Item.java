@@ -47,13 +47,13 @@ public class Item extends Entity {
 
 	public static final BufferedImage[] itemImages = new BufferedImage[21];
 	
-	public Item(int type) {
-		// TODO: this is wrong, change it
-		super(0, 0, null);
-		if (itemImages[type - 1] == null) {
-			initItemPics();
-		}
-	}
+//	public Item(int id, int type) {
+//		// TODO: this is wrong, change it
+//		super(null, 0, 0);
+//		if (itemImages[type - 1] == null) {
+//			initItemPics();
+//		}
+//	}
 	
 	/*
 	 * Pic initialization
@@ -172,16 +172,16 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(double x, double y, int type, Map m) {
-		this(x, y, type, 1, -1, m);
+	public Item(int id, Map m, double x, double y, int type) {
+		this(id, m, x, y, type, 1, -1);
 	}
 	
-	public Item(double x, double y, int type, int durability, Map m) {
-		this(x, y, type, 1, durability, m);
+	public Item(int id, Map m, double x, double y, int type, int durability) {
+		this(id, m, x, y, type, 1, durability);
 	}
 	
-	public Item(double x, double y, int type, int stackSize, int durability, Map m) {
-		super(x, y, m);
+	public Item(int id, Map m, double x, double y, int type, int stackSize, int durability) {
+		super(id, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		
 		this.itemType = type;
@@ -236,7 +236,7 @@ public class Item extends Entity {
 			
 			m.incrementMana(-5.0);
 			double[] pos3 = m.getPos();
-			m.getMap().addMob(new Chicken(pos3[0], pos3[1], map));
+			m.getMap().addMob(new Chicken(map, pos3[0], pos3[1]));
 			return true;
 		case Item.LAW_RUNE:
 			if (m.getMana() < 30.0) {
@@ -340,22 +340,22 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 					double rand = Math.random();
 					if (rand > .95) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.LAW_RUNE, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.LAW_RUNE));
 					} else if (rand > .90) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.COSMIC_RUNE, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.COSMIC_RUNE));
 					} else if (rand > .85) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.ASTRAL_RUNE, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.ASTRAL_RUNE));
 					} else if (rand > .82) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.SHOTGUN, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.SHOTGUN));
 					} else if (rand > .79) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.SMG, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.SMG));
 					} else if (rand > .75) {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.GRENADE_ITEM, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.GRENADE_ITEM));
 					} else {
-						m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
+						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.STONE));
 					}
 				}
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.STONE, map));
+				m.getMap().addItem(new Item(map, coords[0], coords[1], Item.STONE));
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile[0] == Tiles.STONE) {
@@ -363,9 +363,9 @@ public class Item extends Entity {
 				if (tile[1] == Tiles.STONE_DEF) {
 					// nothing else
 				} else if (tile[1] == Tiles.COPPERORE_STONE) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.COPPER_ORE, map));
+					m.getMap().addItem(new Item(map, coords[0], coords[1], Item.COPPER_ORE));
 				} else if (tile[1] == Tiles.IRONORE_STONE) {
-					m.getMap().addItem(new Item(coords[0], coords[1], Item.IRON_ORE, map));
+					m.getMap().addItem(new Item(map, coords[0], coords[1], Item.IRON_ORE));
 				}
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 				cooldown = getMaxCooldown();			
@@ -377,7 +377,7 @@ public class Item extends Entity {
 			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				m.getMap().addItem(new Item(coords[0], coords[1], Item.LOG, map));
+				m.getMap().addItem(new Item(map, coords[0], coords[1], Item.LOG));
 				
 				cooldown = getMaxCooldown();
 				return true;
@@ -469,7 +469,7 @@ public class Item extends Entity {
 	}
 	
 	public Item clone() {
-		return new Item(bounds.x, bounds.y, itemType, stackSize, durability, map);
+		return new Item(id, map, bounds.x, bounds.y, itemType, stackSize, durability);
 	}
 	
 	/*

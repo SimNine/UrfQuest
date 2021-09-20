@@ -23,8 +23,8 @@ public abstract class Mob extends Entity {
 	protected double maxFullness;
 	protected int healthbarVisibility = 0;
 
-	protected Mob(double x, double y, Map m) {
-		super(x, y, m);
+	protected Mob(int id, Map m, double x, double y) {
+		super(id, m, x, y);
 	}
 
 	public abstract void update();

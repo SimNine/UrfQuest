@@ -16,8 +16,8 @@ public class Cyclops extends Mob {
 	
 	//private Item shotgun;
 
-	public Cyclops(double x, double y, Map m) {
-		super(x, y, m);
+	public Cyclops(int id, Map m, double x, double y) {
+		super(id, m, x, y);
 		
 		// figure out what scaling this should be
 		bounds = new Rectangle2D.Double(x, y, 10, 10);
@@ -38,11 +38,11 @@ public class Cyclops extends Mob {
 	}
 
 	public void update() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
-	
-		attemptMove(direction, velocity);
+//		if (healthbarVisibility > 0) {
+//			healthbarVisibility--;
+//		}
+//	
+//		attemptMove(direction, velocity);
 	}
 	
 	public static void initCyclops() {

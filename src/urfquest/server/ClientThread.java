@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import urfquest.IDGenerator;
 import urfquest.Main;
 import urfquest.shared.message.Message;
 
@@ -12,18 +13,20 @@ public class ClientThread implements Runnable {
 	
 	private Socket socket;
 	private Server server;
-	private int id;
 
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
 	private Thread t;
 	private boolean stopped;
+	
+	public int id;
 
-	public ClientThread(Server serv, Socket s, int id) {
+	public ClientThread(Server serv, Socket s) {
 		this.socket = s;
 		this.server = serv;
-		this.id = id;
+		this.id = IDGenerator.newID();
+		Main.logger.info("new client has connected with id " + this.id);
 		
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
@@ -72,9 +75,5 @@ public class ClientThread implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public int getID() {
-		return this.id;
 	}
 }

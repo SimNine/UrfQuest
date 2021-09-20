@@ -3,10 +3,12 @@ package urfquest.client.entities.mobs;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
+import urfquest.client.map.Map;
+
 public class Chicken extends Mob {
 	
-	public Chicken(double x, double y, urfquest.client.map.Map m) {
-		super(x, y, m);
+	public Chicken(int id, Map m, double x, double y) {
+		super(id, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		
 		velocity = 0.02;

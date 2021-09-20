@@ -10,8 +10,8 @@ import urfquest.client.map.Map;
 public class RocketExhaust extends Particle {
 	private Color color;
 
-	public RocketExhaust(double x, double y, Map m) {
-		super(x, y, (int)(Math.random()*360.0), 0.04, 100, m);
+	public RocketExhaust(int id, Map m, double x, double y) {
+		super(id, m, x, y, (int)(Math.random()*360.0), 0.04, 100);
 		color = new Color(255, 255, 255, 255);
 		bounds.setFrame(x, y, 0, 0);
 	}

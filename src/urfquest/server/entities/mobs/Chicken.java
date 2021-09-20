@@ -2,17 +2,17 @@ package urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
-import urfquest.Main;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 
 public class Chicken extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(double x, double y, Map m) {
-		super(x, y, m);
+	public Chicken(State s, Map m, double x, double y) {
+		super(s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		
 		velocity = 0.02;
@@ -65,7 +65,7 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (Math.random() > 0.5) {
-			Main.server.getGame().getCurrMap().addItem(new Item(bounds.getCenterX(), bounds.getCenterY(), 4, map));
+			this.map.addItem(new Item(this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 4));
 		}
 	}
 }

@@ -2,19 +2,19 @@ package urfquest.server.state;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Timer;
 
+import urfquest.server.ClientThread;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 
 public class State {
 
 	private Map surfaceMap;
-	private ArrayList<Map> maps = new ArrayList<Map>();
-	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	private HashMap<Integer, Map> maps = new HashMap<Integer, Map>(); // mapID to map
+	private HashMap<Integer, Player> players = new HashMap<Integer, Player>(); // playerID to player
 	
 	private boolean buildMode = false;
 	
@@ -30,7 +30,7 @@ public class State {
 		surfaceMap = new Map(Map.SIMPLEX_MAP);
 		// surfaceMap.generateItems();
 		// surfaceMap.generateChickens();
-		maps.add(surfaceMap);
+		maps.put(surfaceMap.id, surfaceMap);
 	}
 
 	/*
@@ -48,10 +48,12 @@ public class State {
 	/*
 	 * Player management
 	 */
-	public Player createPlayer(int id, String name) {
-		Player newPlayer = new Player(surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1], 
-									  surfaceMap, name, id);
-		players.put(id, newPlayer);
+	
+	// Creates a player at the home coordinates of the surface map
+	public Player createPlayer(String name, ClientThread client) {
+		Player newPlayer = new Player(this, surfaceMap, 
+									  surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1], name, client);
+		players.put(newPlayer.id, newPlayer);
 		surfaceMap.addPlayer(newPlayer);
 		
 		return newPlayer;
@@ -69,11 +71,11 @@ public class State {
 		return surfaceMap;
 	}
 
-	public ArrayList<Map> getAllMaps() {
+	public HashMap<Integer, Map> getAllMaps() {
 		return maps;
 	}
 
-	public void setAllMaps(ArrayList<Map> maps) {
+	public void setAllMaps(HashMap<Integer, Map> maps) {
 		this.maps = maps;
 	}
 	

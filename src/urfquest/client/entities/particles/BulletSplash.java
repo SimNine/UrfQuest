@@ -8,8 +8,8 @@ import urfquest.client.map.Map;
 
 public class BulletSplash extends Particle {
 
-	public BulletSplash(double x, double y, Map m) {
-		super(x, y, (int)(Math.random()*360.0), 0.04, 10, m);
+	public BulletSplash(int id, Map m, double x, double y) {
+		super(id, m, x, y, (int)(Math.random()*360.0), 0.04, 10);
 	}
 
 	protected void drawEntity(Graphics g) {

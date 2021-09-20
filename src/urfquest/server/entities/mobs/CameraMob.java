@@ -2,9 +2,9 @@ package urfquest.server.entities.mobs;
 
 import java.awt.Graphics;
 
-import urfquest.Main;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 
 public class CameraMob extends Mob {
 	public static int STILL_MODE = 1301;
@@ -12,8 +12,8 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(double x, double y, int mode, Map m) {
-		super(x, y, m);
+	public CameraMob(State s, Map m, double x, double y, int mode) {
+		super(s, m, x, y);
 		velocity = 0.01;
 		direction = (int)(Math.random()*360.0);
 		health = 100.0;
@@ -25,14 +25,14 @@ public class CameraMob extends Mob {
 
 	public void update() {
 		if (mode == DEMO_MODE) {
-			if (Main.server.getGame().getCurrMap().getTileTypeAt((int)(bounds.x + velocity), (int)bounds.y) == -1) {
+			if (this.map.getTileTypeAt((int)(bounds.x + velocity), (int)bounds.y) == -1) {
 				if (0 <= direction && direction <= 180) {
 					direction = (90 - direction) + 90;
 				} else { // if (
 					direction = (270 - direction) + 270;
 				}
 			}
-			if (Main.server.getGame().getCurrMap().getTileTypeAt((int)bounds.x, (int)(bounds.y + velocity)) == -1) {
+			if (this.map.getTileTypeAt((int)bounds.x, (int)(bounds.y + velocity)) == -1) {
 				if (0 <= direction && direction <= 90) {
 					direction = 360 - direction;
 				} else if (90 < direction && direction < 270) {

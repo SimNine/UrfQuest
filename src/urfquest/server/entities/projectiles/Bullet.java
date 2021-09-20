@@ -3,12 +3,13 @@ package urfquest.server.entities.projectiles;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 
 public class Bullet extends Projectile {
 
-	public Bullet(double x, double y, int dir, double velocity, Entity source, Map m) {
-		super(x, y, source, m);
+	public Bullet(State s, Map m, double x, double y, int dir, double velocity, Entity source) {
+		super(s, m, x, y, source);
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
 		this.velocity = velocity;
 		direction = dir;

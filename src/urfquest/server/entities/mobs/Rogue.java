@@ -4,11 +4,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import urfquest.Main;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
+import urfquest.server.state.State;
 
 public class Rogue extends Mob {
 	
@@ -20,8 +20,8 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(double x, double y, Map m) {
-		super(x, y, m);
+	public Rogue(State s, Map m, double x, double y) {
+		super(s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = 0.013;
 		defaultVelocity = 0.013;
@@ -34,9 +34,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(0, 0, 16, m));
-		inventory.addItem(new Item(0, 0, 15, m));
-		inventory.addItem(new Item(0, 0, 13, m));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 16));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 15));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 13));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(this);
@@ -133,8 +133,8 @@ public class Rogue extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (Main.server.getGame().getCurrMap().getTileTypeAt((int)(bounds.getCenterX()),
-													 (int)(bounds.getCenterY()))) {
+		switch (this.map.getTileTypeAt((int)(bounds.getCenterX()),
+									   (int)(bounds.getCenterY()))) {
 		case 0:
 			//nothing
 			break;

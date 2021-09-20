@@ -2,11 +2,11 @@ package urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
-import urfquest.Main;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 
 public class Cyclops extends Mob {
 	private int thinkingDelay;
@@ -14,8 +14,8 @@ public class Cyclops extends Mob {
 	
 	private Item shotgun;
 
-	public Cyclops(double x, double y, Map m) {
-		super(x, y, m);
+	public Cyclops(State s, Map m, double x, double y) {
+		super(s, m, x, y);
 		
 		// figure out what scaling this should be
 		bounds = new Rectangle2D.Double(x, y, 10, 10);
@@ -32,7 +32,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(0, 0, 15, m);
+		shotgun = new Item(this.state, this.map, 0, 0, 15);
 		intelligence = 50;
 		routine = new IdleRoutine(this);
 		thinkingDelay = intelligence;
@@ -57,29 +57,29 @@ public class Cyclops extends Mob {
 		attemptMove(direction, velocity);
 		
 		// try firing shotgun
-		if (this.distanceTo(Main.server.getGame().getPlayer()) < 10 && 
-			this.hasClearPathTo(Main.server.getGame().getPlayer())) {
-			shotgun.use(this);
-		}
-		shotgun.update();
+//		if (this.distanceTo(Main.server.getGame().getPlayer()) < 10 && 
+//			this.hasClearPathTo(Main.server.getGame().getPlayer())) {
+//			shotgun.use(this);
+//		}
+//		shotgun.update();
 	}
 	
 	private void think() {
-		// if the cyclops is within 20 blocks of the player, and it isn't attacking already, attack
-		if (Math.abs(getPos()[0] - Main.server.getGame().getPlayer().getPos()[0]) < 20 &&
-			Math.abs(getPos()[1] - Main.server.getGame().getPlayer().getPos()[1]) < 20 &&
-			this.hasClearPathTo(Main.server.getGame().getPlayer())) {
-			if (!(routine instanceof AttackRoutine)) {
-				routine = new AttackRoutine(this, Main.server.getGame().getPlayer());
-			}
-		} else {
-			if (!(routine instanceof IdleRoutine)){
-				routine = new IdleRoutine(this);
-			}
-		}
+//		// if the cyclops is within 20 blocks of the player, and it isn't attacking already, attack
+//		if (Math.abs(getPos()[0] - Main.server.getGame().getPlayer().getPos()[0]) < 20 &&
+//			Math.abs(getPos()[1] - Main.server.getGame().getPlayer().getPos()[1]) < 20 &&
+//			this.hasClearPathTo(Main.server.getGame().getPlayer())) {
+//			if (!(routine instanceof AttackRoutine)) {
+//				routine = new AttackRoutine(this, Main.server.getGame().getPlayer());
+//			}
+//		} else {
+//			if (!(routine instanceof IdleRoutine)){
+//				routine = new IdleRoutine(this);
+//			}
+//		}
 	}
 	
 	public void onDeath() {
-		Main.server.getGame().getCurrMap().addItem(new Item(bounds.getCenterX(), bounds.getCenterY(), 6, map));
+		this.map.addItem(new Item(this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 6));
 	}
 }

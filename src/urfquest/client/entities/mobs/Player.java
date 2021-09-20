@@ -166,8 +166,8 @@ public class Player extends Mob {
 	
 	private int animStage = 0;
 
-	public Player(double x, double y, Map currMap, String name) {
-		super(x, y, currMap);
+	public Player(int id, Map currMap, double x, double y, String name) {
+		super(id, currMap, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = Constants.playerVelocity;
 		
@@ -179,9 +179,6 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(0, 0, 19, currMap));
-		inventory.addItem(new Item(0, 0, 17, currMap));
-		inventory.addItem(new Item(0, 0, 18, currMap));
 		
 		this.name = name;
 	}

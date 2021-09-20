@@ -25,10 +25,10 @@ public class Map {
 	public static final int TEMPLATE_MAP = 5003;
 	public static final int CAVE_MAP = 5004;
 
-	private ArrayList<Player> players = new ArrayList<Player>();
-	private ArrayList<Mob> mobs = new ArrayList<Mob>();
-	private ArrayList<Item> items = new ArrayList<Item>();
-	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	private HashMap<Integer, Mob> mobs = new HashMap<Integer, Mob>();
+	private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
+	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
 
 	private ArrayList<Player> addPlayers = new ArrayList<Player>();
 	private ArrayList<Mob> addMobs = new ArrayList<Mob>();
@@ -46,10 +46,10 @@ public class Map {
 	
 	private TerrainGenerator generator;
 	
-	public int mapID;
+	public int id;
 	
 	public Map(int type) {
-		this.mapID = IDGenerator.newID();
+		this.id = IDGenerator.newID();
 		
 		switch (type) {
 		case EMPTY_MAP:
@@ -92,23 +92,23 @@ public class Map {
 	
 	public void update() {
 		// update projectiles
-		for (Projectile p : projectiles) {
+		for (Projectile p : projectiles.values()) {
 			p.update();
 		}
 		
 		// update mobs
-		for (Mob m : mobs) {
+		for (Mob m : mobs.values()) {
 			m.update();
 		}
 		
 		// update items
-		for (Item i : items) {
+		for (Item i : items.values()) {
 			i.update();
 		}
 		
 		// check for items near players
-		for (Player p : players) {
-			for (Item i : items) {
+		for (Player p : players.values()) {
+			for (Item i : items.values()) {
 				if (p.isWithinDistance(i, p.getPickupRange()) && i.isPickupable()) {
 					i.accelerateTowards(p);
 				}
@@ -116,9 +116,9 @@ public class Map {
 		}
 		
 		// check for players colliding with items
-		for (Player p : players) {
+		for (Player p : players.values()) {
 			HashSet<Item> removeNow = new HashSet<Item>();
-			for (Item i : items) {
+			for (Item i : items.values()) {
 				if (p.collides(i) && i.isPickupable()) {
 					Main.logger.debug(p.getName() + " collided with object: " + i.getClass().getName());
 					if (p.addItem(i)) {
@@ -128,12 +128,14 @@ public class Map {
 					}
 				}
 			}
-			items.removeAll(removeNow);
+			for (Item i : removeNow) {
+				items.remove(i.id);
+			}
 		}
 		
 		// check for the player colliding with mobs
-		for (Mob m : mobs) {
-			for (Player p : players) {
+		for (Mob m : mobs.values()) {
+			for (Player p : players.values()) {
 				if (p.collides(m)) {
 					Main.logger.debug(p.getName() + " collided with object: " + m.getClass().getName());
 				}
@@ -141,8 +143,8 @@ public class Map {
 		}
 		
 		// check for collisions between projectiles and mobs
-		for (Projectile p : projectiles) {
-			for (Mob m : mobs) {
+		for (Projectile p : projectiles.values()) {
+			for (Mob m : mobs.values()) {
 				if (p.getSource() == m) {
 					continue;
 				} else if (p.collides(m)) {
@@ -152,8 +154,8 @@ public class Map {
 		}
 		
 		// check for collisions between projectiles and players
-		for (Player p : players) {
-			for (Projectile j : projectiles) {
+		for (Player p : players.values()) {
+			for (Projectile j : projectiles.values()) {
 				if (j.getSource() == p) {
 					continue;
 				} else if (j.collides(p)) {
@@ -163,34 +165,50 @@ public class Map {
 		}
 		
 		// clean up dead projectiles
-		for (Projectile p : projectiles) {
+		for (Projectile p : projectiles.values()) {
 			if (p.isDead()) {
 				removeProjectiles.add(p);
 			}
 		}
 		
 		// clean up dead mobs
-		for (Mob m : mobs) {
+		for (Mob m : mobs.values()) {
 			if (m.isDead()) {
 				m.onDeath();
 				removeMobs.add(m);
 			}
 		}
 
-		items.removeAll(removeItems);
-		mobs.removeAll(removeMobs);
-		projectiles.removeAll(removeProjectiles);
-		players.removeAll(removePlayers);
+		for (Item i : removeItems) {
+			items.remove(i.id);
+		}
+		for (Mob m : removeMobs) {
+			mobs.remove(m.id);
+		}
+		for (Projectile p : removeProjectiles) {
+			projectiles.remove(p.id);
+		}
+		for (Player p : removePlayers) {
+			players.remove(p.id);
+		}
 		
 		removeItems.clear();
 		removeMobs.clear();
 		removeProjectiles.clear();
 		removePlayers.clear();
 		
-		items.addAll(addItems);
-		mobs.addAll(addMobs);
-		projectiles.addAll(addProjectiles);
-		players.addAll(addPlayers);
+		for (Item i : addItems) {
+			items.put(i.id, i);
+		}
+		for (Mob m : addMobs) {
+			mobs.put(m.id, m);
+		}
+		for (Projectile p : addProjectiles) {
+			projectiles.put(p.id, p);
+		}
+		for (Player p : addPlayers) {
+			players.put(p.id, p);
+		}
 		
 		addItems.clear();
 		addMobs.clear();
@@ -565,19 +583,19 @@ public class Map {
 		removePlayers.add(p);
 	}
 	
-	public ArrayList<Item> getItems() {
+	public HashMap<Integer, Item> getItems() {
 		return items;
 	}
 	
-	public ArrayList<Mob> getMobs() {
+	public HashMap<Integer, Mob> getMobs() {
 		return mobs;
 	}
 	
-	public ArrayList<Projectile> getProjectiles() {
+	public HashMap<Integer, Projectile> getProjectiles() {
 		return projectiles;
 	}
 	
-	public ArrayList<Player> getPlayers() {
+	public HashMap<Integer, Player> getPlayers() {
 		return players;
 	}
 	
@@ -602,7 +620,7 @@ public class Map {
 	 */
 	
 	public Mob mobAt(double x, double y) {
-		for (Mob m : mobs) {
+		for (Mob m : mobs.values()) {
 			if (m.containsPoint(x, y)) {
 				return m;
 			}

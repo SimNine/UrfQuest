@@ -1,6 +1,7 @@
 package urfquest.client.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import urfquest.Main;
 import urfquest.client.entities.items.Item;
@@ -25,10 +26,10 @@ public class Map {
 	private MapChunk[][] localChunks;
 	private int[] localChunkOrigin = new int[2];
 
-	private ArrayList<Player> players = new ArrayList<Player>();
-	private ArrayList<Mob> mobs = new ArrayList<Mob>();
-	private ArrayList<Item> items = new ArrayList<Item>();
-	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	private HashMap<Integer, Player> players = new HashMap<>();
+	private HashMap<Integer, Mob> mobs = new HashMap<>();
+	private HashMap<Integer, Item> items = new HashMap<>();
+	private HashMap<Integer, Projectile> projectiles = new HashMap<>();
 	
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
 	private ArrayList<Particle> addParticles = new ArrayList<Particle>();
@@ -354,14 +355,14 @@ public class Map {
 	 */
 	
 	public void addItem(Item i) {
-		items.add(i);
+		items.put(i.id, i);
 	}
 	
 	public void removeItem(Item i) {
-		items.add(i);
+		items.remove(i.id);
 	}
 	
-	public ArrayList<Item> getItems() {
+	public HashMap<Integer, Item> getItems() {
 		return items;
 	}
 	
@@ -369,17 +370,21 @@ public class Map {
 		return items.size();
 	}
 	
+	public Item getItem(int id) {
+		return items.get(id);
+	}
+	
 	
 	
 	public void addMob(Mob m) {
-		mobs.add(m);
+		mobs.put(m.id, m);
 	}
 	
 	public void removeMob(Mob m) {
-		mobs.add(m);
+		mobs.remove(m.id);
 	}
 	
-	public ArrayList<Mob> getMobs() {
+	public HashMap<Integer, Mob> getMobs() {
 		return mobs;
 	}
 	
@@ -387,17 +392,21 @@ public class Map {
 		return mobs.size();
 	}
 	
+	public Mob getMob(int id) {
+		return mobs.get(id);
+	}
+	
 	
 	
 	public void addProjectile(Projectile p) {
-		projectiles.add(p);
+		projectiles.put(p.id, p);
 	}
 	
 	public void removeProjectile(Projectile p) {
-		projectiles.add(p);
+		projectiles.remove(p.id);
 	}
 	
-	public ArrayList<Projectile> getProjectiles() {
+	public HashMap<Integer, Projectile> getProjectiles() {
 		return projectiles;
 	}
 	
@@ -405,22 +414,30 @@ public class Map {
 		return projectiles.size();
 	}
 	
+	public Projectile getProjectile(int id) {
+		return projectiles.get(id);
+	}
+	
 	
 	
 	public void addPlayer(Player p) {
-		players.add(p);
+		players.put(p.id, p);
 	}
 	
 	public void removePlayer(Player p) {
-		players.add(p);
+		players.remove(p.id);
 	}
 	
-	public ArrayList<Player> getPlayers() {
+	public HashMap<Integer, Player> getPlayers() {
 		return players;
 	}
 	
 	public int getNumPlayers() {
 		return players.size();
+	}
+	
+	public Player getPlayer(int id) {
+		return players.get(id);
 	}
 	
 	
@@ -440,7 +457,7 @@ public class Map {
 	 */
 	
 	public Mob mobAt(double x, double y) {
-		for (Mob m : mobs) {
+		for (Mob m : mobs.values()) {
 			if (m.containsPoint(x, y)) {
 				return m;
 			}

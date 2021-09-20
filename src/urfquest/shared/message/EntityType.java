@@ -4,5 +4,7 @@ public enum EntityType {
 	NONE,
 	
 	PLAYER,
-	CHICKEN
+	ITEM,
+	MOB,
+	PROJECTILE
 }

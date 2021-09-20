@@ -64,9 +64,9 @@ public class Client implements Runnable {
 			Main.logger.verbose(m.toString());
 			break;
 		case CONNECTION_CONFIRMED:
+			Main.logger.info(m.toString());
 			// - Assigns this client its clientID
 			// - Sends a request to the server to create a player
-			Main.logger.info(m.toString());
 			this.clientID = m.clientID;
 			String playerName = JOptionPane.showInputDialog(Main.frame, "What is your name?");
 			m = new Message();
@@ -75,13 +75,13 @@ public class Client implements Runnable {
 			this.send(m);
 			break;
 		case ENTITY_INIT:
+			Main.logger.debug(m.toString());
 			// - Initializes an entity of the given type
 			// - If the entity is a player with the ID of this client:
 			// -- Assign it to this client
 			// -- Initialize this client's frontend
-			Main.logger.debug(m.toString());
 			if (m.entityType == EntityType.PLAYER) {
-				Player player = new Player(m.pos[0], m.pos[1], state.getCurrentMap(), m.entityName);
+				Player player = new Player(m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
 				state.getCurrentMap().addPlayer(player);
 				player.setMap(state.getCurrentMap());
 				
@@ -92,8 +92,8 @@ public class Client implements Runnable {
 			}
 			break;
 		case CHUNK_LOAD:
-			// - Loads the payloads of this message into the specified chunk
 			Main.logger.debug(m.toString());
+			// - Loads the payloads of this message into the specified chunk
 			MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 			if (c == null) {
 				c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -102,10 +102,17 @@ public class Client implements Runnable {
 			c.setAllTileSubtypes((int[][])m.payload2);
 			break;
 		case ENTITY_SET_POS:
-			// - Sets the position of the given entity
 			Main.logger.verbose(m.toString());
-			state.getPlayer().setPos(m.pos[0], m.pos[1]);
+			// - Sets the position of the given entity
+			if (m.entityType == EntityType.PLAYER) {
+				Player p = state.getCurrentMap().getPlayer(m.entityID);
+				p.setPos(m.pos[0], m.pos[1]);
+			}
 			break;
+		case MAP_METADATA:
+			Main.logger.info(m.toString());
+			// - Loads metadata about the current map (id, climate, etc)
+			// TODO
 		default:
 			Main.logger.debug(m.toString());
 			break;

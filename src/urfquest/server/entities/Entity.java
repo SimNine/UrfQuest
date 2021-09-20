@@ -2,17 +2,26 @@ package urfquest.server.entities;
 
 import java.awt.geom.Rectangle2D;
 
+import urfquest.IDGenerator;
 import urfquest.Main;
 import urfquest.server.map.Map;
+import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 
 public abstract class Entity {
 	protected Rectangle2D.Double bounds;
+	protected State state;
 	protected Map map;
 	
-	protected Entity(double x, double y, Map m) {
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	public int id;
+	
+	protected Entity(State s, Map m, double x, double y) {
+		id = IDGenerator.newID();
+		
 		map = m;
+		state = s;
+		
+		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
 	// Updating methods

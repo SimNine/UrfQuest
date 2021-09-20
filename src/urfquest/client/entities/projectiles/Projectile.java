@@ -14,7 +14,7 @@ public abstract class Projectile extends Entity {
 	protected Entity source;
 
 	protected Projectile(double x, double y, Entity source, Map m) {
-		super(x, y, m);
+		super(m, x, y);
 		this.source = source;
 	}
 	

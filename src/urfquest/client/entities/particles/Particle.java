@@ -10,8 +10,8 @@ public abstract class Particle extends Entity {
 	protected double velocity;
 	private int duration;
 
-	protected Particle(double x, double y, int dir, double vel, int duration, Map m) {
-		super(x, y, m);
+	protected Particle(int id, Map m, double x, double y, int dir, double vel, int duration) {
+		super(id, m, x, y);
 		this.dir = dir;
 		this.velocity = vel;
 		this.duration = duration;

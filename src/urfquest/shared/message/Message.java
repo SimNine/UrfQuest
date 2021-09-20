@@ -18,8 +18,8 @@ public class Message implements Serializable {
 	public double[] pos = new double[2];
 	
 	public int clientID = 0;
-	
 	public int entityID = 0;
+	public int mapID = 0;
 	
 	public String entityName;
 	
@@ -32,7 +32,7 @@ public class Message implements Serializable {
 		case PING:
 			break;
 		case CHUNK_LOAD:
-			ret += "xChunk:" + xyChunk[0] + " yChunk:" + xyChunk[1];
+			ret += "MapID: " + mapID + ", xChunk:" + xyChunk[0] + ", yChunk:" + xyChunk[1];
 			break;
 			
 		// only sent by client

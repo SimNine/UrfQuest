@@ -11,5 +11,6 @@ public enum MessageType {
 	// sent only by server
 	CONNECTION_CONFIRMED,
 	ENTITY_INIT,
-	ENTITY_SET_POS
+	ENTITY_SET_POS,
+	MAP_METADATA
 }

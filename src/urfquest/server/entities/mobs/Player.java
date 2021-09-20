@@ -5,26 +5,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import urfquest.Main;
+import urfquest.server.ClientThread;
 import urfquest.server.entities.items.Item;
 import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
+import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.message.Constants;
+import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
 public class Player extends Mob {
 	
-	private String name;
 	private int statCounter = 200;
 	private Inventory inventory;
 	private Item heldItem;
-	private int id;
 	
 	private double pickupRange = 3.0;
-
-	public Player(double x, double y, Map currMap, String name, int id) {
-		super(x, y, currMap);
+	
+	private String name;
+	private ClientThread client;
+	
+	public Player(State s, Map m, double x, double y, String name, ClientThread c) {
+		super(s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = Constants.playerVelocity;
 		
@@ -36,12 +40,12 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(0, 0, 19, currMap));
-		inventory.addItem(new Item(0, 0, 17, currMap));
-		inventory.addItem(new Item(0, 0, 18, currMap));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 19));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 17));
+		inventory.addItem(new Item(this.state, this.map, 0, 0, 18));
 		
 		this.name = name;
-		this.id = id;
+		this.client = c;
 	}
 	
 	public void attemptMove(double x, double y) {
@@ -65,9 +69,11 @@ public class Player extends Mob {
 		} else {
 			Message m = new Message();
 			m.type = MessageType.ENTITY_SET_POS;
+			m.entityType = EntityType.PLAYER;
+			m.entityID = this.id;
 			m.pos[0] = bounds.getX();
 			m.pos[1] = bounds.getY();
-			Main.server.sendMessageToSingleClient(m, id);
+			this.client.send(m);
 		}
 	}
 	
@@ -76,9 +82,11 @@ public class Player extends Mob {
 		
 		Message m = new Message();
 		m.type = MessageType.ENTITY_SET_POS;
+		m.entityType = EntityType.PLAYER;
+		m.entityID = this.id;
 		m.pos[0] = bounds.getX();
 		m.pos[1] = bounds.getY();
-		Main.server.sendMessageToSingleClient(m, id);
+		Main.server.sendMessageToAllClients(m);
 	}
 
 	/*
