@@ -35,12 +35,24 @@ public class Message implements Serializable {
 			ret += "xChunk:" + xyChunk[0] + " yChunk:" + xyChunk[1];
 			break;
 			
-		// only sent by server
+		// only sent by client
 		case PLAYER_MOVE:
 			ret += "xDelt:" + pos[0] + " yDelt:" + pos[1];
 			break;
+		case PLAYER_REQUEST:
+			ret += entityName;
+			break;
+		
+		// only sent by server
 		case ENTITY_SET_POS:
 			ret += "x:" + pos[0] + " y:" + pos[1];
+			break;
+		case CONNECTION_CONFIRMED:
+			break;
+		case ENTITY_INIT:
+			break;
+		default:
+			ret += "unrecognized message";
 			break;
 		}
 		return ret;

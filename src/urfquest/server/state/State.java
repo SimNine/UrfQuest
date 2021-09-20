@@ -31,12 +31,6 @@ public class State {
 		// surfaceMap.generateItems();
 		// surfaceMap.generateChickens();
 		maps.add(surfaceMap);
-
-		// TODO: add creation of a new player upon client connect
-//		currentPlayer = new Player(surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1], surfaceMap, "Chris");
-//		otherPlayer = new Player(surfaceMap.getHomeCoords()[0] - 1, surfaceMap.getHomeCoords()[1] - 1, surfaceMap, "Nick");
-//		surfaceMap.addPlayer(currentPlayer);
-//		surfaceMap.addPlayer(otherPlayer);
 	}
 
 	/*

@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 
+import urfquest.IDGenerator;
 import urfquest.Main;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -24,15 +24,12 @@ public class Server {
     
 	private State game;
 	
-	private Random random;
-	
 	private int port;
 	private ServerSocket serverSocket = null;
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
 
 	public Server(int seed, int port) {
-		this.random = new Random(seed);
 		this.port = port;
 		
 		this.setGame(new State());
@@ -61,6 +58,7 @@ public class Server {
 				
 				switch (m.type) {
 				case PLAYER_REQUEST:
+					Main.logger.info(m.clientID + " - " + m.toString());
 					// - Creates a player with the requested name
 					// - Sends the newly created player to all clients
 					// TODO: check if the requesting client already has an assigned player
@@ -77,10 +75,14 @@ public class Server {
 					this.sendMessageToAllClients(m);
 					break;
 				case PLAYER_MOVE:
+					// - Recieves a request from a client to move their player
+					// - Tests if the move is allowed; if so, does the move
 					Main.logger.verbose(m.clientID + " - " + m.toString());
 					game.getPlayer(m.clientID).attemptMove(m.pos[0], m.pos[1]);
 					break;
 				case CHUNK_LOAD:
+					// - Recieves a request from a client to load a chunk
+					// - Sends the chunk data back to the client
 					Main.logger.debug(m.clientID + " - " + m.toString());
 					MapChunk c = game.getPlayer(m.clientID).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 					if (c == null) {
@@ -136,7 +138,7 @@ public class Server {
 				Socket socket = null;
 			    try {
 					socket = serverSocket.accept();
-					int clientID = random.nextInt();
+					int clientID = IDGenerator.newID();
 					Main.logger.info("new client has connected with id " + clientID);
 					ClientThread t = new ClientThread(s, socket, clientID);
 					clients.put(clientID, t);

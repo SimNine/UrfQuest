@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import urfquest.IDGenerator;
 import urfquest.Main;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.Mob;
@@ -45,7 +46,10 @@ public class Map {
 	
 	private TerrainGenerator generator;
 	
+	public int mapID;
+	
 	public Map(int type) {
+		this.mapID = IDGenerator.newID();
 		
 		switch (type) {
 		case EMPTY_MAP:

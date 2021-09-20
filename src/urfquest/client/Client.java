@@ -102,6 +102,7 @@ public class Client implements Runnable {
 			c.setAllTileSubtypes((int[][])m.payload2);
 			break;
 		case ENTITY_SET_POS:
+			// - Sets the position of the given entity
 			Main.logger.verbose(m.toString());
 			state.getPlayer().setPos(m.pos[0], m.pos[1]);
 			break;
