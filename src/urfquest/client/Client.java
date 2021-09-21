@@ -66,8 +66,17 @@ public class Client implements Runnable {
 		case CONNECTION_CONFIRMED:
 			Main.logger.info(m.toString());
 			// - Assigns this client its clientID
+			// - Informs this client of the surface map's ID
+			// - Sends a request to the server to load the current map
 			// - Sends a request to the server to create a player
 			this.clientID = m.clientID;
+			int surfaceMapID = m.mapID;
+			
+			m = new Message();
+			m.type = MessageType.MAP_REQUEST;
+			m.mapID = surfaceMapID;
+			this.send(m);
+			
 			String playerName = JOptionPane.showInputDialog(Main.frame, "What is your name?");
 			m = new Message();
 			m.type = MessageType.PLAYER_REQUEST;
@@ -112,7 +121,11 @@ public class Client implements Runnable {
 		case MAP_METADATA:
 			Main.logger.info(m.toString());
 			// - Loads metadata about the current map (id, climate, etc)
-			// TODO
+			// TODO - currently unused
+			break;
+		case DEBUG_PLAYER_INFO:
+			Main.logger.info(m.toString());
+			break;
 		default:
 			Main.logger.debug(m.toString());
 			break;
@@ -126,5 +139,4 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
 }

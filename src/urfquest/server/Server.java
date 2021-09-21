@@ -53,6 +53,7 @@ public class Server {
 		while (true) {
 			if (incomingMessages.size() > 0) {
 				Message m = incomingMessages.remove(0);
+				ClientThread c = clients.get(m.clientID);
 				
 				switch (m.type) {
 				case PLAYER_REQUEST:
@@ -61,16 +62,15 @@ public class Server {
 					// - Sends the newly created player to all clients
 					// TODO: check if the requesting client already has an assigned player
 					String playerName = m.entityName;
-					int clientID = m.clientID;
-					Player p = game.createPlayer(playerName, clients.get(clientID));
-					clientPlayers.put(clientID, p.id);
+					Player p = game.createPlayer(playerName, c);
+					clientPlayers.put(c.id, p.id);
 					
 					m = new Message();
 					m.type = MessageType.ENTITY_INIT;
 					m.entityName = playerName;
 					m.entityType = EntityType.PLAYER;
 					m.pos = p.getPos();
-					m.clientID = clientID;
+					m.clientID = c.id;
 					m.entityID = p.id;
 					this.sendMessageToAllClients(m);
 					break;
@@ -80,17 +80,64 @@ public class Server {
 					// - Tests if the move is allowed; if so, does the move
 					game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
 					break;
+				case MAP_REQUEST:
+					Main.logger.info(m.clientID + " - " + m.toString());
+					// - Recieves a request from a client to load a new map
+					// - Sends metadata of the requested map to the client - TODO
+					// - Sends chunks nearby the player to the client
+					// - Sends all entities currently on the map
+					// TODO: narrow the number of entities that are sent
+					
+					Map map = game.getAllMaps().get(m.mapID);
+					
+//					m = new Message();
+//					m.type = MessageType.MAP_METADATA;
+					
+					for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
+						for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
+							m = new Message();
+							m.type = MessageType.CHUNK_LOAD;
+							
+							MapChunk chunk = map.getChunk(x, y);
+							m.payload = chunk.getAllTileTypes();
+							m.payload2 = chunk.getAllTileSubtypes();
+							m.xyChunk[0] = x;
+							m.xyChunk[1] = y;
+							c.send(m);
+						}
+					}
+					
+					for (Player player : map.getPlayers().values()) {
+						m = new Message();
+						m.type = MessageType.ENTITY_INIT;
+						m.entityType = EntityType.PLAYER;
+						m.entityID = player.id;
+						m.entityName = player.getName();
+						c.send(m);
+					}
+					break;
 				case CHUNK_LOAD:
 					Main.logger.debug(m.clientID + " - " + m.toString());
 					// - Recieves a request from a client to load a chunk
 					// - Sends the chunk data back to the client
-					MapChunk c = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
-					if (c == null) {
-						c = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+					MapChunk chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+					if (chunk == null) {
+						chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 					}
-					m.payload = c.getAllTileTypes();
-					m.payload2 = c.getAllTileSubtypes();
-					this.sendMessageToSingleClient(m, m.clientID);
+					m.payload = chunk.getAllTileTypes();
+					m.payload2 = chunk.getAllTileSubtypes();
+					c.send(m);
+					break;
+				case DEBUG_PLAYER_INFO:
+					Main.logger.debug(m.clientID + " - " + m.toString());
+					int playerID = clientPlayers.get(m.clientID);
+					Player p1 = game.getPlayer(playerID);
+					String p1pos = p1.getCenter()[0] + "," + p1.getCenter()[1];
+					
+					m = new Message();
+					m.type = MessageType.DEBUG_PLAYER_INFO;
+					m.payload = p1pos;
+					c.send(m);
 					break;
 				default:
 					Main.logger.debug(m.clientID + " - " + m.toString());
@@ -145,23 +192,8 @@ public class Server {
 					Message m = new Message();
 					m.type = MessageType.CONNECTION_CONFIRMED;
 					m.clientID = t.id;
+					m.mapID = game.getSurfaceMap().id;
 					t.send(m);
-					
-					// send initial chunks of map
-					Map surfaceMap = game.getSurfaceMap();
-					for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
-						for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
-							m = new Message();
-							m.type = MessageType.CHUNK_LOAD;
-							
-							MapChunk chunk = surfaceMap.getChunk(x, y);
-							m.payload = chunk.getAllTileTypes();
-							m.payload2 = chunk.getAllTileSubtypes();
-							m.xyChunk[0] = x;
-							m.xyChunk[1] = y;
-							t.send(m);
-						}
-					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					System.exit(2);

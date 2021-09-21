@@ -28,6 +28,8 @@ import urfquest.client.guis.game.GameWeatherOverlay;
 import urfquest.client.guis.game.MapViewOverlay;
 import urfquest.client.guis.menus.KeybindingOverlay;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -109,6 +111,7 @@ public class QuestPanel extends JPanel {
 					if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 						pause();
 					}
+					
 					if (guiOpen) {
 						if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 							if (overlays.peek() instanceof MapViewOverlay) {
@@ -159,6 +162,13 @@ public class QuestPanel extends JPanel {
 							guiOpen = true;
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
 							Main.client.getState().getPlayer().useTileUnderneath();
+						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
+							System.out.println(Main.client.getState().getPlayer().getCenter()[0] + "," +
+											   Main.client.getState().getPlayer().getCenter()[1]);
+							
+							Message m = new Message();
+							m.type = MessageType.DEBUG_PLAYER_INFO;
+							Main.client.send(m);
 						}
 					}
 				} else {
@@ -235,7 +245,12 @@ public class QuestPanel extends JPanel {
 		
 		if (keysHeld) {
 			// TODO: *attempt* to move before actually moving
-			Main.client.getState().getPlayer().move(xDiff, yDiff);
+			// currently, if move is invalid, server has to correct client
+			if (Main.client.getState().getPlayer() != null) {
+				Main.client.getState().getPlayer().move(xDiff, yDiff);
+			} else {
+				Main.client.getState().getCamera().move(xDiff, yDiff);
+			}
 		}
 	}
 	
@@ -365,7 +380,7 @@ public class QuestPanel extends JPanel {
 	 */
 	
 	private Entity fetchCamera() {
-		return Main.client.getState().getPlayer();
+		return Main.client.getState().getCamera();
 	}
 	
 //	public void setCamera(Entity m) {

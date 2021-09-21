@@ -35,6 +35,11 @@ public class Message implements Serializable {
 			ret += "MapID: " + mapID + ", xChunk:" + xyChunk[0] + ", yChunk:" + xyChunk[1];
 			break;
 			
+		// temporary / debugging
+		case DEBUG_PLAYER_INFO:
+			ret += "Pos: " + (String)payload;
+			break;
+			
 		// only sent by client
 		case PLAYER_MOVE:
 			ret += "xDelt:" + pos[0] + " yDelt:" + pos[1];
@@ -50,6 +55,7 @@ public class Message implements Serializable {
 		case CONNECTION_CONFIRMED:
 			break;
 		case ENTITY_INIT:
+			ret += "type: " + entityType.toString();
 			break;
 		default:
 			ret += "unrecognized message";
