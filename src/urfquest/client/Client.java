@@ -109,6 +109,7 @@ public class Client implements Runnable {
 			}
 			c.setAllTileTypes((int[][])m.payload);
 			c.setAllTileSubtypes((int[][])m.payload2);
+			state.getCurrentMap().generateMinimap();
 			break;
 		case ENTITY_SET_POS:
 			Main.logger.verbose(m.toString());

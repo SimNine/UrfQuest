@@ -6,6 +6,7 @@ import urfquest.Main;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 import urfquest.client.map.Map;
+import urfquest.client.map.MapChunk;
 
 public class MapViewOverlay extends GUIContainer {
 	
@@ -21,11 +22,12 @@ public class MapViewOverlay extends GUIContainer {
 		
 		// add the map
 		Map map = Main.client.getState().getCurrentMap();
-//		guiObjects.add(new Minimap(-map.getWidth()/2, 
-//								   -map.getHeight()/2, 
-//								   map.getWidth() + 10, 
-//								   map.getHeight() + 10, 
-//								   GUIObject.CENTER, 
-//								   this));
+		int mapDiameter = map.getMapDiameter() * MapChunk.CHUNK_SIZE;
+		guiObjects.add(new Minimap(-mapDiameter/2, 
+								   -mapDiameter/2, 
+								   mapDiameter + 10, 
+								   mapDiameter + 10, 
+								   GUIObject.CENTER, 
+								   this));
 	}
 }

@@ -71,9 +71,11 @@ public class Main implements Runnable {
 		if (mode == MODE_FULL) {
 			// client and server
 			int portMirror = port;
-			new Thread(() -> {
+			Thread serverThread = new Thread(() -> {
 				startServer(0, portMirror);
-			}).start();
+			});
+			serverThread.setName("ServerProcessorThread");
+			serverThread.start();
 			try {
 				Thread.sleep(300);
 			} catch (InterruptedException e) {
@@ -114,6 +116,7 @@ public class Main implements Runnable {
         // initialize the networking engine
         client = new Client(socket);
         Thread clientThread = new Thread(client);
+        clientThread.setName("LocalClientThread");
         clientThread.start();
 	}
 	

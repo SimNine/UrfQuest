@@ -2,6 +2,7 @@ package urfquest.client.guis.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import urfquest.Logger;
 import urfquest.Main;
@@ -27,7 +28,7 @@ public class Minimap extends GUIObject implements Clickable {
 	}
 
 	public void draw(Graphics g) {
-		//BufferedImage minimap = UrfQuestClient.client.getState().getCurrentMap().getMinimap();
+		BufferedImage minimap = Main.client.getState().getCurrentMap().getMinimap();
 		Player player = Main.client.getState().getPlayer();
 		
 		int borderWidth = 3;
@@ -46,37 +47,37 @@ public class Minimap extends GUIObject implements Clickable {
 		int width = bounds.width - 2*(borderWidth + gapWidth);
 		int height = bounds.height - 2*(borderWidth + gapWidth);
 		
-//		if (minimap.getWidth() <= width) {
-//			xRoot += (width - minimap.getWidth())/2;
-//			xCrop = 0;
-//			width = minimap.getWidth();
-//		} else {
-//			xCrop = (int)player.getPos()[0] - width/2;
-//			if (xCrop < 0) {
-//				xCrop = 0;
-//			}
-//			if (xCrop + width > minimap.getWidth()) {
-//				xCrop = minimap.getWidth() - width;
-//			}
-//		}
-//		
-//		if (minimap.getHeight() <= height) {
-//			yRoot += (height - minimap.getHeight())/2;
-//			yCrop = 0;
-//			height = minimap.getHeight();
-//		} else {
-//			yCrop = (int)player.getPos()[1] - height/2;
-//			if (yCrop < 0) {
-//				yCrop = 0;
-//			}
-//			if (yCrop + height > minimap.getHeight()) {
-//				yCrop = minimap.getHeight() - height;
-//			}
-//		}
-//		
-//		// crop the map's minimap to fit the current size
-//		minimap = minimap.getSubimage(xCrop, yCrop, width, height);
-//		g.drawImage(minimap, xRoot, yRoot, null);
+		if (minimap.getWidth() <= width) {
+			xRoot += (width - minimap.getWidth())/2;
+			xCrop = 0;
+			width = minimap.getWidth();
+		} else {
+			xCrop = (int)player.getPos()[0] - width/2;
+			if (xCrop < 0) {
+				xCrop = 0;
+			}
+			if (xCrop + width > minimap.getWidth()) {
+				xCrop = minimap.getWidth() - width;
+			}
+		}
+		
+		if (minimap.getHeight() <= height) {
+			yRoot += (height - minimap.getHeight())/2;
+			yCrop = 0;
+			height = minimap.getHeight();
+		} else {
+			yCrop = (int)player.getPos()[1] - height/2;
+			if (yCrop < 0) {
+				yCrop = 0;
+			}
+			if (yCrop + height > minimap.getHeight()) {
+				yCrop = minimap.getHeight() - height;
+			}
+		}
+		
+		// crop the map's minimap to fit the current size
+		minimap = minimap.getSubimage(xCrop, yCrop, width, height);
+		g.drawImage(minimap, xRoot, yRoot, null);
 		
 		// draw a square for each item currently on the minimap
 		g.setColor(Color.RED);
@@ -110,13 +111,13 @@ public class Minimap extends GUIObject implements Clickable {
 	}
 	
 	public boolean click() {
-		int xPos = Main.panel.mousePos[0] - xRoot + xCrop;
-		int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
-		Main.logger.debug(xPos + ", " + yPos);
-		
-		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
-			Main.client.getState().getPlayer().setPos(xPos, yPos);
-		}
+//		int xPos = Main.panel.mousePos[0] - xRoot + xCrop;
+//		int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
+//		Main.logger.debug(xPos + ", " + yPos);
+//		
+//		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+//			Main.client.getState().getPlayer().setPos(xPos, yPos);
+//		}
 		return true;
 	}
 

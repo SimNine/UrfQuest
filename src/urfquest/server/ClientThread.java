@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import urfquest.IDGenerator;
 import urfquest.Main;
@@ -72,6 +73,13 @@ public class ClientThread implements Runnable {
 	public void send(Message m) {
 		try {
 			out.writeObject(m);
+		} catch (SocketException e) {
+			// TODO: look into the appropriate way to handle disconnection
+			try {
+				this.stop();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

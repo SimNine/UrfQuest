@@ -1,5 +1,6 @@
 package urfquest.client.map;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +24,8 @@ public class Map {
 	
 	private int[] homeCoords = new int[2];
 	
+	private BufferedImage minimap;
+	
 	private MapChunk[][] localChunks;
 	private int[] localChunkOrigin = new int[2];
 
@@ -44,12 +47,16 @@ public class Map {
 				localChunks[x][y] = null;
 			}
 		}
+		
+		minimap = new BufferedImage(localChunks.length * MapChunk.CHUNK_SIZE, 
+									localChunks[0].length * MapChunk.CHUNK_SIZE, 
+									BufferedImage.TYPE_4BYTE_ABGR);
 	}
-	
+
 	/*
 	 * Tick updater
 	 */
-	
+
 //	public void update() {
 //		// update projectiles
 //		for (Projectile p : projectiles) {
@@ -209,7 +216,13 @@ public class Map {
 		int xChunkLocal = xChunk - localChunkOrigin[0];
 		int yChunkLocal = yChunk - localChunkOrigin[1];
 		
-		return localChunks[xChunkLocal][yChunkLocal];
+		try {
+			return localChunks[xChunkLocal][yChunkLocal];
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+			return null;
+		}
 	}
 	
 	public MapChunk getChunkAtPos(int x, int y) {
@@ -305,7 +318,44 @@ public class Map {
 		MapChunk newChunk = new MapChunk();
 		localChunks[xChunkLocal][yChunkLocal] = newChunk;
 		return newChunk;
+	}	
+	
+	
+	
+	/*
+	 * Minimap management
+	 */
+	
+	// A minimap should be regenerated whenever this client recieves new chunks
+	public void generateMinimap() {
+		for (int x = 0; x < localChunks.length; x++) {
+			for (int y = 0; y < localChunks[0].length; y++) {
+				MapChunk c = localChunks[x][y];
+				if (c == null) {
+					continue;
+				}
+				
+				for (int xc = 0; xc < MapChunk.CHUNK_SIZE; xc++) {
+					for (int yc = 0; yc < MapChunk.CHUNK_SIZE; yc++) {
+						int color = Tiles.minimapColor(c.getTileTypeAt(xc, yc));
+						minimap.setRGB(x * MapChunk.CHUNK_SIZE + xc, 
+									   y * MapChunk.CHUNK_SIZE + yc, 
+									   color);
+					}
+				}
+			}
+		}
 	}
+	
+	public BufferedImage getMinimap() {
+		return minimap;
+	}
+	
+	public void setMinimapAt(int x, int y, int type) {
+		minimap.setRGB(x, y, Tiles.minimapColor(type));
+	}
+	
+	
 	
 	/*
 	 * Misc map manipulation
@@ -324,6 +374,8 @@ public class Map {
 	public int[] getHomeCoords() {
 		return homeCoords;
 	}
+	
+	
 	
 	/*
 	 * ActiveTile management

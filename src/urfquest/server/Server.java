@@ -41,7 +41,7 @@ public class Server {
 		}
 		
 		// launch the master server listening thread
-		new MasterThread(this);
+		new ServerListenerThread(this);
 	}
 	
 	public void intakeMessage(Message m) {
@@ -166,14 +166,14 @@ public class Server {
 		this.game = game;
 	}
 
-	private class MasterThread implements Runnable {
+	private class ServerListenerThread implements Runnable {
 		
 		private Thread t;
 		private Server s;
 		
-		public MasterThread(Server server) {
+		public ServerListenerThread(Server server) {
 			this.s = server;
-			this.t = new Thread(this, "Master server thread");
+			this.t = new Thread(this, "ServerListenerThread");
 			this.t.start();
 		}
 
