@@ -5,8 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import javax.swing.JOptionPane;
-
 import urfquest.Main;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
@@ -77,10 +75,9 @@ public class Client implements Runnable {
 			m.mapID = surfaceMapID;
 			this.send(m);
 			
-			String playerName = JOptionPane.showInputDialog(Main.frame, "What is your name?");
 			m = new Message();
 			m.type = MessageType.PLAYER_REQUEST;
-			m.entityName = playerName;
+			m.entityName = Main.playerName;
 			this.send(m);
 			break;
 		case ENTITY_INIT:

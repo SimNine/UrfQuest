@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import urfquest.client.Client;
@@ -18,9 +22,9 @@ import urfquest.server.Server;
 
 public class Main implements Runnable {
 	
-	private static final int MODE_FULL = 0;
-	private static final int MODE_CLIENT = 1;
-	private static final int MODE_SERVER = 2;
+	static final int MODE_FULL = 0;
+	static final int MODE_CLIENT = 1;
+	static final int MODE_SERVER = 2;
 	
 	// logger
 	public static Logger logger;
@@ -41,38 +45,78 @@ public class Main implements Runnable {
 	// frame properties
 	public static boolean isFullscreen;
 	
+	// startup arguments
+	public static String ip = "localhost";
+	public static int port = 7096;
+	public static int mode = MODE_FULL;
+	public static String playerName = "default";
+	
 	public static void main(String[] args) {
 		logger = new Logger(Logger.LogLevel.LOG_DEBUG);
 		
-		// parse arguments
-		String ip = "localhost";
-		int port = 7096;
-		int mode = MODE_FULL;
-		if (args.length == 0) {
-			mode = Integer.parseInt(JOptionPane.showInputDialog("Server/Client mode:"));
-			if (mode == MODE_CLIENT) {
-				ip = JOptionPane.showInputDialog("Server IP:");
-				port = Integer.parseInt(JOptionPane.showInputDialog("Server port:"));
-			} else if (mode == MODE_SERVER) {
-				port = Integer.parseInt(JOptionPane.showInputDialog("Server port:"));
-			}
-		}
-		if (args.length > 0) {
+		// check for proper number of arguments
+		if (args.length == 3) {
 			ip = args[0];
-		}
-		if (args.length > 1) {
 			port = Integer.parseInt(args[1]);
-		}
-		if (args.length > 2) {
 			mode = Integer.parseInt(args[2]);
+			playerName = args[3];
+		} else if (args.length == 0) {
+			// try to load last used config from file
+			File startupPrefs = new File("startupPrefs.config");
+			if (startupPrefs.exists()) {
+				try {
+					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
+					ip = prefsReader.readLine();
+					port = Integer.parseInt(prefsReader.readLine());
+					mode = Integer.parseInt(prefsReader.readLine());
+					playerName = prefsReader.readLine();
+					prefsReader.close();
+				} catch (IOException e) {
+					System.err.println("Malformed prefs file. going with defaults");
+				}
+			}
+			
+			// create the startup dialog with filled-in defaults
+			StartupDialog dialog = new StartupDialog(ip, port + "", mode, playerName);
+			
+			// load inputs from dialog
+			ip = dialog.ip.getText();
+			port = Integer.parseInt(dialog.portNum.getText());
+			switch (dialog.modeGroup.getSelection().getActionCommand()) {
+			case StartupDialog.SERVER_CLIENT_STRING:
+				mode = 0;
+				break;
+			case StartupDialog.CLIENT_ONLY_STRING:
+				mode = 1;
+				break;
+			case StartupDialog.SERVER_ONLY_STRING:
+				mode = 2;
+				break;
+			}
+			playerName = dialog.playerName.getText();
+			
+			// save inputs to prefs file
+			try {
+				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
+				prefsWriter.println(ip);
+				prefsWriter.println(port + "");
+				prefsWriter.println(mode + "");
+				prefsWriter.println(playerName);
+				prefsWriter.close();
+			} catch (IOException e) {
+				System.err.println("Error writing startup prefs to file");
+			}
+		} else if (args.length != 0) {
+			System.err.println("Wrong number of arguments. Usage:");
+			System.err.println("UrfQuest.java [<ip> <port> <mode> <playerName>]");
+			System.exit(1);
 		}
 		
 		// start either the client, the server, or both
 		if (mode == MODE_FULL) {
 			// client and server
-			int portMirror = port;
 			Thread serverThread = new Thread(() -> {
-				startServer(0, portMirror);
+				startServer(0, port);
 			});
 			serverThread.setName("ServerProcessorThread");
 			serverThread.start();
