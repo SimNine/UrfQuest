@@ -7,8 +7,8 @@ import java.util.HashSet;
 import urf.Pair;
 import urfquest.Main;
 import urfquest.client.QuestPanel;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
-import urfquest.client.guis.GUIObject;
 
 public class GameWeatherOverlay extends GUIContainer {
 	
@@ -18,7 +18,7 @@ public class GameWeatherOverlay extends GUIContainer {
 	private HashSet<Pair<Integer, Integer>> set = new HashSet<Pair<Integer, Integer>>();
 	
 	public GameWeatherOverlay() {
-		super(GUIObject.TOP_LEFT, 
+		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
 			  Main.panel.getWidth(), 

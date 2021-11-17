@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -14,7 +15,7 @@ public class InventoryBar extends GUIContainer {
 	
 	private int entrySize;
 
-	public InventoryBar(int anchorPoint, int xRel, int yRel, int entrySize, GUIObject parent) {
+	public InventoryBar(GUIAnchor anchorPoint, int xRel, int yRel, int entrySize, GUIObject parent) {
 		super(anchorPoint, xRel, yRel, 
 			  10*(entrySize + gapWidth) + gapWidth + borderWidth*2, borderWidth*2 + gapWidth*2 + entrySize, 
 			  null, parent, 
@@ -25,7 +26,7 @@ public class InventoryBar extends GUIContainer {
 		// compute entries
 		int xTemp = borderWidth + gapWidth;
 		for (int z = 0; z < Main.client.getState().getPlayer().getInventoryItems().size(); z++) { // for each entry
-			InventoryEntry e = new InventoryEntry(GUIObject.TOP_LEFT, xTemp, borderWidth + gapWidth, 
+			InventoryEntry e = new InventoryEntry(GUIAnchor.TOP_LEFT, xTemp, borderWidth + gapWidth, 
 												  entrySize, entrySize, this, z);
 			guiObjects.add(e);
 			xTemp += entrySize + gapWidth;

@@ -4,11 +4,12 @@ import java.awt.Graphics;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 
 public class ImageBox extends ImageArea {
 	
-	public ImageBox(String source, int xDisplacement, int yDisplacement, int anchor, GUIContainer parent) {
+	public ImageBox(String source, int xDisplacement, int yDisplacement, GUIAnchor anchor, GUIContainer parent) {
 		super(source, xDisplacement, yDisplacement, anchor, parent);
 	}
 

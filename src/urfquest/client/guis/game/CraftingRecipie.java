@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import urfquest.Main;
 import urfquest.client.entities.items.Item;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -17,7 +18,7 @@ public class CraftingRecipie extends GUIContainer {
 	private HashSet<GUIObject> inputEntries = new HashSet<GUIObject>();
 	private GUIContainer inputContainer;
 
-	public CraftingRecipie(int anchorPoint, int xRel, int yRel, int width, int height, String name, GUIObject parent,
+	public CraftingRecipie(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, String name, GUIObject parent,
 			Color bkg, Color borderColor, int borderThickness, GUIContainer inputContainer) {
 		super(anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
 		this.inputContainer = inputContainer;
@@ -43,7 +44,7 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public void addInput(Item i) {
-		InventoryEntry e = new InventoryEntry(GUIObject.TOP_LEFT, 
+		InventoryEntry e = new InventoryEntry(GUIAnchor.TOP_LEFT, 
 				  5 + input.size()*45, 
 				  5, 
 				  40, 
@@ -59,7 +60,7 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public void addOutput(Item i) {
-		InventoryEntry e = new InventoryEntry(GUIObject.TOP_LEFT, 
+		InventoryEntry e = new InventoryEntry(GUIAnchor.TOP_LEFT, 
 				  5 + output.size()*45, 
 				  5, 
 				  40, 

@@ -10,6 +10,7 @@ import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.Clickable;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -23,7 +24,7 @@ public class Minimap extends GUIObject implements Clickable {
 	private int xCrop;
 	private int yCrop;
 
-	public Minimap(int xDisp, int yDisp, int width, int height, int anchorPoint, GUIContainer parent) {
+	public Minimap(int xDisp, int yDisp, int width, int height, GUIAnchor anchorPoint, GUIContainer parent) {
 		super(anchorPoint, xDisp, yDisp, width, height, parent);
 	}
 

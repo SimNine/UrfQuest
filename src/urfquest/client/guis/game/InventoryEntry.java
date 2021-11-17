@@ -8,6 +8,7 @@ import urfquest.Main;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.Clickable;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -20,7 +21,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 	private static final int MISC = 11;
 	private int type;
 
-	protected InventoryEntry(int anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryNum) {
+	protected InventoryEntry(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryNum) {
 		super(anchorPoint, xRel, yRel, width, height, parent);
 		this.entryNum = entryNum;
 		this.color = new Color(128, 128, 128, 128);
@@ -28,7 +29,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		this.type = INVENTORY;
 	}
 	
-	protected InventoryEntry(int anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, Item item) {
+	protected InventoryEntry(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, Item item) {
 		super(anchorPoint, xRel, yRel, width, height, parent);
 		this.item = item;
 		this.color = new Color(128, 128, 128, 128);

@@ -1,6 +1,8 @@
 package urfquest;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -9,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class StartupDialog {
+public class StartupDialog implements ActionListener {
 	
 	public JTextField ip;
 	public JTextField portNum;
@@ -28,23 +30,26 @@ public class StartupDialog {
 		// set up mode radio buttons
 		JRadioButton serverOnly = new JRadioButton(SERVER_ONLY_STRING);
 		serverOnly.setActionCommand(SERVER_ONLY_STRING);
+		serverOnly.addActionListener(this);
 		JRadioButton clientOnly = new JRadioButton(CLIENT_ONLY_STRING);
 		clientOnly.setActionCommand(CLIENT_ONLY_STRING);
+		clientOnly.addActionListener(this);
 		JRadioButton clientServer = new JRadioButton(SERVER_CLIENT_STRING);
 		clientServer.setActionCommand(SERVER_CLIENT_STRING);
+		clientServer.addActionListener(this);
 		
 		switch (startupMode) {
 		case Main.MODE_FULL:
-			clientServer.setSelected(true);
+			clientServer.doClick();
 			break;
 		case Main.MODE_SERVER:
-			serverOnly.setSelected(true);
+			serverOnly.doClick();
 			break;
 		case Main.MODE_CLIENT:
-			clientOnly.setSelected(true);
+			clientOnly.doClick();
 			break;
 		default:
-			clientServer.setSelected(true);
+			clientServer.doClick();
 			break;
 		}
 		
@@ -77,6 +82,26 @@ public class StartupDialog {
 			return;
 		} else {
 			System.exit(0);
+		}
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+		case SERVER_ONLY_STRING:
+			ip.setEnabled(false);
+			portNum.setEnabled(true);
+			playerName.setEnabled(false);
+			break;
+		case CLIENT_ONLY_STRING:
+			ip.setEnabled(true);
+			portNum.setEnabled(true);
+			playerName.setEnabled(true);
+			break;
+		case SERVER_CLIENT_STRING:
+			ip.setEnabled(false);
+			portNum.setEnabled(true);
+			playerName.setEnabled(true);
+			break;
 		}
 	}
 }

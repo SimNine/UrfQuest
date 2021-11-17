@@ -7,13 +7,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
 public abstract class ImageArea extends GUIObject {
 	protected BufferedImage image;
 	
-	public ImageArea(String source, int xDisp, int yDisp, int anchor, GUIContainer parent) {
+	public ImageArea(String source, int xDisp, int yDisp, GUIAnchor anchor, GUIContainer parent) {
 		super(anchor, xDisp, yDisp, 0, 0, parent);
 		try {
 			this.image = ImageIO.read(new File(source));

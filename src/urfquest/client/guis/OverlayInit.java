@@ -5,12 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import urfquest.Main;
+import urfquest.client.guis.game.ChatWindow;
 import urfquest.client.guis.menus.*;
 
 public class OverlayInit {
 	
 	public static GUIContainer newMainMenu() {
-		GUIContainer mainMenu = new GUIContainer(GUIObject.TOP_LEFT, 
+		GUIContainer mainMenu = new GUIContainer(GUIAnchor.TOP_LEFT, 
 												 0, 
 												 0, 
 												 Main.panel.getWidth(), 
@@ -20,26 +21,26 @@ public class OverlayInit {
 												 new Color(128, 128, 128, 128), null, 0);
 		Set<GUIObject> mainObjects = new HashSet<GUIObject>();
 		
-		mainObjects.add(new TextBox("UrfQuest", 60, -160, -120, GUIObject.CENTER, mainMenu));
-		mainObjects.add(new TextButton("Play", 30, -80, -60, GUIObject.CENTER, mainMenu) {
+		mainObjects.add(new TextBox("UrfQuest", 60, -160, -120, GUIAnchor.CENTER, mainMenu));
+		mainObjects.add(new TextButton("Play", 30, -80, -60, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
 				Main.panel.unpause();
 				return true;
 			}
 		});
-		mainObjects.add(new TextButton("Character", 30, -80, -30, GUIObject.CENTER, mainMenu) {
+		mainObjects.add(new TextButton("Character", 30, -80, -30, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
 				//currentOverlay = characterScreen;
 				return true;
 			}
 		});
-		mainObjects.add(new TextButton("Options", 30, -80, 0, GUIObject.CENTER, mainMenu) {
+		mainObjects.add(new TextButton("Options", 30, -80, 0, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.optionsMenu);
 				return true;
 			}
 		});
-		mainObjects.add(new TextButton("Quit", 30, -80, 30, GUIObject.CENTER, mainMenu) {
+		mainObjects.add(new TextButton("Quit", 30, -80, 30, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
 				System.exit(0);
 				return true;
@@ -51,17 +52,10 @@ public class OverlayInit {
 	}
 
 	public static GUIContainer newTitleScreen() {
-		GUIContainer titleScreen = new GUIContainer(GUIObject.TOP_LEFT, 
-													0, 
-													0, 
-													Main.panel.getWidth(), 
-													Main.panel.getHeight(), 
-													"title", 
-													null, 
-													Color.BLACK, null, 0);
+		GUIContainer titleScreen = newGrayLayer("title");
 		Set<GUIObject> titleObjects = new HashSet<GUIObject>();
 		
-		titleObjects.add(new ImageButton("src/resources/arcanists2.png", 1, -185, 80, titleScreen) {
+		titleObjects.add(new ImageButton("src/resources/arcanists2.png", 1, -185, GUIAnchor.CENTER, titleScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.mainMenu);
 				return true;
@@ -73,122 +67,114 @@ public class OverlayInit {
 	}
 	
 	public static GUIContainer newOptionsOverlay() {	
-		GUIContainer optionsScreen = new GUIContainer(GUIObject.TOP_LEFT, 
-													0, 
-													0, 
-													Main.panel.getWidth(), 
-													Main.panel.getHeight(), 
-													"options", 
-													null, 
-													new Color(128, 128, 128, 128), null, 0);
-		Set<GUIObject> optionsObjects = new HashSet<GUIObject>();
+		GUIContainer optionsScreen = newGrayLayer("options");
 		
-		optionsObjects.add(new TextBox("Sound:", 30, -160, -60, GUIObject.CENTER, optionsScreen));
-		optionsObjects.add(new Slider(30, 0, -60, GUIObject.CENTER, optionsScreen) {
+		optionsScreen.addObject(new TextBox("Sound:", 30, -160, -60, GUIAnchor.CENTER, optionsScreen));
+		optionsScreen.addObject(new Slider(30, 0, -60, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
 				this.setSliderPosition();
 				//SoundEngine.soundVol = this.sliderPos;
 				return true;
 			}
 		});
-		optionsObjects.add(new TextBox("Music:", 30, -160, -30, GUIObject.CENTER, optionsScreen));
-		optionsObjects.add(new Slider(30, 0, -30, GUIObject.CENTER, optionsScreen) {
+		optionsScreen.addObject(new TextBox("Music:", 30, -160, -30, GUIAnchor.CENTER, optionsScreen));
+		optionsScreen.addObject(new Slider(30, 0, -30, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
 				this.setSliderPosition();
 				//SoundEngine.musicVol = this.sliderPos;
 				return true;
 			}
 		});
-//		optionsObjects.add(new TextButton("Toggle Debug", 30, -80, 0, GUIObject.CENTER, optionsScreen) {
+//		optionsScreen.addObject(new TextButton("Toggle Debug", 30, -80, 0, GUIObject.CENTER, optionsScreen) {
 //			public boolean click() {
 //				Main.debug = !Main.debug;
 //				return true;
 //			}
 //		});
-		optionsObjects.add(new TextButton("Select Keybindings", 30, -80, 30, GUIObject.CENTER, optionsScreen) {
+		optionsScreen.addObject(new TextButton("Select Keybindings", 30, -80, 30, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.keybindingView);
 				return true;
 			}
 		});
-		optionsObjects.add(new TextButton("Back", 30, -80, 60, GUIObject.CENTER, optionsScreen) {
+		optionsScreen.addObject(new TextButton("Back", 30, -80, 60, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.pauseMenu);
 				return true;
 			}
 		});
 		
-		optionsScreen.addAllObjects(optionsObjects);
 		return optionsScreen;
 	}
 	
 	public static GUIContainer newPauseMenu() {
-		GUIContainer pauseScreen = new GUIContainer(GUIObject.TOP_LEFT, 
-													0, 
-													0, 
-													Main.panel.getWidth(), 
-													Main.panel.getHeight(), 
-													"pause", 
-													null, 
-													new Color(128, 128, 128, 128), null, 0);
-		Set<GUIObject> pauseObjects = new HashSet<GUIObject>();
+		GUIContainer pauseScreen = newGrayLayer("pause");
 		
-		pauseObjects.add(new TextBox("Paused", 60, -160, -120, GUIObject.CENTER, pauseScreen));
-		pauseObjects.add(new TextButton("Resume", 30, -80, -60, GUIObject.CENTER, pauseScreen) {
+		pauseScreen.addObject(new TextBox("Paused", 60, -160, -120, GUIAnchor.CENTER, pauseScreen));
+		pauseScreen.addObject(new TextButton("Resume", 30, -80, -60, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
 				Main.panel.unpause();
 				return true;
 			}
 		});
-		pauseObjects.add(new TextButton("Options", 30, -80, -30, GUIObject.CENTER, pauseScreen) {
+		pauseScreen.addObject(new TextButton("Options", 30, -80, -30, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.optionsMenu);
 				return true;
 			}
 		});
-//		pauseObjects.add(new TextButton("Save", 30, -80, 0, GUIObject.CENTER, pauseScreen) {
+//		pauseScreen.addObject(new TextButton("Save", 30, -80, 0, GUIAnchor.CENTER, pauseScreen) {
 //			public boolean click() {
 //				Loader.saveGame();
 //				return true;
 //			}
 //		});
-//		pauseObjects.add(new TextButton("Load", 30, -80, 30, GUIObject.CENTER, pauseScreen) {
+//		pauseScreen.addObject(new TextButton("Load", 30, -80, 30, GUIAnchor.CENTER, pauseScreen) {
 //			public boolean click() {
 //				Loader.loadGame();
 //				return true;
 //			}
 //		});
-		pauseObjects.add(new TextButton("Main Menu", 30, -80, 60, GUIObject.CENTER, pauseScreen) {
+		pauseScreen.addObject(new TextButton("Main Menu", 30, -80, 60, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
 				Main.panel.swap(Main.panel.mainMenu);
 				return true;
 			}
 		});
-		pauseObjects.add(new TextButton("Quit Game", 30, -80, 90, GUIObject.CENTER, pauseScreen) {
+		pauseScreen.addObject(new TextButton("Quit Game", 30, -80, 90, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
 				System.exit(0);
 				return true;
 			}
 		});
 		
-		pauseScreen.addAllObjects(pauseObjects);
 		return pauseScreen;
 	}
 	
-	public static GUIContainer newGrayLayer() {
-		return new GUIContainer(GUIObject.TOP_LEFT, 
+	public static GUIContainer newChatOverlay() {
+		GUIContainer chatScreen = newGrayLayer("chat");
+		
+		ChatWindow chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -10, -10, 300, 150, 
+				"chatmessages", chatScreen, Color.GRAY, Color.BLACK, 3);
+		chatScreen.addObject(chatWindow);
+		
+		return chatScreen;
+	}
+	
+	public static GUIContainer newGrayLayer(String name) {
+		return new GUIContainer(GUIAnchor.TOP_LEFT, 
 								0, 
 								0, 
 								Main.panel.getWidth(), 
 								Main.panel.getHeight(), 
-								"graylayer", 
+								name, 
 								null, 
 								new Color(128, 128, 128, 128), null, 0);
 	}
 	
 	public static GUIContainer newGUIOverlay() {
 		//Set<GUIObject> guiObjects = new HashSet<GUIObject>();
-		return new GUIContainer(GUIObject.TOP_LEFT, 
+		return new GUIContainer(GUIAnchor.TOP_LEFT, 
 								0, 
 								0, 
 								Main.panel.getWidth(), 

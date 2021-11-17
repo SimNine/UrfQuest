@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -13,7 +14,7 @@ public abstract class StatusBar extends GUIObject {
 	private boolean visibleByDefault = false;
 	private int visibility = 0;
 	
-	public StatusBar(int xDisp, int yDisp, int width, int height, int anchor, Color col, boolean visibleByDefault, GUIContainer parent) {
+	public StatusBar(int xDisp, int yDisp, int width, int height, GUIAnchor anchor, Color col, boolean visibleByDefault, GUIContainer parent) {
 		super(anchor, xDisp, yDisp, width, height, parent);
 		this.color = col;
 		this.visibleByDefault = visibleByDefault;

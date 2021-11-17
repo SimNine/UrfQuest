@@ -7,11 +7,12 @@ import java.awt.Graphics;
 import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.guis.Clickable;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 
 public abstract class TextButton extends TextArea implements Clickable {
 
-	public TextButton(String text, int fontSize, int xDisplacement, int yDisplacement, int anchor, GUIContainer parent) {
+	public TextButton(String text, int fontSize, int xDisplacement, int yDisplacement, GUIAnchor anchor, GUIContainer parent) {
 		super(text, fontSize, xDisplacement, yDisplacement, anchor, parent);
 	}
 	

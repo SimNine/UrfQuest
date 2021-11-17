@@ -6,13 +6,14 @@ import java.awt.Graphics;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 
 public class TextBox extends TextArea {
 	
 	public boolean respondsToMouseover = false;
 
-	public TextBox(String text, int fontSize, int xDisplacement, int yDisplacement, int anchor, GUIContainer parent) {
+	public TextBox(String text, int fontSize, int xDisplacement, int yDisplacement, GUIAnchor anchor, GUIContainer parent) {
 		super(text, fontSize, xDisplacement, yDisplacement, anchor, parent);
 	}
 	

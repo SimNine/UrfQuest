@@ -13,7 +13,7 @@ public class Keybindings {
 	public int MAPLINK = KeyEvent.VK_ENTER;
 	public int CRAFTING = KeyEvent.VK_C;
 	public int CYCLE_DEBUG = KeyEvent.VK_F3;
-	//public int CHAT = KeyEvent.VK_T;
+	public int CHAT = KeyEvent.VK_T;
 	
 	public String toString() {
 		String ret = "CONSOLE: " + KeyEvent.getKeyText(CONSOLE) + "\n";
@@ -25,7 +25,7 @@ public class Keybindings {
 		ret += "MAPLINK: " + KeyEvent.getKeyText(MAPLINK) + "\n";
 		ret += "CRAFTING: " + KeyEvent.getKeyText(CRAFTING) + "\n";
 		ret += "CYCLE_DEBUG: " + KeyEvent.getKeyText(CRAFTING) + "\n";
-		//ret += "CHAT: " + KeyEvent.getKeyText(CHAT) + "\n";
+		ret += "CHAT: " + KeyEvent.getKeyText(CHAT) + "\n";
 		return ret;
 	}
 }

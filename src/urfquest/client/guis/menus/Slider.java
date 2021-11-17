@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.guis.Clickable;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 
@@ -13,7 +14,7 @@ public class Slider extends GUIObject implements Clickable {
 	private int sliderPos = 0;
 	private int lineThickness = 3;
 	
-	public Slider(int size, int xDisp, int yDisp, int anchor, GUIContainer parent) {
+	public Slider(int size, int xDisp, int yDisp, GUIAnchor anchor, GUIContainer parent) {
 		super(anchor, xDisp, yDisp, size*5, size, parent);
 	}
 	

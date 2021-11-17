@@ -7,18 +7,13 @@ import java.awt.Rectangle;
 import urfquest.Main;
 
 public abstract class GUIObject {
-	public static final int TOP_LEFT = 2010;
-	public static final int TOP_RIGHT = 2015;
-	public static final int BOTTOM_LEFT = 2020;
-	public static final int BOTTOM_RIGHT = 2025;
-	public static final int CENTER = 2030;
 	
 	protected int xDisplacement, yDisplacement;
-	protected int anchor;
+	protected GUIAnchor anchor;
 	protected Rectangle bounds;
 	protected GUIObject parent;
 	
-	protected GUIObject(int anchorPoint, int xRel, int yRel, int width, int height, GUIObject parent) {
+	protected GUIObject(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIObject parent) {
 		anchor = anchorPoint;
 		xDisplacement = xRel;
 		yDisplacement = yRel;

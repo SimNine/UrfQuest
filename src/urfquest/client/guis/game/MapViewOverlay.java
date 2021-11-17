@@ -3,15 +3,15 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 
 import urfquest.Main;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
-import urfquest.client.guis.GUIObject;
 import urfquest.client.map.Map;
 import urfquest.client.map.MapChunk;
 
 public class MapViewOverlay extends GUIContainer {
 	
 	public MapViewOverlay() {
-		super(GUIObject.TOP_LEFT, 
+		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
 			  Main.panel.getWidth(), 
@@ -27,7 +27,7 @@ public class MapViewOverlay extends GUIContainer {
 								   -mapDiameter/2, 
 								   mapDiameter + 10, 
 								   mapDiameter + 10, 
-								   GUIObject.CENTER, 
+								   GUIAnchor.CENTER, 
 								   this));
 	}
 }

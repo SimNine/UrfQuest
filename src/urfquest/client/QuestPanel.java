@@ -21,6 +21,7 @@ import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.OverlayInit;
+import urfquest.client.guis.game.ChatWindow;
 import urfquest.client.guis.game.CraftingOverlay;
 import urfquest.client.guis.game.GameBoardOverlay;
 import urfquest.client.guis.game.GameStatusOverlay;
@@ -50,6 +51,7 @@ public class QuestPanel extends JPanel {
 	public GUIContainer pauseMenu;
 	public GUIContainer optionsMenu;
 	
+	public ChatWindow chatOverlay;
 	public GameStatusOverlay gameStatus;
 	public GameBoardOverlay gameBoard;
 	public GameWeatherOverlay gameWeather;
@@ -298,6 +300,7 @@ public class QuestPanel extends JPanel {
 	}
 	
 	public void initOverlays() {
+		//chatOverla
 		gameBoard = new GameBoardOverlay();
 		gameStatus = new GameStatusOverlay();
 		gameWeather = new GameWeatherOverlay();

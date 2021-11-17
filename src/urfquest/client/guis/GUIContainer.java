@@ -16,7 +16,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 	private int borderThickness;
 	private String name;
 	
-	public GUIContainer(int anchorPoint, int xRel, int yRel, int width, int height, 
+	public GUIContainer(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, 
 						String name, GUIObject parent, 
 						Color bkg, Color borderColor, int borderThickness) {
 		super(anchorPoint, xRel, yRel, width, height, parent);

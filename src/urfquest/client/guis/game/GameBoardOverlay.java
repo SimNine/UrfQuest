@@ -12,8 +12,8 @@ import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.entities.particles.Particle;
 import urfquest.client.entities.projectiles.Projectile;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
-import urfquest.client.guis.GUIObject;
 import urfquest.client.map.Map;
 import urfquest.client.tiles.Tiles;
 
@@ -23,7 +23,7 @@ public class GameBoardOverlay extends GUIContainer {
 	private int tileAnimStage = 0;
 
 	public GameBoardOverlay() {
-		super(GUIObject.TOP_LEFT, 
+		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
 			  Main.panel.getWidth(), 

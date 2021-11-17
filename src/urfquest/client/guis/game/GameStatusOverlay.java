@@ -6,8 +6,8 @@ import java.awt.Graphics;
 import urfquest.Main;
 //import guis.menus.ImageBox;
 import urfquest.client.entities.items.Item;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
-import urfquest.client.guis.GUIObject;
 
 public class GameStatusOverlay extends GUIContainer {
 	private StatusBar healthBar;
@@ -23,11 +23,11 @@ public class GameStatusOverlay extends GUIContainer {
 	private int inventoryBarHeight = 51;
 
 	public GameStatusOverlay() {
-		super(GUIObject.TOP_LEFT, 0, 0, Main.panel.getWidth(), Main.panel.getHeight(), "status", null, null, null, 0);
+		super(GUIAnchor.TOP_LEFT, 0, 0, Main.panel.getWidth(), Main.panel.getHeight(), "status", null, null, null, 0);
 
 		manaBar = new StatusBar(spacing, -(spacing*3 + statusBarHeight*2 + inventoryBarHeight), 
 								statusBarLength, statusBarHeight, 
-								GUIObject.BOTTOM_LEFT, 
+								GUIAnchor.BOTTOM_LEFT, 
 								new Color(0, 0, 255, 180), 
 								true, 
 								this) {
@@ -37,7 +37,7 @@ public class GameStatusOverlay extends GUIContainer {
 		};
 		healthBar = new StatusBar(spacing, -(spacing*2 + statusBarHeight + inventoryBarHeight), 
 								  statusBarLength, statusBarHeight, 
-								  GUIObject.BOTTOM_LEFT, 
+								  GUIAnchor.BOTTOM_LEFT, 
 								  new Color(255, 0, 0, 180), 
 								  true,
 								  this) {
@@ -47,7 +47,7 @@ public class GameStatusOverlay extends GUIContainer {
 		};
 		fullnessBar = new StatusBar(spacing, -(spacing*4 + statusBarHeight*3 + inventoryBarHeight), 
 				  				  statusBarLength, statusBarHeight, 
-				  				  GUIObject.BOTTOM_LEFT, 
+				  				GUIAnchor.BOTTOM_LEFT, 
 				  				  new Color(255, 255, 255, 180), 
 				  				  true,
 				  				  this) {
@@ -59,8 +59,8 @@ public class GameStatusOverlay extends GUIContainer {
 //									200, 
 //									200,
 //									GUIObject.TOP_LEFT);
-		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIObject.TOP_RIGHT, this);
-		invBar = new InventoryBar(GUIObject.BOTTOM_LEFT, 3, -inventoryBarHeight - spacing, 40, this);
+		minimap = new Minimap(-100 - spacing, spacing, 100, 100, GUIAnchor.TOP_RIGHT, this);
+		invBar = new InventoryBar(GUIAnchor.BOTTOM_LEFT, 3, -inventoryBarHeight - spacing, 40, this);
 		
 		guiObjects.add(fullnessBar);
 		//guiObjects.add(fullnessIcon);
@@ -72,17 +72,17 @@ public class GameStatusOverlay extends GUIContainer {
 	
 	public void cycleMinimapSize() {
 		if (!guiObjects.contains(minimap)) {
-			minimap = new Minimap(-(100 + spacing), spacing, 100, 100, GUIObject.TOP_RIGHT, this);
+			minimap = new Minimap(-(100 + spacing), spacing, 100, 100, GUIAnchor.TOP_RIGHT, this);
 			guiObjects.add(minimap);
 			return;
 		}
 		
 		guiObjects.remove(minimap);
 		if (minimap.getSize() == 100) {
-			minimap = new Minimap(-(200 + spacing), spacing, 200, 200, GUIObject.TOP_RIGHT, this);
+			minimap = new Minimap(-(200 + spacing), spacing, 200, 200, GUIAnchor.TOP_RIGHT, this);
 			guiObjects.add(minimap);
 		} else if (minimap.getSize() == 200) {
-			minimap = new Minimap(-(300 + spacing), spacing, 300, 300, GUIObject.TOP_RIGHT, this);
+			minimap = new Minimap(-(300 + spacing), spacing, 300, 300, GUIAnchor.TOP_RIGHT, this);
 			guiObjects.add(minimap);
 		} else { //if (minimap.getSize() == 300) {
 			// don't re-add the minimap
