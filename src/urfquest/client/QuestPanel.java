@@ -19,6 +19,7 @@ import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
+import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.OverlayInit;
 import urfquest.client.guis.game.ChatWindow;
@@ -51,7 +52,7 @@ public class QuestPanel extends JPanel {
 	public GUIContainer pauseMenu;
 	public GUIContainer optionsMenu;
 	
-	public ChatWindow chatOverlay;
+	public ChatWindow chatWindow;
 	public GameStatusOverlay gameStatus;
 	public GameBoardOverlay gameBoard;
 	public GameWeatherOverlay gameWeather;
@@ -164,6 +165,8 @@ public class QuestPanel extends JPanel {
 							guiOpen = true;
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
 							Main.client.getState().getPlayer().useTileUnderneath();
+						} else if (e.getKeyCode() == keybindings.CHAT) {
+							gameStatus.addObject(chatWindow);
 						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
 							System.out.println(Main.client.getState().getPlayer().getCenter()[0] + "," +
 											   Main.client.getState().getPlayer().getCenter()[1]);
@@ -300,7 +303,6 @@ public class QuestPanel extends JPanel {
 	}
 	
 	public void initOverlays() {
-		//chatOverla
 		gameBoard = new GameBoardOverlay();
 		gameStatus = new GameStatusOverlay();
 		gameWeather = new GameWeatherOverlay();
@@ -310,6 +312,9 @@ public class QuestPanel extends JPanel {
 		mainMenu = OverlayInit.newMainMenu();
 		pauseMenu = OverlayInit.newPauseMenu();
 		optionsMenu = OverlayInit.newOptionsOverlay();
+		
+		chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -15, -15, 500, 200, 
+									"chatwindow", gameStatus, Color.LIGHT_GRAY, null, 0);
 		
 		overlays.push(gameBoard);
 		//overlays.push(gameWeather);

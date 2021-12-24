@@ -106,6 +106,16 @@ public class KeybindingOverlay extends GUIContainer {
 			}
 		});
 		
+		guiObjects.add(new TextBox("Chat: ", 30, -160, 90, GUIAnchor.CENTER, this));
+		guiObjects.add(new KeybindingButton(KeyEvent.getKeyText(keybindings.CHAT), 30, 120, 90, GUIAnchor.CENTER, this) {
+			public void setKey(int k) {
+				text = KeyEvent.getKeyText(k);
+				keybindings.CHAT = k;
+				boxToWaitFor = null;
+				setWaiting(false);
+			}
+		});
+		
 //		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER, this) {
 //			public boolean click() {
 //				Main.debug = !Main.debug;
