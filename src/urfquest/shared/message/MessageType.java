@@ -3,6 +3,7 @@ package urfquest.shared.message;
 public enum MessageType {
 	PING,
 	CHUNK_LOAD,
+	CHAT_MESSAGE,
 	
 	// temporary
 	DEBUG_PLAYER_INFO,

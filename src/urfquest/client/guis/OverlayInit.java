@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import urfquest.Main;
-import urfquest.client.guis.game.ChatWindow;
 import urfquest.client.guis.menus.*;
 
 public class OverlayInit {
@@ -149,16 +148,6 @@ public class OverlayInit {
 		});
 		
 		return pauseScreen;
-	}
-	
-	public static GUIContainer newChatOverlay() {
-		GUIContainer chatScreen = newGrayLayer("chat");
-		
-		ChatWindow chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -10, -10, 300, 150, 
-				"chatmessages", chatScreen, Color.GRAY, Color.BLACK, 3);
-		chatScreen.addObject(chatWindow);
-		
-		return chatScreen;
 	}
 	
 	public static GUIContainer newGrayLayer(String name) {

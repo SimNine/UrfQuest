@@ -19,10 +19,9 @@ import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
-import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.OverlayInit;
-import urfquest.client.guis.game.ChatWindow;
+import urfquest.client.guis.game.ChatOverlay;
 import urfquest.client.guis.game.CraftingOverlay;
 import urfquest.client.guis.game.GameBoardOverlay;
 import urfquest.client.guis.game.GameStatusOverlay;
@@ -52,7 +51,7 @@ public class QuestPanel extends JPanel {
 	public GUIContainer pauseMenu;
 	public GUIContainer optionsMenu;
 	
-	public ChatWindow chatWindow;
+	public ChatOverlay chatOverlay;
 	public GameStatusOverlay gameStatus;
 	public GameBoardOverlay gameBoard;
 	public GameWeatherOverlay gameWeather;
@@ -93,11 +92,10 @@ public class QuestPanel extends JPanel {
 			public void keyPressed(KeyEvent e) {
 				keys.add(e.getKeyCode());
 				
-				if (overlays.peek() instanceof KeybindingOverlay) {
+				// if currently on the keybinding page
+				if (overlays.peek() == keybindingView) {
 					keybindingView.keypress(e.getKeyCode());
-				}
-				
-				if (!(overlays.peek() instanceof KeybindingOverlay)) {
+				} else {
 					if (e.getKeyCode() == keybindings.FULLSCREEN) {
 						Main.resetFrame(!Main.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
@@ -116,16 +114,23 @@ public class QuestPanel extends JPanel {
 					}
 					
 					if (guiOpen) {
-						if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
-							if (overlays.peek() instanceof MapViewOverlay) {
+						GUIContainer currentOverlay = overlays.peek();
+						if (currentOverlay == mapView) {
+							if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 								swap(gameStatus);
 								guiOpen = false;
 							}
-						} else if (e.getKeyCode() == keybindings.CRAFTING) {
-							if (overlays.peek() instanceof CraftingOverlay) {
+						} else if (currentOverlay == craftingView) {
+							if (e.getKeyCode() == keybindings.CRAFTING) {
 								swap(gameStatus);
 								guiOpen = false;
 							}
+						} else if (currentOverlay == chatOverlay) {
+							if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+								swap(gameStatus);
+								guiOpen = false;
+							}
+							chatOverlay.keypress(e);
 						}
 					} else {
 						if (e.getKeyCode() == keybindings.CONSOLE) {
@@ -166,7 +171,8 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
 							Main.client.getState().getPlayer().useTileUnderneath();
 						} else if (e.getKeyCode() == keybindings.CHAT) {
-							gameStatus.addObject(chatWindow);
+							swap(chatOverlay);
+							guiOpen = true;
 						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
 							System.out.println(Main.client.getState().getPlayer().getCenter()[0] + "," +
 											   Main.client.getState().getPlayer().getCenter()[1]);
@@ -227,6 +233,11 @@ public class QuestPanel extends JPanel {
 	}
 	
 	private void scanHeldKeys() {
+		if (guiOpen) {
+			// do not send a message that the user is trying to move, if a GUI is open
+			return;
+		}
+		
 		double xDiff = 0;
 		double yDiff = 0;
 		
@@ -312,9 +323,7 @@ public class QuestPanel extends JPanel {
 		mainMenu = OverlayInit.newMainMenu();
 		pauseMenu = OverlayInit.newPauseMenu();
 		optionsMenu = OverlayInit.newOptionsOverlay();
-		
-		chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -15, -15, 500, 200, 
-									"chatwindow", gameStatus, Color.LIGHT_GRAY, null, 0);
+		chatOverlay = new ChatOverlay();
 		
 		overlays.push(gameBoard);
 		//overlays.push(gameWeather);
