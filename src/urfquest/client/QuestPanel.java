@@ -127,8 +127,8 @@ public class QuestPanel extends JPanel {
 							}
 						} else if (currentOverlay == chatOverlay) {
 							if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-								swap(gameStatus);
 								guiOpen = false;
+								chatOverlay.setOpaqueChatbox(false);
 							}
 							chatOverlay.keypress(e);
 						}
@@ -171,8 +171,8 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
 							Main.client.getState().getPlayer().useTileUnderneath();
 						} else if (e.getKeyCode() == keybindings.CHAT) {
-							swap(chatOverlay);
 							guiOpen = true;
+							chatOverlay.setOpaqueChatbox(true);
 						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
 							System.out.println(Main.client.getState().getPlayer().getCenter()[0] + "," +
 											   Main.client.getState().getPlayer().getCenter()[1]);
@@ -286,6 +286,10 @@ public class QuestPanel extends JPanel {
 		return this.isUserIngame;
 	}
 	
+	public void setKeybindings(Keybindings k) {
+		this.keybindings = k;
+	}
+	
 	public Keybindings getKeybindings() {
 		return keybindings;
 	}
@@ -297,6 +301,7 @@ public class QuestPanel extends JPanel {
 	public void pause() {
 		// UrfQuestClient.gameRunning = false; TODO: send pause signal
 		this.isUserIngame = false;
+		overlays.pop();
 		pauseMenu.resetBounds();
 		overlays.push(pauseMenu);
 	}
@@ -305,6 +310,7 @@ public class QuestPanel extends JPanel {
 		// UrfQuestClient.gameRunning = true; TODO: send resume signal
 		this.isUserIngame = true;
 		overlays.pop();
+		overlays.push(chatOverlay);
 	}
 	
 	public void swap(GUIContainer o) {
@@ -324,6 +330,7 @@ public class QuestPanel extends JPanel {
 		pauseMenu = OverlayInit.newPauseMenu();
 		optionsMenu = OverlayInit.newOptionsOverlay();
 		chatOverlay = new ChatOverlay();
+		chatOverlay.resetBounds();
 		
 		overlays.push(gameBoard);
 		//overlays.push(gameWeather);

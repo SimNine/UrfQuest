@@ -139,6 +139,14 @@ public class Server {
 					m.payload = p1pos;
 					c.send(m);
 					break;
+				case CHAT_MESSAGE:
+					Main.logger.info(m.clientID + " - " + m.toString());
+					int playerID1 = clientPlayers.get(m.clientID);
+					Player p11 = game.getPlayer(playerID1);
+					
+					m.entityName = p11.getName();
+					this.sendMessageToAllClients(m);
+					break;
 				default:
 					Main.logger.debug(m.clientID + " - " + m.toString());
 					break;

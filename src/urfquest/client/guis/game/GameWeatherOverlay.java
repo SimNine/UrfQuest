@@ -21,8 +21,8 @@ public class GameWeatherOverlay extends GUIContainer {
 		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
-			  Main.panel.getWidth(), 
-			  Main.panel.getHeight(), 
+			  0, 
+			  0, 
 			  "board", 
 			  null, 
 			  null, null, 0);

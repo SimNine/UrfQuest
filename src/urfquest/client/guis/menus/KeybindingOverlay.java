@@ -14,14 +14,14 @@ import urfquest.client.guis.OverlayInit;
 
 public class KeybindingOverlay extends GUIContainer {
 	private KeybindingButton boxToWaitFor = null;
-	private Keybindings keybindings = Main.panel.getKeybindings();
+	private Keybindings keybindings = new Keybindings();
 	
 	public KeybindingOverlay() {
 		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
-			  Main.panel.getWidth(), 
-			  Main.panel.getHeight(), 
+			  0, 
+			  0, 
 			  "keybindings", 
 			  null, 
 			  new Color(128, 128, 128, 128), null, 0);
@@ -116,13 +116,13 @@ public class KeybindingOverlay extends GUIContainer {
 			}
 		});
 		
-//		guiObjects.add(new TextButton("Toggle Debug", 30, -80, 90, GUIObject.CENTER, this) {
-//			public boolean click() {
-//				Main.debug = !Main.debug;
-//				return true;
-//			}
-//		});
-		guiObjects.add(new TextButton("Back", 30, -80, 120, GUIAnchor.CENTER, this) {
+		guiObjects.add(new TextButton("Apply", 30, -80, 120, GUIAnchor.CENTER, this) {
+			public boolean click() {
+				Main.panel.setKeybindings(keybindings);
+				return true;
+			}
+		});
+		guiObjects.add(new TextButton("Back", 30, -80, 150, GUIAnchor.CENTER, this) {
 			public boolean click() {
 				if (boxToWaitFor == null) {
 					Main.panel.swap(OverlayInit.newOptionsOverlay());
@@ -158,5 +158,9 @@ public class KeybindingOverlay extends GUIContainer {
 		}
 		
 		boxToWaitFor.setKey(key);
+	}
+	
+	public void setKeybindings(Keybindings k) {
+		this.keybindings = k;
 	}
 }

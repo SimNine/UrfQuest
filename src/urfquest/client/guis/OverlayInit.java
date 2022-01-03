@@ -13,8 +13,8 @@ public class OverlayInit {
 		GUIContainer mainMenu = new GUIContainer(GUIAnchor.TOP_LEFT, 
 												 0, 
 												 0, 
-												 Main.panel.getWidth(), 
-												 Main.panel.getHeight(), 
+												 0, 
+												 0, 
 												 "main", 
 												 null, 
 												 new Color(128, 128, 128, 128), null, 0);
@@ -92,6 +92,7 @@ public class OverlayInit {
 //		});
 		optionsScreen.addObject(new TextButton("Select Keybindings", 30, -80, 30, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
+				Main.panel.keybindingView.setKeybindings(Main.panel.getKeybindings());
 				Main.panel.swap(Main.panel.keybindingView);
 				return true;
 			}
@@ -154,8 +155,8 @@ public class OverlayInit {
 		return new GUIContainer(GUIAnchor.TOP_LEFT, 
 								0, 
 								0, 
-								Main.panel.getWidth(), 
-								Main.panel.getHeight(), 
+								0, 
+								0, 
 								name, 
 								null, 
 								new Color(128, 128, 128, 128), null, 0);
@@ -166,8 +167,8 @@ public class OverlayInit {
 		return new GUIContainer(GUIAnchor.TOP_LEFT, 
 								0, 
 								0, 
-								Main.panel.getWidth(), 
-								Main.panel.getHeight(), 
+								0, 
+								0, 
 								"gui", 
 								null, 
 								null, null, 0);

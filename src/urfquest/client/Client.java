@@ -124,6 +124,10 @@ public class Client implements Runnable {
 		case DEBUG_PLAYER_INFO:
 			Main.logger.info(m.toString());
 			break;
+		case CHAT_MESSAGE:
+			Main.logger.info(m.toString());
+			Main.panel.chatOverlay.addMessage(m.entityName + "> " + (String)m.payload);
+			break;
 		default:
 			Main.logger.debug(m.toString());
 			break;

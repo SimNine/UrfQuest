@@ -23,7 +23,7 @@ public class GameStatusOverlay extends GUIContainer {
 	private int inventoryBarHeight = 51;
 
 	public GameStatusOverlay() {
-		super(GUIAnchor.TOP_LEFT, 0, 0, Main.panel.getWidth(), Main.panel.getHeight(), "status", null, null, null, 0);
+		super(GUIAnchor.TOP_LEFT, 0, 0, 0, 0, "status", null, null, null, 0);
 
 		manaBar = new StatusBar(spacing, -(spacing*3 + statusBarHeight*2 + inventoryBarHeight), 
 								statusBarLength, statusBarHeight, 

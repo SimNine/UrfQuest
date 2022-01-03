@@ -14,8 +14,8 @@ public class MapViewOverlay extends GUIContainer {
 		super(GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
-			  Main.panel.getWidth(), 
-			  Main.panel.getHeight(), 
+			  0, 
+			  0, 
 			  "map", 
 			  null, 
 			  new Color(128, 128, 128, 128), null, 0);

@@ -34,6 +34,9 @@ public class Message implements Serializable {
 		case CHUNK_LOAD:
 			ret += "MapID: " + mapID + ", xChunk:" + xyChunk[0] + ", yChunk:" + xyChunk[1];
 			break;
+		case CHAT_MESSAGE:
+			ret += "Player: " + this.entityName + ", Message: " + (String)payload;
+			break;
 			
 		// temporary / debugging
 		case DEBUG_PLAYER_INFO:
