@@ -58,79 +58,88 @@ public class Client implements Runnable {
 	
 	private void processMessage(Message m) {
 		switch (m.type) {
-		case PING:
-			Main.logger.verbose(m.toString());
-			break;
-		case CONNECTION_CONFIRMED:
-			Main.logger.info(m.toString());
-			// - Assigns this client its clientID
-			// - Informs this client of the surface map's ID
-			// - Sends a request to the server to load the current map
-			// - Sends a request to the server to create a player
-			this.clientID = m.clientID;
-			int surfaceMapID = m.mapID;
-			
-			m = new Message();
-			m.type = MessageType.MAP_REQUEST;
-			m.mapID = surfaceMapID;
-			this.send(m);
-			
-			m = new Message();
-			m.type = MessageType.PLAYER_REQUEST;
-			m.entityName = Main.playerName;
-			this.send(m);
-			break;
-		case ENTITY_INIT:
-			Main.logger.debug(m.toString());
-			// - Initializes an entity of the given type
-			// - If the entity is a player with the ID of this client:
-			// -- Assign it to this client
-			// -- Initialize this client's frontend
-			if (m.entityType == EntityType.PLAYER) {
-				Player player = new Player(m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
-				state.getCurrentMap().addPlayer(player);
-				player.setMap(state.getCurrentMap());
+			case PING: {
+				Main.logger.verbose(m.toString());
+				break;
+			}
+			case CONNECTION_CONFIRMED: {
+				Main.logger.info(m.toString());
+				// - Assigns this client its clientID
+				// - Informs this client of the surface map's ID
+				// - Sends a request to the server to load the current map
+				// - Sends a request to the server to create a player
+				this.clientID = m.clientID;
+				int surfaceMapID = m.mapID;
 				
-				if (m.clientID == this.clientID) {
-					state.setPlayer(player);
-					Main.initClientFrontend();
+				m = new Message();
+				m.type = MessageType.MAP_REQUEST;
+				m.mapID = surfaceMapID;
+				this.send(m);
+				
+				m = new Message();
+				m.type = MessageType.PLAYER_REQUEST;
+				m.entityName = Main.playerName;
+				this.send(m);
+				break;
+			}
+			case ENTITY_INIT: {
+				Main.logger.debug(m.toString());
+				// - Initializes an entity of the given type
+				// - If the entity is a player with the ID of this client:
+				// -- Assign it to this client
+				// -- Initialize this client's frontend
+				if (m.entityType == EntityType.PLAYER) {
+					Player player = new Player(m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
+					state.getCurrentMap().addPlayer(player);
+					player.setMap(state.getCurrentMap());
+					
+					if (m.clientID == this.clientID) {
+						state.setPlayer(player);
+						Main.initClientFrontend();
+					}
 				}
+				break;
 			}
-			break;
-		case CHUNK_LOAD:
-			Main.logger.debug(m.toString());
-			// - Loads the payloads of this message into the specified chunk
-			MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
-			if (c == null) {
-				c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+			case CHUNK_LOAD: {
+				Main.logger.debug(m.toString());
+				// - Loads the payloads of this message into the specified chunk
+				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+				if (c == null) {
+					c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+				}
+				c.setAllTileTypes((int[][])m.payload);
+				c.setAllTileSubtypes((int[][])m.payload2);
+				state.getCurrentMap().generateMinimap();
+				break;
 			}
-			c.setAllTileTypes((int[][])m.payload);
-			c.setAllTileSubtypes((int[][])m.payload2);
-			state.getCurrentMap().generateMinimap();
-			break;
-		case ENTITY_SET_POS:
-			Main.logger.verbose(m.toString());
-			// - Sets the position of the given entity
-			if (m.entityType == EntityType.PLAYER) {
-				Player p = state.getCurrentMap().getPlayer(m.entityID);
-				p.setPos(m.pos[0], m.pos[1]);
+			case ENTITY_SET_POS: {
+				Main.logger.verbose(m.toString());
+				// - Sets the position of the given entity
+				if (m.entityType == EntityType.PLAYER) {
+					Player p = state.getCurrentMap().getPlayer(m.entityID);
+					p.setPos(m.pos[0], m.pos[1]);
+				}
+				break;
 			}
-			break;
-		case MAP_METADATA:
-			Main.logger.info(m.toString());
-			// - Loads metadata about the current map (id, climate, etc)
-			// TODO - currently unused
-			break;
-		case DEBUG_PLAYER_INFO:
-			Main.logger.info(m.toString());
-			break;
-		case CHAT_MESSAGE:
-			Main.logger.info(m.toString());
-			Main.panel.chatOverlay.addMessage(m.entityName + "> " + (String)m.payload);
-			break;
-		default:
-			Main.logger.debug(m.toString());
-			break;
+			case MAP_METADATA: {
+				Main.logger.info(m.toString());
+				// - Loads metadata about the current map (id, climate, etc)
+				// TODO - currently unused
+				break;
+			}
+			case DEBUG_PLAYER_INFO: {
+				Main.logger.info(m.toString());
+				break;
+			}
+			case CHAT_MESSAGE: {
+				Main.logger.info(m.toString());
+				Main.panel.chatOverlay.addMessage(m.entityName + "> " + (String)m.payload);
+				break;
+			}
+			default: {
+				Main.logger.debug(m.toString());
+				break;
+			}
 		}
 	}
 	

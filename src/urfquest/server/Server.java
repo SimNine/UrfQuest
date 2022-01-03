@@ -56,100 +56,107 @@ public class Server {
 				ClientThread c = clients.get(m.clientID);
 				
 				switch (m.type) {
-				case PLAYER_REQUEST:
-					Main.logger.info(m.clientID + " - " + m.toString());
-					// - Creates a player with the requested name
-					// - Sends the newly created player to all clients
-					// TODO: check if the requesting client already has an assigned player
-					String playerName = m.entityName;
-					Player p = game.createPlayer(playerName, c);
-					clientPlayers.put(c.id, p.id);
-					
-					m = new Message();
-					m.type = MessageType.ENTITY_INIT;
-					m.entityName = playerName;
-					m.entityType = EntityType.PLAYER;
-					m.pos = p.getPos();
-					m.clientID = c.id;
-					m.entityID = p.id;
-					this.sendMessageToAllClients(m);
-					break;
-				case PLAYER_MOVE:
-					Main.logger.verbose(m.clientID + " - " + m.toString());
-					// - Recieves a request from a client to move their player
-					// - Tests if the move is allowed; if so, does the move
-					game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
-					break;
-				case MAP_REQUEST:
-					Main.logger.info(m.clientID + " - " + m.toString());
-					// - Recieves a request from a client to load a new map
-					// - Sends metadata of the requested map to the client - TODO
-					// - Sends chunks nearby the player to the client
-					// - Sends all entities currently on the map
-					// TODO: narrow the number of entities that are sent
-					
-					Map map = game.getAllMaps().get(m.mapID);
-					
-//					m = new Message();
-//					m.type = MessageType.MAP_METADATA;
-					
-					for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
-						for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
-							m = new Message();
-							m.type = MessageType.CHUNK_LOAD;
-							
-							MapChunk chunk = map.getChunk(x, y);
-							m.payload = chunk.getAllTileTypes();
-							m.payload2 = chunk.getAllTileSubtypes();
-							m.xyChunk[0] = x;
-							m.xyChunk[1] = y;
-							c.send(m);
-						}
-					}
-					
-					for (Player player : map.getPlayers().values()) {
+					case PLAYER_REQUEST: {
+						Main.logger.info(m.clientID + " - " + m.toString());
+						// - Creates a player with the requested name
+						// - Sends the newly created player to all clients
+						// TODO: check if the requesting client already has an assigned player
+						String playerName = m.entityName;
+						Player p = game.createPlayer(playerName, c);
+						clientPlayers.put(c.id, p.id);
+						
 						m = new Message();
 						m.type = MessageType.ENTITY_INIT;
+						m.entityName = playerName;
 						m.entityType = EntityType.PLAYER;
-						m.entityID = player.id;
-						m.entityName = player.getName();
+						m.pos = p.getPos();
+						m.clientID = c.id;
+						m.entityID = p.id;
+						this.sendMessageToAllClients(m);
+						break;
+					}
+					case PLAYER_MOVE: {
+						Main.logger.verbose(m.clientID + " - " + m.toString());
+						// - Recieves a request from a client to move their player
+						// - Tests if the move is allowed; if so, does the move
+						game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
+						break;
+					}
+					case MAP_REQUEST: {
+						Main.logger.info(m.clientID + " - " + m.toString());
+						// - Recieves a request from a client to load a new map
+						// - Sends metadata of the requested map to the client - TODO
+						// - Sends chunks nearby the player to the client
+						// - Sends all entities currently on the map
+						// TODO: narrow the number of entities that are sent
+						
+						Map map = game.getAllMaps().get(m.mapID);
+						
+	//					m = new Message();
+	//					m.type = MessageType.MAP_METADATA;
+						
+						for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
+							for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
+								m = new Message();
+								m.type = MessageType.CHUNK_LOAD;
+								
+								MapChunk chunk = map.getChunk(x, y);
+								m.payload = chunk.getAllTileTypes();
+								m.payload2 = chunk.getAllTileSubtypes();
+								m.xyChunk[0] = x;
+								m.xyChunk[1] = y;
+								c.send(m);
+							}
+						}
+						
+						for (Player player : map.getPlayers().values()) {
+							m = new Message();
+							m.type = MessageType.ENTITY_INIT;
+							m.entityType = EntityType.PLAYER;
+							m.entityID = player.id;
+							m.entityName = player.getName();
+							c.send(m);
+						}
+						break;
+					}
+					case CHUNK_LOAD: {
+						Main.logger.debug(m.clientID + " - " + m.toString());
+						// - Recieves a request from a client to load a chunk
+						// - Sends the chunk data back to the client
+						MapChunk chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+						if (chunk == null) {
+							chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+						}
+						m.payload = chunk.getAllTileTypes();
+						m.payload2 = chunk.getAllTileSubtypes();
 						c.send(m);
+						break;
 					}
-					break;
-				case CHUNK_LOAD:
-					Main.logger.debug(m.clientID + " - " + m.toString());
-					// - Recieves a request from a client to load a chunk
-					// - Sends the chunk data back to the client
-					MapChunk chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
-					if (chunk == null) {
-						chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+					case DEBUG_PLAYER_INFO: {
+						Main.logger.debug(m.clientID + " - " + m.toString());
+						int playerID = clientPlayers.get(m.clientID);
+						Player p = game.getPlayer(playerID);
+						String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
+						
+						m = new Message();
+						m.type = MessageType.DEBUG_PLAYER_INFO;
+						m.payload = playerPos;
+						c.send(m);
+						break;
 					}
-					m.payload = chunk.getAllTileTypes();
-					m.payload2 = chunk.getAllTileSubtypes();
-					c.send(m);
-					break;
-				case DEBUG_PLAYER_INFO:
-					Main.logger.debug(m.clientID + " - " + m.toString());
-					int playerID = clientPlayers.get(m.clientID);
-					Player p1 = game.getPlayer(playerID);
-					String p1pos = p1.getCenter()[0] + "," + p1.getCenter()[1];
-					
-					m = new Message();
-					m.type = MessageType.DEBUG_PLAYER_INFO;
-					m.payload = p1pos;
-					c.send(m);
-					break;
-				case CHAT_MESSAGE:
-					Main.logger.info(m.clientID + " - " + m.toString());
-					int playerID1 = clientPlayers.get(m.clientID);
-					Player p11 = game.getPlayer(playerID1);
-					
-					m.entityName = p11.getName();
-					this.sendMessageToAllClients(m);
-					break;
-				default:
-					Main.logger.debug(m.clientID + " - " + m.toString());
-					break;
+					case CHAT_MESSAGE: {
+						Main.logger.info(m.clientID + " - " + m.toString());
+						int playerID = clientPlayers.get(m.clientID);
+						Player p = game.getPlayer(playerID);
+						
+						m.entityName = p.getName();
+						this.sendMessageToAllClients(m);
+						break;
+					}
+					default: {
+						Main.logger.debug(m.clientID + " - " + m.toString());
+						break;
+					}
 				}
 			}
 		}
