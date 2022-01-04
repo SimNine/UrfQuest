@@ -27,7 +27,7 @@ public class ClientThread implements Runnable {
 		this.socket = s;
 		this.server = serv;
 		this.id = IDGenerator.newID();
-		Main.logger.info("new client has connected with id " + this.id);
+		Main.server.getLogger().info("new client has connected with id " + this.id);
 		
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
@@ -49,18 +49,18 @@ public class ClientThread implements Runnable {
 				m.clientID = id;
 				this.server.intakeMessage(m);
 			} catch (IOException e) {
-				Main.logger.info("Client " + id + " disconnected");
+				Main.server.getLogger().info("Client " + id + " disconnected");
 				stopped = true;
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				Main.logger.warning("Message class not found");
+				Main.server.getLogger().warning("Message class not found");
 				e.printStackTrace();
 			}
 		}
 		
 		try {
 			socket.close();
-			Main.logger.info("connection closed");
+			Main.server.getLogger().info("connection closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

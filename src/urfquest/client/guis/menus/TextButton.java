@@ -26,7 +26,7 @@ public abstract class TextButton extends TextArea implements Clickable {
 		
 		g.drawString(text, bounds.x, bounds.y + bounds.height);
 		
-		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

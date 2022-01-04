@@ -20,7 +20,7 @@ public abstract class ImageArea extends GUIObject {
 			this.image = ImageIO.read(new File(source));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.logger.error("Image could not be read at: " + source);
+			Main.client.getLogger().error("Image could not be read at: " + source);
 		}
 		
 		this.setBounds(this.xDisplacement, this.yDisplacement, image.getWidth(), image.getHeight());
