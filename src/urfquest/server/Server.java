@@ -149,8 +149,12 @@ public class Server {
 						int playerID = clientPlayers.get(m.clientID);
 						Player p = game.getPlayer(playerID);
 						
-						m.entityName = p.getName();
-						this.sendMessageToAllClients(m);
+						if (((String)m.payload).charAt(0) == '/') {
+							CommandProcessor.processCommand((String)m.payload);
+						} else {
+							m.entityName = p.getName();
+							this.sendMessageToAllClients(m);
+						}
 						break;
 					}
 					default: {
