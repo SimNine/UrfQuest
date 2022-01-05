@@ -100,10 +100,10 @@ public class QuestPanel extends JPanel {
 						Main.resetFrame(!Main.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
 						// TODO: incorporate a method to cycle through all modes
-						if (Main.logger.getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
-							Main.logger.setLogLevel(Logger.LogLevel.LOG_WARNING);
+						if (Main.client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
+							Main.client.getLogger().setLogLevel(Logger.LogLevel.LOG_WARNING);
 						} else {
-							Main.logger.setLogLevel(Logger.LogLevel.LOG_DEBUG);
+							Main.client.getLogger().setLogLevel(Logger.LogLevel.LOG_DEBUG);
 						}
 					}
 				}
@@ -192,7 +192,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void keyReleased(KeyEvent e) {
 				keys.remove(e.getKeyCode());
-				Main.logger.debug("key released: " + e.getKeyChar());
+				Main.client.getLogger().debug("key released: " + e.getKeyChar());
 			}
 			public void keyTyped(KeyEvent e) {}
 		});
@@ -227,7 +227,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void mouseReleased(MouseEvent e) {
 				mouseDown = false;
-				Main.logger.debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
+				Main.client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
 			}
 		});
 	}
@@ -353,7 +353,7 @@ public class QuestPanel extends JPanel {
 			it.next().draw(g);
 		}
 		
-		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());

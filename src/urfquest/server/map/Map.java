@@ -120,7 +120,7 @@ public class Map {
 			HashSet<Item> removeNow = new HashSet<Item>();
 			for (Item i : items.values()) {
 				if (p.collides(i) && i.isPickupable()) {
-					Main.logger.debug(p.getName() + " collided with object: " + i.getClass().getName());
+					Main.server.getLogger().debug(p.getName() + " collided with object: " + i.getClass().getName());
 					if (p.addItem(i)) {
 						removeNow.add(i);
 					} else {
@@ -137,7 +137,7 @@ public class Map {
 		for (Mob m : mobs.values()) {
 			for (Player p : players.values()) {
 				if (p.collides(m)) {
-					Main.logger.debug(p.getName() + " collided with object: " + m.getClass().getName());
+					Main.server.getLogger().debug(p.getName() + " collided with object: " + m.getClass().getName());
 				}
 			}
 		}

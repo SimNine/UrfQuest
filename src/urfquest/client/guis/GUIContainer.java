@@ -40,7 +40,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		for (GUIObject o : guiObjects) {
 			o.draw(g);
 		}
-		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}
@@ -51,7 +51,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 			if (o instanceof Clickable && o.isMouseOver()) {
 				((Clickable) o).click();
 				ret = true;
-				Main.logger.debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
+				Main.client.getLogger().debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
 			}
 		}
 		return ret;
