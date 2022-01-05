@@ -29,7 +29,7 @@ public class Server {
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
 	
-	private HashMap<Integer, Integer> clientPlayers = new HashMap<>(); // clientID to playerID
+	private HashMap<Integer, Integer> playerMap = new HashMap<>(); // clientID to playerID
 	
 	private Logger logger;
 
@@ -73,7 +73,7 @@ public class Server {
 						// TODO: check if the requesting client already has an assigned player
 						String playerName = m.entityName;
 						Player p = game.createPlayer(playerName, c);
-						clientPlayers.put(c.id, p.id);
+						playerMap.put(c.id, p.id);
 						
 						m = new Message();
 						m.type = MessageType.ENTITY_INIT;
@@ -89,7 +89,7 @@ public class Server {
 						Main.server.getLogger().verbose(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to move their player
 						// - Tests if the move is allowed; if so, does the move
-						game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
+						game.getPlayer(playerMap.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
 						break;
 					}
 					case MAP_REQUEST: {
@@ -133,9 +133,9 @@ public class Server {
 						Main.server.getLogger().debug(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to load a chunk
 						// - Sends the chunk data back to the client
-						MapChunk chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+						MapChunk chunk = game.getPlayer(playerMap.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 						if (chunk == null) {
-							chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+							chunk = game.getPlayer(playerMap.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 						}
 						m.payload = chunk.getAllTileTypes();
 						m.payload2 = chunk.getAllTileSubtypes();
@@ -144,7 +144,7 @@ public class Server {
 					}
 					case DEBUG_PLAYER_INFO: {
 						Main.server.getLogger().debug(m.clientID + " - " + m.toString());
-						int playerID = clientPlayers.get(m.clientID);
+						int playerID = playerMap.get(m.clientID);
 						Player p = game.getPlayer(playerID);
 						String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
 						
@@ -156,11 +156,11 @@ public class Server {
 					}
 					case CHAT_MESSAGE: {
 						Main.server.getLogger().info(m.clientID + " - " + m.toString());
-						int playerID = clientPlayers.get(m.clientID);
+						int playerID = playerMap.get(m.clientID);
 						Player p = game.getPlayer(playerID);
 						
 						if (((String)m.payload).charAt(0) == '/') {
-							CommandProcessor.processCommand((String)m.payload);
+							CommandProcessor.processCommand(this, (String)m.payload, m.clientID);
 						} else {
 							m.entityName = p.getName();
 							this.sendMessageToAllClients(m);
@@ -188,11 +188,15 @@ public class Server {
 	}
 	
 	public State getGame() {
-		return game;
+		return this.game;
 	}
 
 	public void setGame(State game) {
 		this.game = game;
+	}
+	
+	public HashMap<Integer, Integer> getPlayerMap() {
+		return this.playerMap;
 	}
 
 	private class ServerListenerThread implements Runnable {

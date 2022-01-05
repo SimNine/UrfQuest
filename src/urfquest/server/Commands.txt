@@ -1,0 +1,2 @@
+/getpos
+	Returns the position of the calling player
