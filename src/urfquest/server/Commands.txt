@@ -1,2 +1,11 @@
+Implemented:
+/help
+	Lists available commands to the calling player
 /getpos
-	Returns the position of the calling player
+	Returns the position of the specified player, or the calling player if none specified
+	
+ToDo:
+/tp <other_player>
+	Teleports caller to another player
+/tppos
+	Teleports caller to position

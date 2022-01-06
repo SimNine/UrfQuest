@@ -192,7 +192,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void keyReleased(KeyEvent e) {
 				keys.remove(e.getKeyCode());
-				Main.client.getLogger().debug("key released: " + e.getKeyChar());
+				Main.client.getLogger().verbose("key released: " + e.getKeyChar());
 			}
 			public void keyTyped(KeyEvent e) {}
 		});
