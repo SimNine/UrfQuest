@@ -126,7 +126,9 @@ public class Client implements Runnable {
 				// - Sets the position of the given entity
 				if (m.entityType == EntityType.PLAYER) {
 					Player p = state.getCurrentMap().getPlayer(m.entityID);
-					p.setPos(m.pos[0], m.pos[1]);
+					if (p != null) {
+						p.setPos(m.pos[0], m.pos[1]);
+					}
 				}
 				break;
 			}
