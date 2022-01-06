@@ -16,7 +16,7 @@ public class CommandProcessor {
 				Message m = new Message();
 				m.type = MessageType.CHAT_MESSAGE;
 				m.entityName = "SERVER";
-				m.payload = "/help /getpos [player_name]";
+				m.payload = "/help, /getpos [player_name], /list, /me";
 				server.sendMessageToSingleClient(m, clientID);
 				break;
 			}
@@ -30,18 +30,38 @@ public class CommandProcessor {
 				if (tokens.length > 1) {
 					Integer playerID = server.getUserMap().getPlayerIdFromPlayerName(tokens[1]);
 					if (playerID == null) { // if the specified player wasn't found
-						m.payload = "specified player '" + tokens[1] + "' not found";
+						m.payload = "Specified player '" + tokens[1] + "' not found";
 					} else {
 						p = server.getGame().getPlayer(playerID);
 						double[] pos = p.getPos();
-						m.payload = tokens[1] + " position is (" + pos[0] + "," + pos[1] + ")";
+						m.payload = tokens[1] + "'s position is (" + pos[0] + "," + pos[1] + ")";
 					}
 				} else {
 					double[] pos = server.getGame().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getPos();
-					m.payload = "position is (" + pos[0] + "," + pos[1] + ")";
+					m.payload = "Your position is (" + pos[0] + "," + pos[1] + ")";
 				}
 
 				server.sendMessageToSingleClient(m, clientID);
+				break;
+			}
+			case "/list": {
+				Message m = new Message();
+				m.type = MessageType.CHAT_MESSAGE;
+				m.entityName = "SERVER";
+				m.payload = "";
+				for (String s : server.getUserMap().getAllPlayerNames()) {
+					m.payload += s + ", ";
+				}
+				server.sendMessageToSingleClient(m, clientID);
+				break;
+			}
+			case "/me": {
+				Message m = new Message();
+				m.type = MessageType.CHAT_MESSAGE;
+				m.entityName = "SERVER";
+				String thisPlayerName = server.getUserMap().getPlayerNameFromClientId(clientID);
+				m.payload = thisPlayerName + commandStr.substring(3);
+				server.sendMessageToAllClients(m);
 				break;
 			}
 		}

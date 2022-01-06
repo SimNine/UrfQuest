@@ -3,6 +3,10 @@ Implemented:
 	Lists available commands to the calling player
 /getpos
 	Returns the position of the specified player, or the calling player if none specified
+/list
+	Lists all players currently on the server
+/me
+	Displays a message in third person from the sender
 	
 ToDo:
 /tp <other_player>

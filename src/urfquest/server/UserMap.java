@@ -1,6 +1,7 @@
 package urfquest.server;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class UserMap {
 	
@@ -71,6 +72,23 @@ public class UserMap {
 	
 	public Integer getPlayerIdFromPlayerName(String playerName) {
 		return playerNameToPlayerId.get(playerName);
+	}
+	
+	
+	/*
+	 * All-item retrieval
+	 */
+	
+	public Set<Integer> getAllClientIDs() {
+		return clientIdToPlayerId.keySet();
+	}
+	
+	public Set<Integer> getAllPlayerIDs() {
+		return playerIdToClientId.keySet();
+	}
+	
+	public Set<String> getAllPlayerNames() {
+		return playerNameToClientId.keySet();
 	}
 	
 	
