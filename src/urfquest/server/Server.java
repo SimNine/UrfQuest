@@ -88,7 +88,8 @@ public class Server {
 						Main.server.getLogger().verbose(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to move their player
 						// - Tests if the move is allowed; if so, does the move
-						game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
+						Player movedPlayer = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
+						movedPlayer.attemptIncrementPos(m.pos[0], m.pos[1]);
 						break;
 					}
 					case MAP_REQUEST: {

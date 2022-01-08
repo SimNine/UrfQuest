@@ -355,7 +355,7 @@ public class Item extends Entity {
 	}
 	
 	public void update() {
-		move(xVel, yVel);
+		incrementPos(xVel, yVel);
 		
 		if (getMaxCooldown() > -1) {
 			if (cooldown > 0) {

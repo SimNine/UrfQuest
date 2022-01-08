@@ -33,11 +33,11 @@ public class CommandProcessor {
 						m.payload = "Specified player '" + tokens[1] + "' not found";
 					} else {
 						p = server.getGame().getPlayer(playerID);
-						double[] pos = p.getPos();
+						double[] pos = p.getCenter();
 						m.payload = tokens[1] + "'s position is (" + pos[0] + "," + pos[1] + ")";
 					}
 				} else {
-					double[] pos = server.getGame().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getPos();
+					double[] pos = server.getGame().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getCenter();
 					m.payload = "Your position is (" + pos[0] + "," + pos[1] + ")";
 				}
 
