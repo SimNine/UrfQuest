@@ -32,6 +32,15 @@ public class Server implements Runnable {
 	private UserMap userMap = new UserMap();
 	
 	private Logger logger;
+	
+	public Server(int seed) {
+		this.setGame(new State());
+        this.getGame().setGameRunning(true);
+        
+        this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
+        
+        this.serverSocket = null;
+	}
 
 	public Server(int seed, int port) {
 		this.setGame(new State());
