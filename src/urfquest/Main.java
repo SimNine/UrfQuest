@@ -143,7 +143,9 @@ public class Main implements Runnable {
 	public static void startServer(int seed, int port) {
 		launchLogger.all("Starting server on port " + port);
 		Main.server = new Server(seed, port);
-		Main.server.processMessages();
+		Thread serverThread = new Thread(server);
+		serverThread.setName("LocalServerThread");
+		serverThread.start();
 	}
 	
 	public static void startClient(String ip, int port) {

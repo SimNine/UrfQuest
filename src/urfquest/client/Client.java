@@ -11,6 +11,7 @@ import urfquest.Main;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
+import urfquest.server.Server;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -18,6 +19,8 @@ import urfquest.shared.message.MessageType;
 public class Client implements Runnable {
 	
 	private State state;
+	
+	private Server server;
 	
 	private Socket socket;
 	private ObjectOutputStream out;
@@ -27,12 +30,18 @@ public class Client implements Runnable {
 	
 	private int clientID;
 	
+	public Client(Server server) {
+		this.server = server;
+		this.socket = null;
+	}
+	
 	public Client(Socket socket) {
-		this.socket = socket;
 		this.state = new State();
 		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
 		
 		// initialize streams on the socket
+		this.server = null;
+		this.socket = socket;
 		try {
 	        out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
@@ -65,7 +74,7 @@ public class Client implements Runnable {
 		return this.logger;
 	}
 	
-	private void processMessage(Message m) {
+	public void processMessage(Message m) {
 		switch (m.type) {
 			case PING: {
 				Main.client.getLogger().verbose(m.toString());
@@ -156,7 +165,11 @@ public class Client implements Runnable {
 	
 	public void send(Message m) {
 		try {
-			out.writeObject(m);
+			if (socket == null) {
+				server.processMessage(m);
+			} else {
+				out.writeObject(m);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
