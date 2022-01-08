@@ -8,13 +8,16 @@ import java.net.SocketException;
 
 import urfquest.IDGenerator;
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.shared.message.Message;
 
 public class ClientThread implements Runnable {
 	
-	private Socket socket;
 	private Server server;
+	
+	private Client client; // only used for locally attached clients
 
+	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
@@ -24,11 +27,12 @@ public class ClientThread implements Runnable {
 	public int id;
 
 	public ClientThread(Server serv, Socket s) {
-		this.socket = s;
 		this.server = serv;
 		this.id = IDGenerator.newID();
 		Main.server.getLogger().info("new client has connected with id " + this.id);
-		
+
+		this.client = null;
+		this.socket = s;
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
@@ -39,6 +43,15 @@ public class ClientThread implements Runnable {
 		this.stopped = false;
 		this.t = new Thread(this, "ClientThread");
 		this.t.start();
+	}
+	
+	public ClientThread(Server serv, Client c) {
+		this.server = serv;
+		this.id = IDGenerator.newID();
+		Main.server.getLogger().info("new local client added with id " + this.id);
+		
+		this.client = c;
+		this.socket = null;
 	}
 
 	@Override
@@ -72,7 +85,11 @@ public class ClientThread implements Runnable {
 	
 	public void send(Message m) {
 		try {
-			out.writeObject(m);
+			if (socket == null) {
+				client.processMessage(m);
+			} else {
+				out.writeObject(m);
+			}
 		} catch (SocketException e) {
 			// TODO: look into the appropriate way to handle disconnection
 			try {
