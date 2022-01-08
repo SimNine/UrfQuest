@@ -56,6 +56,7 @@ public class Message implements Serializable {
 			ret += "x:" + pos[0] + " y:" + pos[1];
 			break;
 		case CONNECTION_CONFIRMED:
+			ret += "client has id " + clientID;
 			break;
 		case ENTITY_INIT:
 			ret += "type: " + entityType.toString();

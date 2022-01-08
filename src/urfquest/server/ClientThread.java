@@ -52,6 +52,8 @@ public class ClientThread implements Runnable {
 		
 		this.client = c;
 		this.socket = null;
+		
+		this.stopped = false;
 	}
 
 	@Override

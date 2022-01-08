@@ -31,6 +31,9 @@ public class Client implements Runnable {
 	private int clientID;
 	
 	public Client(Server server) {
+		this.state = new State();
+		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
+		
 		this.server = server;
 		this.socket = null;
 	}
@@ -166,6 +169,7 @@ public class Client implements Runnable {
 	public void send(Message m) {
 		try {
 			if (socket == null) {
+				m.clientID = this.clientID;
 				server.processMessage(m);
 			} else {
 				out.writeObject(m);
