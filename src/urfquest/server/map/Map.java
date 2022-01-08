@@ -120,7 +120,7 @@ public class Map {
 			HashSet<Item> removeNow = new HashSet<Item>();
 			for (Item i : items.values()) {
 				if (p.collides(i) && i.isPickupable()) {
-					Main.logger.debug(p.getName() + " collided with object: " + i.getClass().getName());
+					Main.server.getLogger().debug(p.getName() + " collided with object: " + i.getClass().getName());
 					if (p.addItem(i)) {
 						removeNow.add(i);
 					} else {
@@ -137,7 +137,7 @@ public class Map {
 		for (Mob m : mobs.values()) {
 			for (Player p : players.values()) {
 				if (p.collides(m)) {
-					Main.logger.debug(p.getName() + " collided with object: " + m.getClass().getName());
+					Main.server.getLogger().debug(p.getName() + " collided with object: " + m.getClass().getName());
 				}
 			}
 		}
@@ -459,8 +459,9 @@ public class Map {
 	
 	public int getTileTypeAt(int x, int y) {
 		MapChunk chunk = getChunkAtPos(x, y);
-		if (chunk == null)
+		if (chunk == null) {
 			return -1;
+		}
 		
 		int[] posInChunk = getCoordsInChunk(x, y);
 		return chunk.getTileTypeAt(posInChunk[0], posInChunk[1]);
@@ -496,8 +497,8 @@ public class Map {
 	public int[] getCoordsInChunk(int x, int y) {
 		int[] returns = new int[2];
 		
-		returns[0] = (x + MapChunk.CHUNK_SIZE) % MapChunk.CHUNK_SIZE;
-		returns[1] = (y + MapChunk.CHUNK_SIZE) % MapChunk.CHUNK_SIZE;
+		returns[0] = Math.floorMod(x, MapChunk.CHUNK_SIZE);
+		returns[1] = Math.floorMod(y, MapChunk.CHUNK_SIZE);
 		
 		return returns;
 	}

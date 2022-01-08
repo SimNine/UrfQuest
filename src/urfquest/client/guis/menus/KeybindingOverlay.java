@@ -127,7 +127,7 @@ public class KeybindingOverlay extends GUIContainer {
 				if (boxToWaitFor == null) {
 					Main.panel.swap(OverlayInit.newOptionsOverlay());
 				}
-				Main.logger.debug(keybindings.toString());
+				Main.client.getLogger().debug(keybindings.toString());
 				return true;
 			}
 		});
@@ -146,7 +146,7 @@ public class KeybindingOverlay extends GUIContainer {
 					((Clickable) o).click();
 				}
 				ret = true;
-				Main.logger.debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
+				Main.client.getLogger().debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
 			}
 		}
 		return ret;

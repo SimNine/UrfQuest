@@ -34,7 +34,7 @@ public abstract class Entity {
 	
 	// moves the entity, NOT checking for validity of move
 	// object's position is incremented according to the parameters
-	public void move(double x, double y) {
+	public void incrementPos(double x, double y) {
 		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
 	}
 	

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import urfquest.Logger;
+import urfquest.Logger.LogLevel;
 import urfquest.Main;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -24,14 +26,17 @@ public class Server {
 	private State game;
 	
 	private ServerSocket serverSocket = null;
-	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
+	private HashMap<Integer, ClientThread> clients = new HashMap<>();
+	private UserMap userMap = new UserMap();
 	
-	private HashMap<Integer, Integer> clientPlayers = new HashMap<>(); // clientID to playerID
+	private Logger logger;
 
 	public Server(int seed, int port) {
 		this.setGame(new State());
         this.getGame().setGameRunning(true);
+        
+        this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
 		
 		try {
 			serverSocket = new ServerSocket(port);
@@ -42,6 +47,10 @@ public class Server {
 		
 		// launch the master server listening thread
 		new ServerListenerThread(this);
+	}
+	
+	public Logger getLogger() {
+		return this.logger;
 	}
 	
 	public void intakeMessage(Message m) {
@@ -57,13 +66,13 @@ public class Server {
 				
 				switch (m.type) {
 					case PLAYER_REQUEST: {
-						Main.logger.info(m.clientID + " - " + m.toString());
+						Main.server.getLogger().info(m.clientID + " - " + m.toString());
 						// - Creates a player with the requested name
 						// - Sends the newly created player to all clients
 						// TODO: check if the requesting client already has an assigned player
 						String playerName = m.entityName;
 						Player p = game.createPlayer(playerName, c);
-						clientPlayers.put(c.id, p.id);
+						userMap.addEntry(c.id, p.id, playerName);
 						
 						m = new Message();
 						m.type = MessageType.ENTITY_INIT;
@@ -76,14 +85,15 @@ public class Server {
 						break;
 					}
 					case PLAYER_MOVE: {
-						Main.logger.verbose(m.clientID + " - " + m.toString());
+						Main.server.getLogger().verbose(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to move their player
 						// - Tests if the move is allowed; if so, does the move
-						game.getPlayer(clientPlayers.get(m.clientID)).attemptMove(m.pos[0], m.pos[1]);
+						Player movedPlayer = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
+						movedPlayer.attemptIncrementPos(m.pos[0], m.pos[1]);
 						break;
 					}
 					case MAP_REQUEST: {
-						Main.logger.info(m.clientID + " - " + m.toString());
+						Main.server.getLogger().info(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to load a new map
 						// - Sends metadata of the requested map to the client - TODO
 						// - Sends chunks nearby the player to the client
@@ -120,12 +130,12 @@ public class Server {
 						break;
 					}
 					case CHUNK_LOAD: {
-						Main.logger.debug(m.clientID + " - " + m.toString());
+						Main.server.getLogger().debug(m.clientID + " - " + m.toString());
 						// - Recieves a request from a client to load a chunk
 						// - Sends the chunk data back to the client
-						MapChunk chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+						MapChunk chunk = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 						if (chunk == null) {
-							chunk = game.getPlayer(clientPlayers.get(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+							chunk = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 						}
 						m.payload = chunk.getAllTileTypes();
 						m.payload2 = chunk.getAllTileSubtypes();
@@ -133,8 +143,8 @@ public class Server {
 						break;
 					}
 					case DEBUG_PLAYER_INFO: {
-						Main.logger.debug(m.clientID + " - " + m.toString());
-						int playerID = clientPlayers.get(m.clientID);
+						Main.server.getLogger().debug(m.clientID + " - " + m.toString());
+						int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 						Player p = game.getPlayer(playerID);
 						String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
 						
@@ -145,16 +155,20 @@ public class Server {
 						break;
 					}
 					case CHAT_MESSAGE: {
-						Main.logger.info(m.clientID + " - " + m.toString());
-						int playerID = clientPlayers.get(m.clientID);
+						Main.server.getLogger().info(m.clientID + " - " + m.toString());
+						int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 						Player p = game.getPlayer(playerID);
 						
-						m.entityName = p.getName();
-						this.sendMessageToAllClients(m);
+						if (((String)m.payload).charAt(0) == '/') {
+							CommandProcessor.processCommand(this, (String)m.payload, m.clientID);
+						} else {
+							m.entityName = p.getName();
+							this.sendMessageToAllClients(m);
+						}
 						break;
 					}
 					default: {
-						Main.logger.debug(m.clientID + " - " + m.toString());
+						Main.server.getLogger().debug(m.clientID + " - " + m.toString());
 						break;
 					}
 				}
@@ -174,11 +188,15 @@ public class Server {
 	}
 	
 	public State getGame() {
-		return game;
+		return this.game;
 	}
 
 	public void setGame(State game) {
 		this.game = game;
+	}
+	
+	public UserMap getUserMap() {
+		return this.userMap;
 	}
 
 	private class ServerListenerThread implements Runnable {
@@ -195,7 +213,7 @@ public class Server {
 		@Override
 		public void run() {
 			// while the game is running, continue listening on the given socket
-			Main.logger.info("server listening on port: " + serverSocket.getLocalPort());
+			Main.server.getLogger().info("server listening on port: " + serverSocket.getLocalPort());
 			while (true) {
 				Socket socket = null;
 			    try {

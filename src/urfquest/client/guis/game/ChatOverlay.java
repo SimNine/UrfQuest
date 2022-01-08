@@ -20,7 +20,7 @@ public class ChatOverlay extends GUIContainer {
 			  null, null, null, 0);
 		
 		// add the chat window
-		chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -310, -160, 300, 150, 
+		chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -610, -160, 600, 150, 
 				"chatmessages", this, new Color(180, 180, 180, 150), null, 3);
 		this.addObject(chatWindow);
 	}

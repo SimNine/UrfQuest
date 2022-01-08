@@ -16,7 +16,7 @@ public class RocketExplosion extends Projectile {
 	}
 
 	public void update() {
-		this.move(-0.04, -0.04);
+		this.incrementPos(-0.04, -0.04);
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.08, bounds.height + 0.08);
 		
 		// clear trees

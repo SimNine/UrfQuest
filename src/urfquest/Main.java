@@ -27,7 +27,7 @@ public class Main implements Runnable {
 	static final int MODE_SERVER = 2;
 	
 	// logger
-	public static Logger logger;
+	public static Logger launchLogger;
 	
 	// game state container
 	public static Server server;
@@ -52,7 +52,7 @@ public class Main implements Runnable {
 	public static String playerName = "default";
 	
 	public static void main(String[] args) {
-		logger = new Logger(Logger.LogLevel.LOG_DEBUG);
+		launchLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
 		
 		// check for proper number of arguments
 		if (args.length == 3) {
@@ -65,6 +65,7 @@ public class Main implements Runnable {
 			File startupPrefs = new File("startupPrefs.config");
 			if (startupPrefs.exists()) {
 				try {
+					launchLogger.info("loading config file");
 					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
 					ip = prefsReader.readLine();
 					port = Integer.parseInt(prefsReader.readLine());
@@ -77,6 +78,7 @@ public class Main implements Runnable {
 			}
 			
 			// create the startup dialog with filled-in defaults
+			launchLogger.info("opening startup dialog");
 			StartupDialog dialog = new StartupDialog(ip, port + "", mode, playerName);
 			
 			// load inputs from dialog
@@ -97,6 +99,7 @@ public class Main implements Runnable {
 			
 			// save inputs to prefs file
 			try {
+				launchLogger.info("saving config file");
 				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
 				prefsWriter.println(ip);
 				prefsWriter.println(port + "");
@@ -133,16 +136,18 @@ public class Main implements Runnable {
 			// server only
 			startServer(0, port);
 		}
+		
+		launchLogger.info("all launcher tasks done");
 	}
 	
 	public static void startServer(int seed, int port) {
-		logger.all("Starting server on port " + port);
+		launchLogger.all("Starting server on port " + port);
 		Main.server = new Server(seed, port);
 		Main.server.processMessages();
 	}
 	
 	public static void startClient(String ip, int port) {
-		logger.all("Starting client, connecting to " + ip + ":" + port);
+		launchLogger.all("Starting client, connecting to " + ip + ":" + port);
 		root = new Main();
 		
 		// initialize the game client

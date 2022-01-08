@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import urfquest.Logger;
+import urfquest.Logger.LogLevel;
 import urfquest.Main;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
@@ -21,18 +23,21 @@ public class Client implements Runnable {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
+	private Logger logger;
+	
 	private int clientID;
 	
 	public Client(Socket socket) {
 		this.socket = socket;
 		this.state = new State();
+		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
 		
 		// initialize streams on the socket
 		try {
 	        out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 			
-			Main.logger.debug("Client: initialized streams");
+			this.getLogger().debug("Client: initialized streams");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,14 +61,18 @@ public class Client implements Runnable {
 		return state;
 	}
 	
+	public Logger getLogger() {
+		return this.logger;
+	}
+	
 	private void processMessage(Message m) {
 		switch (m.type) {
 			case PING: {
-				Main.logger.verbose(m.toString());
+				Main.client.getLogger().verbose(m.toString());
 				break;
 			}
 			case CONNECTION_CONFIRMED: {
-				Main.logger.info(m.toString());
+				Main.client.getLogger().info(m.toString());
 				// - Assigns this client its clientID
 				// - Informs this client of the surface map's ID
 				// - Sends a request to the server to load the current map
@@ -83,7 +92,7 @@ public class Client implements Runnable {
 				break;
 			}
 			case ENTITY_INIT: {
-				Main.logger.debug(m.toString());
+				Main.client.getLogger().debug(m.toString());
 				// - Initializes an entity of the given type
 				// - If the entity is a player with the ID of this client:
 				// -- Assign it to this client
@@ -101,7 +110,7 @@ public class Client implements Runnable {
 				break;
 			}
 			case CHUNK_LOAD: {
-				Main.logger.debug(m.toString());
+				Main.client.getLogger().debug(m.toString());
 				// - Loads the payloads of this message into the specified chunk
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (c == null) {
@@ -113,31 +122,33 @@ public class Client implements Runnable {
 				break;
 			}
 			case ENTITY_SET_POS: {
-				Main.logger.verbose(m.toString());
+				Main.client.getLogger().verbose(m.toString());
 				// - Sets the position of the given entity
 				if (m.entityType == EntityType.PLAYER) {
 					Player p = state.getCurrentMap().getPlayer(m.entityID);
-					p.setPos(m.pos[0], m.pos[1]);
+					if (p != null) {
+						p.setPos(m.pos[0], m.pos[1]);
+					}
 				}
 				break;
 			}
 			case MAP_METADATA: {
-				Main.logger.info(m.toString());
+				Main.client.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)
 				// TODO - currently unused
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				Main.logger.info(m.toString());
+				Main.client.getLogger().info(m.toString());
 				break;
 			}
 			case CHAT_MESSAGE: {
-				Main.logger.info(m.toString());
+				Main.client.getLogger().info(m.toString());
 				Main.panel.chatOverlay.addMessage(m.entityName + "> " + (String)m.payload);
 				break;
 			}
 			default: {
-				Main.logger.debug(m.toString());
+				Main.client.getLogger().debug(m.toString());
 				break;
 			}
 		}

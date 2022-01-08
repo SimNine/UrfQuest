@@ -18,10 +18,13 @@ public class Logger {
 	
 	private LogLevel logLevel = LogLevel.LOG_NONE;
 	
+	private String prefix;
+	
 	private PrintWriter writer;
 	
-	public Logger(LogLevel logLevel) {
+	public Logger(LogLevel logLevel, String prefix) {
 		this.logLevel = logLevel;
+		this.prefix = prefix;
 		
 		File logDir = new File("logs");
         if (!logDir.exists()) {
@@ -77,7 +80,7 @@ public class Logger {
 	
 	private void log(String s, LogLevel logLevel) {
 		if (logLevel.compareTo(this.logLevel) <= 0) {
-			s = System.currentTimeMillis() + ": " + s;
+			s = System.currentTimeMillis() + " - " + this.prefix + ": " + s;
 			
 			System.out.println(s);
 			writer.println(s);

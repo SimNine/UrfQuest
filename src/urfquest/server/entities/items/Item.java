@@ -334,9 +334,9 @@ public class Item extends Entity {
 					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
-					if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
-						Main.logger.debug("soruce: " + coords[0] + ", " + coords[1]);
-						Main.logger.debug("exit: " + xHome + ", " + yHome);
+					if (Main.server.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+						Main.server.getLogger().debug("soruce: " + coords[0] + ", " + coords[1]);
+						Main.server.getLogger().debug("exit: " + xHome + ", " + yHome);
 					}
 				}
 				
@@ -355,7 +355,7 @@ public class Item extends Entity {
 	}
 	
 	public void update() {
-		move(xVel, yVel);
+		incrementPos(xVel, yVel);
 		
 		if (getMaxCooldown() > -1) {
 			if (cooldown > 0) {

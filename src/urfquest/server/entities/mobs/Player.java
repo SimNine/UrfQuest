@@ -48,7 +48,7 @@ public class Player extends Mob {
 		this.client = c;
 	}
 	
-	public void attemptMove(double x, double y) {
+	public void attemptIncrementPos(double x, double y) {
 		double newX = bounds.getCenterX() + x;
 		double newY = bounds.getCenterY() + y;
 		
@@ -65,7 +65,7 @@ public class Player extends Mob {
 		}
 				
 		if (canMove) {
-			this.move(x, y);
+			this.incrementPos(x, y);
 		} else {
 			Message m = new Message();
 			m.type = MessageType.ENTITY_SET_POS;
@@ -77,8 +77,8 @@ public class Player extends Mob {
 		}
 	}
 	
-	public void move(double x, double y) {
-		super.move(x, y);
+	public void incrementPos(double x, double y) {
+		super.incrementPos(x, y);
 		
 		Message m = new Message();
 		m.type = MessageType.ENTITY_SET_POS;
