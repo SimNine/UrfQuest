@@ -32,6 +32,7 @@ public class MapChunk {
 		return tileTypes[x][y];
 	}
 	
+	// TODO: potentially change defaut subtype to be -1 (null)
 	public int getTileSubtypeAt(int x, int y) {
 		if (x < 0 || y < 0) return 0;
 		if (x >= tileTypes.length || y >= tileTypes[0].length) return 0;

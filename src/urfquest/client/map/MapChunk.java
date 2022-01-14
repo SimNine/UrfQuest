@@ -33,7 +33,8 @@ public class MapChunk {
 			return -1;
 		return tileTypes[x][y];
 	}
-	
+
+	// TODO: tiles with no subtype should probably return -1
 	public int getTileSubtypeAt(int x, int y) {
 		if (x < 0 || y < 0)
 			return 0;
