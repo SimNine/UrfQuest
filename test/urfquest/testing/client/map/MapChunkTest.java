@@ -44,81 +44,81 @@ class MapChunkTest {
 	void testDefaultChunkSize() {
 		MapChunk c = new MapChunk();
 
-		Assertions.assertEquals(c.getTileTypeAt(MapChunk.CHUNK_SIZE - 1, MapChunk.CHUNK_SIZE - 1), 0);
-		Assertions.assertEquals(c.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE), -1);
+		Assertions.assertEquals(0, c.getTileTypeAt(MapChunk.CHUNK_SIZE - 1, MapChunk.CHUNK_SIZE - 1));
+		Assertions.assertEquals(-1, c.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
 	}
 	
 	@Test
 	void testCustomSquareChunkSize() {
 		MapChunk c = new MapChunk(50, 50);
 
-		Assertions.assertEquals(c.getTileTypeAt(49, 49), 0);
-		Assertions.assertEquals(c.getTileTypeAt(49, 50), -1);
-		Assertions.assertEquals(c.getTileTypeAt(50, 49), -1);
-		Assertions.assertEquals(c.getTileTypeAt(50, 50), -1);
+		Assertions.assertEquals(0, c.getTileTypeAt(49, 49));
+		Assertions.assertEquals(-1, c.getTileTypeAt(49, 50));
+		Assertions.assertEquals(-1, c.getTileTypeAt(50, 49));
+		Assertions.assertEquals(-1, c.getTileTypeAt(50, 50));
 	}
 	
 	@Test
 	void testCustomRectangleChunkSize() {
 		MapChunk c = new MapChunk(20, 10);
 
-		Assertions.assertEquals(c.getTileTypeAt(19, 9), 0);
-		Assertions.assertEquals(c.getTileTypeAt(19, 10), -1);
-		Assertions.assertEquals(c.getTileTypeAt(20, 9), -1);
-		Assertions.assertEquals(c.getTileTypeAt(20, 10), -1);
+		Assertions.assertEquals(0, c.getTileTypeAt(19, 9));
+		Assertions.assertEquals(-1, c.getTileTypeAt(19, 10));
+		Assertions.assertEquals(-1, c.getTileTypeAt(20, 9));
+		Assertions.assertEquals(-1, c.getTileTypeAt(20, 10));
 	}
 	
 	@Test
 	void testTinyChunkSize() {
 		MapChunk c = new MapChunk(1, 1);
 
-		Assertions.assertEquals(c.getTileTypeAt(0, 0), 0);
-		Assertions.assertEquals(c.getTileTypeAt(1, 0), -1);
-		Assertions.assertEquals(c.getTileTypeAt(0, 1), -1);
-		Assertions.assertEquals(c.getTileTypeAt(1, 1), -1);
+		Assertions.assertEquals(0, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(-1, c.getTileTypeAt(1, 0));
+		Assertions.assertEquals(-1, c.getTileTypeAt(0, 1));
+		Assertions.assertEquals(-1, c.getTileTypeAt(1, 1));
 	}
 	
 	@Test
 	void testGiantChunkSize() {
 		MapChunk c = new MapChunk(3000, 3000);
 
-		Assertions.assertEquals(c.getTileTypeAt(2999, 2999), 0);
-		Assertions.assertEquals(c.getTileTypeAt(3000, 2999), -1);
-		Assertions.assertEquals(c.getTileTypeAt(2999, 3000), -1);
-		Assertions.assertEquals(c.getTileTypeAt(3000, 3000), -1);
+		Assertions.assertEquals(0, c.getTileTypeAt(2999, 2999));
+		Assertions.assertEquals(-1, c.getTileTypeAt(3000, 2999));
+		Assertions.assertEquals(-1, c.getTileTypeAt(2999, 3000));
+		Assertions.assertEquals(-1, c.getTileTypeAt(3000, 3000));
 	}
 	
 	@Test
 	void testTileTypeGetters() {
-		Assertions.assertEquals(chunk.getTileTypeAt(0, 0), 0);
-		Assertions.assertEquals(chunk.getTileSubtypeAt(0, 0), 0);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[0], 0);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[1], 0);
+		Assertions.assertEquals(0, chunk.getTileTypeAt(0, 0));
+		Assertions.assertEquals(0, chunk.getTileSubtypeAt(0, 0));
+		Assertions.assertEquals(0, chunk.getTileAt(0, 0)[0]);
+		Assertions.assertEquals(0, chunk.getTileAt(0, 0)[1]);
 		
-		Assertions.assertEquals(chunk.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE), -1);
-		Assertions.assertEquals(chunk.getTileSubtypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE), 0);
-		Assertions.assertEquals(chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[0], -1);
-		Assertions.assertEquals(chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[1], 0);
+		Assertions.assertEquals(-1, chunk.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
+		Assertions.assertEquals(0, chunk.getTileSubtypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
+		Assertions.assertEquals(-1, chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[0]);
+		Assertions.assertEquals(0, chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[1]);
 		
-		Assertions.assertEquals(chunk.getTileTypeAt(-1, -1), -1);
-		Assertions.assertEquals(chunk.getTileSubtypeAt(-1, -1), 0);
-		Assertions.assertEquals(chunk.getTileAt(-1, -1)[0], -1);
-		Assertions.assertEquals(chunk.getTileAt(-1, -1)[1], 0);
+		Assertions.assertEquals(-1, chunk.getTileTypeAt(-1, -1));
+		Assertions.assertEquals(0, chunk.getTileSubtypeAt(-1, -1));
+		Assertions.assertEquals(-1, chunk.getTileAt(-1, -1)[0]);
+		Assertions.assertEquals(0, chunk.getTileAt(-1, -1)[1]);
 	}
 	
 	@Test
 	void testTileTypeSetters() {
 		chunk.setTileAt(0, 0, 5);
-		Assertions.assertEquals(chunk.getTileTypeAt(0, 0), 5);
-		Assertions.assertEquals(chunk.getTileSubtypeAt(0, 0), 0);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[0], 5);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[1], 0);
+		Assertions.assertEquals(5, chunk.getTileTypeAt(0, 0));
+		Assertions.assertEquals(0, chunk.getTileSubtypeAt(0, 0));
+		Assertions.assertEquals(5, chunk.getTileAt(0, 0)[0]);
+		Assertions.assertEquals(0, chunk.getTileAt(0, 0)[1]);
 
 		chunk.setTileAt(0, 0, 3, 2);
-		Assertions.assertEquals(chunk.getTileTypeAt(0, 0), 3);
-		Assertions.assertEquals(chunk.getTileSubtypeAt(0, 0), 2);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[0], 3);
-		Assertions.assertEquals(chunk.getTileAt(0, 0)[1], 2);
+		Assertions.assertEquals(3, chunk.getTileTypeAt(0, 0));
+		Assertions.assertEquals(2, chunk.getTileSubtypeAt(0, 0));
+		Assertions.assertEquals(3, chunk.getTileAt(0, 0)[0]);
+		Assertions.assertEquals(2, chunk.getTileAt(0, 0)[1]);
 	}
 	
 	@Test
@@ -126,24 +126,24 @@ class MapChunkTest {
 		MapChunk c = new MapChunk(8, 8);
 		
 		c.setAllTileTypes(sampleTileTypes);
-		Assertions.assertEquals(c.getTileTypeAt(0, 0), 0);
-		Assertions.assertEquals(c.getTileTypeAt(2, 6), 8);
-		Assertions.assertEquals(c.getTileTypeAt(4, 1), 5);
-		Assertions.assertEquals(c.getTileTypeAt(7, 7), 14);
-		Assertions.assertEquals(c.getTileSubtypeAt(0, 0), 0);
-		Assertions.assertEquals(c.getTileSubtypeAt(2, 6), 0);
-		Assertions.assertEquals(c.getTileSubtypeAt(4, 1), 0);
-		Assertions.assertEquals(c.getTileSubtypeAt(7, 7), 0);
+		Assertions.assertEquals(0, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(8, c.getTileTypeAt(2, 6));
+		Assertions.assertEquals(5, c.getTileTypeAt(4, 1));
+		Assertions.assertEquals(14, c.getTileTypeAt(7, 7));
+		Assertions.assertEquals(0, c.getTileSubtypeAt(0, 0));
+		Assertions.assertEquals(0, c.getTileSubtypeAt(2, 6));
+		Assertions.assertEquals(0, c.getTileSubtypeAt(4, 1));
+		Assertions.assertEquals(0, c.getTileSubtypeAt(7, 7));
 		
 		c.setAllTileSubtypes(sampleTileTypes);
-		Assertions.assertEquals(c.getTileTypeAt(0, 0), 0);
-		Assertions.assertEquals(c.getTileTypeAt(2, 6), 8);
-		Assertions.assertEquals(c.getTileTypeAt(4, 1), 5);
-		Assertions.assertEquals(c.getTileTypeAt(7, 7), 14);
-		Assertions.assertEquals(c.getTileSubtypeAt(0, 0), 0);
-		Assertions.assertEquals(c.getTileSubtypeAt(2, 6), 8);
-		Assertions.assertEquals(c.getTileSubtypeAt(4, 1), 5);
-		Assertions.assertEquals(c.getTileSubtypeAt(7, 7), 14);
+		Assertions.assertEquals(0, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(8, c.getTileTypeAt(2, 6));
+		Assertions.assertEquals(5, c.getTileTypeAt(4, 1));
+		Assertions.assertEquals(14, c.getTileTypeAt(7, 7));
+		Assertions.assertEquals(0, c.getTileSubtypeAt(0, 0));
+		Assertions.assertEquals(8, c.getTileSubtypeAt(2, 6));
+		Assertions.assertEquals(5, c.getTileSubtypeAt(4, 1));
+		Assertions.assertEquals(14, c.getTileSubtypeAt(7, 7));
 	}
 
 }

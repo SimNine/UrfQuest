@@ -311,7 +311,7 @@ public class Map {
 	 * Map generation methods
 	 */
 	
-	@SuppressWarnings("unused")
+//	@SuppressWarnings("unused")
 //	private void generateOldCaveMap() {
 //		int width = tileTypes.length;
 //		int height = tileTypes[0].length;

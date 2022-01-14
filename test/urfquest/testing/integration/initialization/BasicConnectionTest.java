@@ -43,7 +43,7 @@ class BasicConnectionTest {
 	void testAddClient() {
 		s.attachLocalClient(c1);
 		
-		Assertions.assertEquals(s.getUserMap().getAllClientIDs().size(), 1);
+		Assertions.assertEquals(1, s.getUserMap().getAllClientIDs().size());
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ class BasicConnectionTest {
 		s.attachLocalClient(c1);
 		s.attachLocalClient(c2);
 		
-		Assertions.assertEquals(s.getUserMap().getAllClientIDs().size(), 2);
+		Assertions.assertEquals(2, s.getUserMap().getAllClientIDs().size());
 	}
 
 }
