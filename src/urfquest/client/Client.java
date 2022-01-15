@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayDeque;
 
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
@@ -12,6 +13,7 @@ import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
 import urfquest.server.Server;
+import urfquest.shared.ChatMessage;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -25,6 +27,8 @@ public class Client implements Runnable {
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
+	
+	private ArrayDeque<ChatMessage> chatMessages = new ArrayDeque<ChatMessage>();
 	
 	private Logger logger;
 	
@@ -156,7 +160,7 @@ public class Client implements Runnable {
 			}
 			case CHAT_MESSAGE: {
 				Main.client.getLogger().info(m.toString());
-				Main.panel.chatOverlay.addMessage(m.entityName + "> " + (String)m.payload);
+				chatMessages.addFirst((ChatMessage)m.payload);
 				break;
 			}
 			default: {
@@ -177,5 +181,9 @@ public class Client implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ArrayDeque<ChatMessage> getAllChatMessages() {
+		return chatMessages;
 	}
 }

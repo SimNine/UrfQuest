@@ -2,6 +2,8 @@ package urfquest.shared.message;
 
 import java.io.Serializable;
 
+import urfquest.shared.ChatMessage;
+
 public class Message implements Serializable {
 	/**
 	 * 
@@ -34,9 +36,11 @@ public class Message implements Serializable {
 		case CHUNK_LOAD:
 			ret += "MapID: " + mapID + ", xChunk:" + xyChunk[0] + ", yChunk:" + xyChunk[1];
 			break;
-		case CHAT_MESSAGE:
-			ret += "Player: " + this.entityName + ", Message: " + (String)payload;
+		case CHAT_MESSAGE: {
+			ChatMessage m = (ChatMessage)payload;
+			ret += "Source: " + m.source + ", Message: " + m.message;
 			break;
+		}
 			
 		// temporary / debugging
 		case DEBUG_PLAYER_INFO:

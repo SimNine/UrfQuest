@@ -32,8 +32,4 @@ public class ChatOverlay extends GUIContainer {
 	public void setOpaqueChatbox(boolean opaque) {
 		chatWindow.setOpaque(opaque);
 	}
-	
-	public void addMessage(String m) {
-		chatWindow.addMessage(m);
-	}
 }

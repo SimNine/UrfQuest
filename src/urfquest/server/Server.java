@@ -3,6 +3,7 @@ package urfquest.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
+import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
@@ -30,6 +32,8 @@ public class Server implements Runnable {
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private UserMap userMap = new UserMap();
+	
+	private ArrayDeque<ChatMessage> chatMessages = new ArrayDeque<ChatMessage>();
 	
 	private Logger logger;
 	
@@ -176,8 +180,13 @@ public class Server implements Runnable {
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 				Player p = game.getPlayer(playerID);
 				
-				if (((String)m.payload).charAt(0) == '/') {
-					CommandProcessor.processCommand(this, (String)m.payload, m.clientID);
+				ChatMessage chatMessage = (ChatMessage)m.payload;
+				chatMessage.source = p.getName();
+				
+				chatMessages.addFirst(chatMessage);
+				
+				if (chatMessage.message.charAt(0) == '/') {
+					CommandProcessor.processCommand(this, chatMessage.message, m.clientID);
 				} else {
 					m.entityName = p.getName();
 					this.sendMessageToAllClients(m);
@@ -212,6 +221,10 @@ public class Server implements Runnable {
 	
 	public UserMap getUserMap() {
 		return this.userMap;
+	}
+	
+	public ArrayDeque<ChatMessage> getAllChatMessages() {
+		return chatMessages;
 	}
 
 	private class ServerListenerThread implements Runnable {

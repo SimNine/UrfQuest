@@ -4,18 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.util.ArrayDeque;
 
 import urfquest.Main;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
+import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
 public class ChatWindow extends GUIContainer {
 	
-	private ArrayDeque<String> chatMessages = new ArrayDeque<String>();
 	private String currentMessage = "";
 	private boolean isOpaque = false;
 	private Font chatFont = new Font("Courier", Font.BOLD, 15);
@@ -24,12 +23,6 @@ public class ChatWindow extends GUIContainer {
 					  String name, GUIObject parent, 
 					  Color bkg, Color borderColor, int borderThickness) {
 		super(anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
-		
-		chatMessages = new ArrayDeque<String>();
-	}
-	
-	public void addMessage(String s) {
-		chatMessages.addFirst(s);
 	}
 	
 	public void keypress(KeyEvent keyEvent) {
@@ -37,7 +30,7 @@ public class ChatWindow extends GUIContainer {
 			if (currentMessage.length() > 0) {
 				Message m = new Message();
 				m.type = MessageType.CHAT_MESSAGE;
-				m.payload = currentMessage;
+				m.payload = new ChatMessage(null, currentMessage);
 				Main.client.send(m);
 			}
 			
@@ -83,9 +76,17 @@ public class ChatWindow extends GUIContainer {
 		
 		// draw each of the current chat messages
 		int yPos = -g.getFontMetrics().getHeight()/2;
-		for (String s : chatMessages) {
-			g.drawString(s, this.bounds.x + 5, 
-							this.bounds.y + this.bounds.height + yPos - offset);
+		for (ChatMessage m : Main.client.getAllChatMessages()) {
+			String toDraw = "";
+			if (m.source.equals(ChatMessage.serverSource)) {
+				g.setColor(new Color(255, 0, 0));;
+			} else {
+				g.setColor(Color.BLACK);
+				toDraw = m.source + "> ";
+			}
+			toDraw += m.message;
+			g.drawString(toDraw, this.bounds.x + 5, 
+						 this.bounds.y + this.bounds.height + yPos - offset);
 			yPos += -fontHeight;
 			
 			if (yPos < (this.bounds.height - fontHeight*2) * -1) {
