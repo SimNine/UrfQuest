@@ -7,6 +7,8 @@ import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
 public class CommandProcessor {
+	
+	public static String helpCommandMessage = "/help, /getpos [player_name], /list, /me";
 
 	public static void processCommand(Server server, String commandStr, int clientID) {
 		Main.server.getLogger().info(clientID + " sent command: " + commandStr);
@@ -16,7 +18,7 @@ public class CommandProcessor {
 			case "/help": {
 				Message m = new Message();
 				m.type = MessageType.CHAT_MESSAGE;
-				m.payload = new ChatMessage(ChatMessage.serverSource, "/help, /getpos [player_name], /list, /me");
+				m.payload = new ChatMessage(ChatMessage.serverSource, helpCommandMessage);
 				server.sendMessageToSingleClient(m, clientID);
 				break;
 			}
