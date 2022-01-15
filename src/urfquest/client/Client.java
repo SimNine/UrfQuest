@@ -84,6 +84,10 @@ public class Client implements Runnable {
 		return this.logger;
 	}
 	
+	public int getClientID() {
+		return this.clientID;
+	}
+	
 	public void processMessage(Message m) {
 		switch (m.type) {
 			case PING: {
