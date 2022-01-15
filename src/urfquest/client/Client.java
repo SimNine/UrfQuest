@@ -33,18 +33,21 @@ public class Client implements Runnable {
 	private Logger logger;
 	
 	private int clientID;
+	private String playerName = "default";
 	
-	public Client(Server server) {
+	public Client(Server server, String playerName) {
 		this.state = new State();
 		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
+		this.playerName = playerName;
 		
 		this.server = server;
 		this.socket = null;
 	}
 	
-	public Client(Socket socket) {
+	public Client(Socket socket, String playerName) {
 		this.state = new State();
 		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
+		this.playerName = playerName;
 		
 		// initialize streams on the socket
 		this.server = null;
@@ -103,7 +106,7 @@ public class Client implements Runnable {
 				
 				m = new Message();
 				m.type = MessageType.PLAYER_REQUEST;
-				m.entityName = Main.playerName;
+				m.entityName = this.playerName;
 				this.send(m);
 				break;
 			}

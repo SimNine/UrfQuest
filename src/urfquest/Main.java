@@ -46,15 +46,15 @@ public class Main implements Runnable {
 	public static boolean isFullscreen;
 	
 	// startup arguments
-	public static String ip = "localhost";
-	public static int port = 7096;
-	public static int mode = MODE_FULL;
-	public static String playerName = "default";
+	private static String ip = "localhost";
+	private static int port = 7096;
+	private static int mode = MODE_FULL;
 	
 	public static void main(String[] args) {
 		launchLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
 		
 		// check for proper number of arguments
+		String playerName = "playerName";
 		if (args.length == 3) {
 			ip = args[0];
 			port = Integer.parseInt(args[1]);
@@ -128,10 +128,10 @@ public class Main implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			startClient(ip, port);
+			startClient(ip, port, playerName);
 		} else if (mode == MODE_CLIENT) {
 			// client only
-			startClient(ip, port);
+			startClient(ip, port, playerName);
 		} else if (mode == MODE_SERVER) {
 			// server only
 			startServer(0, port);
@@ -148,7 +148,7 @@ public class Main implements Runnable {
 		serverThread.start();
 	}
 	
-	public static void startClient(String ip, int port) {
+	public static void startClient(String ip, int port, String playerName) {
 		launchLogger.all("Starting client, connecting to " + ip + ":" + port);
 		root = new Main();
 		
@@ -165,7 +165,7 @@ public class Main implements Runnable {
 		}
         
         // initialize the networking engine
-        client = new Client(socket);
+        client = new Client(socket, playerName);
         Thread clientThread = new Thread(client);
         clientThread.setName("LocalClientThread");
         clientThread.start();

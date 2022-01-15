@@ -28,8 +28,8 @@ class BasicConnectionTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		s = new Server(0, 0);
-		c1 = new Client(s);
-		c2 = new Client(s);
+		c1 = new Client(s, "Chris");
+		c2 = new Client(s, "Nick");
 		
 		Main.server = s;
 		Main.client = c1;
