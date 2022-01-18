@@ -155,7 +155,7 @@ class BasicPlayerMovementTest {
 
 		// move down 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
-			c1.getState().getPlayer().move(1, 0);
+			c1.getState().getPlayer().move(0, 1);
 		}
 		double xPos3c = p1c.getPos()[0];
 		double yPos3c = p1c.getPos()[1];
@@ -164,7 +164,7 @@ class BasicPlayerMovementTest {
 
 		// move left 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
-			c1.getState().getPlayer().move(1, 0);
+			c1.getState().getPlayer().move(-1, 0);
 		}
 		double xPos4c = p1c.getPos()[0];
 		double yPos4c = p1c.getPos()[1];
@@ -173,7 +173,7 @@ class BasicPlayerMovementTest {
 
 		// move up 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
-			c1.getState().getPlayer().move(1, 0);
+			c1.getState().getPlayer().move(0, -1);
 		}
 		double xPos5c = p1c.getPos()[0];
 		double yPos5c = p1c.getPos()[1];

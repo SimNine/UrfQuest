@@ -212,12 +212,12 @@ public class Player extends Mob {
 		double xComp = velocity*Math.cos(dirRadians);
 		double yComp = velocity*Math.sin(dirRadians);
 		
+		super.move(xComp, yComp);
+		
 		Message m = new Message();
 		m.type = MessageType.PLAYER_MOVE;
 		m.pos = new double[]{xComp, yComp};
 		Main.client.send(m);
-		
-		super.move(xComp, yComp);
 	}
 	
 	public void setPos(double x, double y) {
