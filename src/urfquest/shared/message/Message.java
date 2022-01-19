@@ -54,6 +54,9 @@ public class Message implements Serializable {
 		case PLAYER_REQUEST:
 			ret += entityName;
 			break;
+		case MAP_REQUEST:
+			ret += "mapID: " + this.mapID;
+			break;
 		
 		// only sent by server
 		case ENTITY_SET_POS:

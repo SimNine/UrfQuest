@@ -146,6 +146,7 @@ public class Server implements Runnable {
 					m.entityType = EntityType.PLAYER;
 					m.entityID = player.id;
 					m.entityName = player.getName();
+					m.pos = player.getPos();
 					c.send(m);
 				}
 				break;
