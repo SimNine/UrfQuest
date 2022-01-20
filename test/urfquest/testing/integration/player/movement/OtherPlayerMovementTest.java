@@ -1,9 +1,6 @@
 package urfquest.testing.integration.player.movement;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,17 +18,9 @@ class OtherPlayerMovementTest {
 	private Client c2;
 	private Server s;
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
-
 	@BeforeEach
 	void setUp() throws Exception {
-		s = new Server(0, 0);
+		s = new Server(0);
 		c1 = new Client(s, "Chris");
 		c2 = new Client(s, "Nick");
 		
@@ -40,10 +29,6 @@ class OtherPlayerMovementTest {
 		
 		s.attachLocalClient(c1);
 		s.attachLocalClient(c2);
-	}
-
-	@AfterEach
-	void tearDown() throws Exception {
 	}
 	
 	@Test
@@ -83,7 +68,7 @@ class OtherPlayerMovementTest {
 	@Test
 	void testMovementSquare() {
 		urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
-		System.out.println(c1p1.id);
+		//System.out.println(c1p1.id);
 		urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
 		Assertions.assertNotNull(c2p1);
 		

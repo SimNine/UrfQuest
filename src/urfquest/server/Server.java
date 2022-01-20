@@ -139,7 +139,10 @@ public class Server implements Runnable {
 						c.send(m);
 					}
 				}
-				
+
+				// TODO: OtherPlayerMovementTest's second test case occasionally fails here.
+				// When this happens, the loop below does not iterate, even though there are players
+				// on the map. This causes the existing player to not be found on the new client.
 				for (Player player : map.getPlayers().values()) {
 					m = new Message();
 					m.type = MessageType.ENTITY_INIT;

@@ -34,7 +34,7 @@ public class Message implements Serializable {
 		case PING:
 			break;
 		case CHUNK_LOAD:
-			ret += "MapID: " + mapID + ", xChunk:" + xyChunk[0] + ", yChunk:" + xyChunk[1];
+			ret += "mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
 			break;
 		case CHAT_MESSAGE: {
 			ChatMessage m = (ChatMessage)payload;
@@ -49,24 +49,27 @@ public class Message implements Serializable {
 			
 		// only sent by client
 		case PLAYER_MOVE:
-			ret += "xDelt:" + pos[0] + " yDelt:" + pos[1];
+			ret += "entityID:" + this.entityID + ",xDelt:" + pos[0] + ",yDelt:" + pos[1];
 			break;
 		case PLAYER_REQUEST:
-			ret += entityName;
+			ret += "name:" + entityName;
 			break;
 		case MAP_REQUEST:
-			ret += "mapID: " + this.mapID;
+			ret += "mapID:" + this.mapID;
 			break;
 		
 		// only sent by server
 		case ENTITY_SET_POS:
-			ret += "x:" + pos[0] + " y:" + pos[1];
+			ret += "entityID:" + this.entityID + ",x:" + pos[0] + ",y:" + pos[1];
 			break;
 		case CONNECTION_CONFIRMED:
-			ret += "client has id " + clientID;
+			ret += "clientID:" + clientID;
 			break;
 		case ENTITY_INIT:
-			ret += "type: " + entityType.toString();
+			ret += "entityID:" + this.entityID + ",type:" + entityType.toString() + ",";
+			if (entityType == EntityType.PLAYER) {
+				ret += "name:" + this.entityName;
+			}
 			break;
 		default:
 			ret += "unrecognized message";
