@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.server.Server;
 
@@ -30,9 +29,6 @@ class BasicConnectionTest {
 		s = new Server(0, 0);
 		c1 = new Client(s, "Chris");
 		c2 = new Client(s, "Nick");
-		
-		Main.server = s;
-		Main.client = c1;
 	}
 
 	@AfterEach

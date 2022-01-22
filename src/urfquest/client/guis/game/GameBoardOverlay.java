@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.items.Item;
@@ -22,21 +23,21 @@ public class GameBoardOverlay extends GUIContainer {
 	private boolean transparencyIncreasing = false;
 	private int tileAnimStage = 0;
 
-	public GameBoardOverlay() {
-		super(GUIAnchor.TOP_LEFT, 
+	public GameBoardOverlay(Client c) {
+		super(c, 
+			  GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
 			  0, 
 			  0, 
 			  "board", 
-			  null, 
-			  null, null, 0);
+			  null, null, null, 0);
 	}
 
 	public void draw(Graphics g) {
 		drawBoard(g);
 		drawEntities(g);
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebugText(g);
 			drawCrosshair(g);
 		}
@@ -53,8 +54,8 @@ public class GameBoardOverlay extends GUIContainer {
 		int dispCenterX = Main.panel.dispCenterX;
 		int dispCenterY = Main.panel.dispCenterY;
 		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
-		Map currMap = Main.client.getState().getCurrentMap();
-		Entity camera = Main.client.getState().getPlayer();
+		Map currMap = this.client.getState().getCurrentMap();
+		Entity camera = this.client.getState().getPlayer();
 
 		// get the rendering offset
 		int rootX = (int)(TILE_WIDTH - (dispCenterX % TILE_WIDTH));
@@ -105,11 +106,11 @@ public class GameBoardOverlay extends GUIContainer {
 		int mouseY = (int) mouseCoordY;
 		
 		// convenience
-		Player p = Main.client.getState().getPlayer();
+		Player p = this.client.getState().getPlayer();
 		
 		// draw the highlight of the selected tile
-		if (Main.client.getState().isGameRunning() && !Main.panel.getGUIOpen()) {
-			if (Main.client.getState().isBuildMode()) {
+		if (this.client.getState().isGameRunning() && !Main.panel.getGUIOpen()) {
+			if (this.client.getState().isBuildMode()) {
 				int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
 				int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
 				g.setColor(new Color(255, 255, 255, selectedTileTransparency));
@@ -134,7 +135,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// get any mob underneath the mouse cursor, highlight it
-		Mob m = Main.client.getState().getCurrentMap().mobAt(mouseCoordX, mouseCoordY);
+		Mob m = this.client.getState().getCurrentMap().mobAt(mouseCoordX, mouseCoordY);
 		if (m != null) {
 			int tileWidth = QuestPanel.TILE_WIDTH;
 			int xTemp = Main.panel.gameToWindowX(m.getPos()[0]);
@@ -144,7 +145,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// when debugging, draw the grid itself
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			g.setColor(Color.BLACK);
 			for (int x = 0; x < dispTileWidth + 2; x++) {
 				g.drawLine(-rootX + x*TILE_WIDTH, 0, -rootX + x*TILE_WIDTH, Main.panel.getHeight());
@@ -160,7 +161,7 @@ public class GameBoardOverlay extends GUIContainer {
 		int mouseX = (int) Main.panel.windowToGameX(Main.panel.mousePos[0]);
 		int mouseY = (int) Main.panel.windowToGameY(Main.panel.mousePos[1]);
 		
-		Player p = Main.client.getState().getPlayer();
+		Player p = this.client.getState().getPlayer();
 		if (mouseX < p.getPos()[0] + 3 &&
 				   mouseX > p.getPos()[0] - 3 &&
 				   mouseY < p.getPos()[1] + 3 &&
@@ -169,8 +170,8 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		System.out.println(p.getMap().getTileAt(mouseX, mouseY)[0]);
 		
-		if (Main.client.getState().isBuildMode() && Main.client.getState().isGameRunning() && !Main.panel.getGUIOpen()) {
-			Main.client.getState().getCurrentMap().setTileAt(mouseX, mouseY, 15);
+		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !Main.panel.getGUIOpen()) {
+			this.client.getState().getCurrentMap().setTileAt(mouseX, mouseY, 15);
 			return true;
 		} else {
 			return false;
@@ -178,8 +179,8 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 
 	private void drawDebugText(Graphics g) {
-		Player player = Main.client.getState().getPlayer();
-		Map currMap = Main.client.getState().getCurrentMap();
+		Player player = this.client.getState().getPlayer();
+		Map currMap = this.client.getState().getCurrentMap();
 		
 		g.setColor(new Color(128, 128, 128, 128));
 		g.fillRect(0, 0, 600, 150);
@@ -201,8 +202,8 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 
 	private void drawEntities(Graphics g) {
-		Map currMap = Main.client.getState().getCurrentMap();
-		Entity camera = Main.client.getState().getPlayer();
+		Map currMap = this.client.getState().getCurrentMap();
+		Entity camera = this.client.getState().getPlayer();
 		
 		for (Mob m : currMap.getMobs().values()) {
 			if (m.getCenter()[0] > camera.getPos()[0] - 30 &&

@@ -4,14 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
 
 public class RocketExhaust extends Particle {
 	private Color color;
 
-	public RocketExhaust(int id, Map m, double x, double y) {
-		super(id, m, x, y, (int)(Math.random()*360.0), 0.04, 100);
+	public RocketExhaust(Client c, int id, Map m, double x, double y) {
+		super(c, id, m, x, y, (int)(Math.random()*360.0), 0.04, 100);
 		color = new Color(255, 255, 255, 255);
 		bounds.setFrame(x, y, 0, 0);
 	}

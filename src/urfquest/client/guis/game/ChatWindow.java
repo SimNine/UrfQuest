@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
@@ -19,10 +19,11 @@ public class ChatWindow extends GUIContainer {
 	private boolean isOpaque = false;
 	private Font chatFont = new Font("Courier", Font.BOLD, 15);
 
-	public ChatWindow(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, 
+	public ChatWindow(Client c,
+					  GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, 
 					  String name, GUIObject parent, 
 					  Color bkg, Color borderColor, int borderThickness) {
-		super(anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
+		super(c, anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
 	}
 	
 	public void keypress(KeyEvent keyEvent) {
@@ -31,7 +32,7 @@ public class ChatWindow extends GUIContainer {
 				Message m = new Message();
 				m.type = MessageType.CHAT_MESSAGE;
 				m.payload = new ChatMessage(null, currentMessage);
-				Main.client.send(m);
+				this.client.send(m);
 			}
 			
 			currentMessage = "";
@@ -76,7 +77,7 @@ public class ChatWindow extends GUIContainer {
 		
 		// draw each of the current chat messages
 		int yPos = -g.getFontMetrics().getHeight()/2;
-		for (ChatMessage m : Main.client.getAllChatMessages()) {
+		for (ChatMessage m : this.client.getAllChatMessages()) {
 			String toDraw = "";
 			if (m.source.equals(ChatMessage.serverSource)) {
 				g.setColor(new Color(255, 0, 0));;

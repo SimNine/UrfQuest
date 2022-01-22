@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import urfquest.IDGenerator;
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.shared.message.Message;
 
@@ -29,7 +28,7 @@ public class ClientThread implements Runnable {
 	public ClientThread(Server serv, Socket s) {
 		this.server = serv;
 		this.id = IDGenerator.newID();
-		Main.server.getLogger().info("new client has connected with id " + this.id);
+		this.server.getLogger().info("new client has connected with id " + this.id);
 
 		this.client = null;
 		this.socket = s;
@@ -48,7 +47,7 @@ public class ClientThread implements Runnable {
 	public ClientThread(Server serv, Client c) {
 		this.server = serv;
 		this.id = IDGenerator.newID();
-		Main.server.getLogger().info("new local client added with id " + this.id);
+		this.server.getLogger().info("new local client added with id " + this.id);
 		
 		this.client = c;
 		this.socket = null;
@@ -64,18 +63,18 @@ public class ClientThread implements Runnable {
 				m.clientID = id;
 				this.server.intakeMessage(m);
 			} catch (IOException e) {
-				Main.server.getLogger().info("Client " + id + " disconnected");
+				this.server.getLogger().info("Client " + id + " disconnected");
 				stopped = true;
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				Main.server.getLogger().warning("Message class not found");
+				this.server.getLogger().warning("Message class not found");
 				e.printStackTrace();
 			}
 		}
 		
 		try {
 			socket.close();
-			Main.server.getLogger().info("connection closed");
+			this.server.getLogger().info("connection closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -86,21 +85,21 @@ public class ClientThread implements Runnable {
 	}
 	
 	public void send(Message m) {
-		try {
-			if (socket == null) {
-				client.processMessage(m);
-			} else {
-				out.writeObject(m);
-			}
-		} catch (SocketException e) {
-			// TODO: look into the appropriate way to handle disconnection
+		if (socket == null) {
+			client.processMessage(m);
+		} else {
 			try {
-				this.stop();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				out.writeObject(m);
+			} catch (SocketException e) {
+				// TODO: look into the appropriate way to handle disconnection
+				try {
+					this.stop();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Chicken;
 import urfquest.client.entities.mobs.Mob;
@@ -61,7 +62,7 @@ public class Item extends Entity {
 	
 	private static void initItemPics() {
 		try {
-			Class<?> c = Main.client.getClass();
+			Class<?> c = Main.mainLogger.getClass();
 			itemImages[0] = ImageIO.read(c.getResourceAsStream(assetPath + "astralRune_scaled_30px.png"));
 			itemImages[1] = ImageIO.read(c.getResourceAsStream(assetPath + "cosmicRune_scaled_30px.png"));
 			itemImages[2] = ImageIO.read(c.getResourceAsStream(assetPath + "lawRune_scaled_30px.png"));
@@ -84,7 +85,7 @@ public class Item extends Entity {
 			itemImages[19] = ImageIO.read(c.getResourceAsStream(assetPath + "ironore_scaled_30px.png"));
 			itemImages[20] = ImageIO.read(c.getResourceAsStream(assetPath + "copperore_scaled_30px.png"));
 		} catch (IOException e) {
-			Main.client.getLogger().error(e.getMessage());
+			Main.mainLogger.error(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -172,16 +173,16 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(int id, Map m, double x, double y, int type) {
-		this(id, m, x, y, type, 1, -1);
+	public Item(Client c, int id, Map m, double x, double y, int type) {
+		this(c, id, m, x, y, type, 1, -1);
 	}
 	
-	public Item(int id, Map m, double x, double y, int type, int durability) {
-		this(id, m, x, y, type, 1, durability);
+	public Item(Client c, int id, Map m, double x, double y, int type, int durability) {
+		this(c, id, m, x, y, type, 1, durability);
 	}
 	
-	public Item(int id, Map m, double x, double y, int type, int stackSize, int durability) {
-		super(id, m, x, y);
+	public Item(Client c, int id, Map m, double x, double y, int type, int stackSize, int durability) {
+		super(c, id, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		
 		this.itemType = type;
@@ -236,7 +237,7 @@ public class Item extends Entity {
 			
 			m.incrementMana(-5.0);
 			double[] pos3 = m.getPos();
-			m.getMap().addMob(new Chicken(map, pos3[0], pos3[1]));
+			//m.getMap().addMob(new Chicken(client, map, pos3[0], pos3[1]));
 			return true;
 		case Item.LAW_RUNE:
 			if (m.getMana() < 30.0) {
@@ -281,7 +282,7 @@ public class Item extends Entity {
 			cooldown = getMaxCooldown();
 			
 			for (int i = 0; i < 20; i++) {
-				map.addProjectile(new RocketExplosion(bounds.x + (Math.random() - 0.5)*20, bounds.y + (Math.random() - 0.5)*20, this, map));
+				map.addProjectile(new RocketExplosion(null, bounds.x + (Math.random() - 0.5)*20, bounds.y + (Math.random() - 0.5)*20, this, map));
 			}
 			return true;
 		case Item.KEY:
@@ -289,7 +290,7 @@ public class Item extends Entity {
 		case Item.GRENADE_ITEM:
 			cooldown = getMaxCooldown();
 			
-			m.getMap().addProjectile(new GrenadeProjectile(m.getCenter()[0], m.getCenter()[1], m, m.getMap()));
+			m.getMap().addProjectile(new GrenadeProjectile(null, m.getCenter()[0], m.getCenter()[1], m, m.getMap()));
 			return true;
 		case Item.PISTOL:
 			cooldown = getMaxCooldown();
@@ -340,22 +341,22 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 					double rand = Math.random();
 					if (rand > .95) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.LAW_RUNE));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LAW_RUNE));
 					} else if (rand > .90) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.COSMIC_RUNE));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COSMIC_RUNE));
 					} else if (rand > .85) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.ASTRAL_RUNE));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.ASTRAL_RUNE));
 					} else if (rand > .82) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.SHOTGUN));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SHOTGUN));
 					} else if (rand > .79) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.SMG));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SMG));
 					} else if (rand > .75) {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.GRENADE_ITEM));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.GRENADE_ITEM));
 					} else {
-						m.getMap().addItem(new Item(map, coords[0], coords[1], Item.STONE));
+						m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
 					}
 				}
-				m.getMap().addItem(new Item(map, coords[0], coords[1], Item.STONE));
+				m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile[0] == Tiles.STONE) {
@@ -363,9 +364,9 @@ public class Item extends Entity {
 				if (tile[1] == Tiles.STONE_DEF) {
 					// nothing else
 				} else if (tile[1] == Tiles.COPPERORE_STONE) {
-					m.getMap().addItem(new Item(map, coords[0], coords[1], Item.COPPER_ORE));
+					m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COPPER_ORE));
 				} else if (tile[1] == Tiles.IRONORE_STONE) {
-					m.getMap().addItem(new Item(map, coords[0], coords[1], Item.IRON_ORE));
+					m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.IRON_ORE));
 				}
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 				cooldown = getMaxCooldown();			
@@ -377,7 +378,7 @@ public class Item extends Entity {
 			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				m.getMap().addItem(new Item(map, coords[0], coords[1], Item.LOG));
+				m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LOG));
 				
 				cooldown = getMaxCooldown();
 				return true;
@@ -469,7 +470,7 @@ public class Item extends Entity {
 	}
 	
 	public Item clone() {
-		return new Item(id, map, bounds.x, bounds.y, itemType, stackSize, durability);
+		return new Item(client, id, map, bounds.x, bounds.y, itemType, stackSize, durability);
 	}
 	
 	/*

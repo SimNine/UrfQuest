@@ -2,6 +2,7 @@ package urfquest.client.entities.particles;
 
 import java.awt.Graphics;
 
+import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
 
@@ -10,8 +11,8 @@ public abstract class Particle extends Entity {
 	protected double velocity;
 	private int duration;
 
-	protected Particle(int id, Map m, double x, double y, int dir, double vel, int duration) {
-		super(id, m, x, y);
+	protected Particle(Client c, int id, Map m, double x, double y, int dir, double vel, int duration) {
+		super(c, id, m, x, y);
 		this.dir = dir;
 		this.velocity = vel;
 		this.duration = duration;

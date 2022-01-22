@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import urfquest.IDGenerator;
-import urfquest.Main;
+import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.entities.mobs.Player;
@@ -19,6 +19,8 @@ import urfquest.server.tiles.ActiveTile;
 import urfquest.server.tiles.Tiles;
 
 public class Map {
+	private Server server;
+	
 	public static final int EMPTY_MAP = 5000;
 	public static final int SIMPLEX_MAP = 5001;
 	public static final int SAVANNAH_MAP = 5002;
@@ -48,7 +50,9 @@ public class Map {
 	
 	public int id;
 	
-	public Map(int type) {
+	public Map(Server srv, int type) {
+		this.server = srv;
+		
 		this.id = IDGenerator.newID();
 		
 		switch (type) {
@@ -120,7 +124,7 @@ public class Map {
 			HashSet<Item> removeNow = new HashSet<Item>();
 			for (Item i : items.values()) {
 				if (p.collides(i) && i.isPickupable()) {
-					Main.server.getLogger().debug(p.getName() + " collided with object: " + i.getClass().getName());
+					this.server.getLogger().debug(p.getName() + " collided with object: " + i.getClass().getName());
 					if (p.addItem(i)) {
 						removeNow.add(i);
 					} else {
@@ -137,7 +141,7 @@ public class Map {
 		for (Mob m : mobs.values()) {
 			for (Player p : players.values()) {
 				if (p.collides(m)) {
-					Main.server.getLogger().debug(p.getName() + " collided with object: " + m.getClass().getName());
+					this.server.getLogger().debug(p.getName() + " collided with object: " + m.getClass().getName());
 				}
 			}
 		}

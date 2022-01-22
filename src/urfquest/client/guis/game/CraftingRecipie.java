@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
@@ -18,9 +19,9 @@ public class CraftingRecipie extends GUIContainer {
 	private HashSet<GUIObject> inputEntries = new HashSet<GUIObject>();
 	private GUIContainer inputContainer;
 
-	public CraftingRecipie(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, String name, GUIObject parent,
-			Color bkg, Color borderColor, int borderThickness, GUIContainer inputContainer) {
-		super(anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
+	public CraftingRecipie(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, String name,
+			GUIObject parent, Color bkg, Color borderColor, int borderThickness, GUIContainer inputContainer) {
+		super(c, anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
 		this.inputContainer = inputContainer;
 	}
 
@@ -44,13 +45,13 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public void addInput(Item i) {
-		InventoryEntry e = new InventoryEntry(GUIAnchor.TOP_LEFT, 
+		InventoryEntry e = new InventoryEntry(this.client, 
+				  GUIAnchor.TOP_LEFT, 
 				  5 + input.size()*45, 
 				  5, 
 				  40, 
 				  40, 
-				  inputContainer, 
-				  i);
+				  inputContainer, i);
 		input.add(i);
 		inputEntries.add(e);
 	}
@@ -60,13 +61,13 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public void addOutput(Item i) {
-		InventoryEntry e = new InventoryEntry(GUIAnchor.TOP_LEFT, 
+		InventoryEntry e = new InventoryEntry(this.client, 
+				  GUIAnchor.TOP_LEFT, 
 				  5 + output.size()*45, 
 				  5, 
 				  40, 
 				  40, 
-				  this, 
-				  i);
+				  this, i);
 		output.add(i);
 		guiObjects.add(e);
 	}
@@ -76,8 +77,8 @@ public class CraftingRecipie extends GUIContainer {
 	}
 	
 	public boolean click() {
-		Main.client.getLogger().debug("crafting attempted");
-		Main.client.getState().getPlayer().tryCrafting(input, output);
+		this.client.getLogger().debug("crafting attempted");
+		this.client.getState().getPlayer().tryCrafting(input, output);
 		return true;
 	}
 }

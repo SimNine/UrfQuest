@@ -37,6 +37,8 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class QuestPanel extends JPanel {
+	private Client client;
+	
 	public int dispCenterX, dispCenterY; // the center of this JPanel relative to the window's top-left corner, in pixels
 	public int dispTileWidth, dispTileHeight; // the number of tiles needed to fill the screen
 	public static final int TILE_WIDTH = 30; // the width, in pixels, of each tile
@@ -76,12 +78,13 @@ public class QuestPanel extends JPanel {
     	}
     });
 	
-	public QuestPanel() {
-		this(640, 480);
+	public QuestPanel(Client c) {
+		this(c, 640, 480);
 	}
 	
-	public QuestPanel(int initwidth, int initheight) {
+	public QuestPanel(Client c, int initwidth, int initheight) {
 		super();
+		this.client = c;
 		setFocusable(true);
 		requestFocusInWindow();
 		setSize(initwidth, initheight);
@@ -100,10 +103,10 @@ public class QuestPanel extends JPanel {
 						Main.resetFrame(!Main.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
 						// TODO: incorporate a method to cycle through all modes
-						if (Main.client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
-							Main.client.getLogger().setLogLevel(Logger.LogLevel.LOG_WARNING);
+						if (client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
+							client.getLogger().setLogLevel(Logger.LogLevel.LOG_WARNING);
 						} else {
-							Main.client.getLogger().setLogLevel(Logger.LogLevel.LOG_DEBUG);
+							client.getLogger().setLogLevel(Logger.LogLevel.LOG_DEBUG);
 						}
 					}
 				}
@@ -139,29 +142,29 @@ public class QuestPanel extends JPanel {
 						} else if (e.getKeyCode() == keybindings.CYCLE_MINIMAP) {
 							gameStatus.cycleMinimapSize();
 						} else if (e.getKeyCode() == keybindings.DROPITEM) {
-							Main.client.getState().getPlayer().dropOneOfSelectedItem();
+							client.getState().getPlayer().dropOneOfSelectedItem();
 						} else if (e.getKeyCode() == keybindings.BUILDMODE) {
 							//UrfQuestClient.client.getState().toggleBuildMode();
 						} else if (e.getKeyCode() == KeyEvent.VK_1) {
-							Main.client.getState().getPlayer().setSelectedEntry(0);
+							client.getState().getPlayer().setSelectedEntry(0);
 						} else if (e.getKeyCode() == KeyEvent.VK_2) {
-							Main.client.getState().getPlayer().setSelectedEntry(1);
+							client.getState().getPlayer().setSelectedEntry(1);
 						} else if (e.getKeyCode() == KeyEvent.VK_3) {
-							Main.client.getState().getPlayer().setSelectedEntry(2);
+							client.getState().getPlayer().setSelectedEntry(2);
 						} else if (e.getKeyCode() == KeyEvent.VK_4) {
-							Main.client.getState().getPlayer().setSelectedEntry(3);
+							client.getState().getPlayer().setSelectedEntry(3);
 						} else if (e.getKeyCode() == KeyEvent.VK_5) {
-							Main.client.getState().getPlayer().setSelectedEntry(4);
+							client.getState().getPlayer().setSelectedEntry(4);
 						} else if (e.getKeyCode() == KeyEvent.VK_6) {
-							Main.client.getState().getPlayer().setSelectedEntry(5);
+							client.getState().getPlayer().setSelectedEntry(5);
 						} else if (e.getKeyCode() == KeyEvent.VK_7) {
-							Main.client.getState().getPlayer().setSelectedEntry(6);
+							client.getState().getPlayer().setSelectedEntry(6);
 						} else if (e.getKeyCode() == KeyEvent.VK_8) {
-							Main.client.getState().getPlayer().setSelectedEntry(7);
+							client.getState().getPlayer().setSelectedEntry(7);
 						} else if (e.getKeyCode() == KeyEvent.VK_9) {
-							Main.client.getState().getPlayer().setSelectedEntry(8);
+							client.getState().getPlayer().setSelectedEntry(8);
 						} else if (e.getKeyCode() == KeyEvent.VK_0) {
-							Main.client.getState().getPlayer().setSelectedEntry(9);
+							client.getState().getPlayer().setSelectedEntry(9);
 						} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 							swap(mapView);
 							guiOpen = true;
@@ -169,17 +172,17 @@ public class QuestPanel extends JPanel {
 							swap(craftingView);
 							guiOpen = true;
 						} else if (e.getKeyCode() == keybindings.MAPLINK) {
-							Main.client.getState().getPlayer().useTileUnderneath();
+							client.getState().getPlayer().useTileUnderneath();
 						} else if (e.getKeyCode() == keybindings.CHAT) {
 							guiOpen = true;
 							chatOverlay.setOpaqueChatbox(true);
 						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
-							System.out.println(Main.client.getState().getPlayer().getCenter()[0] + "," +
-											   Main.client.getState().getPlayer().getCenter()[1]);
+							System.out.println(client.getState().getPlayer().getCenter()[0] + "," +
+											   client.getState().getPlayer().getCenter()[1]);
 							
 							Message m = new Message();
 							m.type = MessageType.DEBUG_PLAYER_INFO;
-							Main.client.send(m);
+							client.send(m);
 						}
 					}
 				} else {
@@ -192,7 +195,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void keyReleased(KeyEvent e) {
 				keys.remove(e.getKeyCode());
-				Main.client.getLogger().verbose("key released: " + e.getKeyChar());
+				client.getLogger().verbose("key released: " + e.getKeyChar());
 			}
 			public void keyTyped(KeyEvent e) {}
 		});
@@ -201,7 +204,7 @@ public class QuestPanel extends JPanel {
 			public void mouseDragged(MouseEvent e) {
 				mousePos[0] = e.getX();
 				mousePos[1] = e.getY();
-				if (Main.client.getState().isBuildMode() && Main.client.getState().isGameRunning() && !guiOpen) {
+				if (client.getState().isBuildMode() && client.getState().isGameRunning() && !guiOpen) {
 					gameBoard.click();
 				}
 			}
@@ -227,7 +230,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void mouseReleased(MouseEvent e) {
 				mouseDown = false;
-				Main.client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
+				client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
 			}
 		});
 	}
@@ -262,10 +265,10 @@ public class QuestPanel extends JPanel {
 		if (keysHeld) {
 			// TODO: *attempt* to move before actually moving
 			// currently, if move is invalid, server has to correct client
-			if (Main.client.getState().getPlayer() != null) {
-				Main.client.getState().getPlayer().move(xDiff, yDiff);
+			if (client.getState().getPlayer() != null) {
+				client.getState().getPlayer().move(xDiff, yDiff);
 			} else {
-				Main.client.getState().getCamera().move(xDiff, yDiff);
+				client.getState().getCamera().move(xDiff, yDiff);
 			}
 		}
 	}
@@ -320,16 +323,16 @@ public class QuestPanel extends JPanel {
 	}
 	
 	public void initOverlays() {
-		gameBoard = new GameBoardOverlay();
-		gameStatus = new GameStatusOverlay();
-		gameWeather = new GameWeatherOverlay();
-		mapView = new MapViewOverlay();
-		keybindingView = new KeybindingOverlay();
-		craftingView = new CraftingOverlay();
-		mainMenu = OverlayInit.newMainMenu();
-		pauseMenu = OverlayInit.newPauseMenu();
-		optionsMenu = OverlayInit.newOptionsOverlay();
-		chatOverlay = new ChatOverlay();
+		gameBoard = new GameBoardOverlay(this.client);
+		gameStatus = new GameStatusOverlay(this.client);
+		gameWeather = new GameWeatherOverlay(this.client);
+		mapView = new MapViewOverlay(this.client);
+		keybindingView = new KeybindingOverlay(this.client);
+		craftingView = new CraftingOverlay(this.client);
+		mainMenu = OverlayInit.newMainMenu(this.client);
+		pauseMenu = OverlayInit.newPauseMenu(this.client);
+		optionsMenu = OverlayInit.newOptionsOverlay(this.client);
+		chatOverlay = new ChatOverlay(this.client);
 		chatOverlay.resetBounds();
 		
 		overlays.push(gameBoard);
@@ -353,7 +356,7 @@ public class QuestPanel extends JPanel {
 			it.next().draw(g);
 		}
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());
@@ -404,7 +407,7 @@ public class QuestPanel extends JPanel {
 	 */
 	
 	private Entity fetchCamera() {
-		return Main.client.getState().getCamera();
+		return client.getState().getCamera();
 	}
 	
 //	public void setCamera(Entity m) {

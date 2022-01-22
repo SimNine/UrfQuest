@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.server.Server;
 import urfquest.shared.message.Constants;
@@ -23,9 +22,6 @@ class OtherPlayerMovementTest {
 		s = new Server(0);
 		c1 = new Client(s, "Chris");
 		c2 = new Client(s, "Nick");
-		
-		Main.server = s;
-		Main.client = c1;
 		
 		s.attachLocalClient(c1);
 		s.attachLocalClient(c2);

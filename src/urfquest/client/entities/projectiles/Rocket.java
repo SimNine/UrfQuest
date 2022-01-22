@@ -13,7 +13,7 @@ import urfquest.client.tiles.Tiles;
 public class Rocket extends Projectile {
 
 	public Rocket(double x, double y, int dir, double velocity, Entity source, Map m) {
-		super(x, y, source, m);
+		super(null, x, y, source, m);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		this.velocity = velocity;
 		this.direction = dir;
@@ -43,7 +43,7 @@ public class Rocket extends Projectile {
 	}
 	
 	private void explode() {
-		map.addProjectile(new RocketExplosion(bounds.x, bounds.y, this, map));
+		map.addProjectile(new RocketExplosion(null, bounds.x, bounds.y, this, map));
 	}
 
 	public void drawEntity(Graphics g) {

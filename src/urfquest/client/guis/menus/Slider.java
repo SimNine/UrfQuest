@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.guis.Clickable;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
@@ -14,8 +14,8 @@ public class Slider extends GUIObject implements Clickable {
 	private int sliderPos = 0;
 	private int lineThickness = 3;
 	
-	public Slider(int size, int xDisp, int yDisp, GUIAnchor anchor, GUIContainer parent) {
-		super(anchor, xDisp, yDisp, size*5, size, parent);
+	public Slider(Client c, int size, int xDisp, int yDisp, GUIAnchor anchor, GUIContainer parent) {
+		super(c, anchor, xDisp, yDisp, size*5, size, parent);
 	}
 	
 	public void draw(Graphics g) {
@@ -41,7 +41,7 @@ public class Slider extends GUIObject implements Clickable {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(bounds.x + sliderPos - sliderWidth/2, bounds.y, sliderWidth, bounds.height + 1);
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		};
 	}
@@ -50,7 +50,8 @@ public class Slider extends GUIObject implements Clickable {
 	 * representing the percentage of the slider to the left of the mouse
 	 */
 	public void setSliderPosition() {
-		this.sliderPos = Main.panel.mousePos[0] - bounds.x;
+		// TODO: find workaround
+		//this.sliderPos = Main.panel.mousePos[0] - bounds.x;
 		//this.sliderPos = (int)(((UrfQuest.mousePos[0] - (xAnchor() + this.xDisplacement))/(bounds.width))*100);
 	}
 	

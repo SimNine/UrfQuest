@@ -1,5 +1,6 @@
 package urfquest.client.state;
 
+import urfquest.client.Client;
 import urfquest.client.entities.mobs.CameraMob;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
@@ -7,6 +8,7 @@ import urfquest.client.map.Map;
 import urfquest.shared.message.Constants;
 
 public class State {
+	private Client client;
 	
 	private boolean isGameRunning;
 	private boolean isBuildMode;
@@ -16,10 +18,11 @@ public class State {
 	private Player player;
 	private CameraMob camera;
 
-	public State() {
+	public State(Client c) {
+		this.client = c;
 		this.isGameRunning = false;
-		this.currentMap = new Map(Constants.localMapRadius);
-		this.camera = new CameraMob(-1, currentMap, 
+		this.currentMap = new Map(c, Constants.localMapRadius);
+		this.camera = new CameraMob(this.client, -1, currentMap, 
 				currentMap.getHomeCoords()[0], 
 				currentMap.getHomeCoords()[1], 
 				CameraMob.STILL_MODE);

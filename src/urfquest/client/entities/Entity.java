@@ -6,16 +6,20 @@ import java.awt.geom.Rectangle2D;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
 
 public abstract class Entity {
+	protected Client client;
+	
 	protected Rectangle2D.Double bounds;
 	protected Map map;
 	
 	public int id;
 	
-	protected Entity(int id, Map m, double x, double y) {
+	protected Entity(Client c, int id, Map m, double x, double y) {
+		this.client = c;
 		this.id = id;
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		map = m;
@@ -93,7 +97,7 @@ public abstract class Entity {
 	 */
 	public void draw(Graphics g) {
 		drawEntity(g);
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 			drawBounds(g);
 		}

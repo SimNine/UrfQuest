@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -38,7 +37,7 @@ public class Server implements Runnable {
 	private Logger logger;
 	
 	public Server(int seed) {
-		this.setGame(new State());
+		this.setGame(new State(this));
         this.getGame().setGameRunning(true);
         
         this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
@@ -47,7 +46,7 @@ public class Server implements Runnable {
 	}
 
 	public Server(int seed, int port) {
-		this.setGame(new State());
+		this.setGame(new State(this));
         this.getGame().setGameRunning(true);
         
         this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
@@ -87,7 +86,7 @@ public class Server implements Runnable {
 		
 		switch (m.type) {
 			case PLAYER_REQUEST: {
-				Main.server.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.clientID + " - " + m.toString());
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
@@ -106,7 +105,7 @@ public class Server implements Runnable {
 				break;
 			}
 			case PLAYER_MOVE: {
-				Main.server.getLogger().verbose(m.clientID + " - " + m.toString());
+				this.getLogger().verbose(m.clientID + " - " + m.toString());
 				// - Recieves a request from a client to move their player
 				// - Tests if the move is allowed; if so, does the move
 				Player movedPlayer = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
@@ -114,7 +113,7 @@ public class Server implements Runnable {
 				break;
 			}
 			case MAP_REQUEST: {
-				Main.server.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.clientID + " - " + m.toString());
 				// - Recieves a request from a client to load a new map
 				// - Sends metadata of the requested map to the client - TODO
 				// - Sends chunks nearby the player to the client
@@ -155,7 +154,7 @@ public class Server implements Runnable {
 				break;
 			}
 			case CHUNK_LOAD: {
-				Main.server.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.clientID + " - " + m.toString());
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
 				MapChunk chunk = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -168,7 +167,7 @@ public class Server implements Runnable {
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				Main.server.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.clientID + " - " + m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 				Player p = game.getPlayer(playerID);
 				String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
@@ -180,7 +179,7 @@ public class Server implements Runnable {
 				break;
 			}
 			case CHAT_MESSAGE: {
-				Main.server.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.clientID + " - " + m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 				Player p = game.getPlayer(playerID);
 				
@@ -198,7 +197,7 @@ public class Server implements Runnable {
 				break;
 			}
 			default: {
-				Main.server.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.clientID + " - " + m.toString());
 				break;
 			}
 		}
@@ -245,7 +244,7 @@ public class Server implements Runnable {
 		@Override
 		public void run() {
 			// while the game is running, continue listening on the given socket
-			Main.server.getLogger().info("server listening on port: " + serverSocket.getLocalPort());
+			logger.info("server listening on port: " + serverSocket.getLocalPort());
 			while (true) {
 				Socket socket = null;
 			    try {

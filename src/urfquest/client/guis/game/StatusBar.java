@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
@@ -14,8 +14,8 @@ public abstract class StatusBar extends GUIObject {
 	private boolean visibleByDefault = false;
 	private int visibility = 0;
 	
-	public StatusBar(int xDisp, int yDisp, int width, int height, GUIAnchor anchor, Color col, boolean visibleByDefault, GUIContainer parent) {
-		super(anchor, xDisp, yDisp, width, height, parent);
+	public StatusBar(Client c, int xDisp, int yDisp, int width, int height, GUIAnchor anchor, Color col, boolean visibleByDefault, GUIContainer parent) {
+		super(c, anchor, xDisp, yDisp, width, height, parent);
 		this.color = col;
 		this.visibleByDefault = visibleByDefault;
 		if (visibleByDefault) {
@@ -49,7 +49,7 @@ public abstract class StatusBar extends GUIObject {
 		int pixelLength = (int)((bounds.width - borderPlusGap*2)*getPercentage());
 		g.fillRect(bounds.x + borderPlusGap, bounds.y + borderPlusGap, pixelLength, bounds.height - borderPlusGap*2);
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

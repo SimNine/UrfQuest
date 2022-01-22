@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
@@ -23,8 +24,8 @@ public abstract class Mob extends Entity {
 	protected double maxFullness;
 	protected int healthbarVisibility = 0;
 
-	protected Mob(int id, Map m, double x, double y) {
-		super(id, m, x, y);
+	protected Mob(Client c, int id, Map m, double x, double y) {
+		super(c, id, m, x, y);
 	}
 
 	public abstract void update();

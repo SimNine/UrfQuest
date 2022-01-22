@@ -4,6 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
@@ -20,8 +21,8 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(State s, Map m, double x, double y) {
-		super(s, m, x, y);
+	public Rogue(Server srv, State s, Map m, double x, double y) {
+		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = 0.013;
 		defaultVelocity = 0.013;
@@ -34,9 +35,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 16));
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 15));
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 13));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 16));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 15));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 13));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(this);

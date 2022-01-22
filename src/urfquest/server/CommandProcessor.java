@@ -1,6 +1,5 @@
 package urfquest.server;
 
-import urfquest.Main;
 import urfquest.server.entities.mobs.Player;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Message;
@@ -11,7 +10,7 @@ public class CommandProcessor {
 	public static String helpCommandMessage = "/help, /getpos [player_name], /list, /me";
 
 	public static void processCommand(Server server, String commandStr, int clientID) {
-		Main.server.getLogger().info(clientID + " sent command: " + commandStr);
+		server.getLogger().info(clientID + " sent command: " + commandStr);
 		
 		String tokens[] = commandStr.split(" ");
 		switch (tokens[0]) {

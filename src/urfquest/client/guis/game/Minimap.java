@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
@@ -24,13 +24,13 @@ public class Minimap extends GUIObject implements Clickable {
 	private int xCrop;
 	private int yCrop;
 
-	public Minimap(int xDisp, int yDisp, int width, int height, GUIAnchor anchorPoint, GUIContainer parent) {
-		super(anchorPoint, xDisp, yDisp, width, height, parent);
+	public Minimap(Client c, int xDisp, int yDisp, int width, int height, GUIAnchor anchorPoint, GUIContainer parent) {
+		super(c, anchorPoint, xDisp, yDisp, width, height, parent);
 	}
 
 	public void draw(Graphics g) {
-		BufferedImage minimap = Main.client.getState().getCurrentMap().getMinimap();
-		Player player = Main.client.getState().getPlayer();
+		BufferedImage minimap = this.client.getState().getCurrentMap().getMinimap();
+		Player player = this.client.getState().getPlayer();
 		
 		int borderWidth = 3;
 		int gapWidth = 2;
@@ -82,7 +82,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each item currently on the minimap
 		g.setColor(Color.RED);
-		for (Item i : Main.client.getState().getCurrentMap().getItems().values()) {
+		for (Item i : this.client.getState().getCurrentMap().getItems().values()) {
 			if ((int)i.getPos()[0] > xCrop && (int)i.getPos()[0] < xCrop + width &&
 				(int)i.getPos()[1] > yCrop && (int)i.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)i.getPos()[0]-xCrop) - 1, 
@@ -92,7 +92,7 @@ public class Minimap extends GUIObject implements Clickable {
 		
 		// draw a square for each npc currently on the minimap
 		g.setColor(Color.YELLOW);
-		for (Mob m : Main.client.getState().getCurrentMap().getMobs().values()) {
+		for (Mob m : this.client.getState().getCurrentMap().getMobs().values()) {
 			if ((int)m.getPos()[0] > xCrop && (int)m.getPos()[0] < xCrop + width &&
 				(int)m.getPos()[1] > yCrop && (int)m.getPos()[1] < yCrop + height) {
 				g.fillRect(xRoot + ((int)m.getPos()[0]-xCrop) - 1, 
@@ -106,7 +106,7 @@ public class Minimap extends GUIObject implements Clickable {
 		int playerIndY = yRoot + ((int)player.getPos()[1]-yCrop);
 		g.fillRect(playerIndX-2, playerIndY-2, 5, 5);
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

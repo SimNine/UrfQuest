@@ -1,5 +1,6 @@
 package urfquest.server.entities.mobs;
 
+import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import urfquest.server.map.Map;
@@ -22,8 +23,8 @@ public abstract class Mob extends Entity {
 	
 	protected MobRoutine routine;
 
-	protected Mob(State s, Map m, double x, double y) {
-		super(s, m, x, y);
+	protected Mob(Server srv, State s, Map m, double x, double y) {
+		super(srv, s, m, x, y);
 	}
 
 	public abstract void update();

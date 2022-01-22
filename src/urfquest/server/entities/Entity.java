@@ -3,19 +3,23 @@ package urfquest.server.entities;
 import java.awt.geom.Rectangle2D;
 
 import urfquest.IDGenerator;
-import urfquest.Main;
+import urfquest.server.Server;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 
 public abstract class Entity {
+	protected Server server;
+	
 	protected Rectangle2D.Double bounds;
 	protected State state;
 	protected Map map;
 	
 	public int id;
 	
-	protected Entity(State s, Map m, double x, double y) {
+	protected Entity(Server srv, State s, Map m, double x, double y) {
+		this.server = srv;
+		
 		id = IDGenerator.newID();
 		
 		map = m;
@@ -135,7 +139,7 @@ public abstract class Entity {
 		double xCurr = this.getCenter()[0];
 		double yCurr = this.getCenter()[1];
 		for (int i = 0; i < numSteps; i++) {
-			if (!Tiles.isWalkable(Main.server.getGame().getSurfaceMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
+			if (!Tiles.isWalkable(this.server.getGame().getSurfaceMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
 				return false;
 			}
 			xCurr += xComp;

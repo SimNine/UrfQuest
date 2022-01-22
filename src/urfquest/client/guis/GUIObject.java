@@ -5,15 +5,19 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import urfquest.Main;
+import urfquest.client.Client;
 
 public abstract class GUIObject {
+	
+	protected Client client;
 	
 	protected int xDisplacement, yDisplacement;
 	protected GUIAnchor anchor;
 	protected Rectangle bounds;
 	protected GUIObject parent;
 	
-	protected GUIObject(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIObject parent) {
+	protected GUIObject(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIObject parent) {
+		this.client = c;
 		anchor = anchorPoint;
 		xDisplacement = xRel;
 		yDisplacement = yRel;

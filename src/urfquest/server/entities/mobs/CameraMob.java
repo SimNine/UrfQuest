@@ -2,6 +2,7 @@ package urfquest.server.entities.mobs;
 
 import java.awt.Graphics;
 
+import urfquest.server.Server;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
@@ -12,8 +13,8 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(State s, Map m, double x, double y, int mode) {
-		super(s, m, x, y);
+	public CameraMob(Server srv, State s, Map m, double x, double y, int mode) {
+		super(srv, s, m, x, y);
 		velocity = 0.01;
 		direction = (int)(Math.random()*360.0);
 		health = 100.0;

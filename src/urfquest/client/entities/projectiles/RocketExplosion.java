@@ -1,5 +1,6 @@
 package urfquest.client.entities.projectiles;
 
+import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.map.Map;
@@ -7,8 +8,8 @@ import urfquest.client.tiles.Tiles;
 
 public class RocketExplosion extends Projectile {
 
-	public RocketExplosion(double x, double y, Entity source, Map m) {
-		super(x, y, source, m);
+	public RocketExplosion(Client c, double x, double y, Entity source, Map m) {
+		super(null, x, y, source, m);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		this.velocity = 0;
 		this.direction = 0;

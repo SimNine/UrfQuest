@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.map.Map;
 
 public class Cyclops extends Mob {
@@ -16,8 +17,8 @@ public class Cyclops extends Mob {
 	
 	//private Item shotgun;
 
-	public Cyclops(int id, Map m, double x, double y) {
-		super(id, m, x, y);
+	public Cyclops(Client c, int id, Map m, double x, double y) {
+		super(c, id, m, x, y);
 		
 		// figure out what scaling this should be
 		bounds = new Rectangle2D.Double(x, y, 10, 10);
@@ -47,10 +48,10 @@ public class Cyclops extends Mob {
 	
 	public static void initCyclops() {
 		try {
-			pic = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
+			pic = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
 		}
 	}
 

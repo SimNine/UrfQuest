@@ -7,6 +7,7 @@ import java.util.Set;
 
 import urfquest.Logger;
 import urfquest.Main;
+import urfquest.client.Client;
 
 public class GUIContainer extends GUIObject implements Clickable {
 
@@ -16,10 +17,10 @@ public class GUIContainer extends GUIObject implements Clickable {
 	private int borderThickness;
 	private String name;
 	
-	public GUIContainer(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, 
-						String name, GUIObject parent, 
-						Color bkg, Color borderColor, int borderThickness) {
-		super(anchorPoint, xRel, yRel, width, height, parent);
+	public GUIContainer(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, 
+						int height, String name, 
+						GUIObject parent, Color bkg, Color borderColor, int borderThickness) {
+		super(c, anchorPoint, xRel, yRel, width, height, parent);
 		this.name = name;
 		this.bkg = bkg;
 		this.borderColor = borderColor;
@@ -40,7 +41,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		for (GUIObject o : guiObjects) {
 			o.draw(g);
 		}
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}
@@ -51,7 +52,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 			if (o instanceof Clickable && o.isMouseOver()) {
 				((Clickable) o).click();
 				ret = true;
-				Main.client.getLogger().debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
+				this.client.getLogger().debug("GUIObject " + o.getClass().getSimpleName() + " clicked");
 			}
 		}
 		return ret;

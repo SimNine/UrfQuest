@@ -3,7 +3,7 @@ package urfquest.server.entities.items;
 import java.awt.geom.Rectangle2D;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Chicken;
 import urfquest.server.entities.mobs.Mob;
@@ -90,6 +90,8 @@ public class Item extends Entity {
 			  {-1,				-1,				100},//20
 			  {-1,				-1,				100} };
 	
+	private Server server;
+	
 	private int cooldown;
 	private int durability;
 	private int stackSize;
@@ -100,16 +102,17 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(State s, Map m, double x, double y, int type) {
-		this(s, m, x, y, type, 1, -1);
+	public Item(Server srv, State s, Map m, double x, double y, int type) {
+		this(srv, s, m, x, y, type, 1, -1);
 	}
 	
-	public Item(State s, Map m, double x, double y, int type, int durability) {
-		this(s, m, x, y, type, 1, durability);
+	public Item(Server srv, State s, Map m, double x, double y, int type, int durability) {
+		this(srv, s, m, x, y, type, 1, durability);
 	}
 	
-	public Item(State s, Map m, double x, double y, int type, int stackSize, int durability) {
-		super(s, m, x, y);
+	public Item(Server srv, State s, Map m, double x, double y, int type, int stackSize, int durability) {
+		super(srv, s, m, x, y);
+		this.server = srv;
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		
 		this.itemType = type;
@@ -164,7 +167,7 @@ public class Item extends Entity {
 			
 			m.incrementMana(-5.0);
 			double[] pos3 = m.getPos();
-			m.getMap().addMob(new Chicken(this.state, this.map, pos3[0], pos3[1]));
+			m.getMap().addMob(new Chicken(this.server, this.state, this.map, pos3[0], pos3[1]));
 			return true;
 		case Item.LAW_RUNE:
 			if (m.getMana() < 30.0) {
@@ -268,22 +271,22 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 					double rand = Math.random();
 					if (rand > .95) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.LAW_RUNE));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.LAW_RUNE));
 					} else if (rand > .90) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.COSMIC_RUNE));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.COSMIC_RUNE));
 					} else if (rand > .85) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.ASTRAL_RUNE));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.ASTRAL_RUNE));
 					} else if (rand > .82) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.SHOTGUN));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.SHOTGUN));
 					} else if (rand > .79) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.SMG));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.SMG));
 					} else if (rand > .75) {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.GRENADE_ITEM));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.GRENADE_ITEM));
 					} else {
-						m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.STONE));
+						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.STONE));
 					}
 				}
-				m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.STONE));
+				m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.STONE));
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile[0] == Tiles.STONE) {
@@ -291,9 +294,9 @@ public class Item extends Entity {
 				if (tile[1] == Tiles.STONE_DEF) {
 					// nothing else
 				} else if (tile[1] == Tiles.COPPERORE_STONE) {
-					m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.COPPER_ORE));
+					m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.COPPER_ORE));
 				} else if (tile[1] == Tiles.IRONORE_STONE) {
-					m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.IRON_ORE));
+					m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.IRON_ORE));
 				}
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 				cooldown = getMaxCooldown();			
@@ -305,7 +308,7 @@ public class Item extends Entity {
 			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				m.getMap().addItem(new Item(this.state, this.map, coords[0], coords[1], Item.LOG));
+				m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.LOG));
 				
 				cooldown = getMaxCooldown();
 				return true;
@@ -320,10 +323,10 @@ public class Item extends Entity {
 				} else {
 					m.getMap().setTileAt(coords[0], coords[1], 13);
 					
-					int caveSize = 400;
+					//int caveSize = 400;
 					
 					// create new map
-					Map newCaveMap = new Map(Map.CAVE_MAP);
+					Map newCaveMap = new Map(srv, Map.CAVE_MAP);
 					int xHome = newCaveMap.getHomeCoords()[0];
 					int yHome = newCaveMap.getHomeCoords()[1];
 					newCaveMap.setTileAt(xHome, yHome, 13);
@@ -334,9 +337,9 @@ public class Item extends Entity {
 					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
-					if (Main.server.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
-						Main.server.getLogger().debug("soruce: " + coords[0] + ", " + coords[1]);
-						Main.server.getLogger().debug("exit: " + xHome + ", " + yHome);
+					if (this.server.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+						this.server.getLogger().debug("soruce: " + coords[0] + ", " + coords[1]);
+						this.server.getLogger().debug("exit: " + xHome + ", " + yHome);
 					}
 				}
 				
@@ -397,7 +400,7 @@ public class Item extends Entity {
 	}
 	
 	public Item clone() {
-		return new Item(this.state, this.map, bounds.x, bounds.y, itemType, stackSize, durability);
+		return new Item(this.server, this.state, this.map, bounds.x, bounds.y, itemType, stackSize, durability);
 	}
 	
 	/*

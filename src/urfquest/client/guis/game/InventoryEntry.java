@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.Clickable;
@@ -21,16 +21,16 @@ public class InventoryEntry extends GUIObject implements Clickable {
 	private static final int MISC = 11;
 	private int type;
 
-	protected InventoryEntry(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryNum) {
-		super(anchorPoint, xRel, yRel, width, height, parent);
+	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryNum) {
+		super(c, anchorPoint, xRel, yRel, width, height, parent);
 		this.entryNum = entryNum;
 		this.color = new Color(128, 128, 128, 128);
 		
 		this.type = INVENTORY;
 	}
 	
-	protected InventoryEntry(GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, Item item) {
-		super(anchorPoint, xRel, yRel, width, height, parent);
+	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, Item item) {
+		super(c, anchorPoint, xRel, yRel, width, height, parent);
 		this.item = item;
 		this.color = new Color(128, 128, 128, 128);
 		
@@ -43,8 +43,8 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		
 		Item tempItem;
 		if (type == INVENTORY) {
-			tempItem = Main.client.getState().getPlayer().getInventoryItems().get(entryNum);
-			if (Main.client.getState().getPlayer().getInventory().getSelectedIndex() == entryNum) {
+			tempItem = this.client.getState().getPlayer().getInventoryItems().get(entryNum);
+			if (this.client.getState().getPlayer().getInventory().getSelectedIndex() == entryNum) {
 				this.setBkgColor(new Color(192, 192, 192));
 			} else {
 				this.setBkgColor(new Color(128, 128, 128, 128));
@@ -78,7 +78,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 			}
 		}
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}
@@ -98,7 +98,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		
 		//System.out.println("ding");
 		
-		Player p = Main.client.getState().getPlayer();
+		Player p = this.client.getState().getPlayer();
 		Item tempItem = p.getInventory().getItems().get(entryNum);
 		Item heldItem = p.getHeldItem();
 		if (tempItem == null && heldItem != null) {

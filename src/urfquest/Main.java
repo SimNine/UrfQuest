@@ -20,27 +20,18 @@ import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.server.Server;
 
-public class Main implements Runnable {
+public class Main {
 	
 	static final int MODE_FULL = 0;
 	static final int MODE_CLIENT = 1;
 	static final int MODE_SERVER = 2;
 	
 	// logger
-	public static Logger launchLogger;
-	
-	// game state container
-	public static Server server;
-	
-    // should never need to be accessed
-	private static Main root;
+	public static Logger mainLogger;
 	
 	// for getting graphics properties
     public static JFrame frame;
     public static QuestPanel panel;
-    
-    // for client-server communication
-    public static Client client;
 	
 	// frame properties
 	public static boolean isFullscreen;
@@ -51,7 +42,7 @@ public class Main implements Runnable {
 	private static int mode = MODE_FULL;
 	
 	public static void main(String[] args) {
-		launchLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
+		mainLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
 		
 		// check for proper number of arguments
 		String playerName = "playerName";
@@ -65,7 +56,7 @@ public class Main implements Runnable {
 			File startupPrefs = new File("startupPrefs.config");
 			if (startupPrefs.exists()) {
 				try {
-					launchLogger.info("loading config file");
+					mainLogger.info("loading config file");
 					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
 					ip = prefsReader.readLine();
 					port = Integer.parseInt(prefsReader.readLine());
@@ -78,7 +69,7 @@ public class Main implements Runnable {
 			}
 			
 			// create the startup dialog with filled-in defaults
-			launchLogger.info("opening startup dialog");
+			mainLogger.info("opening startup dialog");
 			StartupDialog dialog = new StartupDialog(ip, port + "", mode, playerName);
 			
 			// load inputs from dialog
@@ -99,7 +90,7 @@ public class Main implements Runnable {
 			
 			// save inputs to prefs file
 			try {
-				launchLogger.info("saving config file");
+				mainLogger.info("saving config file");
 				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
 				prefsWriter.println(ip);
 				prefsWriter.println(port + "");
@@ -137,20 +128,19 @@ public class Main implements Runnable {
 			startServer(0, port);
 		}
 		
-		launchLogger.info("all launcher tasks done");
+		mainLogger.info("all launcher tasks done");
 	}
 	
 	public static void startServer(int seed, int port) {
-		launchLogger.all("Starting server on port " + port);
-		Main.server = new Server(seed, port);
+		mainLogger.all("Starting server on port " + port);
+		Server server = new Server(seed, port);
 		Thread serverThread = new Thread(server);
 		serverThread.setName("LocalServerThread");
 		serverThread.start();
 	}
 	
 	public static void startClient(String ip, int port, String playerName) {
-		launchLogger.all("Starting client, connecting to " + ip + ":" + port);
-		root = new Main();
+		mainLogger.all("Starting client, connecting to " + ip + ":" + port);
 		
 		// initialize the game client
 		Socket socket = null;
@@ -165,24 +155,25 @@ public class Main implements Runnable {
 		}
         
         // initialize the networking engine
-        client = new Client(socket, playerName);
+        Client client = new Client(socket, playerName);
         Thread clientThread = new Thread(client);
         clientThread.setName("LocalClientThread");
         clientThread.start();
 	}
 	
-	public static void initClientFrontend() {
+	public static void initClientFrontend(Client c) {
         // initialize the display and java swing framework
-		SwingUtilities.invokeLater(root);
-	}
-
-	@Override
-	public void run() {
-        Main.panel = new QuestPanel();
-        panel.initOverlays();
-        resetFrame(false);
-        panel.renderTimer.start();
-        panel.inputScanTimer.start();
+		SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+			        Main.panel = new QuestPanel(c);
+			        panel.initOverlays();
+			        resetFrame(false);
+			        panel.renderTimer.start();
+			        panel.inputScanTimer.start();
+				}
+			}
+		);
 	}
 	
 	public static void resetFrame(boolean fullscreen) {

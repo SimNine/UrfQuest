@@ -13,7 +13,7 @@ import urfquest.client.tiles.Tiles;
 public class Bullet extends Projectile {
 
 	public Bullet(double x, double y, int dir, double velocity, Entity source, Map m) {
-		super(x, y, source, m);
+		super(null, x, y, source, m);
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
 		this.velocity = velocity;
 		direction = dir;

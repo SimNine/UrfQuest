@@ -2,6 +2,7 @@ package urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
+import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
@@ -14,8 +15,8 @@ public class Cyclops extends Mob {
 	
 	private Item shotgun;
 
-	public Cyclops(State s, Map m, double x, double y) {
-		super(s, m, x, y);
+	public Cyclops(Server srv, State s, Map m, double x, double y) {
+		super(srv, s, m, x, y);
 		
 		// figure out what scaling this should be
 		bounds = new Rectangle2D.Double(x, y, 10, 10);
@@ -32,7 +33,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(this.state, this.map, 0, 0, 15);
+		shotgun = new Item(srv, this.state, this.map, 0, 0, 15);
 		intelligence = 50;
 		routine = new IdleRoutine(this);
 		thinkingDelay = intelligence;
@@ -80,6 +81,6 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		this.map.addItem(new Item(this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 6));
+		this.map.addItem(new Item(this.server, this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 6));
 	}
 }

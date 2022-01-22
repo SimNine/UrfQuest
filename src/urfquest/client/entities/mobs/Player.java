@@ -12,6 +12,7 @@ import java.util.Collection;
 import javax.imageio.ImageIO;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.map.Map;
 import urfquest.client.map.MapChunk;
@@ -30,130 +31,130 @@ public class Player extends Mob {
 	public static void initGraphics() {
 		// Load E-W
 		try {
-			img[0][0] = img[0][4] = img[4][0] = img[4][4] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E1.png"));
+			img[0][0] = img[0][4] = img[4][0] = img[4][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "E1.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "E1.png");
 		}
 		try {
-			img[0][1] = img[0][3] = img[4][1] = img[4][3] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E2.png"));
+			img[0][1] = img[0][3] = img[4][1] = img[4][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "E2.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "E2.png");
 		}
 		try {
-			img[0][2] = img[4][2] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E3.png"));
+			img[0][2] = img[4][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "E3.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "E3.png");
 		}
 		try {
-			img[0][5] = img[0][7] = img[4][5] = img[4][7] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E6.png"));
+			img[0][5] = img[0][7] = img[4][5] = img[4][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "E6.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "E6.png");
 		}
 		try {
-			img[0][6] = img[4][6] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "E7.png"));
+			img[0][6] = img[4][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "E7.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "E7.png");
 		}
 		
 		// Load NE-SW
 		try {
-			img[7][0] = img[7][4] = img[3][0] = img[3][4] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NE1.png"));
+			img[7][0] = img[7][4] = img[3][0] = img[3][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NE1.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE1.png");
 		}
 		try {
-			img[7][1] = img[7][3] = img[3][1] = img[3][3] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NE2.png"));
+			img[7][1] = img[7][3] = img[3][1] = img[3][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NE2.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE2.png");
 		}
 		try {
-			img[7][2] = img[3][2] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NE3.png"));
+			img[7][2] = img[3][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NE3.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE3.png");
 		}
 		try {
-			img[7][5] = img[7][7] = img[3][5] = img[3][7] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NE6.png"));
+			img[7][5] = img[7][7] = img[3][5] = img[3][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NE6.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE6.png");
 		}
 		try {
-			img[7][6] = img[3][6] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NE7.png"));
+			img[7][6] = img[3][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NE7.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE7.png");
 		}
 		
 		// Load NW-SE
 		try {
-			img[5][0] = img[5][4] = img[1][0] = img[1][4] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NW1.png"));
+			img[5][0] = img[5][4] = img[1][0] = img[1][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NW1.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW1.png");
 		}
 		try {
-			img[5][1] = img[5][3] = img[1][1] = img[1][3] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NW2.png"));
+			img[5][1] = img[5][3] = img[1][1] = img[1][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NW2.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW2.png");
 		}
 		try {
-			img[5][2] = img[1][2] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NW3.png"));
+			img[5][2] = img[1][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NW3.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW3.png");
 		}
 		try {
-			img[5][5] = img[5][7] = img[1][5] = img[1][7] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NW6.png"));
+			img[5][5] = img[5][7] = img[1][5] = img[1][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NW6.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW6.png");
 		}
 		try {
-			img[5][6] = img[1][6] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "NW7.png"));
+			img[5][6] = img[1][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "NW7.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW7.png");
 		}
 		
 		// Load north-south
 		try {
-			img[6][0] = img[6][4] = img[2][0] = img[2][4] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "N1.png"));
+			img[6][0] = img[6][4] = img[2][0] = img[2][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "N1.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "N1.png");
 		}
 		try {
-			img[6][1] = img[6][3] = img[2][1] = img[2][3] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "N2.png"));
+			img[6][1] = img[6][3] = img[2][1] = img[2][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "N2.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "N2.png");
 		}
 		try {
-			img[6][2] = img[2][2] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "N3.png"));
+			img[6][2] = img[2][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "N3.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "N3.png");
 		}
 		try {
-			img[6][5] = img[6][7] = img[2][5] = img[2][7] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "N6.png"));
+			img[6][5] = img[6][7] = img[2][5] = img[2][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "N6.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "N6.png");
 		}
 		try {
-			img[6][6] = img[2][6] = ImageIO.read(Main.client.getClass().getResourceAsStream(assetPath + "N7.png"));
+			img[6][6] = img[2][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Main.client.getLogger().error("Image could not be read at: " + assetPath + "N7.png");
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "N7.png");
 		}
 	}
 	
@@ -166,8 +167,8 @@ public class Player extends Mob {
 	
 	private int animStage = 0;
 
-	public Player(int id, Map currMap, double x, double y, String name) {
-		super(id, currMap, x, y);
+	public Player(Client c, int id, Map currMap, double x, double y, String name) {
+		super(c, id, currMap, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = Constants.playerVelocity;
 		
@@ -217,7 +218,7 @@ public class Player extends Mob {
 		Message m = new Message();
 		m.type = MessageType.PLAYER_MOVE;
 		m.pos = new double[]{xComp, yComp};
-		Main.client.send(m);
+		this.client.send(m);
 	}
 	
 	public void setPos(double x, double y) {

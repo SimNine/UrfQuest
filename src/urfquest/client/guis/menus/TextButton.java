@@ -5,15 +5,15 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import urfquest.Logger;
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.guis.Clickable;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 
 public abstract class TextButton extends TextArea implements Clickable {
 
-	public TextButton(String text, int fontSize, int xDisplacement, int yDisplacement, GUIAnchor anchor, GUIContainer parent) {
-		super(text, fontSize, xDisplacement, yDisplacement, anchor, parent);
+	public TextButton(Client c, String text, int fontSize, int xDisplacement, int yDisplacement, GUIAnchor anchor, GUIContainer parent) {
+		super(c, text, fontSize, xDisplacement, yDisplacement, anchor, parent);
 	}
 	
 	public abstract boolean click();
@@ -26,7 +26,7 @@ public abstract class TextButton extends TextArea implements Clickable {
 		
 		g.drawString(text, bounds.x, bounds.y + bounds.height);
 		
-		if (Main.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

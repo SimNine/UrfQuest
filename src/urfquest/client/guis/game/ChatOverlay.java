@@ -3,6 +3,7 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
+import urfquest.client.Client;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 
@@ -10,17 +11,17 @@ public class ChatOverlay extends GUIContainer {
 	
 	private ChatWindow chatWindow;
 	
-	public ChatOverlay() {
-		super(GUIAnchor.TOP_LEFT, 
+	public ChatOverlay(Client c) {
+		super(c, 
+			  GUIAnchor.TOP_LEFT, 
 			  0, 
 			  0, 
 			  0, 
 			  0, 
-			  "chat", 
-			  null, null, null, 0);
+			  "chat", null, null, null, 0);
 		
 		// add the chat window
-		chatWindow = new ChatWindow(GUIAnchor.BOTTOM_RIGHT, -610, -160, 600, 150, 
+		chatWindow = new ChatWindow(this.client, GUIAnchor.BOTTOM_RIGHT, -610, -160, 600, 150, 
 				"chatmessages", this, new Color(180, 180, 180, 150), null, 3);
 		this.addObject(chatWindow);
 	}

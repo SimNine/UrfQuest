@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.map.Map;
@@ -13,8 +14,8 @@ public abstract class Projectile extends Entity {
 	protected int direction;
 	protected Entity source;
 
-	protected Projectile(double x, double y, Entity source, Map m) {
-		super(m, x, y);
+	protected Projectile(Client c, double x, double y, Entity source, Map m) {
+		super(c, m, x, y);
 		this.source = source;
 	}
 	

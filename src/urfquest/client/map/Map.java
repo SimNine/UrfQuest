@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
@@ -16,6 +16,8 @@ import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
 public class Map {
+	private Client client;
+	
 	public static final int EMPTY_MAP = 5000;
 	public static final int SIMPLEX_MAP = 5001;
 	public static final int SAVANNAH_MAP = 5002;
@@ -38,7 +40,9 @@ public class Map {
 	private ArrayList<Particle> addParticles = new ArrayList<Particle>();
 	private ArrayList<Particle> removeParticles = new ArrayList<Particle>();
 	
-	public Map(int loadedChunkSize) {
+	public Map(Client c, int loadedChunkSize) {
+		this.client = c;
+		
 		localChunks = new MapChunk[loadedChunkSize][loadedChunkSize];
 		localChunkOrigin[0] = localChunkOrigin[1] = 0 - (loadedChunkSize / 2);
 		
@@ -259,6 +263,9 @@ public class Map {
 	}
 	
 	public void shiftMapChunks(int xChunkOriginNew, int yChunkOriginNew) {
+		this.client.getLogger().debug("Shifting local chunk origin to: " + 
+									  "(" + xChunkOriginNew + "," + yChunkOriginNew + ")");
+		
 		int xChunkOriginDiff = xChunkOriginNew - localChunkOrigin[0];
 		int yChunkOriginDiff = yChunkOriginNew - localChunkOrigin[1];
 		
@@ -270,7 +277,7 @@ public class Map {
 		MapChunk[][] newLocalChunks = new MapChunk[localChunks.length][localChunks[0].length];
 		
 		// copy existing chunks over that are within bounds
-		Main.client.getLogger().debug("Copying existing chunks");
+		this.client.getLogger().debug("Copying existing chunks");
 		for (int x = 0; x < localChunks.length; x++) {
 			for (int y = 0; y < localChunks[0].length; y++) {
 				int xChunkOld = x + xChunkOriginDiff;
@@ -305,7 +312,7 @@ public class Map {
 						x + localChunkOrigin[0],
 						y + localChunkOrigin[1]
 					};
-					Main.client.send(m);
+					this.client.send(m);
 				}
 			}
 		}

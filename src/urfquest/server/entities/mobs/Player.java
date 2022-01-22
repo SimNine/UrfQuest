@@ -4,8 +4,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import urfquest.Main;
 import urfquest.server.ClientThread;
+import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
@@ -27,8 +27,8 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(State s, Map m, double x, double y, String name, ClientThread c) {
-		super(s, m, x, y);
+	public Player(Server srv, State s, Map m, double x, double y, String name, ClientThread c) {
+		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 		velocity = Constants.playerVelocity;
 		
@@ -40,9 +40,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 19));
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 17));
-		inventory.addItem(new Item(this.state, this.map, 0, 0, 18));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 19));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 17));
+		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 18));
 		
 		this.name = name;
 		this.client = c;
@@ -86,7 +86,7 @@ public class Player extends Mob {
 		m.entityID = this.id;
 		m.pos[0] = bounds.getX();
 		m.pos[1] = bounds.getY();
-		Main.server.sendMessageToAllClients(m);
+		this.server.sendMessageToAllClients(m);
 	}
 
 	/*

@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.map.Map;
 
 public class BulletSplash extends Particle {
 
-	public BulletSplash(int id, Map m, double x, double y) {
-		super(id, m, x, y, (int)(Math.random()*360.0), 0.04, 10);
+	public BulletSplash(Client c, int id, Map m, double x, double y) {
+		super(c, id, m, x, y, (int)(Math.random()*360.0), 0.04, 10);
 	}
 
 	protected void drawEntity(Graphics g) {

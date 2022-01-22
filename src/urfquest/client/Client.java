@@ -36,7 +36,7 @@ public class Client implements Runnable {
 	private String playerName = "default";
 	
 	public Client(Server server, String playerName) {
-		this.state = new State();
+		this.state = new State(this);
 		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
 		this.playerName = playerName;
 		
@@ -45,7 +45,7 @@ public class Client implements Runnable {
 	}
 	
 	public Client(Socket socket, String playerName) {
-		this.state = new State();
+		this.state = new State(this);
 		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
 		this.playerName = playerName;
 		
@@ -91,11 +91,11 @@ public class Client implements Runnable {
 	public void processMessage(Message m) {
 		switch (m.type) {
 			case PING: {
-				Main.client.getLogger().verbose(m.toString());
+				this.getLogger().verbose(m.toString());
 				break;
 			}
 			case CONNECTION_CONFIRMED: {
-				Main.client.getLogger().info(m.toString());
+				this.getLogger().info(m.toString());
 				// - Assigns this client its clientID
 				// - Informs this client of the surface map's ID
 				// - Sends a request to the server to load the current map
@@ -115,25 +115,25 @@ public class Client implements Runnable {
 				break;
 			}
 			case ENTITY_INIT: {
-				Main.client.getLogger().debug(m.toString());
+				this.getLogger().debug(m.toString());
 				// - Initializes an entity of the given type
 				// - If the entity is a player with the ID of this client:
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
 				if (m.entityType == EntityType.PLAYER) {
-					Player player = new Player(m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
+					Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
 					state.getCurrentMap().addPlayer(player);
 					player.setMap(state.getCurrentMap());
 					
 					if (m.clientID == this.clientID) {
 						state.setPlayer(player);
-						Main.initClientFrontend();
+						Main.initClientFrontend(this);
 					}
 				}
 				break;
 			}
 			case CHUNK_LOAD: {
-				Main.client.getLogger().debug(m.toString());
+				this.getLogger().debug(m.toString());
 				// - Loads the payloads of this message into the specified chunk
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (c == null) {
@@ -145,7 +145,7 @@ public class Client implements Runnable {
 				break;
 			}
 			case ENTITY_SET_POS: {
-				Main.client.getLogger().verbose(m.toString());
+				this.getLogger().verbose(m.toString());
 				// - Sets the position of the given entity
 				if (m.entityType == EntityType.PLAYER) {
 					Player p = state.getCurrentMap().getPlayer(m.entityID);
@@ -156,37 +156,37 @@ public class Client implements Runnable {
 				break;
 			}
 			case MAP_METADATA: {
-				Main.client.getLogger().info(m.toString());
+				this.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)
 				// TODO - currently unused
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				Main.client.getLogger().info(m.toString());
+				this.getLogger().info(m.toString());
 				break;
 			}
 			case CHAT_MESSAGE: {
-				Main.client.getLogger().info(m.toString());
+				this.getLogger().info(m.toString());
 				chatMessages.addFirst((ChatMessage)m.payload);
 				break;
 			}
 			default: {
-				Main.client.getLogger().debug(m.toString());
+				this.getLogger().debug(m.toString());
 				break;
 			}
 		}
 	}
 	
 	public void send(Message m) {
-		try {
-			if (socket == null) {
-				m.clientID = this.clientID;
-				server.processMessage(m);
-			} else {
+		if (socket == null) {
+			m.clientID = this.clientID;
+			server.processMessage(m);
+		} else {
+			try {
 				out.writeObject(m);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
