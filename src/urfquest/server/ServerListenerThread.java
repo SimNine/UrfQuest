@@ -26,6 +26,13 @@ class ServerListenerThread implements Runnable {
 		    try {
 				socket = this.s.getServerSocket().accept();
 				ClientThread t = new ClientThread(s, socket);
+				Thread thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						t.mainLoop();
+					}
+				});
+				thread.start();
 				this.s.addClient(t.id, t);
 				
 				// send a connection confirmation message

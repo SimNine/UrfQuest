@@ -42,8 +42,8 @@ public class Client {
 	private String playerName = "default";
 
 	// for getting graphics properties
-    public static JFrame frame;
-	public static boolean isFullscreen;
+    public JFrame frame;
+	public boolean isFullscreen;
 	private QuestPanel panel;
 	
 	public Client(Server server, String playerName) {
@@ -138,7 +138,9 @@ public class Client {
 					
 					if (m.clientID == this.clientID) {
 						state.setPlayer(player);
-						this.initFrontend();
+						if (this.server == null) {
+							this.initFrontend();
+						}
 					}
 				}
 				break;
@@ -205,8 +207,12 @@ public class Client {
 		return chatMessages;
 	}
 	
+	public QuestPanel getPanel() {
+		return this.panel;
+	}
+
+    // initialize the display and java swing framework
 	public void initFrontend() {
-        // initialize the display and java swing framework
 		Client thisClient = this;
 		SwingUtilities.invokeLater(new Runnable() {
 				@Override

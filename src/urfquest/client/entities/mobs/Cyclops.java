@@ -57,8 +57,8 @@ public class Cyclops extends Mob {
 
 	protected void drawEntity(Graphics g) {
 		g.drawImage(pic, 
-					(int) Main.panel.gameToWindowX(bounds.getX()), 
-					(int) Main.panel.gameToWindowY(bounds.getY()), 
+					(int) client.getPanel().gameToWindowX(bounds.getX()), 
+					(int) client.getPanel().gameToWindowY(bounds.getY()), 
 					null);
 		drawHealthBar(g);
 	}

@@ -385,15 +385,15 @@ public class Player extends Mob {
 		}
 		
 		g.drawImage(img[(int)direction/45][animStage/STEP_SIZE], 
-					Main.panel.gameToWindowX(bounds.getX()), 
-					Main.panel.gameToWindowY(bounds.getY()), 
+					client.getPanel().gameToWindowX(bounds.getX()), 
+					client.getPanel().gameToWindowY(bounds.getY()), 
 					null);
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
 		g.drawString(name, 
-				Main.panel.gameToWindowX(bounds.getX()) - 5*(name.length()/2), 
-				Main.panel.gameToWindowY(bounds.getY()));
+				client.getPanel().gameToWindowX(bounds.getX()) - 5*(name.length()/2), 
+				client.getPanel().gameToWindowY(bounds.getY()));
 		
 		drawHealthBar(g);
 	}
@@ -401,10 +401,10 @@ public class Player extends Mob {
 	public void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawString("direction: " + this.direction, 
-				Main.panel.gameToWindowX(bounds.getX()), 
-				Main.panel.gameToWindowY(bounds.getY()));
+				client.getPanel().gameToWindowX(bounds.getX()), 
+				client.getPanel().gameToWindowY(bounds.getY()));
 		g.drawString("moveStage: " + this.animStage, 
-				Main.panel.gameToWindowX(bounds.getX()), 
-				Main.panel.gameToWindowY(bounds.getY()) + 10);
+				client.getPanel().gameToWindowX(bounds.getX()), 
+				client.getPanel().gameToWindowY(bounds.getY()) + 10);
 	}
 }

@@ -3,7 +3,6 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import urfquest.Main;
 import urfquest.client.Client;
 //import guis.menus.ImageBox;
 import urfquest.client.entities.items.Item;
@@ -94,7 +93,7 @@ public class GameStatusOverlay extends GUIContainer {
 		super.draw(g);
 		Item heldItem = this.client.getState().getPlayer().getHeldItem();
 		if (heldItem != null) {
-			g.drawImage(heldItem.getPic(), Main.panel.mousePos[0], Main.panel.mousePos[1], null);
+			g.drawImage(heldItem.getPic(), client.getPanel().mousePos[0], client.getPanel().mousePos[1], null);
 		}
 	}
 }

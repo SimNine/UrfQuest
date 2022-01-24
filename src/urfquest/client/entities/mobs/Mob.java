@@ -3,7 +3,6 @@ package urfquest.client.entities.mobs;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
@@ -178,8 +177,8 @@ public abstract class Mob extends Entity {
 			return;
 		}
 		
-		int topLeftX = (int)(Main.panel.gameToWindowX(bounds.getX()) + (bounds.getWidth()/2.0)*QuestPanel.TILE_WIDTH) - 26;
-		int topLeftY = (int)(Main.panel.gameToWindowY(bounds.getY()) + bounds.getHeight()*QuestPanel.TILE_WIDTH);
+		int topLeftX = (int)(client.getPanel().gameToWindowX(bounds.getX()) + (bounds.getWidth()/2.0)*QuestPanel.TILE_WIDTH) - 26;
+		int topLeftY = (int)(client.getPanel().gameToWindowY(bounds.getY()) + bounds.getHeight()*QuestPanel.TILE_WIDTH);
 		
 		int vis;
 		if (healthbarVisibility > 255) {
@@ -197,8 +196,8 @@ public abstract class Mob extends Entity {
 	protected void drawDebug(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.drawString("bounds: (" + (int)bounds.getX() + "," + (int)bounds.getY() + ") " + bounds.getWidth() + "*" + bounds.getHeight(),
-					(int) Main.panel.gameToWindowX(bounds.getX()),
-					(int) Main.panel.gameToWindowY(bounds.getY()));
+					(int) client.getPanel().gameToWindowX(bounds.getX()),
+					(int) client.getPanel().gameToWindowY(bounds.getY()));
 //		g.drawString(("routine: " + routine.getClass().getSimpleName()),
 //			 		 (int) UrfQuestClient.panel.gameToWindowX(bounds.getX()),
 //			 		 (int) UrfQuestClient.panel.gameToWindowY(bounds.getY()) +10);

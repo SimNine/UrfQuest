@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.guis.GUIAnchor;
@@ -36,8 +35,8 @@ public class CraftingRecipie extends GUIContainer {
 		super.draw(g);
 		
 		if (isMouseOver()) {
-			int xMouse = Main.panel.mousePos[0];
-			int yMouse = Main.panel.mousePos[1];
+			int xMouse = client.getPanel().mousePos[0];
+			int yMouse = client.getPanel().mousePos[1];
 			g.setColor(Color.BLACK);
 			g.drawString(getName(), xMouse, yMouse);
 			inputContainer.addAllObjects(inputEntries);

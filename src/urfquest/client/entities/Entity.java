@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
 import urfquest.Logger;
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
@@ -109,8 +108,8 @@ public abstract class Entity {
 	
 	private void drawBounds(Graphics g) {
 		g.setColor(Color.RED);
-		g.drawRect((int) Main.panel.gameToWindowX(bounds.getX()), 
-				   (int) Main.panel.gameToWindowY(bounds.getY()),
+		g.drawRect((int) client.getPanel().gameToWindowX(bounds.getX()), 
+				   (int) client.getPanel().gameToWindowY(bounds.getY()),
 				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), 
 				   (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}

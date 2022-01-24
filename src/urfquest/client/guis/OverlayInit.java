@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.guis.menus.*;
 
@@ -24,7 +23,7 @@ public class OverlayInit {
 		mainObjects.add(new TextBox(c, "UrfQuest", 60, -160, -120, GUIAnchor.CENTER, mainMenu));
 		mainObjects.add(new TextButton(c, "Play", 30, -80, -60, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
-				Main.panel.unpause();
+				c.getPanel().unpause();
 				return true;
 			}
 		});
@@ -36,7 +35,7 @@ public class OverlayInit {
 		});
 		mainObjects.add(new TextButton(c, "Options", 30, -80, 0, GUIAnchor.CENTER, mainMenu) {
 			public boolean click() {
-				Main.panel.swap(Main.panel.optionsMenu);
+				c.getPanel().swap(c.getPanel().optionsMenu);
 				return true;
 			}
 		});
@@ -57,7 +56,7 @@ public class OverlayInit {
 		
 		titleObjects.add(new ImageButton(c, "src/resources/arcanists2.png", 1, -185, GUIAnchor.CENTER, titleScreen) {
 			public boolean click() {
-				Main.panel.swap(Main.panel.mainMenu);
+				c.getPanel().swap(c.getPanel().mainMenu);
 				return true;
 			}
 		});
@@ -93,14 +92,14 @@ public class OverlayInit {
 //		});
 		optionsScreen.addObject(new TextButton(c, "Select Keybindings", 30, -80, 30, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
-				Main.panel.keybindingView.setKeybindings(Main.panel.getKeybindings());
-				Main.panel.swap(Main.panel.keybindingView);
+				c.getPanel().keybindingView.setKeybindings(c.getPanel().getKeybindings());
+				c.getPanel().swap(c.getPanel().keybindingView);
 				return true;
 			}
 		});
 		optionsScreen.addObject(new TextButton(c, "Back", 30, -80, 60, GUIAnchor.CENTER, optionsScreen) {
 			public boolean click() {
-				Main.panel.swap(Main.panel.pauseMenu);
+				c.getPanel().swap(c.getPanel().pauseMenu);
 				return true;
 			}
 		});
@@ -114,13 +113,13 @@ public class OverlayInit {
 		pauseScreen.addObject(new TextBox(c, "Paused", 60, -160, -120, GUIAnchor.CENTER, pauseScreen));
 		pauseScreen.addObject(new TextButton(c, "Resume", 30, -80, -60, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
-				Main.panel.unpause();
+				c.getPanel().unpause();
 				return true;
 			}
 		});
 		pauseScreen.addObject(new TextButton(c, "Options", 30, -80, -30, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
-				Main.panel.swap(Main.panel.optionsMenu);
+				c.getPanel().swap(c.getPanel().optionsMenu);
 				return true;
 			}
 		});
@@ -138,7 +137,7 @@ public class OverlayInit {
 //		});
 		pauseScreen.addObject(new TextButton(c, "Main Menu", 30, -80, 60, GUIAnchor.CENTER, pauseScreen) {
 			public boolean click() {
-				Main.panel.swap(Main.panel.mainMenu);
+				c.getPanel().swap(c.getPanel().mainMenu);
 				return true;
 			}
 		});

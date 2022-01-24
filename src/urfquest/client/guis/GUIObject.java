@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import urfquest.Main;
 import urfquest.client.Client;
 
 public abstract class GUIObject {
@@ -27,7 +26,7 @@ public abstract class GUIObject {
 	}
 	
 	public boolean isMouseOver() {
-		return bounds.contains(Main.panel.mousePos[0], Main.panel.mousePos[1]);
+		return bounds.contains(client.getPanel().mousePos[0], client.getPanel().mousePos[1]);
 	};
 	
 	public int xAnchor() {
@@ -92,8 +91,8 @@ public abstract class GUIObject {
 	private void drawMousePositioning(Graphics g) {
 		g.setColor(Color.RED);
 		if (this.isMouseOver()) {
-			g.drawLine(bounds.x, Main.panel.mousePos[1], bounds.x + bounds.width, Main.panel.mousePos[1]);
-			g.drawLine(Main.panel.mousePos[0], bounds.y, Main.panel.mousePos[0], bounds.y + bounds.height);
+			g.drawLine(bounds.x, client.getPanel().mousePos[1], bounds.x + bounds.width, client.getPanel().mousePos[1]);
+			g.drawLine(client.getPanel().mousePos[0], bounds.y, client.getPanel().mousePos[0], bounds.y + bounds.height);
 		}
 	}
 	

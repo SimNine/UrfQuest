@@ -73,7 +73,6 @@ public class Server {
 			if (incomingMessages.size() > 0) {
 				Message m = incomingMessages.remove(0);
 				processMessage(m);
-				System.out.println("processing message");
 			}
 		}
 	}
@@ -233,15 +232,6 @@ public class Server {
 	
 	public void attachLocalClient(Client c) {
 		ClientThread t = new ClientThread(this, c);
-		if (this.serverSocket != null) {
-			Thread thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					t.mainLoop();
-				}
-			});
-			thread.start();
-		}
 		clients.put(t.id, t);
 		
 		// send connection confirmation message

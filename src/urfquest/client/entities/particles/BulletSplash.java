@@ -3,7 +3,6 @@ package urfquest.client.entities.particles;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.map.Map;
 
@@ -15,8 +14,8 @@ public class BulletSplash extends Particle {
 
 	protected void drawEntity(Graphics g) {
 		g.setColor(Color.RED);
-		int x = Main.panel.gameToWindowX(bounds.getX());
-		int y = Main.panel.gameToWindowY(bounds.getY());
+		int x = client.getPanel().gameToWindowX(bounds.getX());
+		int y = client.getPanel().gameToWindowY(bounds.getY());
 		g.fillOval(x, y, 3, 3);
 	}
 	

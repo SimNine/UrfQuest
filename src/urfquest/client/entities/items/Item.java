@@ -96,19 +96,19 @@ public class Item extends Entity {
 	
 	protected void drawEntity(Graphics g) {
 		g.drawImage(itemImages[itemType - 1], 
-					Main.panel.gameToWindowX(bounds.getX()), 
-					Main.panel.gameToWindowY(bounds.getY()), 
+					client.getPanel().gameToWindowX(bounds.getX()), 
+					client.getPanel().gameToWindowY(bounds.getY()), 
 					null);
 	}
 
 	public void drawDebug(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
-					 (int) Main.panel.gameToWindowX(bounds.getX()),
-					 (int) Main.panel.gameToWindowY(bounds.getY()));
+					 (int) client.getPanel().gameToWindowX(bounds.getX()),
+					 (int) client.getPanel().gameToWindowY(bounds.getY()));
 		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 (int) Main.panel.gameToWindowX(bounds.getX()),
-				 (int) Main.panel.gameToWindowY(bounds.getY()) + 10);
+				 (int) client.getPanel().gameToWindowX(bounds.getX()),
+				 (int) client.getPanel().gameToWindowY(bounds.getY()) + 10);
 	};
 
 	public BufferedImage getPic() {

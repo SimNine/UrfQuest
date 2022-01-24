@@ -3,7 +3,6 @@ package urfquest.client.entities.particles;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
@@ -20,8 +19,8 @@ public class RocketExhaust extends Particle {
 	protected void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.setColor(color);
-		g.fillOval(Main.panel.gameToWindowX(bounds.getX()), 
-				   Main.panel.gameToWindowY(bounds.getY()),
+		g.fillOval(client.getPanel().gameToWindowX(bounds.getX()), 
+				   client.getPanel().gameToWindowY(bounds.getY()),
 				   (int)(bounds.getWidth()*tileWidth), 
 				   (int)(bounds.getHeight()*tileWidth));
 	}

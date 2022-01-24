@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.HashSet;
 
 import urf.Pair;
-import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.guis.GUIAnchor;
@@ -30,7 +29,7 @@ public class GameWeatherOverlay extends GUIContainer {
 	}
 
 	public void draw(Graphics g) {
-		QuestPanel p = Main.panel;
+		QuestPanel p = client.getPanel();
 		g.setColor(new Color(164, 255, 244, 50));
 		g.fillRect(0, 0, p.getWidth(), p.getHeight());
 

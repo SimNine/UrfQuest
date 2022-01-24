@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import urfquest.Logger;
-import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.GUIContainer;
@@ -68,7 +67,7 @@ public class QuestPanel extends JPanel {
 
     public Timer renderTimer = new Timer(30, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            Main.panel.repaint();
+            repaint();
         }
     });
     
@@ -100,7 +99,7 @@ public class QuestPanel extends JPanel {
 					keybindingView.keypress(e.getKeyCode());
 				} else {
 					if (e.getKeyCode() == keybindings.FULLSCREEN) {
-						client.resetFrame(!Main.isFullscreen);
+						client.resetFrame(client.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
 						// TODO: incorporate a method to cycle through all modes
 						if (client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {

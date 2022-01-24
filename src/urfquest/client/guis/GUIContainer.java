@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import urfquest.Logger;
-import urfquest.Main;
 import urfquest.client.Client;
 
 public class GUIContainer extends GUIObject implements Clickable {
@@ -62,7 +61,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		super.resetBounds();
 		
 		if (parent == null) {
-			this.setBounds(0, 0, Main.panel.getWidth(), Main.panel.getHeight());
+			this.setBounds(0, 0, this.client.getPanel().getWidth(), this.client.getPanel().getHeight());
 		}
 		
 		for (GUIObject o : guiObjects) {
