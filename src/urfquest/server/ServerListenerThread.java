@@ -32,6 +32,7 @@ class ServerListenerThread implements Runnable {
 						t.mainLoop();
 					}
 				});
+				thread.setName("ClientThread-" + t.id);
 				thread.start();
 				this.s.addClient(t.id, t);
 				

@@ -226,11 +226,11 @@ public class Player extends Mob {
 
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
-		int[] localChunkOrigin = map.getLocalChunkOrigin();
 		int mapWidth = map.getMapDiameter();
 		int xChunk = Math.floorDiv((int) x, MapChunk.CHUNK_SIZE);
 		int yChunk = Math.floorDiv((int) y, MapChunk.CHUNK_SIZE);
 		
+		int[] localChunkOrigin = map.getLocalChunkOrigin();
 		if (xChunk <= localChunkOrigin[0] + 1) {
 			map.shiftMapChunks(localChunkOrigin[0] - 1, localChunkOrigin[1]);
 			map.requestMissingChunks();
@@ -238,7 +238,9 @@ public class Player extends Mob {
 			map.shiftMapChunks(localChunkOrigin[0] + 1, localChunkOrigin[1]);
 			map.requestMissingChunks();
 		}
-		
+
+		// it's necessary to refresh the local chunk origin in case it was shifted above
+		localChunkOrigin = map.getLocalChunkOrigin();
 		if (yChunk <= localChunkOrigin[1] + 1) {
 			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] - 1);
 			map.requestMissingChunks();
