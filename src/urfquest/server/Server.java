@@ -2,7 +2,6 @@ package urfquest.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +22,7 @@ import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
-public class Server implements Runnable {
+public class Server {
     
 	private State game;
 	
@@ -68,17 +67,19 @@ public class Server implements Runnable {
 	}
 
 	// TODO: make this loop's thread sleep until a message is recieved
-	@Override
-	public void run() {
-		// launch the master server listening thread
-		new ServerListenerThread(this);
-		
+	public void mainLoop() {
+		this.logger.all("Main loop started");
 		while (true) {
 			if (incomingMessages.size() > 0) {
 				Message m = incomingMessages.remove(0);
 				processMessage(m);
+				System.out.println("processing message");
 			}
 		}
+	}
+	
+	public void initListenerThread() {
+		new ServerListenerThread(this);
 	}
 	
 	public void processMessage(Message m) {
@@ -229,45 +230,18 @@ public class Server implements Runnable {
 	public ArrayDeque<ChatMessage> getAllChatMessages() {
 		return chatMessages;
 	}
-
-	private class ServerListenerThread implements Runnable {
-		
-		private Thread t;
-		private Server s;
-		
-		public ServerListenerThread(Server server) {
-			this.s = server;
-			this.t = new Thread(this, "ServerListenerThread");
-			this.t.start();
-		}
-
-		@Override
-		public void run() {
-			// while the game is running, continue listening on the given socket
-			logger.info("server listening on port: " + serverSocket.getLocalPort());
-			while (true) {
-				Socket socket = null;
-			    try {
-					socket = serverSocket.accept();
-					ClientThread t = new ClientThread(s, socket);
-					clients.put(t.id, t);
-					
-					// send a connection confirmation message
-					Message m = new Message();
-					m.type = MessageType.CONNECTION_CONFIRMED;
-					m.clientID = t.id;
-					m.mapID = game.getSurfaceMap().id;
-					t.send(m);
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.exit(2);
-				}
-			}
-		}
-	}
 	
 	public void attachLocalClient(Client c) {
 		ClientThread t = new ClientThread(this, c);
+		if (this.serverSocket != null) {
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					t.mainLoop();
+				}
+			});
+			thread.start();
+		}
 		clients.put(t.id, t);
 		
 		// send connection confirmation message
@@ -294,5 +268,17 @@ public class Server implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public ServerSocket getServerSocket() {
+		return this.serverSocket;
+	}
+	
+	public State getState() {
+		return this.game;
+	}
+	
+	public void addClient(int clientID, ClientThread clientThread) {
+		this.clients.put(clientID, clientThread);
 	}
 }

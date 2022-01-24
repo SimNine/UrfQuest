@@ -1,14 +1,20 @@
 package urfquest.client;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayDeque;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
-import urfquest.Main;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
@@ -18,7 +24,7 @@ import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
-public class Client implements Runnable {
+public class Client {
 	
 	private State state;
 	
@@ -34,6 +40,11 @@ public class Client implements Runnable {
 	
 	private int clientID;
 	private String playerName = "default";
+
+	// for getting graphics properties
+    public static JFrame frame;
+	public static boolean isFullscreen;
+	private QuestPanel panel;
 	
 	public Client(Server server, String playerName) {
 		this.state = new State(this);
@@ -62,8 +73,8 @@ public class Client implements Runnable {
 		}
 	}
 
-	@Override
-	public void run() {
+	public void mainLoop() {
+		this.logger.all("Main loop started");
 		try {
 			while (true) {
 				Message m = (Message)in.readObject();
@@ -127,7 +138,7 @@ public class Client implements Runnable {
 					
 					if (m.clientID == this.clientID) {
 						state.setPlayer(player);
-						Main.initClientFrontend(this);
+						this.initFrontend();
 					}
 				}
 				break;
@@ -192,5 +203,52 @@ public class Client implements Runnable {
 	
 	public ArrayDeque<ChatMessage> getAllChatMessages() {
 		return chatMessages;
+	}
+	
+	public void initFrontend() {
+        // initialize the display and java swing framework
+		Client thisClient = this;
+		SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+			        panel = new QuestPanel(thisClient);
+			        panel.initOverlays();
+			        resetFrame(false);
+			        panel.renderTimer.start();
+			        panel.inputScanTimer.start();
+				}
+			}
+		);
+	}
+	
+	public void resetFrame(boolean fullscreen) {
+		if (frame != null) {
+			frame.dispose();
+		}
+		
+        frame = new JFrame("UrfQuest");
+
+        if (fullscreen) {
+    		frame.setResizable(false);
+    		frame.setUndecorated(true);
+    		isFullscreen = true;
+        } else {
+            frame.setMinimumSize(new Dimension(700, 600));
+    		frame.setResizable(true);
+    		frame.setExtendedState(JFrame.NORMAL);
+    		frame.setUndecorated(false);
+    		isFullscreen = false;
+        }
+		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		frame.setBackground(Color.BLACK);
+		
+		frame.add(panel);
+		frame.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
+            }
+        });
 	}
 }

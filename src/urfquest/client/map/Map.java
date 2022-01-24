@@ -299,7 +299,7 @@ public class Map {
 		localChunks = newLocalChunks;
 		
 		// request any chunks that are null (because they weren't copied above)
-		requestMissingChunks();
+		//requestMissingChunks();
 	}
 	
 	public void requestMissingChunks() {

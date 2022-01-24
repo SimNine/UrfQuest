@@ -10,7 +10,7 @@ import urfquest.IDGenerator;
 import urfquest.client.Client;
 import urfquest.shared.message.Message;
 
-public class ClientThread implements Runnable {
+public class ClientThread {
 	
 	private Server server;
 	
@@ -20,7 +20,6 @@ public class ClientThread implements Runnable {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
-	private Thread t;
 	private boolean stopped;
 	
 	public int id;
@@ -40,8 +39,6 @@ public class ClientThread implements Runnable {
 		}
 		
 		this.stopped = false;
-		this.t = new Thread(this, "ClientThread");
-		this.t.start();
 	}
 	
 	public ClientThread(Server serv, Client c) {
@@ -55,8 +52,7 @@ public class ClientThread implements Runnable {
 		this.stopped = false;
 	}
 
-	@Override
-	public void run() {
+	public void mainLoop() {
 		while (!stopped) {
 			try {
 				Message m = (Message)in.readObject();

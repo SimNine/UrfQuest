@@ -100,7 +100,7 @@ public class QuestPanel extends JPanel {
 					keybindingView.keypress(e.getKeyCode());
 				} else {
 					if (e.getKeyCode() == keybindings.FULLSCREEN) {
-						Main.resetFrame(!Main.isFullscreen);
+						client.resetFrame(!Main.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
 						// TODO: incorporate a method to cycle through all modes
 						if (client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {

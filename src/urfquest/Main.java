@@ -1,9 +1,5 @@
 package urfquest;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,11 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import urfquest.client.Client;
-import urfquest.client.QuestPanel;
 import urfquest.server.Server;
 
 public class Main {
@@ -28,13 +20,6 @@ public class Main {
 	
 	// logger
 	public static Logger mainLogger;
-	
-	// for getting graphics properties
-    public static JFrame frame;
-    public static QuestPanel panel;
-	
-	// frame properties
-	public static boolean isFullscreen;
 	
 	// startup arguments
 	private static String ip = "localhost";
@@ -134,11 +119,16 @@ public class Main {
 	public static void startServer(int seed, int port) {
 		mainLogger.all("Starting server on port " + port);
 		Server server = new Server(seed, port);
-		Thread serverThread = new Thread(server);
+		server.initListenerThread();
+		Thread serverThread = new Thread(new Runnable() {
+			public void run() {
+				server.mainLoop();
+			}
+		});
 		serverThread.setName("LocalServerThread");
 		serverThread.start();
 	}
-	
+
 	public static void startClient(String ip, int port, String playerName) {
 		mainLogger.all("Starting client, connecting to " + ip + ":" + port);
 		
@@ -156,54 +146,13 @@ public class Main {
         
         // initialize the networking engine
         Client client = new Client(socket, playerName);
-        Thread clientThread = new Thread(client);
+        Thread clientThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				client.mainLoop();
+			}
+        });
         clientThread.setName("LocalClientThread");
         clientThread.start();
-	}
-	
-	public static void initClientFrontend(Client c) {
-        // initialize the display and java swing framework
-		SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-			        Main.panel = new QuestPanel(c);
-			        panel.initOverlays();
-			        resetFrame(false);
-			        panel.renderTimer.start();
-			        panel.inputScanTimer.start();
-				}
-			}
-		);
-	}
-	
-	public static void resetFrame(boolean fullscreen) {
-		if (frame != null) {
-			frame.dispose();
-		}
-		
-        frame = new JFrame("UrfQuest");
-
-        if (fullscreen) {
-    		frame.setResizable(false);
-    		frame.setUndecorated(true);
-    		isFullscreen = true;
-        } else {
-            frame.setMinimumSize(new Dimension(700, 600));
-    		frame.setResizable(true);
-    		frame.setExtendedState(JFrame.NORMAL);
-    		frame.setUndecorated(false);
-    		isFullscreen = false;
-        }
-		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		frame.setBackground(Color.BLACK);
-		
-		frame.add(panel);
-		frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
-            }
-        });
 	}
 }

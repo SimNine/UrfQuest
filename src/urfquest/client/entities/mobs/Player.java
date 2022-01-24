@@ -233,17 +233,19 @@ public class Player extends Mob {
 		
 		if (xChunk <= localChunkOrigin[0] + 1) {
 			map.shiftMapChunks(localChunkOrigin[0] - 1, localChunkOrigin[1]);
+			map.requestMissingChunks();
 		} else if (xChunk >= localChunkOrigin[0] + mapWidth - 1) {
 			map.shiftMapChunks(localChunkOrigin[0] + 1, localChunkOrigin[1]);
+			map.requestMissingChunks();
 		}
 		
 		if (yChunk <= localChunkOrigin[1] + 1) {
 			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] - 1);
+			map.requestMissingChunks();
 		} else if (yChunk >= localChunkOrigin[1] + mapWidth - 1) {
 			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] + 1);
+			map.requestMissingChunks();
 		}
-		
-		map.requestMissingChunks();
 	}
 
 	/*
