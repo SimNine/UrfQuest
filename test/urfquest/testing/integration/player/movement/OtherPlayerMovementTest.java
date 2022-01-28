@@ -36,6 +36,12 @@ class OtherPlayerMovementTest {
 	void testMovementOneMotion() {
 		urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
 		urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		if (c2p1 == null) {
+			// TODO: remove this when bug is found
+			System.out.println("This print statement is here as a placeholder for a breakpoint that "
+					+ "occurs periodically but I can't seem to replicate intentionally. Likely "
+					+ "some kind of race condition");
+		}
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;
@@ -69,8 +75,13 @@ class OtherPlayerMovementTest {
 	@Test
 	void testMovementSquare() {
 		urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
-		//System.out.println(c1p1.id);
 		urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		if (c2p1 == null) {
+			// TODO: remove this when bug is found
+			System.out.println("This print statement is here as a placeholder for a breakpoint that "
+					+ "occurs periodically but I can't seem to replicate intentionally. Likely "
+					+ "some kind of race condition");
+		}
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;
@@ -108,12 +119,42 @@ class OtherPlayerMovementTest {
 		// check third position
 		double x3c1p1 = c1p1.getPos()[0];
 		double y3c1p1 = c1p1.getPos()[1];
-		Assertions.assertEquals(x2c1p1 + numStepsMoved*Constants.playerVelocity, x3c1p1, 0.01);
-		Assertions.assertEquals(y2c1p1 + numStepsMoved*Constants.playerVelocity, y3c1p1, 0.01);
+		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.playerVelocity, x3c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.playerVelocity, y3c1p1, 0.01);
 		double x3c2p1 = c2p1.getPos()[0];
 		double y3c2p1 = c2p1.getPos()[1];
-		Assertions.assertEquals(x2c2p1 + numStepsMoved*Constants.playerVelocity, x3c2p1, 0.01);
-		Assertions.assertEquals(y2c2p1 + numStepsMoved*Constants.playerVelocity, y3c2p1, 0.01);
+		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.playerVelocity, x3c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.playerVelocity, y3c2p1, 0.01);
+		
+		// move left 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(-1, 0);
+		}
+		
+		// check fourth position
+		double x4c1p1 = c1p1.getPos()[0];
+		double y4c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1, x4c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.playerVelocity, y4c1p1, 0.01);
+		double x4c2p1 = c2p1.getPos()[0];
+		double y4c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1, x4c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.playerVelocity, y4c2p1, 0.01);
+		
+		// move up 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(0, -1);
+		}
+		
+		// check fifth position
+		double x5c1p1 = c1p1.getPos()[0];
+		double y5c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1, x5c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1, y5c1p1, 0.01);
+		double x5c2p1 = c2p1.getPos()[0];
+		double y5c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1, x5c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1, y5c2p1, 0.01);
 	}
 
 }
