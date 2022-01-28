@@ -157,4 +157,90 @@ class OtherPlayerMovementTest {
 		Assertions.assertEquals(y1c2p1, y5c2p1, 0.01);
 	}
 
+	@Test
+	void testMovementDiamond() {
+		urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
+		urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		if (c2p1 == null) {
+			// TODO: remove this when bug is found
+			System.out.println("This print statement is here as a placeholder for a breakpoint that "
+					+ "occurs periodically but I can't seem to replicate intentionally. Likely "
+					+ "some kind of race condition");
+		}
+		Assertions.assertNotNull(c2p1);
+		
+		int numStepsMoved = 10;
+		double stepDistanceComponent = numStepsMoved*Constants.playerVelocity*Math.sin(Math.toRadians(45));
+		
+		// check initial position
+		double x1c1p1 = c1p1.getPos()[0];
+		double y1c1p1 = c1p1.getPos()[1];
+		Assertions.assertTrue(x1c1p1 > -5.0 && x1c1p1 < 5.0);
+		Assertions.assertTrue(y1c1p1 > -5.0 && y1c1p1 < 5.0);
+		double x1c2p1 = c2p1.getPos()[0];
+		double y1c2p1 = c2p1.getPos()[1];
+		Assertions.assertTrue(x1c2p1 > -5.0 && x1c2p1 < 5.0);
+		Assertions.assertTrue(y1c2p1 > -5.0 && y1c2p1 < 5.0);
+
+		// move southeast 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(1, 1);
+		}
+		
+		// check second position
+		double x2c1p1 = c1p1.getPos()[0];
+		double y2c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1 + stepDistanceComponent, x2c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + stepDistanceComponent, y2c1p1, 0.01);
+		double x2c2p1 = c2p1.getPos()[0];
+		double y2c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1 + stepDistanceComponent, x2c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + stepDistanceComponent, y2c2p1, 0.01);
+		
+		// move southwest 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(-1, 1);
+		}
+		
+		// check third position
+		double x3c1p1 = c1p1.getPos()[0];
+		double y3c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1, x3c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + stepDistanceComponent*2, y3c1p1, 0.01);
+		double x3c2p1 = c2p1.getPos()[0];
+		double y3c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1, x3c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + stepDistanceComponent*2, y3c2p1, 0.01);
+		
+		// move northwest 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(-1, -1);
+		}
+		
+		// check fourth position
+		double x4c1p1 = c1p1.getPos()[0];
+		double y4c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1 - stepDistanceComponent, x4c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + stepDistanceComponent, y4c1p1, 0.01);
+		double x4c2p1 = c2p1.getPos()[0];
+		double y4c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1 - stepDistanceComponent, x4c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + stepDistanceComponent, y4c2p1, 0.01);
+		
+		// move northeast 10 times
+		for (int i = 0; i < numStepsMoved; i++) {
+			c1.getState().getPlayer().move(1, -1);
+		}
+		
+		// check fifth position
+		double x5c1p1 = c1p1.getPos()[0];
+		double y5c1p1 = c1p1.getPos()[1];
+		Assertions.assertEquals(x1c1p1, x5c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1, y5c1p1, 0.01);
+		double x5c2p1 = c2p1.getPos()[0];
+		double y5c2p1 = c2p1.getPos()[1];
+		Assertions.assertEquals(x1c2p1, x5c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1, y5c2p1, 0.01);
+	}
+
 }
