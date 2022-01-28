@@ -17,7 +17,7 @@ import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
 import urfquest.shared.ChatMessage;
-import urfquest.shared.message.Constants;
+import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -125,8 +125,8 @@ public class Server {
 //					m = new Message();
 //					m.type = MessageType.MAP_METADATA;
 				
-				for (int x = -Constants.localMapRadius/2; x < Constants.localMapRadius/2; x++) {
-					for (int y = -Constants.localMapRadius/2; y < Constants.localMapRadius/2; y++) {
+				for (int x = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; x < Constants.CLIENT_CACHED_MAP_DIAMETER/2; x++) {
+					for (int y = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; y < Constants.CLIENT_CACHED_MAP_DIAMETER/2; y++) {
 						m = new Message();
 						m.type = MessageType.CHUNK_LOAD;
 						

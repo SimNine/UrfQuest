@@ -17,7 +17,7 @@ import urfquest.client.entities.items.Item;
 import urfquest.client.map.Map;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.Inventory;
-import urfquest.shared.message.Constants;
+import urfquest.shared.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -170,7 +170,7 @@ public class Player extends Mob {
 	public Player(Client c, int id, Map currMap, double x, double y, String name) {
 		super(c, id, currMap, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = Constants.playerVelocity;
+		velocity = Constants.DEFAULT_PLAYER_VELOCITY;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -227,8 +227,8 @@ public class Player extends Mob {
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
 		int mapWidth = map.getMapDiameter();
-		int xChunk = Math.floorDiv((int) x, MapChunk.CHUNK_SIZE);
-		int yChunk = Math.floorDiv((int) y, MapChunk.CHUNK_SIZE);
+		int xChunk = Math.floorDiv((int) x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv((int) y, Constants.MAP_CHUNK_SIZE);
 		
 		int[] localChunkOrigin = map.getLocalChunkOrigin();
 		if (xChunk <= localChunkOrigin[0] + 1) {

@@ -17,6 +17,7 @@ import urfquest.server.map.generator.TerrainGeneratorSimplex;
 import urfquest.server.map.generator.TerrainGeneratorTemplate;
 import urfquest.server.tiles.ActiveTile;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Constants;
 
 public class Map {
 	private Server server;
@@ -234,8 +235,8 @@ public class Map {
 	}
 	
 	public MapChunk getChunkAtPos(int x, int y) {
-		int xChunk = Math.floorDiv(x, MapChunk.CHUNK_SIZE);
-		int yChunk = Math.floorDiv(y, MapChunk.CHUNK_SIZE);
+		int xChunk = Math.floorDiv(x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv(y, Constants.MAP_CHUNK_SIZE);
 		
 		return getChunk(xChunk, yChunk);
 	}
@@ -256,8 +257,8 @@ public class Map {
 	}
 	
 	private MapChunk createChunkAtPos(int x, int y) {
-		int xChunk = x / MapChunk.CHUNK_SIZE;
-		int yChunk = y / MapChunk.CHUNK_SIZE;
+		int xChunk = x / Constants.MAP_CHUNK_SIZE;
+		int yChunk = y / Constants.MAP_CHUNK_SIZE;
 		
 		return createChunk(xChunk, yChunk);
 	}
@@ -501,8 +502,8 @@ public class Map {
 	public int[] getCoordsInChunk(int x, int y) {
 		int[] returns = new int[2];
 		
-		returns[0] = Math.floorMod(x, MapChunk.CHUNK_SIZE);
-		returns[1] = Math.floorMod(y, MapChunk.CHUNK_SIZE);
+		returns[0] = Math.floorMod(x, Constants.MAP_CHUNK_SIZE);
+		returns[1] = Math.floorMod(y, Constants.MAP_CHUNK_SIZE);
 		
 		return returns;
 	}

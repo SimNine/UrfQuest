@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import urfquest.client.map.MapChunk;
+import urfquest.shared.Constants;
 
 class MapChunkTest {
 	
@@ -33,7 +34,7 @@ class MapChunkTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		chunk = new MapChunk(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE);
+		chunk = new MapChunk(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE);
 	}
 
 	@AfterEach
@@ -44,8 +45,8 @@ class MapChunkTest {
 	void testDefaultChunkSize() {
 		MapChunk c = new MapChunk();
 
-		Assertions.assertEquals(0, c.getTileTypeAt(MapChunk.CHUNK_SIZE - 1, MapChunk.CHUNK_SIZE - 1));
-		Assertions.assertEquals(-1, c.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
+		Assertions.assertEquals(0, c.getTileTypeAt(Constants.MAP_CHUNK_SIZE - 1, Constants.MAP_CHUNK_SIZE - 1));
+		Assertions.assertEquals(-1, c.getTileTypeAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE));
 	}
 	
 	@Test
@@ -95,10 +96,10 @@ class MapChunkTest {
 		Assertions.assertEquals(0, chunk.getTileAt(0, 0)[0]);
 		Assertions.assertEquals(0, chunk.getTileAt(0, 0)[1]);
 		
-		Assertions.assertEquals(-1, chunk.getTileTypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
-		Assertions.assertEquals(0, chunk.getTileSubtypeAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE));
-		Assertions.assertEquals(-1, chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[0]);
-		Assertions.assertEquals(0, chunk.getTileAt(MapChunk.CHUNK_SIZE, MapChunk.CHUNK_SIZE)[1]);
+		Assertions.assertEquals(-1, chunk.getTileTypeAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE));
+		Assertions.assertEquals(0, chunk.getTileSubtypeAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE));
+		Assertions.assertEquals(-1, chunk.getTileAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE)[0]);
+		Assertions.assertEquals(0, chunk.getTileAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE)[1]);
 		
 		Assertions.assertEquals(-1, chunk.getTileTypeAt(-1, -1));
 		Assertions.assertEquals(0, chunk.getTileSubtypeAt(-1, -1));

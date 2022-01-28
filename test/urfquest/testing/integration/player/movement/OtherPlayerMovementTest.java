@@ -9,7 +9,7 @@ import urfquest.Logger.LogLevel;
 import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.server.Server;
-import urfquest.shared.message.Constants;
+import urfquest.shared.Constants;
 
 /*
  * Test that the movement of one player is reflected by the client of another player
@@ -64,11 +64,11 @@ class OtherPlayerMovementTest {
 		// check second position
 		double x2c1p1 = c1p1.getPos()[0];
 		double y2c1p1 = c1p1.getPos()[1];
-		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.playerVelocity, x2c1p1, 0.01);
+		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x2c1p1, 0.01);
 		Assertions.assertEquals(y1c1p1, y2c1p1, 0.01);
 		double x2c2p1 = c2p1.getPos()[0];
 		double y2c2p1 = c2p1.getPos()[1];
-		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.playerVelocity, x2c2p1, 0.01);
+		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x2c2p1, 0.01);
 		Assertions.assertEquals(y1c2p1, y2c2p1, 0.01);
 	}
 
@@ -104,11 +104,11 @@ class OtherPlayerMovementTest {
 		// check second position
 		double x2c1p1 = c1p1.getPos()[0];
 		double y2c1p1 = c1p1.getPos()[1];
-		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.playerVelocity, x2c1p1, 0.01);
+		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x2c1p1, 0.01);
 		Assertions.assertEquals(y1c1p1, y2c1p1, 0.01);
 		double x2c2p1 = c2p1.getPos()[0];
 		double y2c2p1 = c2p1.getPos()[1];
-		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.playerVelocity, x2c2p1, 0.01);
+		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x2c2p1, 0.01);
 		Assertions.assertEquals(y1c2p1, y2c2p1, 0.01);
 		
 		// move down 10 times
@@ -119,12 +119,12 @@ class OtherPlayerMovementTest {
 		// check third position
 		double x3c1p1 = c1p1.getPos()[0];
 		double y3c1p1 = c1p1.getPos()[1];
-		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.playerVelocity, x3c1p1, 0.01);
-		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.playerVelocity, y3c1p1, 0.01);
+		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x3c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, y3c1p1, 0.01);
 		double x3c2p1 = c2p1.getPos()[0];
 		double y3c2p1 = c2p1.getPos()[1];
-		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.playerVelocity, x3c2p1, 0.01);
-		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.playerVelocity, y3c2p1, 0.01);
+		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, x3c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, y3c2p1, 0.01);
 		
 		// move left 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -135,11 +135,11 @@ class OtherPlayerMovementTest {
 		double x4c1p1 = c1p1.getPos()[0];
 		double y4c1p1 = c1p1.getPos()[1];
 		Assertions.assertEquals(x1c1p1, x4c1p1, 0.01);
-		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.playerVelocity, y4c1p1, 0.01);
+		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, y4c1p1, 0.01);
 		double x4c2p1 = c2p1.getPos()[0];
 		double y4c2p1 = c2p1.getPos()[1];
 		Assertions.assertEquals(x1c2p1, x4c2p1, 0.01);
-		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.playerVelocity, y4c2p1, 0.01);
+		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, y4c2p1, 0.01);
 		
 		// move up 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -170,7 +170,7 @@ class OtherPlayerMovementTest {
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;
-		double stepDistanceComponent = numStepsMoved*Constants.playerVelocity*Math.sin(Math.toRadians(45));
+		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY*Math.sin(Math.toRadians(45));
 		
 		// check initial position
 		double x1c1p1 = c1p1.getPos()[0];

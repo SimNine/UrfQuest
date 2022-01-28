@@ -12,6 +12,7 @@ import urfquest.client.entities.particles.Particle;
 import urfquest.client.entities.projectiles.Projectile;
 import urfquest.client.tiles.ActiveTile;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -52,9 +53,10 @@ public class Map {
 			}
 		}
 		
-		minimap = new BufferedImage(localChunks.length * MapChunk.CHUNK_SIZE, 
-									localChunks[0].length * MapChunk.CHUNK_SIZE, 
+		minimap = new BufferedImage(localChunks.length * Constants.MAP_CHUNK_SIZE, 
+									localChunks[0].length * Constants.MAP_CHUNK_SIZE, 
 									BufferedImage.TYPE_4BYTE_ABGR);
+		System.out.println("Map of size " + minimap.getHeight());
 	}
 
 	/*
@@ -230,26 +232,26 @@ public class Map {
 	}
 	
 	public MapChunk getChunkAtPos(int x, int y) {
-		if (x < localChunkOrigin[0] * MapChunk.CHUNK_SIZE || 
-			y < localChunkOrigin[1] * MapChunk.CHUNK_SIZE)
+		if (x < localChunkOrigin[0] * Constants.MAP_CHUNK_SIZE || 
+			y < localChunkOrigin[1] * Constants.MAP_CHUNK_SIZE)
 			return null;
-		if (x >= (localChunkOrigin[0] + localChunks.length) * MapChunk.CHUNK_SIZE || 
-			y >= (localChunkOrigin[1] + localChunks[0].length) * MapChunk.CHUNK_SIZE)
+		if (x >= (localChunkOrigin[0] + localChunks.length) * Constants.MAP_CHUNK_SIZE || 
+			y >= (localChunkOrigin[1] + localChunks[0].length) * Constants.MAP_CHUNK_SIZE)
 			return null;
 
-		int xChunk = Math.floorDiv(x, MapChunk.CHUNK_SIZE);
-		int yChunk = Math.floorDiv(y, MapChunk.CHUNK_SIZE);
+		int xChunk = Math.floorDiv(x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv(y, Constants.MAP_CHUNK_SIZE);
 		return getChunk(xChunk, yChunk);
 	}
 
 	private int[] getPosInChunk(int x, int y) {
-		x %= MapChunk.CHUNK_SIZE;
+		x %= Constants.MAP_CHUNK_SIZE;
 		if (x < 0)
-			x += MapChunk.CHUNK_SIZE;
+			x += Constants.MAP_CHUNK_SIZE;
 
-		y %= MapChunk.CHUNK_SIZE;
+		y %= Constants.MAP_CHUNK_SIZE;
 		if (y < 0)
-			y += MapChunk.CHUNK_SIZE;
+			y += Constants.MAP_CHUNK_SIZE;
 		
 		return new int[]{x, y};
 	}
@@ -342,11 +344,11 @@ public class Map {
 					continue;
 				}
 				
-				for (int xc = 0; xc < MapChunk.CHUNK_SIZE; xc++) {
-					for (int yc = 0; yc < MapChunk.CHUNK_SIZE; yc++) {
+				for (int xc = 0; xc < Constants.MAP_CHUNK_SIZE; xc++) {
+					for (int yc = 0; yc < Constants.MAP_CHUNK_SIZE; yc++) {
 						int color = Tiles.minimapColor(c.getTileTypeAt(xc, yc));
-						minimap.setRGB(x * MapChunk.CHUNK_SIZE + xc, 
-									   y * MapChunk.CHUNK_SIZE + yc, 
+						minimap.setRGB(x * Constants.MAP_CHUNK_SIZE + xc, 
+									   y * Constants.MAP_CHUNK_SIZE + yc, 
 									   color);
 					}
 				}

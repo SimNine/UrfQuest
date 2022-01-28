@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
 import urfquest.server.Server;
-import urfquest.shared.message.Constants;
+import urfquest.shared.Constants;
 
 class BasicPlayerMovementTest {
 	
@@ -56,7 +56,7 @@ class BasicPlayerMovementTest {
 		}
 		double xPos2s = p1s.getPos()[0];
 		double yPos2s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.playerVelocity, xPos2s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos2s, 0.01);
 		Assertions.assertEquals(yPos1s, yPos2s, 0.01);
 	}
 
@@ -77,7 +77,7 @@ class BasicPlayerMovementTest {
 		}
 		double xPos2s = p1s.getPos()[0];
 		double yPos2s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.playerVelocity, xPos2s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos2s, 0.01);
 		Assertions.assertEquals(yPos1s, yPos2s, 0.01);
 
 		// move down 10 times
@@ -86,8 +86,8 @@ class BasicPlayerMovementTest {
 		}
 		double xPos3s = p1s.getPos()[0];
 		double yPos3s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.playerVelocity, xPos3s, 0.01);
-		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.playerVelocity, yPos3s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos3s, 0.01);
+		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, yPos3s, 0.01);
 
 		// move left 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -96,7 +96,7 @@ class BasicPlayerMovementTest {
 		double xPos4s = p1s.getPos()[0];
 		double yPos4s = p1s.getPos()[1];
 		Assertions.assertEquals(xPos1s, xPos4s, 0.01);
-		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.playerVelocity, yPos4s, 0.01);
+		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, yPos4s, 0.01);
 
 		// move up 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -112,7 +112,7 @@ class BasicPlayerMovementTest {
 	void testMovementServerSideDiamond() {
 		urfquest.server.entities.mobs.Player p1s = s.getGame().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
-		double stepDistanceComponent = numStepsMoved*Constants.playerVelocity*Math.sin(Math.toRadians(45));
+		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY*Math.sin(Math.toRadians(45));
 		
 		// check initial position
 		double xPos1s = p1s.getPos()[0];
@@ -174,7 +174,7 @@ class BasicPlayerMovementTest {
 		}
 		double xPos2c = p1c.getPos()[0];
 		double yPos2c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.playerVelocity, xPos2c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos2c, 0.01);
 		Assertions.assertEquals(yPos1c, yPos2c, 0.01);
 	}
 
@@ -195,7 +195,7 @@ class BasicPlayerMovementTest {
 		}
 		double xPos2c = p1c.getPos()[0];
 		double yPos2c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.playerVelocity, xPos2c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos2c, 0.01);
 		Assertions.assertEquals(yPos1c, yPos2c, 0.01);
 
 		// move down 10 times
@@ -204,8 +204,8 @@ class BasicPlayerMovementTest {
 		}
 		double xPos3c = p1c.getPos()[0];
 		double yPos3c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.playerVelocity, xPos3c, 0.01);
-		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.playerVelocity, yPos3c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, xPos3c, 0.01);
+		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, yPos3c, 0.01);
 
 		// move left 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -214,7 +214,7 @@ class BasicPlayerMovementTest {
 		double xPos4c = p1c.getPos()[0];
 		double yPos4c = p1c.getPos()[1];
 		Assertions.assertEquals(xPos1c, xPos4c, 0.01);
-		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.playerVelocity, yPos4c, 0.01);
+		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY, yPos4c, 0.01);
 
 		// move up 10 times
 		for (int i = 0; i < numStepsMoved; i++) {
@@ -230,7 +230,7 @@ class BasicPlayerMovementTest {
 	void testMovementClientSideDiamond() {
 		urfquest.client.entities.mobs.Player p1c = c1.getState().getPlayer();
 		int numStepsMoved = 10;
-		double stepDistanceComponent = numStepsMoved*Constants.playerVelocity*Math.sin(Math.toRadians(45));
+		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY*Math.sin(Math.toRadians(45));
 		
 		// check initial position
 		double xPos1c = p1c.getPos()[0];

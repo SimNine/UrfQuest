@@ -11,7 +11,7 @@ import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
-import urfquest.shared.message.Constants;
+import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -30,7 +30,7 @@ public class Player extends Mob {
 	public Player(Server srv, State s, Map m, double x, double y, String name, ClientThread c) {
 		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = Constants.playerVelocity;
+		velocity = Constants.DEFAULT_PLAYER_VELOCITY;
 		
 		health = 100.0;
 		maxHealth = 100.0;

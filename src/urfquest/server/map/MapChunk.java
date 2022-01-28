@@ -2,6 +2,7 @@ package urfquest.server.map;
 
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.tiles.ActiveTile;
+import urfquest.shared.Constants;
 
 public class MapChunk {
 
@@ -10,10 +11,8 @@ public class MapChunk {
 	
 	private ActiveTile[][] activeTiles;
 	
-	public static final int CHUNK_SIZE = 32;
-	
 	public MapChunk() {
-		this(CHUNK_SIZE, CHUNK_SIZE);
+		this(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE);
 	}
 	
 	public MapChunk(int width, int height) {
