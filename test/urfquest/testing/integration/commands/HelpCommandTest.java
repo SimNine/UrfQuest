@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
+import urfquest.server.Command;
 import urfquest.server.CommandProcessor;
 import urfquest.server.Server;
 import urfquest.shared.ChatMessage;
@@ -55,17 +56,16 @@ class HelpCommandTest {
 		m.payload = new ChatMessage(null, messageText);
 		c1.send(m);
 
-		Assertions.assertEquals(1, c1.getAllChatMessages().size());
+		Assertions.assertEquals(CommandProcessor.commands.size(), c1.getAllChatMessages().size());
 		Assertions.assertEquals(1, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
-		Assertions.assertEquals(CommandProcessor.helpCommandMessage, c1.getAllChatMessages().getFirst().message);
 	}
 
 	@Test
-	void testHelpCommandExtraArgs() {
-		String messageText = "/help with extra args";
+	void testHelpCommandRealCommand() {
+		String messageText = "/help help";
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
@@ -81,7 +81,30 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
-		Assertions.assertEquals(CommandProcessor.helpCommandMessage, c1.getAllChatMessages().getFirst().message);
+		Command helpCommand = CommandProcessor.commands.get("help");
+		String expectedString = helpCommand.base + " " + helpCommand.usage + " - " + helpCommand.description;
+		Assertions.assertEquals(expectedString, c1.getAllChatMessages().getFirst().message);
+	}
+
+	@Test
+	void testHelpCommandFakeCommand() {
+		String messageText = "/help not_a_real_command";
+
+		Assertions.assertEquals(0, c1.getAllChatMessages().size());
+		Assertions.assertEquals(0, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Message m = new Message();
+		m.type = MessageType.CHAT_MESSAGE;
+		m.payload = new ChatMessage(null, messageText);
+		c1.send(m);
+
+		Assertions.assertEquals(1, c1.getAllChatMessages().size());
+		Assertions.assertEquals(1, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
+		Assertions.assertEquals(CommandProcessor.commandNotRecognized, c1.getAllChatMessages().getFirst().message);
 	}
 
 }

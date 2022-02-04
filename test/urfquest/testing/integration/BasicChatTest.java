@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
+import urfquest.server.CommandProcessor;
 import urfquest.server.Server;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Message;
@@ -64,7 +65,7 @@ class BasicChatTest {
 
 	@Test
 	void testSendCommand() {
-		String messageText = "/An example of a command that should be parsed and not passed";
+		String messageText = "/An example of a command that should be parsed and warned about";
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
@@ -75,11 +76,12 @@ class BasicChatTest {
 		m.payload = new ChatMessage(null, messageText);
 		c1.send(m);
 
-		Assertions.assertEquals(0, c1.getAllChatMessages().size());
+		Assertions.assertEquals(1, c1.getAllChatMessages().size());
 		Assertions.assertEquals(1, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
+		Assertions.assertEquals(CommandProcessor.commandNotRecognized, c1.getAllChatMessages().getFirst().message);
 	}
 
 }
