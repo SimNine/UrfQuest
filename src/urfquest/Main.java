@@ -41,7 +41,7 @@ public class Main {
 					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
 					ip = prefsReader.readLine();
 					port = Integer.parseInt(prefsReader.readLine());
-					mode = StartupMode.valueOf(prefsReader.readLine());
+					mode = StartupMode.valueOf(Integer.parseInt(prefsReader.readLine()));
 					playerName = prefsReader.readLine();
 					prefsReader.close();
 				} catch (IOException e) {
@@ -75,7 +75,7 @@ public class Main {
 				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
 				prefsWriter.println(ip);
 				prefsWriter.println(port + "");
-				prefsWriter.println(mode + "");
+				prefsWriter.println(mode.value + "");
 				prefsWriter.println(playerName);
 				prefsWriter.close();
 			} catch (IOException e) {

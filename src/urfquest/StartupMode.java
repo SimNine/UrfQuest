@@ -7,7 +7,7 @@ public enum StartupMode {
 	CLIENT_ONLY(1),
 	SERVER_ONLY(2);
 	
-	private int value;
+	int value;
 	private static HashMap<Integer, StartupMode> map = new HashMap<>();
 	
 	StartupMode(int value) {
@@ -21,6 +21,6 @@ public enum StartupMode {
     }
 
     public static StartupMode valueOf(int value) {
-        return (StartupMode) map.get(value);
+        return map.get(value);
     }
 }
