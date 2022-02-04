@@ -12,9 +12,6 @@ import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
-import urfquest.shared.message.EntityType;
-import urfquest.shared.message.Message;
-import urfquest.shared.message.MessageType;
 
 public class Player extends Mob {
 	
@@ -67,26 +64,8 @@ public class Player extends Mob {
 		if (canMove) {
 			this.incrementPos(x, y);
 		} else {
-			Message m = new Message();
-			m.type = MessageType.ENTITY_SET_POS;
-			m.entityType = EntityType.PLAYER;
-			m.entityID = this.id;
-			m.pos[0] = bounds.getX();
-			m.pos[1] = bounds.getY();
-			this.client.send(m);
+			this.setPos(bounds.getX(), bounds.getY());
 		}
-	}
-	
-	public void incrementPos(double x, double y) {
-		super.incrementPos(x, y);
-		
-		Message m = new Message();
-		m.type = MessageType.ENTITY_SET_POS;
-		m.entityType = EntityType.PLAYER;
-		m.entityID = this.id;
-		m.pos[0] = bounds.getX();
-		m.pos[1] = bounds.getY();
-		this.server.sendMessageToAllClients(m);
 	}
 
 	/*

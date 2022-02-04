@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
+import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
@@ -160,11 +161,9 @@ public class Client {
 			case ENTITY_SET_POS: {
 				this.getLogger().verbose(m.toString());
 				// - Sets the position of the given entity
-				if (m.entityType == EntityType.PLAYER) {
-					Player p = state.getCurrentMap().getPlayer(m.entityID);
-					if (p != null) {
-						p.setPos(m.pos[0], m.pos[1]);
-					}
+				Entity e = state.getCurrentMap().getEntity(m.entityID);
+				if (e != null) {
+					e.setPos(m.pos[0], m.pos[1]);
 				}
 				break;
 			}

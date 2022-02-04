@@ -12,6 +12,8 @@ public class CommandProcessor {
 	public static void processCommand(Server server, String commandStr, int clientID) {
 		server.getLogger().info(clientID + " sent command: " + commandStr);
 		
+		int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientID);
+		
 		String tokens[] = commandStr.split(" ");
 		switch (tokens[0]) {
 			case "/help": {
@@ -32,12 +34,12 @@ public class CommandProcessor {
 					if (playerID == null) { // if the specified player wasn't found
 						m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + tokens[1] + "' not found");
 					} else {
-						p = server.getGame().getPlayer(playerID);
+						p = server.getState().getPlayer(playerID);
 						double[] pos = p.getCenter();
 						m.payload = new ChatMessage(ChatMessage.serverSource, tokens[1] + "'s position is (" + pos[0] + "," + pos[1] + ")");
 					}
 				} else {
-					double[] pos = server.getGame().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getCenter();
+					double[] pos = server.getState().getPlayer(thisPlayerID).getCenter();
 					m.payload = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos[0] + "," + pos[1] + ")");
 				}
 

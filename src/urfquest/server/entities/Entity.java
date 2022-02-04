@@ -7,6 +7,8 @@ import urfquest.server.Server;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
 
 public abstract class Entity {
 	protected Server server;
@@ -34,12 +36,19 @@ public abstract class Entity {
 	// sets the entity's position, NOT checking for validity of move
 	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
+		
+		Message m = new Message();
+		m.type = MessageType.ENTITY_SET_POS;
+		m.entityID = this.id;
+		m.pos[0] = bounds.getX();
+		m.pos[1] = bounds.getY();
+		this.server.sendMessageToAllClients(m);
 	}
 	
 	// moves the entity, NOT checking for validity of move
 	// object's position is incremented according to the parameters
 	public void incrementPos(double x, double y) {
-		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
+		this.setPos(bounds.getX() + x, bounds.getY() + y);
 	}
 	
 	// moves the entity, NOT checking for validity of move
@@ -52,7 +61,7 @@ public abstract class Entity {
 		newX += xComp;
 		newY += yComp;
 		
-		bounds.setRect(newX, newY, bounds.getWidth(), bounds.getHeight());
+		this.setPos(newX, newY);
 	}
 	
 	// gets the object's position as a double array with length 2 (x, y)
@@ -139,7 +148,7 @@ public abstract class Entity {
 		double xCurr = this.getCenter()[0];
 		double yCurr = this.getCenter()[1];
 		for (int i = 0; i < numSteps; i++) {
-			if (!Tiles.isWalkable(this.server.getGame().getSurfaceMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
+			if (!Tiles.isWalkable(this.server.getState().getSurfaceMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
 				return false;
 			}
 			xCurr += xComp;

@@ -41,7 +41,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideOneMotion() {
-		urfquest.server.entities.mobs.Player p1s = s.getGame().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		
 		// check initial position
@@ -62,7 +62,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideSquare() {
-		urfquest.server.entities.mobs.Player p1s = s.getGame().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		
 		// check initial position
@@ -110,7 +110,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideDiamond() {
-		urfquest.server.entities.mobs.Player p1s = s.getGame().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_PLAYER_VELOCITY*Math.sin(Math.toRadians(45));
 		

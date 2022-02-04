@@ -24,7 +24,7 @@ import urfquest.shared.message.MessageType;
 
 public class Server {
     
-	private State game;
+	private State state;
 	
 	private ServerSocket serverSocket = null;
 	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
@@ -36,8 +36,8 @@ public class Server {
 	private Logger logger;
 	
 	public Server(int seed) {
-		this.setGame(new State(this));
-        this.getGame().setGameRunning(true);
+		this.setState(new State(this));
+        this.getState().setGameRunning(true);
         
         this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
         
@@ -45,8 +45,8 @@ public class Server {
 	}
 
 	public Server(int seed, int port) {
-		this.setGame(new State(this));
-        this.getGame().setGameRunning(true);
+		this.setState(new State(this));
+        this.getState().setGameRunning(true);
         
         this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
 		
@@ -91,7 +91,7 @@ public class Server {
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
 				String playerName = m.entityName;
-				Player p = game.createPlayer(playerName, c);
+				Player p = state.createPlayer(playerName, c);
 				userMap.addEntry(c.id, p.id, playerName);
 				
 				m = new Message();
@@ -108,7 +108,7 @@ public class Server {
 				this.getLogger().verbose(m.clientID + " - " + m.toString());
 				// - Recieves a request from a client to move their player
 				// - Tests if the move is allowed; if so, does the move
-				Player movedPlayer = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
+				Player movedPlayer = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
 				movedPlayer.attemptIncrementPos(m.pos[0], m.pos[1]);
 				break;
 			}
@@ -120,7 +120,7 @@ public class Server {
 				// - Sends all entities currently on the map
 				// TODO: narrow the number of entities that are sent
 				
-				Map map = game.getAllMaps().get(m.mapID);
+				Map map = state.getAllMaps().get(m.mapID);
 				
 //					m = new Message();
 //					m.type = MessageType.MAP_METADATA;
@@ -157,9 +157,9 @@ public class Server {
 				this.getLogger().debug(m.clientID + " - " + m.toString());
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
-				MapChunk chunk = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (chunk == null) {
-					chunk = game.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 				}
 				m.payload = chunk.getAllTileTypes();
 				m.payload2 = chunk.getAllTileSubtypes();
@@ -169,7 +169,7 @@ public class Server {
 			case DEBUG_PLAYER_INFO: {
 				this.getLogger().debug(m.clientID + " - " + m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
-				Player p = game.getPlayer(playerID);
+				Player p = state.getPlayer(playerID);
 				String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
 				
 				m = new Message();
@@ -181,7 +181,7 @@ public class Server {
 			case CHAT_MESSAGE: {
 				this.getLogger().info(m.clientID + " - " + m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
-				Player p = game.getPlayer(playerID);
+				Player p = state.getPlayer(playerID);
 				
 				ChatMessage chatMessage = (ChatMessage)m.payload;
 				chatMessage.source = p.getName();
@@ -214,12 +214,12 @@ public class Server {
 		}
 	}
 	
-	public State getGame() {
-		return this.game;
+	public State getState() {
+		return this.state;
 	}
 
-	public void setGame(State game) {
-		this.game = game;
+	public void setState(State state) {
+		this.state = state;
 	}
 	
 	public UserMap getUserMap() {
@@ -238,7 +238,7 @@ public class Server {
 		Message m = new Message();
 		m.type = MessageType.CONNECTION_CONFIRMED;
 		m.clientID = t.id;
-		m.mapID = game.getSurfaceMap().id;
+		m.mapID = state.getSurfaceMap().id;
 		t.send(m);
 	}
 	
@@ -262,10 +262,6 @@ public class Server {
 	
 	public ServerSocket getServerSocket() {
 		return this.serverSocket;
-	}
-	
-	public State getState() {
-		return this.game;
 	}
 	
 	public void addClient(int clientID, ClientThread clientThread) {

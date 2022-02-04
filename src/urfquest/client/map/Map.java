@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import urfquest.client.Client;
+import urfquest.client.entities.Entity;
 import urfquest.client.entities.items.Item;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
@@ -431,8 +432,8 @@ public class Map {
 		return items.size();
 	}
 	
-	public Item getItem(int id) {
-		return items.get(id);
+	public Item getItem(int entityID) {
+		return items.get(entityID);
 	}
 	
 	
@@ -453,8 +454,8 @@ public class Map {
 		return mobs.size();
 	}
 	
-	public Mob getMob(int id) {
-		return mobs.get(id);
+	public Mob getMob(int entityID) {
+		return mobs.get(entityID);
 	}
 	
 	
@@ -475,8 +476,8 @@ public class Map {
 		return projectiles.size();
 	}
 	
-	public Projectile getProjectile(int id) {
-		return projectiles.get(id);
+	public Projectile getProjectile(int entityID) {
+		return projectiles.get(entityID);
 	}
 	
 	
@@ -497,8 +498,8 @@ public class Map {
 		return players.size();
 	}
 	
-	public Player getPlayer(int id) {
-		return players.get(id);
+	public Player getPlayer(int entityID) {
+		return players.get(entityID);
 	}
 	
 	
@@ -509,6 +510,27 @@ public class Map {
 	
 	public int getNumParticles() {
 		return particles.size();
+	}
+	
+	
+	
+	public Entity getEntity(int entityID) {
+		if (players.containsKey(entityID))
+			return players.get(entityID);
+		if (items.containsKey(entityID))
+			return items.get(entityID);
+		if (mobs.containsKey(entityID))
+			return mobs.get(entityID);
+		if (projectiles.containsKey(entityID))
+			return projectiles.get(entityID);
+		return null;
+	}
+	
+	public void removeEntity(int entityID) {
+		players.remove(entityID);
+		items.remove(entityID);
+		mobs.remove(entityID);
+		projectiles.remove(entityID);
 	}
 	
 	
