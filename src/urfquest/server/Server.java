@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import urfquest.Logger;
@@ -94,17 +93,14 @@ public class Server {
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
 				String playerName = m.entityName;
-				Player p = state.createPlayer(playerName, c);
-				userMap.addEntry(c.id, p.id, playerName);
-				
-				m = new Message();
-				m.type = MessageType.ENTITY_INIT;
-				m.entityName = playerName;
-				m.entityType = EntityType.PLAYER;
-				m.pos = p.getPos();
-				m.clientID = c.id;
-				m.entityID = p.id;
-				this.sendMessageToAllClients(m);
+				Player newPlayer = new Player(this, this.state, 
+											  this.state.getSurfaceMap(), 
+											  this.state.getSurfaceMap().getHomeCoords()[0], 
+											  this.state.getSurfaceMap().getHomeCoords()[1], 
+											  playerName, c);
+				this.state.addPlayer(newPlayer);
+				this.state.getSurfaceMap().addPlayer(newPlayer);
+				userMap.addEntry(c.id, newPlayer.id, playerName);
 				break;
 			}
 			case PLAYER_MOVE: {
@@ -212,8 +208,8 @@ public class Server {
 	}
 	
 	public void sendMessageToAllClients(Message m) {
-		for (Entry<?, ClientThread> e : clients.entrySet()) {
-			e.getValue().send(m);
+		for (ClientThread c : clients.values()) {
+			c.send(m);
 		}
 	}
 	

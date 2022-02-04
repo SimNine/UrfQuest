@@ -12,6 +12,9 @@ import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
+import urfquest.shared.message.EntityType;
+import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
 
 public class Player extends Mob {
 	
@@ -43,6 +46,15 @@ public class Player extends Mob {
 		
 		this.name = name;
 		this.client = c;
+		
+		Message msg = new Message();
+		msg.type = MessageType.ENTITY_INIT;
+		msg.entityName = this.name;
+		msg.entityType = EntityType.PLAYER;
+		msg.pos = this.getPos();
+		msg.clientID = c.id;
+		msg.entityID = this.id;
+		server.sendMessageToAllClients(msg);
 	}
 	
 	public void attemptIncrementPos(double x, double y) {

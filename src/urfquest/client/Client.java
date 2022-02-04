@@ -147,7 +147,7 @@ public class Client {
 				break;
 			}
 			case CHUNK_LOAD: {
-				this.getLogger().debug(m.toString());
+				this.getLogger().verbose(m.toString());
 				// - Loads the payloads of this message into the specified chunk
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (c == null) {

@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import javax.swing.Timer;
 
-import urfquest.server.ClientThread;
 import urfquest.server.Server;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -30,10 +29,10 @@ public class State {
 
 	public State(Server srv) {
 		this.server = srv;
-		surfaceMap = new Map(srv, Map.SIMPLEX_MAP);
+		this.surfaceMap = new Map(srv, Map.SIMPLEX_MAP);
 		// surfaceMap.generateItems();
 		// surfaceMap.generateChickens();
-		maps.put(surfaceMap.id, surfaceMap);
+		this.maps.put(surfaceMap.id, surfaceMap);
 	}
 
 	/*
@@ -52,18 +51,16 @@ public class State {
 	 * Player management
 	 */
 	
-	// Creates a player at the home coordinates of the surface map
-	public Player createPlayer(String name, ClientThread client) {
-		Player newPlayer = new Player(this.server, this, 
-									  surfaceMap, surfaceMap.getHomeCoords()[0], surfaceMap.getHomeCoords()[1], name, client);
-		players.put(newPlayer.id, newPlayer);
-		surfaceMap.addPlayer(newPlayer);
-		
-		return newPlayer;
+	public void addPlayer(Player p) {
+		players.put(p.id, p);
 	}
 	
 	public Player getPlayer(int id) {
 		return players.get(id);
+	}
+	
+	public Player removePlayer(int id) {
+		return players.remove(id);
 	}
 	
 	/*
