@@ -26,6 +26,7 @@ public class Message implements Serializable {
 	public String entityName;
 	
 	public EntityType entityType;
+	public Object entitySubtype;
 	
 	public String toString() {
 		String ret = type.name() + " - ";

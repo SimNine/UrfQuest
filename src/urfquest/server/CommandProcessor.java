@@ -2,10 +2,12 @@ package urfquest.server;
 
 import java.util.HashMap;
 
+import urfquest.server.entities.mobs.Chicken;
 import urfquest.server.entities.mobs.Player;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
+import urfquest.shared.message.MobType;
 
 public class CommandProcessor {
 	
@@ -131,6 +133,36 @@ public class CommandProcessor {
 					}
 		};
 		commands.put("tp", tpCommand);
+		
+		Command summonCommand = new Command("/summon", "<mob_type>", 
+				"Summons a mob of the specified type at the caller's position") {
+					@Override
+					public void runCommand(Server server, String[] args, int clientID) {
+						if (args.length < 2) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientID);
+							return;
+						}
+						
+						int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientID);
+						Player thisPlayer = server.getState().getPlayer(thisPlayerID);
+						
+						switch (args[1].toUpperCase()) {
+							case "CHICKEN": {
+								Chicken c = new Chicken(server, server.getState(), 
+														thisPlayer.getMap(), 
+														thisPlayer.getPos()[0], 
+														thisPlayer.getPos()[1]);
+								thisPlayer.getMap().addMob(c);
+								break;
+							}
+							default: {
+								CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientID);
+								return;
+							}
+						}
+					}
+		};
+		commands.put("summon", summonCommand);
 	}
 	
 	public static void sendIncorrectArgumentsMessage(Server server, Command command, int clientID) {

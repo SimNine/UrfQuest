@@ -7,6 +7,10 @@ import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
+import urfquest.shared.message.EntityType;
+import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
+import urfquest.shared.message.MobType;
 
 public class Chicken extends Mob {
 	private int thinkingDelay;
@@ -26,9 +30,18 @@ public class Chicken extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		routine = new IdleRoutine(this);
+		// routine = new IdleRoutine(this);
 		intelligence = 50;
 		thinkingDelay = intelligence;
+		
+		Message msg = new Message();
+		msg.type = MessageType.ENTITY_INIT;
+		msg.entityType = EntityType.MOB;
+		msg.entitySubtype = MobType.CHICKEN;
+		msg.pos = this.getPos();
+		msg.entityID = this.id;
+		msg.mapID = m.id;
+		server.sendMessageToAllClients(msg);
 	}
 
 	public void update() {
@@ -44,8 +57,8 @@ public class Chicken extends Mob {
 		}
 		
 		// execute the current action
-		routine.update();
-		attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
+		// routine.update();
+		// attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
 	}
 	
 	private void think() {

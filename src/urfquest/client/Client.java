@@ -16,6 +16,7 @@ import javax.swing.SwingUtilities;
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
 import urfquest.client.entities.Entity;
+import urfquest.client.entities.mobs.Chicken;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
@@ -24,6 +25,7 @@ import urfquest.shared.ChatMessage;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
+import urfquest.shared.message.MobType;
 
 public class Client {
 	
@@ -129,6 +131,13 @@ public class Client {
 			case ENTITY_INIT: {
 				this.getLogger().debug(m.toString());
 				// - Initializes an entity of the given type
+				
+				// If this entity is not on the current map, do nothing
+				// TODO: must implement MAP_METADATA first
+				// if (m.mapID != state.getCurrentMap().id) {
+				// 		return;
+				// }
+				
 				// - If the entity is a player with the ID of this client:
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
@@ -141,6 +150,20 @@ public class Client {
 						state.setPlayer(player);
 						if (this.server == null) {
 							this.initFrontend();
+						}
+					}
+				} else if (m.entityType == EntityType.MOB) {
+					switch ((MobType) m.entitySubtype) {
+						case CHICKEN: {
+							Chicken chicken = new Chicken(this, m.entityID, 
+														  state.getCurrentMap(), 
+														  m.pos[0], 
+														  m.pos[1]);
+							state.getCurrentMap().addMob(chicken);
+							break;
+						}
+						default: {
+							break;
 						}
 					}
 				}

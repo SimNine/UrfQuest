@@ -2,11 +2,26 @@ package urfquest.client.entities.mobs;
 
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.map.Map;
 
 public class Chicken extends Mob {
+	private static BufferedImage pic;
+	
+	static {
+		try {
+			pic = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "chicken_scaled_30px.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Image could not be read at: " + assetPath + "chicken_scaled_30px.png");
+		}
+	}
 	
 	public Chicken(Client c, int id, Map m, double x, double y) {
 		super(c, id, m, x, y);
@@ -35,7 +50,10 @@ public class Chicken extends Mob {
 
 	@Override
 	protected void drawEntity(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		g.drawImage(pic, 
+				client.getPanel().gameToWindowX(bounds.getX()), 
+				client.getPanel().gameToWindowY(bounds.getY()), 
+				null);
+		drawHealthBar(g);
 	}
 }
