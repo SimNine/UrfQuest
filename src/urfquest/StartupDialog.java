@@ -22,7 +22,7 @@ public class StartupDialog implements ActionListener {
 	public static final String CLIENT_ONLY_STRING = "Client only";
 	public static final String SERVER_CLIENT_STRING = "Both";
 	
-	public StartupDialog(String defaultIP, String defaultPortNum, int startupMode, String defaultPlayerName) {
+	public StartupDialog(String defaultIP, String defaultPortNum, StartupMode startupMode, String defaultPlayerName) {
 		ip = new JTextField(defaultIP, 10);
 		portNum = new JTextField(defaultPortNum, 10);
 		playerName = new JTextField(defaultPlayerName, 10);
@@ -39,13 +39,13 @@ public class StartupDialog implements ActionListener {
 		clientServer.addActionListener(this);
 		
 		switch (startupMode) {
-		case Main.MODE_FULL:
+		case FULL:
 			clientServer.doClick();
 			break;
-		case Main.MODE_SERVER:
+		case SERVER_ONLY:
 			serverOnly.doClick();
 			break;
-		case Main.MODE_CLIENT:
+		case CLIENT_ONLY:
 			clientOnly.doClick();
 			break;
 		default:

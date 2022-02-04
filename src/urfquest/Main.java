@@ -14,17 +14,13 @@ import urfquest.server.Server;
 
 public class Main {
 	
-	static final int MODE_FULL = 0;
-	static final int MODE_CLIENT = 1;
-	static final int MODE_SERVER = 2;
-	
 	// logger
 	public static Logger mainLogger;
 	
 	// startup arguments
 	private static String ip = "localhost";
 	private static int port = 7096;
-	private static int mode = MODE_FULL;
+	private static StartupMode mode = StartupMode.FULL;
 	
 	public static void main(String[] args) {
 		mainLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
@@ -34,7 +30,7 @@ public class Main {
 		if (args.length == 3) {
 			ip = args[0];
 			port = Integer.parseInt(args[1]);
-			mode = Integer.parseInt(args[2]);
+			mode = StartupMode.valueOf(Integer.parseInt(args[2]));
 			playerName = args[3];
 		} else if (args.length == 0) {
 			// try to load last used config from file
@@ -45,7 +41,7 @@ public class Main {
 					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
 					ip = prefsReader.readLine();
 					port = Integer.parseInt(prefsReader.readLine());
-					mode = Integer.parseInt(prefsReader.readLine());
+					mode = StartupMode.valueOf(prefsReader.readLine());
 					playerName = prefsReader.readLine();
 					prefsReader.close();
 				} catch (IOException e) {
@@ -62,13 +58,13 @@ public class Main {
 			port = Integer.parseInt(dialog.portNum.getText());
 			switch (dialog.modeGroup.getSelection().getActionCommand()) {
 			case StartupDialog.SERVER_CLIENT_STRING:
-				mode = 0;
+				mode = StartupMode.FULL;
 				break;
 			case StartupDialog.CLIENT_ONLY_STRING:
-				mode = 1;
+				mode = StartupMode.CLIENT_ONLY;
 				break;
 			case StartupDialog.SERVER_ONLY_STRING:
-				mode = 2;
+				mode = StartupMode.SERVER_ONLY;
 				break;
 			}
 			playerName = dialog.playerName.getText();
@@ -92,7 +88,7 @@ public class Main {
 		}
 		
 		// start either the client, the server, or both
-		if (mode == MODE_FULL) {
+		if (mode == StartupMode.FULL) {
 			// client and server
 			Thread serverThread = new Thread(() -> {
 				startServer(0, port);
@@ -105,10 +101,10 @@ public class Main {
 				e.printStackTrace();
 			}
 			startClient(ip, port, playerName);
-		} else if (mode == MODE_CLIENT) {
+		} else if (mode == StartupMode.CLIENT_ONLY) {
 			// client only
 			startClient(ip, port, playerName);
-		} else if (mode == MODE_SERVER) {
+		} else if (mode == StartupMode.SERVER_ONLY) {
 			// server only
 			startServer(0, port);
 		}
