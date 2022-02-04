@@ -1,5 +1,0 @@
-ToDo:
-/tp <other_player>
-	Teleports caller to another player
-/tppos
-	Teleports caller to position
