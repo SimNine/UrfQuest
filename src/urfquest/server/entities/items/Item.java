@@ -212,7 +212,7 @@ public class Item extends Entity {
 			cooldown = getMaxCooldown();
 			
 			for (int i = 0; i < 20; i++) {
-				map.addProjectile(new RocketExplosion(this.state, m.getMap(), bounds.x + (Math.random() - 0.5)*20, bounds.y + (Math.random() - 0.5)*20, this));
+				map.addProjectile(new RocketExplosion(this.state, m.getMap(), bounds.x + (server.randomDouble() - 0.5)*20, bounds.y + (server.randomDouble() - 0.5)*20, this));
 			}
 			return true;
 		case Item.KEY:
@@ -226,7 +226,7 @@ public class Item extends Entity {
 			cooldown = getMaxCooldown();
 			
 			double[] pos1 = m.getCenter();
-			int dir = m.getDirection() + (int)((Math.random() - 0.5)*10);
+			int dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
 			m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos1[0], pos1[1], dir, Bullet.getDefaultVelocity(), m));
 			return true;
 		case Item.RPG:
@@ -242,10 +242,10 @@ public class Item extends Entity {
 			
 			double[] pos4 = m.getCenter();
 			int dir4;
-			int numShots = 15 + (int)(Math.random()*5);
+			int numShots = 15 + (int)(server.randomDouble()*5);
 			
 			for (int i = 0; i < numShots; i++) {
-				dir4 = m.getDirection() + (int)((Math.random() - 0.5)*20);
+				dir4 = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
 				m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos4[0], pos4[1], dir4, Bullet.getDefaultVelocity(), m));
 			}
 			
@@ -254,7 +254,7 @@ public class Item extends Entity {
 			cooldown = getMaxCooldown();
 			
 			double[] pos5 = m.getCenter();
-			int dir5 = m.getDirection() + (int)((Math.random() - 0.5)*10);
+			int dir5 = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
 			m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos5[0], pos5[1], dir5, Bullet.getDefaultVelocity(), m));
 			return true;
 		case Item.PICKAXE:
@@ -269,7 +269,7 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.SAND);
 				} else if (tile[1] == Tiles.DIRT_BOULDER) {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
-					double rand = Math.random();
+					double rand = server.randomDouble();
 					if (rand > .95) {
 						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.LAW_RUNE));
 					} else if (rand > .90) {
@@ -318,7 +318,7 @@ public class Item extends Entity {
 		case Item.SHOVEL:
 			if (m.tileAtDistance(0)[0] == Tiles.GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
-				if (Math.random() > .05) {
+				if (server.randomDouble() > .05) {
 					m.getMap().setTileAt(coords[0], coords[1], 0);
 				} else {
 					m.getMap().setTileAt(coords[0], coords[1], 13);

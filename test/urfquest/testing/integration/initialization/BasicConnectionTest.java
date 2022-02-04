@@ -26,7 +26,7 @@ class BasicConnectionTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		s = new Server(0, 0);
+		s = new Server(0);
 		c1 = new Client(s, "Chris");
 		c2 = new Client(s, "Nick");
 	}

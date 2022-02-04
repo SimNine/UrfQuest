@@ -29,8 +29,8 @@ public class Bullet extends Projectile {
 		return false;
 	}
 	
-	public static double getDefaultVelocity() {
-		return Math.random()*0.03 + 0.07;
+	public double getDefaultVelocity() {
+		return server.randomDouble()*0.03 + 0.07;
 	}
 	
 	public void collideWith(Mob m) {

@@ -28,8 +28,8 @@ public class Rocket extends Projectile {
 		return false;
 	}
 	
-	public static double getDefaultVelocity() {
-		return Math.random()*0.04 + 0.08;
+	public double getDefaultVelocity() {
+		return server.randomDouble()*0.04 + 0.08;
 	}
 	
 	public void collideWith(Mob m) {

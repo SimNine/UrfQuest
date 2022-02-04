@@ -97,7 +97,7 @@ public class Rogue extends Mob {
 		routine.update();
 		direction = routine.suggestedDirection();
 		if (routine.suggestedVelocity() == 0) {
-			inventory.setSelectedEntry((int)(Math.random()*3));
+			inventory.setSelectedEntry((int)(server.randomDouble()*3));
 		}
 		velocity = routine.suggestedVelocity();
 		while (direction < 0) {

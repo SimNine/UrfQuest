@@ -15,14 +15,16 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 	private SimplexNoiseClass flowerNoise;
 	private SimplexNoiseClass treeNoise;
 	
-	public TerrainGeneratorSimplex() {
-		terrainNoise = new SimplexNoiseClass((float) 0.01);
-		distortionNoise = new SimplexNoiseClass((float) 0.04);
-		distortionDistribution = new SimplexNoiseClass((float) 0.04);
+	public TerrainGeneratorSimplex(long seed) {
+		super(seed);
+		
+		terrainNoise = new SimplexNoiseClass(seed, (float) 0.01);
+		distortionNoise = new SimplexNoiseClass(seed, (float) 0.04);
+		distortionDistribution = new SimplexNoiseClass(seed, (float) 0.04);
 
-		boulderNoise = new SimplexNoiseClass((float) 0.04);
-		flowerNoise = new SimplexNoiseClass((float) 0.04);
-		treeNoise = new SimplexNoiseClass((float) 0.04);
+		boulderNoise = new SimplexNoiseClass(seed, (float) 0.04);
+		flowerNoise = new SimplexNoiseClass(seed, (float) 0.04);
+		treeNoise = new SimplexNoiseClass(seed, (float) 0.04);
 	}
 	
 	public MapChunk generateChunk(int xChunk, int yChunk) {
@@ -66,7 +68,7 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate boulders
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (boulderNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > Math.random()) {
+				if (boulderNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
 					if (chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
 						chunk.setTileAt(x, y, Tiles.BOULDER, Tiles.GRASS_BOULDER);
 					} else if (chunk.getTileTypeAt(x, y) == Tiles.WATER) {
@@ -81,7 +83,7 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate flowers
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (flowerNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > Math.random()) {
+				if (flowerNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
 					if (chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
 						chunk.setTileAt(x, y, Tiles.GRASS, Tiles.GRASS_FLOWERS);
 					}
@@ -92,7 +94,7 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate trees (only on land tiles)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (treeNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1 > Math.random() && chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
+				if (treeNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
 					chunk.setTileAt(x, y, Tiles.TREE);
 				}
 			}

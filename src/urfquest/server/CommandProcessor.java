@@ -60,11 +60,11 @@ public class CommandProcessor {
 								m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
 							} else {
 								p = server.getState().getPlayer(playerID);
-								double[] pos = p.getCenter();
+								double[] pos = p.getPos();
 								m.payload = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos[0] + "," + pos[1] + ")");
 							}
 						} else {
-							double[] pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getCenter();
+							double[] pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientID)).getPos();
 							m.payload = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos[0] + "," + pos[1] + ")");
 						}
 
@@ -105,7 +105,8 @@ public class CommandProcessor {
 						Message m = new Message();
 						m.type = MessageType.CHAT_MESSAGE;
 						String thisPlayerName = server.getUserMap().getPlayerNameFromClientId(clientID);
-						m.payload = new ChatMessage(ChatMessage.serverSource, thisPlayerName + " " + String.join(" ", args));
+						args[0] = "";
+						m.payload = new ChatMessage(ChatMessage.serverSource, thisPlayerName + String.join(" ", args));
 						server.sendMessageToAllClients(m);
 					}
 		};

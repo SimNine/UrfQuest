@@ -14,13 +14,15 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 	private SimplexNoiseClass stoneNoise;
 	private SimplexNoiseClass oreNoise;
 	
-	public TerrainGeneratorCaves() {
-		terrainNoise = new SimplexNoiseClass((float) 0.01);
-		distortionNoise = new SimplexNoiseClass((float) 0.04);
-		distortionDistribution = new SimplexNoiseClass((float) 0.04);
+	public TerrainGeneratorCaves(long seed) {
+		super(seed);
+		
+		terrainNoise = new SimplexNoiseClass(seed, (float) 0.01);
+		distortionNoise = new SimplexNoiseClass(seed, (float) 0.04);
+		distortionDistribution = new SimplexNoiseClass(seed, (float) 0.04);
 
-		stoneNoise = new SimplexNoiseClass((float) 0.04);
-		oreNoise = new SimplexNoiseClass((float) 0.04);
+		stoneNoise = new SimplexNoiseClass(seed, (float) 0.04);
+		oreNoise = new SimplexNoiseClass(seed, (float) 0.04);
 	}
 	
 	public MapChunk generateChunk(int xChunk, int yChunk) {
@@ -59,7 +61,7 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate stone veins
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (stoneNoise.getNoiseAt(x, y)*2 - 1 > Math.random() && chunk.getTileTypeAt(x, y) == Tiles.DIRT) {
+				if (stoneNoise.getNoiseAt(x, y)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tiles.DIRT) {
 					chunk.setTileAt(x, y, Tiles.STONE);
 				}
 			}

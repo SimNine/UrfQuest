@@ -57,7 +57,6 @@ public class Map {
 		minimap = new BufferedImage(localChunks.length * Constants.MAP_CHUNK_SIZE, 
 									localChunks[0].length * Constants.MAP_CHUNK_SIZE, 
 									BufferedImage.TYPE_4BYTE_ABGR);
-		System.out.println("Map of size " + minimap.getHeight());
 	}
 
 	/*

@@ -60,16 +60,16 @@ public class Map {
 		case EMPTY_MAP:
 			break;
 		case SIMPLEX_MAP:
-			generator = new TerrainGeneratorSimplex();
+			generator = new TerrainGeneratorSimplex(server.randomLong());
 			break;
 		case SAVANNAH_MAP:
-			generator = new TerrainGeneratorSavannah();
+			generator = new TerrainGeneratorSavannah(server.randomLong());
 			break;
 		case TEMPLATE_MAP:
-			generator = new TerrainGeneratorTemplate();
+			generator = new TerrainGeneratorTemplate(server.randomLong());
 			break;
 		case CAVE_MAP:
-			generator = new TerrainGeneratorCaves();
+			generator = new TerrainGeneratorCaves(server.randomLong());
 			// generateRogues();
 			// generateCyclopses();
 			break;
@@ -267,8 +267,8 @@ public class Map {
 //	private void updateTiles() {
 //		HashSet<Pair<Integer, Integer>> set = new HashSet<Pair<Integer, Integer>>();
 //		for (int i = 0; i < 20; i++) {
-//			int x = (int)(Math.random()*chunks.length);
-//			int y = (int)(Math.random()*chunks[0].length);
+//			int x = (int)(server.random()*chunks.length);
+//			int y = (int)(server.random()*chunks[0].length);
 //			set.add(new Pair<Integer, Integer>(x, y));
 //		}
 //		
@@ -289,7 +289,7 @@ public class Map {
 //				if (getTileTypeAt(p.a - 1, p.b) == Tiles.GRASS) {
 //					chance += 0.25;
 //				}
-//				if (chance > Math.random()) {
+//				if (chance > server.random()) {
 //					setTileAt(p.a, p.b, Tiles.GRASS);
 //				}
 //				break;
@@ -298,13 +298,13 @@ public class Map {
 //					getTileTypeAt(p.a, p.b - 1) == Tiles.TREE ||
 //					getTileTypeAt(p.a + 1, p.b) == Tiles.TREE ||
 //					getTileTypeAt(p.a - 1, p.b) == Tiles.TREE) {
-//					if (Math.random() < 0.1) {
+//					if (server.random() < 0.1) {
 //						setTileAt(p.a, p.b, Tiles.TREE);
 //					}
 //				}
 //				break;
 //			case Tiles.TREE:
-//				if (Math.random() < 0.18) {
+//				if (server.random() < 0.18) {
 //					setTileAt(p.a, p.b, Tiles.GRASS);
 //				}
 //				break;
@@ -328,27 +328,27 @@ public class Map {
 //		}
 //		for (int x = 1; x < width - 1; x++) {
 //			for (int y = 1; y < height - 1; y++) {
-//				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT);
+//				if (server.random() < .1) setTileAt(x, y, Tiles.DIRT);
 //			}
 //		}
 //		for (int x = 2; x < width - 2; x++) {
 //			for (int y = 2; y < height - 2; y++) {
-//				if (Math.random() < .2) setTileAt(x, y, Tiles.DIRT);
+//				if (server.random() < .2) setTileAt(x, y, Tiles.DIRT);
 //			}
 //		}
 //		for (int x = 3; x < width - 3; x++) {
 //			for (int y = 3; y < height - 3; y++) {
-//				if (Math.random() < .4) setTileAt(x, y, Tiles.DIRT);
+//				if (server.random() < .4) setTileAt(x, y, Tiles.DIRT);
 //			}
 //		}
 //		for (int x = 4; x < width - 4; x++) {
 //			for (int y = 4; y < height - 4; y++) {
-//				if (Math.random() < .9) setTileAt(x, y, Tiles.DIRT);
+//				if (server.random() < .9) setTileAt(x, y, Tiles.DIRT);
 //			}
 //		}
 //		for (int x = 5; x < width - 5; x++) {
 //			for (int y = 5; y < height - 5; y++) {
-//				if (Math.random() < .1) setTileAt(x, y, Tiles.DIRT_BOULDER);
+//				if (server.random() < .1) setTileAt(x, y, Tiles.DIRT_BOULDER);
 //				else setTileAt(x, y, Tiles.DIRT);
 //			}
 //		}
@@ -378,11 +378,11 @@ public class Map {
 	}
 	
 	private void findHomeCoords() {
-		int spawnCenterX = (int)((Math.random()-0.5)*10);
-		int spawnCenterY = (int)((Math.random()-0.5)*10);
+		int spawnCenterX = (int)((server.randomDouble()-0.5)*10);
+		int spawnCenterY = (int)((server.randomDouble()-0.5)*10);
 		while (!Tiles.isWalkable(getTileTypeAt(spawnCenterX, spawnCenterY))) {
-			spawnCenterX = (int)((Math.random()-0.5)*10);
-			spawnCenterY = (int)((Math.random()-0.5)*10);
+			spawnCenterX = (int)((server.randomDouble()-0.5)*10);
+			spawnCenterY = (int)((server.randomDouble()-0.5)*10);
 		}
 		
 		homeCoords[0] = spawnCenterX;
@@ -409,7 +409,7 @@ public class Map {
 //		ArrayList<Mob> mobs = new ArrayList<Mob>();
 //		for (int x = 0; x < tileTypes.length; x++) {
 //			for (int y = 0; y < tileTypes[0].length; y++) {
-//				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.001) {
+//				if (Tiles.isWalkable(tileTypes[x][y]) && server.random() < 0.001) {
 //					mobs.add(new Chicken(x, y, this));
 //				}
 //			}
@@ -421,7 +421,7 @@ public class Map {
 //		ArrayList<Mob> mobs = new ArrayList<Mob>();
 //		for (int x = 0; x < tileTypes.length; x++) {
 //			for (int y = 0; y < tileTypes[0].length; y++) {
-//				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.001) {
+//				if (Tiles.isWalkable(tileTypes[x][y]) && server.random() < 0.001) {
 //					mobs.add(new Cyclops(x, y, this));
 //				}
 //			}
@@ -433,7 +433,7 @@ public class Map {
 //		ArrayList<Mob> mobs = new ArrayList<Mob>();
 //		for (int x = 0; x < tileTypes.length; x++) {
 //			for (int y = 0; y < tileTypes[0].length; y++) {
-//				if (Tiles.isWalkable(tileTypes[x][y]) && Math.random() < 0.0005) {
+//				if (Tiles.isWalkable(tileTypes[x][y]) && server.random() < 0.0005) {
 //					mobs.add(new Rogue(x, y, this));
 //				}
 //			}
@@ -445,8 +445,8 @@ public class Map {
 //		ArrayList<Item> items = new ArrayList<Item>();
 //		for (int x = 0; x < tileTypes.length; x++) {
 //			for (int y = 0; y < tileTypes[0].length; y++) {
-//				if (tileTypes[x][y] == 2 && Math.random() < 0.005) {
-//					double rand = Math.random();
+//				if (tileTypes[x][y] == 2 && server.random() < 0.005) {
+//					double rand = server.random();
 //					if (rand > .9975) {
 //						items.add(new Item(x, y, Item.CHEESE, this));
 //					} else {

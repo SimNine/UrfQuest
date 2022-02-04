@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
@@ -23,6 +24,8 @@ import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
 public class Server {
+	private long seed;
+	private Random random;
     
 	private State state;
 	
@@ -35,7 +38,10 @@ public class Server {
 	
 	private Logger logger;
 	
-	public Server(int seed) {
+	public Server(long seed) {
+		this.seed = seed;
+		this.random = new Random(seed);
+		
 		this.setState(new State(this));
         this.getState().setGameRunning(true);
         
@@ -44,11 +50,8 @@ public class Server {
         this.serverSocket = null;
 	}
 
-	public Server(int seed, int port) {
-		this.setState(new State(this));
-        this.getState().setGameRunning(true);
-        
-        this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
+	public Server(long seed, int port) {
+		this(seed);
 		
 		try {
 			serverSocket = new ServerSocket(port);
@@ -266,5 +269,21 @@ public class Server {
 	
 	public void addClient(int clientID, ClientThread clientThread) {
 		this.clients.put(clientID, clientThread);
+	}
+	
+	/*
+	 * Methods for generating random values
+	 */
+	
+	public long seed() {
+		return this.seed;
+	}
+	
+	public double randomDouble() {
+		return this.random.nextDouble();
+	}
+	
+	public long randomLong() {
+		return this.random.nextLong();
 	}
 }

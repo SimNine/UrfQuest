@@ -1,7 +1,6 @@
 package urfquest.server.map;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SimplexNoiseClass {
 	private int grad3[][] = { { 1, 1, 0 }, { -1, 1, 0 }, { 1, -1, 0 }, { -1, -1, 0 }, { 1, 0, 1 }, { -1, 0, 1 },
@@ -101,13 +100,13 @@ public class SimplexNoiseClass {
 	
 	private float frequency;
 	
-	public SimplexNoiseClass(float freq) {
+	public SimplexNoiseClass(long seed, float freq) {
 		this.frequency = freq;
 		
 		for (int i = 0; i < 512; i++)
 			perm[i] = p[i & 255];
 
-		Random rnd = ThreadLocalRandom.current();
+		Random rnd = new Random(seed);
 		for (int i = p.length - 1; i > 0; i--) {
 			int index = rnd.nextInt(i + 1);
 			// Simple swap

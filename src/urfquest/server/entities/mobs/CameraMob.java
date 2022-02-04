@@ -16,7 +16,7 @@ public class CameraMob extends Mob {
 	public CameraMob(Server srv, State s, Map m, double x, double y, int mode) {
 		super(srv, s, m, x, y);
 		velocity = 0.01;
-		direction = (int)(Math.random()*360.0);
+		direction = (int)(server.randomDouble()*360.0);
 		health = 100.0;
 		maxHealth = 100.0;
 		routine = new IdleRoutine(this);

@@ -65,7 +65,7 @@ public class Chicken extends Mob {
 	}
 	
 	public void onDeath() {
-		if (Math.random() > 0.5) {
+		if (server.randomDouble() > 0.5) {
 			this.map.addItem(new Item(this.server, this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 4));
 		}
 	}
