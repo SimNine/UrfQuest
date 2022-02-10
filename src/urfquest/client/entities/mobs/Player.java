@@ -31,31 +31,31 @@ public class Player extends Mob {
 	public static void initGraphics() {
 		// Load E-W
 		try {
-			img[0][0] = img[0][4] = img[4][0] = img[4][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E1.png"));
+			img[0][0] = img[0][4] = img[4][0] = img[4][4] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "E1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "E1.png");
 		}
 		try {
-			img[0][1] = img[0][3] = img[4][1] = img[4][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E2.png"));
+			img[0][1] = img[0][3] = img[4][1] = img[4][3] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "E2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "E2.png");
 		}
 		try {
-			img[0][2] = img[4][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E3.png"));
+			img[0][2] = img[4][2] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "E3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "E3.png");
 		}
 		try {
-			img[0][5] = img[0][7] = img[4][5] = img[4][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E6.png"));
+			img[0][5] = img[0][7] = img[4][5] = img[4][7] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "E6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "E6.png");
 		}
 		try {
-			img[0][6] = img[4][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "E7.png"));
+			img[0][6] = img[4][6] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "E7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "E7.png");
@@ -63,31 +63,31 @@ public class Player extends Mob {
 		
 		// Load NE-SW
 		try {
-			img[7][0] = img[7][4] = img[3][0] = img[3][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE1.png"));
+			img[7][0] = img[7][4] = img[3][0] = img[3][4] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NE1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE1.png");
 		}
 		try {
-			img[7][1] = img[7][3] = img[3][1] = img[3][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE2.png"));
+			img[7][1] = img[7][3] = img[3][1] = img[3][3] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NE2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE2.png");
 		}
 		try {
-			img[7][2] = img[3][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE3.png"));
+			img[7][2] = img[3][2] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NE3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE3.png");
 		}
 		try {
-			img[7][5] = img[7][7] = img[3][5] = img[3][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE6.png"));
+			img[7][5] = img[7][7] = img[3][5] = img[3][7] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NE6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE6.png");
 		}
 		try {
-			img[7][6] = img[3][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NE7.png"));
+			img[7][6] = img[3][6] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NE7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NE7.png");
@@ -95,31 +95,31 @@ public class Player extends Mob {
 		
 		// Load NW-SE
 		try {
-			img[5][0] = img[5][4] = img[1][0] = img[1][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW1.png"));
+			img[5][0] = img[5][4] = img[1][0] = img[1][4] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NW1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW1.png");
 		}
 		try {
-			img[5][1] = img[5][3] = img[1][1] = img[1][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW2.png"));
+			img[5][1] = img[5][3] = img[1][1] = img[1][3] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NW2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW2.png");
 		}
 		try {
-			img[5][2] = img[1][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW3.png"));
+			img[5][2] = img[1][2] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NW3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW3.png");
 		}
 		try {
-			img[5][5] = img[5][7] = img[1][5] = img[1][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW6.png"));
+			img[5][5] = img[5][7] = img[1][5] = img[1][7] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NW6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW6.png");
 		}
 		try {
-			img[5][6] = img[1][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "NW7.png"));
+			img[5][6] = img[1][6] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "NW7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "NW7.png");
@@ -127,31 +127,31 @@ public class Player extends Mob {
 		
 		// Load north-south
 		try {
-			img[6][0] = img[6][4] = img[2][0] = img[2][4] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N1.png"));
+			img[6][0] = img[6][4] = img[2][0] = img[2][4] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "N1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "N1.png");
 		}
 		try {
-			img[6][1] = img[6][3] = img[2][1] = img[2][3] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N2.png"));
+			img[6][1] = img[6][3] = img[2][1] = img[2][3] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "N2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "N2.png");
 		}
 		try {
-			img[6][2] = img[2][2] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N3.png"));
+			img[6][2] = img[2][2] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "N3.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "N3.png");
 		}
 		try {
-			img[6][5] = img[6][7] = img[2][5] = img[2][7] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N6.png"));
+			img[6][5] = img[6][7] = img[2][5] = img[2][7] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "N6.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "N6.png");
 		}
 		try {
-			img[6][6] = img[2][6] = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "N7.png"));
+			img[6][6] = img[2][6] = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "N7.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Main.mainLogger.error("Image could not be read at: " + assetPath + "N7.png");

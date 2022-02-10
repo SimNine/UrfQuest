@@ -16,7 +16,7 @@ public class Chicken extends Mob {
 	
 	static {
 		try {
-			pic = ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(assetPath + "chicken_scaled_30px.png"));
+			pic = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "chicken_scaled_30px.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Image could not be read at: " + assetPath + "chicken_scaled_30px.png");

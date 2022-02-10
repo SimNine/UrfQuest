@@ -22,13 +22,21 @@ public class ClientThread {
 	
 	private boolean stopped;
 	
+	private int commandPermissions;
+	
 	public int id;
-
-	public ClientThread(Server serv, Socket s) {
+	
+	private ClientThread(Server serv) {
 		this.server = serv;
 		this.id = IDGenerator.newID();
-		this.server.getLogger().info("new client has connected with id " + this.id);
+		this.setCommandPermissions(CommandPermissions.NORMAL);
+		this.stopped = false;
+	}
 
+	public ClientThread(Server serv, Socket s) {
+		this(serv);
+		this.server.getLogger().info("new remote client has connected with id " + this.id);
+		
 		this.client = null;
 		this.socket = s;
 		try {
@@ -37,19 +45,14 @@ public class ClientThread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		this.stopped = false;
 	}
 	
 	public ClientThread(Server serv, Client c) {
-		this.server = serv;
-		this.id = IDGenerator.newID();
+		this(serv);
 		this.server.getLogger().info("new local client added with id " + this.id);
 		
 		this.client = c;
 		this.socket = null;
-		
-		this.stopped = false;
 	}
 
 	public void mainLoop() {
@@ -97,5 +100,13 @@ public class ClientThread {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int getCommandPermissions() {
+		return commandPermissions;
+	}
+
+	public void setCommandPermissions(int commandPermissions) {
+		this.commandPermissions = commandPermissions;
 	}
 }

@@ -62,7 +62,7 @@ public class Item extends Entity {
 	
 	private static void initItemPics() {
 		try {
-			Class<?> c = Main.mainLogger.getClass();
+			Class<?> c = Main.self.getClass();
 			itemImages[0] = ImageIO.read(c.getResourceAsStream(assetPath + "astralRune_scaled_30px.png"));
 			itemImages[1] = ImageIO.read(c.getResourceAsStream(assetPath + "cosmicRune_scaled_30px.png"));
 			itemImages[2] = ImageIO.read(c.getResourceAsStream(assetPath + "lawRune_scaled_30px.png"));

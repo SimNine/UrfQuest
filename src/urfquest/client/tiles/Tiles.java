@@ -122,7 +122,7 @@ public class Tiles {
 	
 	private static BufferedImage loadImage(String s) {
 		try {
-			return ImageIO.read(Main.mainLogger.getClass().getResourceAsStream(tileRoot + s));
+			return ImageIO.read(Main.self.getClass().getResourceAsStream(tileRoot + s));
 		} catch (IOException e) {
 			Main.mainLogger.error("this was unable to be loaded: " + s);
 			e.printStackTrace();

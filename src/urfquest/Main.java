@@ -14,6 +14,9 @@ import urfquest.server.Server;
 
 public class Main {
 	
+	// reference to instance of self. necessary for initialization of resources
+	public static Main self = new Main();
+	
 	// logger
 	public static Logger mainLogger;
 	
@@ -21,12 +24,12 @@ public class Main {
 	private static String ip = "localhost";
 	private static int port = 7096;
 	private static StartupMode mode = StartupMode.FULL;
+	private static String playerName = "playerName";
 	
 	public static void main(String[] args) {
 		mainLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
 		
 		// check for proper number of arguments
-		String playerName = "playerName";
 		if (args.length == 3) {
 			ip = args[0];
 			port = Integer.parseInt(args[1]);

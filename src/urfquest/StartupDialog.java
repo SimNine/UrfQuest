@@ -27,6 +27,15 @@ public class StartupDialog implements ActionListener {
 		portNum = new JTextField(defaultPortNum, 10);
 		playerName = new JTextField(defaultPlayerName, 10);
 		
+		// set up text input panel
+		JPanel textInputPanel = new JPanel(new GridLayout(3, 2));
+		textInputPanel.add(new JLabel("IP:"));
+		textInputPanel.add(ip);
+		textInputPanel.add(new JLabel("Port:"));
+		textInputPanel.add(portNum);
+		textInputPanel.add(new JLabel("Player Name:"));
+		textInputPanel.add(playerName);
+		
 		// set up mode radio buttons
 		JRadioButton serverOnly = new JRadioButton(SERVER_ONLY_STRING);
 		serverOnly.setActionCommand(SERVER_ONLY_STRING);
@@ -61,15 +70,6 @@ public class StartupDialog implements ActionListener {
 		modeRadioPanel.add(serverOnly);
 		modeRadioPanel.add(clientOnly);
 		modeRadioPanel.add(clientServer);
-		
-		// set up text input panel
-		JPanel textInputPanel = new JPanel(new GridLayout(3, 2));
-		textInputPanel.add(new JLabel("IP:"));
-		textInputPanel.add(ip);
-		textInputPanel.add(new JLabel("Port:"));
-		textInputPanel.add(portNum);
-		textInputPanel.add(new JLabel("Player Name:"));
-		textInputPanel.add(playerName);
 		
 		// create whole panel
 		JPanel myPanel = new JPanel(new GridLayout(0, 1));

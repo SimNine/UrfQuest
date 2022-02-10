@@ -29,6 +29,11 @@ class OtherPlayerMovementTest {
 		Main.mainLogger = new Logger(LogLevel.LOG_ALL, "MAIN");
 		
 		s.attachLocalClient(c1);
+		// TODO: The following line is necessary because of a concurrency bug of some kind.
+		// It appears that the attachLocal above and the attachLocal below run in such a way that
+		// the c1's player is not added to the server map's list of players.
+		// With this line added, the server seems to add the clients' players correctly.
+		Thread.sleep(100);
 		s.attachLocalClient(c2);
 	}
 	

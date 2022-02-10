@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
 import urfquest.client.entities.mobs.Player;
+import urfquest.server.CommandPermissions;
 import urfquest.server.Server;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
@@ -37,6 +38,9 @@ class TpCommandTest {
 		
 		s.attachLocalClient(c1);
 		s.attachLocalClient(c2);
+		
+		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.OP);
+		s.getClient(c2.getClientID()).setCommandPermissions(CommandPermissions.OP);
 	}
 
 	@AfterEach

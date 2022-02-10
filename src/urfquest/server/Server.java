@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import urfquest.IDGenerator;
 import urfquest.Logger;
 import urfquest.Logger.LogLevel;
 import urfquest.client.Client;
@@ -25,6 +26,7 @@ import urfquest.shared.message.MessageType;
 public class Server {
 	private long seed;
 	private Random random;
+	private int id;
     
 	private State state;
 	
@@ -40,6 +42,7 @@ public class Server {
 	public Server(long seed) {
 		this.seed = seed;
 		this.random = new Random(seed);
+		this.id = IDGenerator.newID();
 		
 		this.setState(new State(this));
         this.getState().setGameRunning(true);
@@ -58,6 +61,10 @@ public class Server {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+	
+	public int getServerID() {
+		return this.id;
 	}
 	
 	public Logger getLogger() {
@@ -184,11 +191,10 @@ public class Server {
 				
 				ChatMessage chatMessage = (ChatMessage)m.payload;
 				chatMessage.source = p.getName();
-				
 				chatMessages.addFirst(chatMessage);
 				
 				if (chatMessage.message.charAt(0) == '/') {
-					CommandProcessor.processCommand(this, chatMessage.message, m.clientID);
+					CommandProcessor.processCommand(this, chatMessage.message, c);
 				} else {
 					m.entityName = p.getName();
 					this.sendMessageToAllClients(m);
@@ -229,18 +235,6 @@ public class Server {
 		return chatMessages;
 	}
 	
-	public void attachLocalClient(Client c) {
-		ClientThread t = new ClientThread(this, c);
-		clients.put(t.id, t);
-		
-		// send connection confirmation message
-		Message m = new Message();
-		m.type = MessageType.CONNECTION_CONFIRMED;
-		m.clientID = t.id;
-		m.mapID = state.getSurfaceMap().id;
-		t.send(m);
-	}
-	
 	public void shutdown() {
 		// close server
 		try {
@@ -263,8 +257,28 @@ public class Server {
 		return this.serverSocket;
 	}
 	
+	/*
+	 * Methods for managing clients
+	 */
+	
+	public void attachLocalClient(Client c) {
+		ClientThread t = new ClientThread(this, c);
+		clients.put(t.id, t);
+		
+		// send connection confirmation message
+		Message m = new Message();
+		m.type = MessageType.CONNECTION_CONFIRMED;
+		m.clientID = t.id;
+		m.mapID = state.getSurfaceMap().id;
+		t.send(m);
+	}
+	
 	public void addClient(int clientID, ClientThread clientThread) {
 		this.clients.put(clientID, clientThread);
+	}
+	
+	public ClientThread getClient(int clientID) {
+		return clients.get(clientID);
 	}
 	
 	/*

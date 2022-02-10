@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
 import urfquest.server.Command;
+import urfquest.server.CommandPermissions;
 import urfquest.server.CommandProcessor;
 import urfquest.server.Server;
 import urfquest.shared.ChatMessage;
@@ -44,7 +45,9 @@ class HelpCommandTest {
 	}
 
 	@Test
-	void testHelpCommand() {
+	void testHelpCommandPermissionsServer() {
+		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.SERVER);
+		
 		String messageText = "/help";
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
@@ -57,6 +60,72 @@ class HelpCommandTest {
 		c1.send(m);
 
 		Assertions.assertEquals(CommandProcessor.commands.size(), c1.getAllChatMessages().size());
+		Assertions.assertEquals(1, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
+	}
+
+	@Test
+	void testHelpCommandPermissionsOp() {
+		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.OP);
+		
+		String messageText = "/help";
+
+		Assertions.assertEquals(0, c1.getAllChatMessages().size());
+		Assertions.assertEquals(0, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Message m = new Message();
+		m.type = MessageType.CHAT_MESSAGE;
+		m.payload = new ChatMessage(null, messageText);
+		c1.send(m);
+
+		Assertions.assertEquals(6, c1.getAllChatMessages().size());
+		Assertions.assertEquals(1, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
+	}
+
+	@Test
+	void testHelpCommandPermissionsNormal() {
+		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.NORMAL);
+		
+		String messageText = "/help";
+
+		Assertions.assertEquals(0, c1.getAllChatMessages().size());
+		Assertions.assertEquals(0, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Message m = new Message();
+		m.type = MessageType.CHAT_MESSAGE;
+		m.payload = new ChatMessage(null, messageText);
+		c1.send(m);
+
+		Assertions.assertEquals(4, c1.getAllChatMessages().size());
+		Assertions.assertEquals(1, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
+	}
+
+	@Test
+	void testHelpCommandPermissionsGuest() {
+		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.GUEST);
+		
+		String messageText = "/help";
+
+		Assertions.assertEquals(0, c1.getAllChatMessages().size());
+		Assertions.assertEquals(0, s.getAllChatMessages().size());
+		Assertions.assertEquals(0, c2.getAllChatMessages().size());
+		
+		Message m = new Message();
+		m.type = MessageType.CHAT_MESSAGE;
+		m.payload = new ChatMessage(null, messageText);
+		c1.send(m);
+
+		Assertions.assertEquals(2, c1.getAllChatMessages().size());
 		Assertions.assertEquals(1, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
