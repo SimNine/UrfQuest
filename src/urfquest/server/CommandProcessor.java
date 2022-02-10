@@ -36,7 +36,7 @@ public class CommandProcessor {
 								payloadMessage = c.base + " " + c.usage + " - " + c.description;
 							}
 							m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
-							server.sendMessageToSingleClient(m, clientThreadID);
+							server.sendMessageToClientOrServer(m, clientThreadID);
 						} else {
 							for (Command c : CommandProcessor.commands.values()) {
 								if (clientThread != null && c.permissionLevel < clientThread.getCommandPermissions()) {
@@ -47,7 +47,7 @@ public class CommandProcessor {
 								m.type = MessageType.CHAT_MESSAGE;
 								String payloadMessage = c.base + " " + c.usage + " - " + c.description;
 								m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
-								server.sendMessageToSingleClient(m, clientThreadID);
+								server.sendMessageToClientOrServer(m, clientThreadID);
 							}
 						}
 					}
@@ -81,7 +81,7 @@ public class CommandProcessor {
 						}
 
 						int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
-						server.sendMessageToSingleClient(m, clientThreadID);
+						server.sendMessageToClientOrServer(m, clientThreadID);
 					}
 		};
 		commands.put("getpos", getPosCommand);
@@ -105,7 +105,7 @@ public class CommandProcessor {
 						m.payload = new ChatMessage(ChatMessage.serverSource, payloadString);
 
 						int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
-						server.sendMessageToSingleClient(m, clientThreadID);
+						server.sendMessageToClientOrServer(m, clientThreadID);
 					}
 		};
 		commands.put("list", listCommand);
@@ -219,7 +219,7 @@ public class CommandProcessor {
 		m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
 		
 		int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
-		server.sendMessageToSingleClient(m, clientThreadID);
+		server.sendMessageToClientOrServer(m, clientThreadID);
 	}
 
 	public static void processCommand(Server server, String commandStr, ClientThread clientThread) {
@@ -237,6 +237,7 @@ public class CommandProcessor {
 		// if this was sent by the server console, run it immediately
 		if (clientThread == null) {
 			command.runCommand(server, tokens, null);
+			return;
 		}
 		
 		// if this was sent by a user, check their permissions

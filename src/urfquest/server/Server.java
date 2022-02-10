@@ -1,6 +1,8 @@
 package urfquest.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ public class Server {
 	
 	private Logger logger;
 	
+	private Thread commandParserThread;
+	
 	public Server(long seed) {
 		this.seed = seed;
 		this.random = new Random(seed);
@@ -61,6 +65,26 @@ public class Server {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		commandParserThread = new Thread(new Runnable() {
+			public void run() {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+				while (true) {
+					try {
+						String line = reader.readLine();
+						
+						Message m = new Message();
+						m.clientID = id;
+						m.type = MessageType.CHAT_MESSAGE;
+						m.payload = new ChatMessage("SERVER", line);
+						incomingMessages.add(m);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		commandParserThread.start();
 	}
 	
 	public int getServerID() {
@@ -186,17 +210,20 @@ public class Server {
 			}
 			case CHAT_MESSAGE: {
 				this.getLogger().info(m.clientID + " - " + m.toString());
-				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
-				Player p = state.getPlayer(playerID);
 				
 				ChatMessage chatMessage = (ChatMessage)m.payload;
-				chatMessage.source = p.getName();
+				if (m.clientID == this.id) {
+					chatMessage.source = "SERVER";
+				} else {
+					int playerID = userMap.getPlayerIdFromClientId(m.clientID);
+					Player p = state.getPlayer(playerID);
+					chatMessage.source = p.getName();
+				}
 				chatMessages.addFirst(chatMessage);
 				
 				if (chatMessage.message.charAt(0) == '/') {
 					CommandProcessor.processCommand(this, chatMessage.message, c);
 				} else {
-					m.entityName = p.getName();
 					this.sendMessageToAllClients(m);
 				}
 				break;
@@ -205,6 +232,14 @@ public class Server {
 				this.getLogger().debug(m.clientID + " - " + m.toString());
 				break;
 			}
+		}
+	}
+	
+	public void sendMessageToClientOrServer(Message m, int id) {
+		if (id == this.id) {
+			System.out.println(((ChatMessage)m.payload).message);
+		} else {
+			sendMessageToSingleClient(m, id);
 		}
 	}
 	
