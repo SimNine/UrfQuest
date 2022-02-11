@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import urfquest.IDGenerator;
@@ -33,7 +30,7 @@ public class Server {
 	private State state;
 	
 	private ServerSocket serverSocket = null;
-	private List<Message> incomingMessages = Collections.synchronizedList(new ArrayList<Message>());
+	private MessageQueue incomingMessages = new MessageQueue();
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private UserMap userMap = new UserMap();
 	
@@ -99,14 +96,11 @@ public class Server {
 		incomingMessages.add(m);
 	}
 
-	// TODO: make this loop's thread sleep until a message is recieved
 	public void mainLoop() {
 		this.logger.all("Main loop started");
 		while (true) {
-			if (incomingMessages.size() > 0) {
-				Message m = incomingMessages.remove(0);
-				processMessage(m);
-			}
+			Message m = incomingMessages.poll();
+			this.processMessage(m);
 		}
 	}
 	
