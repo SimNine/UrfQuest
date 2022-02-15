@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import urfquest.Logger;
+import urfquest.LogLevel;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.GUIContainer;
@@ -115,10 +115,10 @@ public class QuestPanel extends JPanel {
 						client.resetFrame(client.isFullscreen);
 					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
 						// TODO: incorporate a method to cycle through all modes
-						if (client.getLogger().getLogLevel() == Logger.LogLevel.LOG_DEBUG) {
-							client.getLogger().setLogLevel(Logger.LogLevel.LOG_WARNING);
+						if (client.getLogger().getLogLevel() == LogLevel.DEBUG) {
+							client.getLogger().setLogLevel(LogLevel.WARNING);
 						} else {
-							client.getLogger().setLogLevel(Logger.LogLevel.LOG_DEBUG);
+							client.getLogger().setLogLevel(LogLevel.DEBUG);
 						}
 					}
 				}
@@ -402,7 +402,7 @@ public class QuestPanel extends JPanel {
 			it.next().draw(g);
 		}
 		
-		if (client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());

@@ -10,7 +10,7 @@ import java.util.Random;
 
 import urfquest.IDGenerator;
 import urfquest.Logger;
-import urfquest.Logger.LogLevel;
+import urfquest.LogLevel;
 import urfquest.client.Client;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -48,7 +48,7 @@ public class Server {
 		
 		this.state = new State(this);
         
-        this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
+        this.logger = new Logger(LogLevel.DEBUG, "SERVER");
         
         this.serverSocket = null;
 	}

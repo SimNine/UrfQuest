@@ -25,9 +25,10 @@ public class Main {
 	private static int port = 7096;
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
+	private static LogLevel debugLevel = LogLevel.INFO;
 	
 	public static void main(String[] args) {
-		mainLogger = new Logger(Logger.LogLevel.LOG_DEBUG, "LAUNCHER");
+		mainLogger = new Logger(LogLevel.ALL, "LAUNCHER");
 		
 		// check for proper number of arguments
 		if (args.length == 3) {
@@ -46,6 +47,7 @@ public class Main {
 					port = Integer.parseInt(prefsReader.readLine());
 					mode = StartupMode.valueOf(Integer.parseInt(prefsReader.readLine()));
 					playerName = prefsReader.readLine();
+					debugLevel = LogLevel.valueOf(prefsReader.readLine());
 					prefsReader.close();
 				} catch (IOException e) {
 					System.err.println("Malformed prefs file. going with defaults");
@@ -71,6 +73,11 @@ public class Main {
 				break;
 			}
 			playerName = dialog.playerName.getText();
+			if (dialog.useDebug.isSelected()) {
+				debugLevel = LogLevel.DEBUG;
+			} else {
+				debugLevel = LogLevel.INFO;
+			}
 			
 			// save inputs to prefs file
 			try {
@@ -80,6 +87,7 @@ public class Main {
 				prefsWriter.println(port + "");
 				prefsWriter.println(mode.value + "");
 				prefsWriter.println(playerName);
+				prefsWriter.println(debugLevel);
 				prefsWriter.close();
 			} catch (IOException e) {
 				System.err.println("Error writing startup prefs to file");
@@ -118,6 +126,7 @@ public class Main {
 	public static void startServer(int seed, int port) {
 		mainLogger.all("Starting server on port " + port);
 		Server server = new Server(seed, port);
+		server.getLogger().setLogLevel(debugLevel);
 		server.initListenerThread();
 		Thread serverThread = new Thread(new Runnable() {
 			public void run() {
@@ -145,6 +154,7 @@ public class Main {
         
         // initialize the networking engine
         Client client = new Client(socket, playerName);
+        client.getLogger().setLogLevel(debugLevel);
         Thread clientThread = new Thread(new Runnable() {
 			@Override
 			public void run() {

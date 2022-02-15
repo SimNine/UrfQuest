@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import urfquest.Logger;
+import urfquest.LogLevel;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
@@ -92,7 +92,7 @@ public abstract class Entity {
 	 */
 	public void draw(Graphics g) {
 		drawEntity(g);
-		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			drawDebug(g);
 			drawBounds(g);
 		}

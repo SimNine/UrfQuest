@@ -3,6 +3,7 @@ package urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import urfquest.LogLevel;
 import urfquest.Logger;
 import urfquest.client.Client;
 import urfquest.client.guis.GUIAnchor;
@@ -49,7 +50,7 @@ public abstract class StatusBar extends GUIObject {
 		int pixelLength = (int)((bounds.width - borderPlusGap*2)*getPercentage());
 		g.fillRect(bounds.x + borderPlusGap, bounds.y + borderPlusGap, pixelLength, bounds.height - borderPlusGap*2);
 		
-		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

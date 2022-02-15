@@ -337,7 +337,7 @@ public class Item extends Entity {
 					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
-					if (this.server.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+					if (this.server.getLogger().getLogLevel().compareTo(LogLevel.LOG_DEBUG) >= 0) {
 						this.server.getLogger().debug("soruce: " + coords[0] + ", " + coords[1]);
 						this.server.getLogger().debug("exit: " + xHome + ", " + yHome);
 					}

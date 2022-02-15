@@ -6,17 +6,7 @@ import java.io.PrintWriter;
 
 public class Logger {
 	
-	public enum LogLevel {
-		LOG_ALL,
-		LOG_NONE,
-		LOG_ERROR,
-		LOG_WARNING,
-		LOG_INFO,
-		LOG_DEBUG,
-		LOG_VERBOSE
-	}
-	
-	private LogLevel logLevel = LogLevel.LOG_NONE;
+	private LogLevel logLevel = LogLevel.NONE;
 	
 	private String prefix;
 	
@@ -53,27 +43,27 @@ public class Logger {
 	
 	
 	public void all(String s) {
-		log("ALL: " + s, LogLevel.LOG_ALL);
+		log("ALL: " + s, LogLevel.ALL);
 	}
 	
 	public void error(String s) {
-		log("ERROR: " + s, LogLevel.LOG_ERROR);
+		log("ERROR: " + s, LogLevel.ERROR);
 	}
 	
 	public void warning(String s) {
-		log("WARNING: " + s, LogLevel.LOG_WARNING);
+		log("WARNING: " + s, LogLevel.WARNING);
 	}
 	
 	public void info(String s) {
-		log("INFO: " + s, LogLevel.LOG_INFO);
+		log("INFO: " + s, LogLevel.INFO);
 	}
 	
 	public void debug(String s) {
-		log("DEBUG: " + s, LogLevel.LOG_DEBUG);
+		log("DEBUG: " + s, LogLevel.DEBUG);
 	}
 	
 	public void verbose(String s) {
-		log("VERBOSE: " + s, LogLevel.LOG_VERBOSE);
+		log("VERBOSE: " + s, LogLevel.VERBOSE);
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,17 +18,19 @@ public class StartupDialog implements ActionListener {
 	public JTextField portNum;
 	public JTextField playerName;
 	public ButtonGroup modeGroup = new ButtonGroup();
+	public JCheckBox useDebug;
 	
 	public static final String SERVER_ONLY_STRING = "Server only";
 	public static final String CLIENT_ONLY_STRING = "Client only";
 	public static final String SERVER_CLIENT_STRING = "Both";
 	
 	public StartupDialog(String defaultIP, String defaultPortNum, StartupMode startupMode, String defaultPlayerName) {
+		
+		// set up text input panel
 		ip = new JTextField(defaultIP, 10);
 		portNum = new JTextField(defaultPortNum, 10);
 		playerName = new JTextField(defaultPlayerName, 10);
 		
-		// set up text input panel
 		JPanel textInputPanel = new JPanel(new GridLayout(3, 2));
 		textInputPanel.add(new JLabel("IP:"));
 		textInputPanel.add(ip);
@@ -71,10 +74,17 @@ public class StartupDialog implements ActionListener {
 		modeRadioPanel.add(clientOnly);
 		modeRadioPanel.add(clientServer);
 		
+		// set up toggleable options panel
+		useDebug = new JCheckBox("Debug mode");
+		
+		JPanel toggleInputPanel = new JPanel(new GridLayout(0, 1));
+		toggleInputPanel.add(useDebug);
+		
 		// create whole panel
 		JPanel myPanel = new JPanel(new GridLayout(0, 1));
 		myPanel.add(textInputPanel);
 		myPanel.add(modeRadioPanel);
+		myPanel.add(toggleInputPanel);
 		
 		int result = JOptionPane.showConfirmDialog(null, myPanel, 
 				"Enter server IP", JOptionPane.OK_CANCEL_OPTION);

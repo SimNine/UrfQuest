@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import urfquest.LogLevel;
 import urfquest.Logger;
 import urfquest.client.Client;
 import urfquest.client.guis.Clickable;
@@ -26,7 +27,7 @@ public abstract class TextButton extends TextArea implements Clickable {
 		
 		g.drawString(text, bounds.x, bounds.y + bounds.height);
 		
-		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			drawDebug(g);
 		}
 	}

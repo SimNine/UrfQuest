@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
+import urfquest.LogLevel;
 import urfquest.Logger;
 import urfquest.client.Client;
 
@@ -40,7 +41,7 @@ public class GUIContainer extends GUIObject implements Clickable {
 		for (GUIObject o : guiObjects) {
 			o.draw(g);
 		}
-		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			this.drawDebug(g);
 		}
 	}

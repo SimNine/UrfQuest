@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import urfquest.Logger;
-import urfquest.Logger.LogLevel;
+import urfquest.LogLevel;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Chicken;
 import urfquest.client.entities.mobs.Player;
@@ -51,7 +51,7 @@ public class Client {
 	
 	public Client(Server server, String playerName) {
 		this.state = new State(this);
-		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
+		this.logger = new Logger(LogLevel.DEBUG, "CLIENT");
 		this.playerName = playerName;
 		
 		this.server = server;
@@ -60,7 +60,7 @@ public class Client {
 	
 	public Client(Socket socket, String playerName) {
 		this.state = new State(this);
-		this.logger = new Logger(LogLevel.LOG_DEBUG, "CLIENT");
+		this.logger = new Logger(LogLevel.DEBUG, "CLIENT");
 		this.playerName = playerName;
 		
 		// initialize streams on the socket

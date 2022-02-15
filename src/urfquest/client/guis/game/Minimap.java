@@ -138,7 +138,7 @@ public class Minimap extends GUIObject implements Clickable {
 //			}
 //		}
 //		
-//		if (this.client.getLogger().getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+//		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.LOG_DEBUG) >= 0) {
 //			drawDebug(g);
 //		}
 	}
@@ -148,7 +148,7 @@ public class Minimap extends GUIObject implements Clickable {
 //		int yPos = Main.panel.mousePos[1] - yRoot + yCrop;
 //		Main.logger.debug(xPos + ", " + yPos);
 //		
-//		if (Main.logger.getLogLevel().compareTo(Logger.LogLevel.LOG_DEBUG) >= 0) {
+//		if (Main.logger.getLogLevel().compareTo(LogLevel.LOG_DEBUG) >= 0) {
 //			Main.client.getState().getPlayer().setPos(xPos, yPos);
 //		}
 		return true;
