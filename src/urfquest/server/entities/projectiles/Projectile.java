@@ -15,7 +15,7 @@ public abstract class Projectile extends Entity {
 		this.source = source;
 	}
 	
-	public abstract void update();
+	public abstract void tick();
 	
 	public abstract boolean isDead();
 

@@ -6,11 +6,13 @@ import urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
-	protected int direction = 0;
-	protected double velocity;
+	
+	protected Vector movementVector = new Vector(0.0, 0.0);
+	
 	protected double defaultVelocity;
 	
 	protected double health;
@@ -26,50 +28,28 @@ public abstract class Mob extends Entity {
 	protected Mob(Server srv, State s, Map m, double x, double y) {
 		super(srv, s, m, x, y);
 	}
+	
+	public void setMovementVector(Vector vector) {
+		this.movementVector = vector;
+	}
 
-	public abstract void update();
+	public abstract void tick();
 	
 	public void onDeath() {
 		// do nothing by default
 	}
 	
-	// returns true if the move is valid (in one or both directions), returns false if not
-	// if move is valid, moves the mob
-	protected boolean attemptMove(int dir, double velocity) {
-		double newX = bounds.getCenterX();
-		double newY = bounds.getCenterY();
-		double xComp = velocity*Math.cos(Math.toRadians(dir));
-		double yComp = velocity*Math.sin(Math.toRadians(dir));
-		
-		boolean ret = false;
-		
-		// attempt to move on the x-axis
-		if (Tiles.isWalkable(map.getTileTypeAt((int)(newX + xComp), (int)newY))) {
-			newX += xComp;
-			ret = true;
-		} // else (if collision) do nothing
-		
-		// attempt to move on the y-axis
-		if (Tiles.isWalkable(map.getTileTypeAt((int)newX, (int)(newY + yComp)))) {
-			newY += yComp;
-			ret = true;
-		} // else (if collision) do nothing
-		
-		bounds.setRect(newX - bounds.getWidth()/2.0, newY - bounds.getHeight()/2.0, bounds.getWidth(), bounds.getHeight());
-		return ret;
-	}
-	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public int[] tileAtDistance(double d) {
-		double xComp = d*Math.cos(Math.toRadians(direction));
-		double yComp = d*Math.sin(Math.toRadians(direction));
+		double xComp = d*Math.cos(movementVector.dirRadians);
+		double yComp = d*Math.sin(movementVector.dirRadians);
 		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
 	public int[] tileCoordsAtDistance(double d) {
-		double xComp = d*Math.cos(Math.toRadians(direction));
-		double yComp = d*Math.sin(Math.toRadians(direction));
+		double xComp = d*Math.cos(movementVector.dirRadians);
+		double yComp = d*Math.sin(movementVector.dirRadians);
 		
 		int[] ret = new int[2];
 		ret[0] = (int)(bounds.getCenterX() + xComp);
@@ -78,9 +58,8 @@ public abstract class Mob extends Entity {
 		return ret;
 	}
 
-	// setters, getters, and incrementers
-	public void setDirection(int dir) {
-		direction = dir % 360;
+	public void setDirection(double dirRadians) {
+		movementVector.dirRadians = dirRadians;
 	}
 	
 	public void setHealth(double h) {
@@ -89,11 +68,11 @@ public abstract class Mob extends Entity {
 	}
 	
 	public void setVelocity(double s) {
-		velocity = s;
+		movementVector.magnitude = s;
 	}
 	
-	public int getDirection() {
-		return direction;
+	public double getDirection() {
+		return movementVector.dirRadians;
 	}
 	
 	public double getHealth() {
@@ -101,7 +80,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	public double getVelocity() {
-		return velocity;
+		return movementVector.magnitude;
 	}
 	
 	public double getDefaultVelocity() {
@@ -113,7 +92,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	public void incrementVelocity(double amt) {
-		setVelocity(velocity + amt);
+		setVelocity(movementVector.magnitude + amt);
 	}
 	
 	public void incrementMana(double amt) {

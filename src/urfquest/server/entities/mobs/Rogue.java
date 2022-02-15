@@ -24,8 +24,9 @@ public class Rogue extends Mob {
 	public Rogue(Server srv, State s, Map m, double x, double y) {
 		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = 0.013;
+
 		defaultVelocity = 0.013;
+		movementVector.magnitude = defaultVelocity;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -48,7 +49,7 @@ public class Rogue extends Mob {
 	 * per-tick updater
 	 */
 	
-	public void update() {
+	public void tick() {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
@@ -79,7 +80,7 @@ public class Rogue extends Mob {
 		// update each entry (cooldown) in the inventory
 		for (Item i : inventory.getItems()) {
 			if (i != null) {
-				i.update();
+				i.tick();
 			}
 		}
 		
@@ -93,27 +94,28 @@ public class Rogue extends Mob {
 			thinkingDelay = intelligence;
 		}
 		
-		// get new movement vector
-		routine.update();
-		direction = routine.suggestedDirection();
-		if (routine.suggestedVelocity() == 0) {
-			inventory.setSelectedEntry((int)(server.randomDouble()*3));
-		}
-		velocity = routine.suggestedVelocity();
-		while (direction < 0) {
-			direction += 360;
-		}
-		attemptMove(direction, velocity);
-		
-		// try firing a weapon
-		//if (this.distanceTo(UrfQuest.game.getPlayer()) < 10 && this.hasClearPathTo(UrfQuest.game.getPlayer())) {
-		//	inventory.useSelectedItem();
-		//}
-		
-		// just in case something weird happens
-		if (direction > 360) {
-			direction -= 360;
-		}
+		// TODO: update all this stuff with Vectors
+//		// get new movement vector
+//		routine.update();
+//		movementVector.dirRadians = routine.suggestedDirection();
+//		if (routine.suggestedVelocity() == 0) {
+//			inventory.setSelectedEntry((int)(server.randomDouble()*3));
+//		}
+//		velocity = routine.suggestedVelocity();
+//		while (direction < 0) {
+//			direction += 360;
+//		}
+//		attemptMove(direction, velocity);
+//		
+//		// try firing a weapon
+//		//if (this.distanceTo(UrfQuest.game.getPlayer()) < 10 && this.hasClearPathTo(UrfQuest.game.getPlayer())) {
+//		//	inventory.useSelectedItem();
+//		//}
+//		
+//		// just in case something weird happens
+//		if (direction > 360) {
+//			direction -= 360;
+//		}
 	}
 	
 	private void think() {
@@ -153,10 +155,10 @@ public class Rogue extends Mob {
 		case 5:
 			if (health > 0) incrementHealth(-0.1);
 			if (mana > 0) incrementMana(-0.1);
-			if (velocity > 0.01) incrementVelocity(-0.001);
+			if (movementVector.magnitude > 0.01) incrementVelocity(-0.001);
 			break;
 		case 6:
-			if (velocity < 1) incrementVelocity(0.001);
+			if (movementVector.magnitude < 1) incrementVelocity(0.001);
 			break;
 		case 7:
 			//impossible

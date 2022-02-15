@@ -3,6 +3,7 @@ package urfquest.shared.message;
 import java.io.Serializable;
 
 import urfquest.shared.ChatMessage;
+import urfquest.shared.Vector;
 
 public class Message implements Serializable {
 	/**
@@ -18,6 +19,9 @@ public class Message implements Serializable {
 	public int[] xyChunk = new int[2];
 	
 	public double[] pos = new double[2];
+	
+	public double direction = 0.0;
+	public double velocity = 0.0;
 	
 	public int clientID = 0;
 	public int entityID = 0;
@@ -49,9 +53,11 @@ public class Message implements Serializable {
 			break;
 			
 		// only sent by client
-		case PLAYER_MOVE:
-			ret += "entityID:" + this.entityID + ",xDelt:" + pos[0] + ",yDelt:" + pos[1];
+		case PLAYER_SET_MOVE_VECTOR: {
+			Vector v = (Vector)this.payload;
+			ret += "entityID:" + this.entityID + ",direction:" + v.dirRadians + ",velocity:" + v.magnitude;
 			break;
+		}
 		case PLAYER_REQUEST:
 			ret += "name:" + entityName;
 			break;

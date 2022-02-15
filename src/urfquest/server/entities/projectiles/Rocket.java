@@ -15,7 +15,7 @@ public class Rocket extends Projectile {
 		this.direction = dir;
 	}
 
-	public void update() {
+	public void tick() {
 		this.incrementPos(velocity*Math.cos(Math.toRadians(direction)), velocity*Math.sin(Math.toRadians(direction)));
 		if(!Tiles.isPenetrable(map.getTileTypeAt((int)bounds.x, (int)bounds.y))) {
 			// animStage = 1000;

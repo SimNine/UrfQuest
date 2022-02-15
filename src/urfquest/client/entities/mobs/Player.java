@@ -15,9 +15,9 @@ import urfquest.Main;
 import urfquest.client.Client;
 import urfquest.client.entities.items.Item;
 import urfquest.client.map.Map;
-import urfquest.client.map.MapChunk;
 import urfquest.client.state.Inventory;
 import urfquest.shared.Constants;
+import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -184,40 +184,18 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public void move(double x, double y) {
-		if (x == 0) {
-			if (y == 1) {
-				direction = 90;
-			} else if (y == -1) {
-				direction = 270;
-			}
-		} else if (x == 1) {
-			if (y == 1) {
-				direction = 45;
-			} else if (y == -1) {
-				direction = 315;
-			} else if (y == 0) {
-				direction = 0;
-			}
-		} else if (x == -1) {
-			if (y == 1) {
-				direction = 135;
-			} else if (y == -1) {
-				direction = 225;
-			} else if (y == 0) {
-				direction = 180;
-			}
-		}
-		
-		double dirRadians = Math.toRadians(direction);
-		double xComp = velocity*Math.cos(dirRadians);
-		double yComp = velocity*Math.sin(dirRadians);
-		
-		super.move(xComp, yComp);
+	public void setMovementVector(double dirRadians, double velocity) {
+		this.velocity = velocity;
+		this.direction = dirRadians;
+
+		// TODO: re-add this after implementing client tick
+		//double xComp = velocity*Math.cos(direction);
+		//double yComp = velocity*Math.sin(direction);
+		//super.move(xComp, yComp);
 		
 		Message m = new Message();
-		m.type = MessageType.PLAYER_MOVE;
-		m.pos = new double[]{xComp, yComp};
+		m.type = MessageType.PLAYER_SET_MOVE_VECTOR;
+		m.payload = new Vector(direction, velocity);
 		this.client.send(m);
 	}
 	
@@ -386,7 +364,7 @@ public class Player extends Mob {
 			animStage = -1;
 		}
 		
-		g.drawImage(img[(int)direction/45][animStage/STEP_SIZE], 
+		g.drawImage(img[(int)(direction/(Math.PI/4.0))][animStage/STEP_SIZE], 
 					client.getPanel().gameToWindowX(bounds.getX()), 
 					client.getPanel().gameToWindowY(bounds.getY()), 
 					null);

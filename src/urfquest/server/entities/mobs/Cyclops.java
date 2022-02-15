@@ -22,9 +22,9 @@ public class Cyclops extends Mob {
 		bounds = new Rectangle2D.Double(x, y, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
-		
-		velocity = 0.01;
+
 		defaultVelocity = 0.01;
+		movementVector.magnitude = 0.01;
 		
 		health = 50.0;
 		maxHealth = 50.0;
@@ -39,7 +39,7 @@ public class Cyclops extends Mob {
 		thinkingDelay = intelligence;
 	}
 
-	public void update() {
+	public void tick() {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
@@ -51,11 +51,12 @@ public class Cyclops extends Mob {
 			thinkingDelay = intelligence;
 		}
 	
+		// TODO: update with Vector
 		// get new movement vector
-		routine.update();
-		direction = routine.suggestedDirection();
-		velocity = routine.suggestedVelocity();
-		attemptMove(direction, velocity);
+//		routine.update();
+//		direction = routine.suggestedDirection();
+//		velocity = routine.suggestedVelocity();
+//		attemptMove(direction, velocity);
 		
 		// try firing shotgun
 //		if (this.distanceTo(Main.server.getGame().getPlayer()) < 10 && 

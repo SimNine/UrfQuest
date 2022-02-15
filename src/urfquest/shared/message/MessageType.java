@@ -9,7 +9,7 @@ public enum MessageType {
 	DEBUG_PLAYER_INFO,
 	
 	// sent only by client
-	PLAYER_MOVE,
+	PLAYER_SET_MOVE_VECTOR,
 	PLAYER_REQUEST,
 	MAP_REQUEST,
 	

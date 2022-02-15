@@ -18,6 +18,7 @@ import urfquest.server.map.MapChunk;
 import urfquest.server.state.State;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
+import urfquest.shared.Vector;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -45,8 +46,7 @@ public class Server {
 		this.random = new Random(seed);
 		this.id = IDGenerator.newID();
 		
-		this.setState(new State(this));
-        this.getState().setGameRunning(true);
+		this.state = new State(this);
         
         this.logger = new Logger(LogLevel.LOG_DEBUG, "SERVER");
         
@@ -83,29 +83,47 @@ public class Server {
 		});
 		commandParserThread.start();
 	}
-	
-	public int getServerID() {
-		return this.id;
-	}
-	
-	public Logger getLogger() {
-		return this.logger;
-	}
-	
-	public void intakeMessage(Message m) {
-		incomingMessages.add(m);
-	}
 
 	public void mainLoop() {
 		this.logger.all("Main loop started");
+		
 		while (true) {
+			long startTime = System.currentTimeMillis();
+			this.tick();
+			long endTime = System.currentTimeMillis();
+			
+			long remainingTime = Constants.MILLISECONDS_PER_TICK - (endTime - startTime);
+			if (remainingTime > 0) {
+				try {
+					Thread.sleep(remainingTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void tick() {
+		while (!incomingMessages.isEmpty()) {
 			Message m = incomingMessages.poll();
 			this.processMessage(m);
+		}
+		
+		this.state.tick();
+	}
+	
+	public void tick(int numTicks) {
+		for (int i = 0; i < numTicks; i++) {
+			this.tick();
 		}
 	}
 	
 	public void initListenerThread() {
 		new ServerListenerThread(this);
+	}
+	
+	public void intakeMessage(Message m) {
+		incomingMessages.add(m);
 	}
 	
 	public void processMessage(Message m) {
@@ -128,12 +146,11 @@ public class Server {
 				userMap.addEntry(c.id, newPlayer.id, playerName);
 				break;
 			}
-			case PLAYER_MOVE: {
-				this.getLogger().verbose(m.clientID + " - " + m.toString());
-				// - Recieves a request from a client to move their player
-				// - Tests if the move is allowed; if so, does the move
-				Player movedPlayer = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
-				movedPlayer.attemptIncrementPos(m.pos[0], m.pos[1]);
+			case PLAYER_SET_MOVE_VECTOR: {
+				this.getLogger().debug(m.clientID + " - " + m.toString());
+				// - Recieves a request from a client to set the velocity and direction of their player
+				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
+				player.setMovementVector((Vector)m.payload);
 				break;
 			}
 			case MAP_REQUEST: {
@@ -223,7 +240,7 @@ public class Server {
 				break;
 			}
 			default: {
-				this.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.clientID + " - =UNKNOWN MESSAGE= - " + m.toString());
 				break;
 			}
 		}
@@ -284,6 +301,14 @@ public class Server {
 	
 	public ServerSocket getServerSocket() {
 		return this.serverSocket;
+	}
+	
+	public int getServerID() {
+		return this.id;
+	}
+	
+	public Logger getLogger() {
+		return this.logger;
 	}
 	
 	/*

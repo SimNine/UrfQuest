@@ -13,7 +13,7 @@ public class GrenadeProjectile extends Projectile {
 		bounds.setFrame(bounds.x, bounds.y, 1, 1);
 	}
 
-	public void update() {
+	public void tick() {
 		
 	}
 

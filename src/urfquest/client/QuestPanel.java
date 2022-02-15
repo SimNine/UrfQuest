@@ -28,6 +28,8 @@ import urfquest.client.guis.game.GameWeatherOverlay;
 import urfquest.client.guis.game.MapViewOverlay;
 import urfquest.client.guis.menus.KeybindingOverlay;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.Constants;
+import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -44,8 +46,17 @@ public class QuestPanel extends JPanel {
 	
 	// user input fields
 	public Set<Integer> keys = new HashSet<Integer>(0);
+	public Set<Integer> prevMovementKeys = new HashSet<Integer>();
 	public int[] mousePos = new int[2];
 	public boolean mouseDown = false;
+	
+	public static final Set<Integer> MOVEMENT_KEYS = new HashSet<Integer>();
+	static {
+		MOVEMENT_KEYS.add(KeyEvent.VK_W);
+		MOVEMENT_KEYS.add(KeyEvent.VK_A);
+		MOVEMENT_KEYS.add(KeyEvent.VK_S);
+		MOVEMENT_KEYS.add(KeyEvent.VK_D);
+	}
 	
 	private Deque<GUIContainer> overlays = new ArrayDeque<GUIContainer>();
 	public GUIContainer mainMenu;
@@ -73,7 +84,8 @@ public class QuestPanel extends JPanel {
     
     public Timer inputScanTimer = new Timer(30, new ActionListener() {
     	public void actionPerformed(ActionEvent e) {
-    		scanHeldKeys();
+    		// TODO: find a better way to scan for held keys.
+    		// scanHeldKeys();
     	}
     });
 	
@@ -93,6 +105,7 @@ public class QuestPanel extends JPanel {
 		addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				keys.add(e.getKeyCode());
+	    		scanHeldKeys();
 				
 				// if currently on the keybinding page
 				if (overlays.peek() == keybindingView) {
@@ -194,6 +207,7 @@ public class QuestPanel extends JPanel {
 			}
 			public void keyReleased(KeyEvent e) {
 				keys.remove(e.getKeyCode());
+	    		scanHeldKeys();
 				client.getLogger().verbose("key released: " + e.getKeyChar());
 			}
 			public void keyTyped(KeyEvent e) {}
@@ -240,35 +254,68 @@ public class QuestPanel extends JPanel {
 			return;
 		}
 		
-		double xDiff = 0;
-		double yDiff = 0;
+		// get the set of player movement keys that are currently held
+		Set<Integer> currentlyHeldKeys = new HashSet<>(this.keys);
+		currentlyHeldKeys.retainAll(MOVEMENT_KEYS);
+		
+		// if the set of movement keys is the same as the last set, do nothing
+		if (currentlyHeldKeys.equals(prevMovementKeys)) {
+			return;
+		}
+		
+		prevMovementKeys = currentlyHeldKeys;
+		
+		double x = 0;
+		double y = 0;
 		
 		boolean keysHeld = false;
 		
 		if (keys.contains(KeyEvent.VK_W)) {
-			yDiff += -1;
+			y += -1;
 			keysHeld = true;
 		} else if (keys.contains(KeyEvent.VK_S)) {
-			yDiff += 1;
+			y += 1;
 			keysHeld = true;
 		}
 		
 		if (keys.contains(KeyEvent.VK_A)) {
-			xDiff += -1;
+			x += -1;
 			keysHeld = true;
 		} else if (keys.contains(KeyEvent.VK_D)) {
-			xDiff += 1;
+			x += 1;
 			keysHeld = true;
 		}
 		
-		if (keysHeld) {
-			// TODO: *attempt* to move before actually moving
-			// currently, if move is invalid, server has to correct client
-			if (client.getState().getPlayer() != null) {
-				client.getState().getPlayer().move(xDiff, yDiff);
-			} else {
-				client.getState().getCamera().move(xDiff, yDiff);
+		double direction = Vector.EAST;
+		if (x == 0) {
+			if (y == 1) {
+				direction = Vector.SOUTH;
+			} else if (y == -1) {
+				direction = Vector.NORTH;
 			}
+		} else if (x == 1) {
+			if (y == 1) {
+				direction = Vector.SOUTHEAST;
+			} else if (y == -1) {
+				direction = Vector.NORTHEAST;
+			} else if (y == 0) {
+				direction = Vector.EAST;
+			}
+		} else if (x == -1) {
+			if (y == 1) {
+				direction = Vector.SOUTHWEST;
+			} else if (y == -1) {
+				direction = Vector.NORTHWEST;
+			} else if (y == 0) {
+				direction = Vector.WEST;
+			}
+		}
+		
+		double velocity = (keysHeld ? Constants.DEFAULT_PLAYER_VELOCITY : 0);
+		if (client.getState().getPlayer() != null) {
+			client.getState().getPlayer().setMovementVector(direction, velocity);
+		} else {
+			//client.getState().getCamera().move(xDiff, yDiff);
 		}
 	}
 	

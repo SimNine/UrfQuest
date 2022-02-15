@@ -11,7 +11,6 @@ import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
-import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -30,7 +29,6 @@ public class Player extends Mob {
 	public Player(Server srv, State s, Map m, double x, double y, String name, ClientThread c) {
 		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = Constants.DEFAULT_PLAYER_VELOCITY;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -55,6 +53,16 @@ public class Player extends Mob {
 		msg.clientID = c.id;
 		msg.entityID = this.id;
 		server.sendMessageToAllClients(msg);
+	}
+	
+	public void attemptIncrementPos() {
+		if (this.movementVector.magnitude == 0.0) {
+			return;
+		} else {
+			double xComp = movementVector.magnitude*Math.cos(movementVector.dirRadians);
+			double yComp = movementVector.magnitude*Math.sin(movementVector.dirRadians);
+			attemptIncrementPos(xComp, yComp);
+		}
 	}
 	
 	public void attemptIncrementPos(double x, double y) {
@@ -84,43 +92,46 @@ public class Player extends Mob {
 	 * per-tick updater
 	 */
 	
-	public void update() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
+	public void tick() {
+		this.attemptIncrementPos();
 		
-		// update hunger and health mechanics
-		if (statCounter > 0) {
-			statCounter--;
-		} else {
-			if (fullness > maxFullness/2) {
-				if (health < maxHealth) {
-					health += 0.2;
-				}
-			}
-			
-			if (fullness > 0) {
-				fullness -= 0.2;
-			} else {
-				health -= 0.2;
-			}
-			
-			if (mana < maxMana) {
-				mana += 0.1;
-			}
-			
-			statCounter = 200;
-		}
-		
-		// update each entry (cooldown) in the inventory
-		for (Item i : inventory.getItems()) {
-			if (i != null) {
-				i.update();
-			}
-		}
-		
-		// process the tile the player is currently on
-		processCurrentTile();
+		// TODO: reimplement all this
+//		if (healthbarVisibility > 0) {
+//			healthbarVisibility--;
+//		}
+//		
+//		// update hunger and health mechanics
+//		if (statCounter > 0) {
+//			statCounter--;
+//		} else {
+//			if (fullness > maxFullness/2) {
+//				if (health < maxHealth) {
+//					health += 0.2;
+//				}
+//			}
+//			
+//			if (fullness > 0) {
+//				fullness -= 0.2;
+//			} else {
+//				health -= 0.2;
+//			}
+//			
+//			if (mana < maxMana) {
+//				mana += 0.1;
+//			}
+//			
+//			statCounter = 200;
+//		}
+//		
+//		// update each entry (cooldown) in the inventory
+//		for (Item i : inventory.getItems()) {
+//			if (i != null) {
+//				i.tick();
+//			}
+//		}
+//		
+//		// process the tile the player is currently on
+//		processCurrentTile();
 	}
 	
 	// helpers
@@ -144,10 +155,10 @@ public class Player extends Mob {
 		case 5:
 			if (health > 0) incrementHealth(-0.1);
 			if (mana > 0) incrementMana(-0.1);
-			if (velocity > 0.01) incrementVelocity(-0.001);
+			if (movementVector.magnitude > 0.01) incrementVelocity(-0.001);
 			break;
 		case 6:
-			if (velocity < 1) incrementVelocity(0.001);
+			if (movementVector.magnitude < 1) incrementVelocity(0.001);
 			break;
 		case 7:
 			//impossible

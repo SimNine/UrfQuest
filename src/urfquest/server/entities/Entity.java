@@ -7,6 +7,7 @@ import urfquest.server.Server;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -30,10 +31,14 @@ public abstract class Entity {
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
 	}
 	
-	// Updating methods
-	public abstract void update();
+	public abstract void tick();
 	
-	// sets the entity's position, NOT checking for validity of move
+	
+	
+	/*
+	 * Position management
+	 */
+	
 	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 		
@@ -45,18 +50,15 @@ public abstract class Entity {
 		this.server.sendMessageToAllClients(m);
 	}
 	
-	// moves the entity, NOT checking for validity of move
-	// object's position is incremented according to the parameters
 	public void incrementPos(double x, double y) {
 		this.setPos(bounds.getX() + x, bounds.getY() + y);
 	}
 	
-	// moves the entity, NOT checking for validity of move
-	protected void move(int direction, double magnitude) {
+	protected void move(Vector vector) {
 		double newX = bounds.getX();
 		double newY = bounds.getY();
-		double xComp = magnitude*Math.cos(Math.toRadians(direction));
-		double yComp = magnitude*Math.sin(Math.toRadians(direction));
+		double xComp = vector.magnitude*Math.cos(vector.dirRadians);
+		double yComp = vector.magnitude*Math.sin(vector.dirRadians);
 		
 		newX += xComp;
 		newY += yComp;
@@ -64,7 +66,6 @@ public abstract class Entity {
 		this.setPos(newX, newY);
 	}
 	
-	// gets the object's position as a double array with length 2 (x, y)
 	public double[] getPos() {
 		double[] ret = new double[2];
 		ret[0] = bounds.getX();
@@ -79,21 +80,12 @@ public abstract class Entity {
 		return ret;
 	}
 	
-	public double getWidth() {
-		return bounds.getWidth();
-	}
-	
-	public double getHeight() {
-		return bounds.getHeight();
-	}
 
-	// map methods
-	public Map getMap() {
-		return map;
-	}
 	
-	// interactions with other entities
-	// -----
+	/*
+	 * Entity angle and collision checking
+	 */
+	
 	// returns true if this entity's bounds intersect with another entity's bounds
 	public boolean collides(Entity e) {
 		return bounds.intersects(e.bounds);
@@ -161,5 +153,24 @@ public abstract class Entity {
 	// returns whether the given coordinates are within the entity's bounding box
 	public boolean containsPoint(double x, double y) {
 		return bounds.contains(x, y);
+	}
+	
+	
+	
+	/*
+	 * Misc methods
+	 */
+	
+	public double getWidth() {
+		return bounds.getWidth();
+	}
+	
+	public double getHeight() {
+		return bounds.getHeight();
+	}
+
+	// map methods
+	public Map getMap() {
+		return map;
 	}
 }

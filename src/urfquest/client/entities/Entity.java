@@ -27,18 +27,14 @@ public abstract class Entity {
 	// Updating methods
 	public abstract void update();
 	
-	// sets the entity's position, NOT checking for validity of move
 	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	// moves the entity, NOT checking for validity of move
-	// object's position is incremented according to the parameters
 	public void move(double x, double y) {
 		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	// moves the entity, NOT checking for validity of move
 	protected void move(int direction, double magnitude) {
 		double newX = bounds.getX();
 		double newY = bounds.getY();

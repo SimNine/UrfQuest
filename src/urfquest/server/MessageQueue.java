@@ -24,5 +24,13 @@ public class MessageQueue {
 		messages.add(m);
 		notify();
 	}
+	
+	public synchronized boolean isEmpty() {
+		return messages.isEmpty();
+	}
+	
+	public synchronized int size() {
+		return messages.size();
+	}
 
 }

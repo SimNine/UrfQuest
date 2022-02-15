@@ -15,7 +15,7 @@ public class RocketExplosion extends Projectile {
 		this.direction = 0;
 	}
 
-	public void update() {
+	public void tick() {
 		this.incrementPos(-0.04, -0.04);
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.08, bounds.height + 0.08);
 		

@@ -20,7 +20,7 @@ public class BulletSplash extends Particle {
 	}
 	
 	public void update() {
-		this.move(dir, velocity);
+		//this.move(dir, velocity);
 		//this.animStage++;
 	}
 }

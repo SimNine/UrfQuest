@@ -19,9 +19,9 @@ public class Chicken extends Mob {
 	public Chicken(Server srv, State s, Map m, double x, double y) {
 		super(srv, s, m, x, y);
 		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		
-		velocity = 0.02;
+
 		defaultVelocity = 0.02;
+		movementVector.magnitude = defaultVelocity;
 		
 		health = 10.0;
 		maxHealth = 10.0;
@@ -44,7 +44,7 @@ public class Chicken extends Mob {
 		server.sendMessageToAllClients(msg);
 	}
 
-	public void update() {
+	public void tick() {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
