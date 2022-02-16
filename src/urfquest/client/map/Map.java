@@ -1,5 +1,6 @@
 package urfquest.client.map;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -337,6 +338,9 @@ public class Map {
 	
 	// A minimap should be regenerated whenever this client recieves new chunks
 	public void generateMinimap() {
+		Graphics2D newMinimapGraphics = minimap.createGraphics();
+		newMinimapGraphics.fillRect(0, 0, minimap.getWidth(), minimap.getHeight());
+		
 		for (int x = 0; x < localChunks.length; x++) {
 			for (int y = 0; y < localChunks[0].length; y++) {
 				MapChunk c = localChunks[x][y];
@@ -344,24 +348,16 @@ public class Map {
 					continue;
 				}
 				
-				for (int xc = 0; xc < Constants.MAP_CHUNK_SIZE; xc++) {
-					for (int yc = 0; yc < Constants.MAP_CHUNK_SIZE; yc++) {
-						int color = Tiles.minimapColor(c.getTileTypeAt(xc, yc));
-						minimap.setRGB(x * Constants.MAP_CHUNK_SIZE + xc, 
-									   y * Constants.MAP_CHUNK_SIZE + yc, 
-									   color);
-					}
-				}
+				c.generateMinimap();
+				newMinimapGraphics.drawImage(c.getMinimap(), null, 
+											 x * Constants.MAP_CHUNK_SIZE, 
+											 y * Constants.MAP_CHUNK_SIZE);
 			}
 		}
 	}
 	
 	public BufferedImage getMinimap() {
 		return minimap;
-	}
-	
-	public void setMinimapAt(int x, int y, int type) {
-		minimap.setRGB(x, y, Tiles.minimapColor(type));
 	}
 	
 	

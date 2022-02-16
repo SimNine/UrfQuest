@@ -1,7 +1,10 @@
 package urfquest.client.map;
 
+import java.awt.image.BufferedImage;
+
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.tiles.ActiveTile;
+import urfquest.client.tiles.Tiles;
 import urfquest.shared.Constants;
 
 public class MapChunk {
@@ -11,6 +14,8 @@ public class MapChunk {
 	
 	private ActiveTile[][] activeTiles;
 	
+	private BufferedImage minimap;
+	
 	public MapChunk() {
 		this(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE);
 	}
@@ -19,6 +24,8 @@ public class MapChunk {
 		tileTypes = new int[width][height];
 		tileSubtypes = new int[width][height];
 		activeTiles = new ActiveTile[width][height];
+
+		minimap = new BufferedImage(tileTypes.length, tileTypes[0].length, BufferedImage.TYPE_4BYTE_ABGR);
 	}
 	
 	/*
@@ -49,6 +56,7 @@ public class MapChunk {
 	public void setTileAt(int x, int y, int type) {
 		tileTypes[x][y] = type;
 		tileSubtypes[x][y] = 0;
+		this.setMinimapAt(x, y, type);
 	}
 	
 	public void setTileAt(int x, int y, int type, int subtype) {
@@ -58,6 +66,7 @@ public class MapChunk {
 	
 	public void setAllTileTypes(int[][] types) {
 		this.tileTypes = types;
+		this.generateMinimap();
 	}
 	
 	public void setAllTileSubtypes(int[][] subtypes) {
@@ -80,6 +89,30 @@ public class MapChunk {
 		if (activeTiles[x][y] != null) {
 			activeTiles[x][y].use(m);
 		}
+	}
+	
+	
+	
+	/*
+	 * Minimap management
+	 */
+	
+	// A minimap should be regenerated whenever this client recieves new chunks
+	public void generateMinimap() {
+		for (int x = 0; x < tileTypes.length; x++) {
+			for (int y = 0; y < tileTypes[0].length; y++) {
+				int color = Tiles.minimapColor(this.getTileTypeAt(x, y));
+				minimap.setRGB(x, y, color);
+			}
+		}
+	}
+	
+	public BufferedImage getMinimap() {
+		return minimap;
+	}
+	
+	private void setMinimapAt(int x, int y, int type) {
+		minimap.setRGB(x, y, Tiles.minimapColor(type));
 	}
 
 }

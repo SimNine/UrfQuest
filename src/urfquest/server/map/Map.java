@@ -251,6 +251,10 @@ public class Map {
 		return getChunk(xChunk, yChunk);
 	}
 	
+	public HashMap<Integer, HashMap<Integer, MapChunk>> getAllChunks() {
+		return chunks;
+	}
+	
 	public MapChunk createChunk(int xChunk, int yChunk) {
 		HashMap<Integer, MapChunk> column = chunks.get(xChunk);
 		if (column == null) {

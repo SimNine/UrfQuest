@@ -168,7 +168,7 @@ public class GameBoardOverlay extends GUIContainer {
 				   mouseY > p.getPos()[1] - 3) {
 			p.getMap().useActiveTile(mouseX, mouseY, p);
 		}
-		System.out.println(p.getMap().getTileAt(mouseX, mouseY)[0]);
+		client.getLogger().debug("clicked: " + p.getMap().getTileAt(mouseX, mouseY)[0]);
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
 			this.client.getState().getCurrentMap().setTileAt(mouseX, mouseY, 15);

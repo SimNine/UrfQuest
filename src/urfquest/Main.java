@@ -123,7 +123,7 @@ public class Main {
 		mainLogger.info("all launcher tasks done");
 	}
 	
-	public static void startServer(int seed, int port) {
+	private static void startServer(int seed, int port) {
 		mainLogger.all("Starting server on port " + port);
 		Server server = new Server(seed, port);
 		server.getLogger().setLogLevel(debugLevel);
@@ -137,7 +137,7 @@ public class Main {
 		serverThread.start();
 	}
 
-	public static void startClient(String ip, int port, String playerName) {
+	private static void startClient(String ip, int port, String playerName) {
 		mainLogger.all("Starting client, connecting to " + ip + ":" + port);
 		
 		// initialize the game client
@@ -145,10 +145,8 @@ public class Main {
         try {
 			socket = new Socket(ip, port);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         

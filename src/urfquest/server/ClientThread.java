@@ -73,7 +73,7 @@ public class ClientThread {
 		
 		try {
 			socket.close();
-			this.server.getLogger().info("connection closed");
+			this.server.getLogger().info("Client " + this.id + " connection closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -189,8 +189,9 @@ public class QuestPanel extends JPanel {
 							guiOpen = true;
 							chatOverlay.setOpaqueChatbox(true);
 						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
-							System.out.println(client.getState().getPlayer().getCenter()[0] + "," +
-											   client.getState().getPlayer().getCenter()[1]);
+							client.getLogger().debug("F4 pressed at: " + 
+													 client.getState().getPlayer().getCenter()[0] + "," +
+													 client.getState().getPlayer().getCenter()[1]);
 							
 							Message m = new Message();
 							m.type = MessageType.DEBUG_PLAYER_INFO;

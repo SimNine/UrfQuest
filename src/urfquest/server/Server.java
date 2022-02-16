@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
+
+import javax.swing.JFrame;
 
 import urfquest.IDGenerator;
 import urfquest.Logger;
@@ -15,6 +18,7 @@ import urfquest.client.Client;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
+import urfquest.server.monitoring.MapMonitor;
 import urfquest.server.state.State;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
@@ -41,6 +45,8 @@ public class Server {
 	
 	private Thread commandParserThread;
 	
+	private HashSet<JFrame> monitoringFrames = new HashSet<JFrame>();
+	
 	public Server(long seed) {
 		this.seed = seed;
 		this.random = new Random(seed);
@@ -56,6 +62,7 @@ public class Server {
 	public Server(long seed, int port) {
 		this(seed);
 		
+		// launch master listener
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
@@ -63,6 +70,7 @@ public class Server {
 			System.exit(1);
 		}
 		
+		// launch command line parser
 		commandParserThread = new Thread(new Runnable() {
 			public void run() {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -82,6 +90,14 @@ public class Server {
 			}
 		});
 		commandParserThread.start();
+		
+		// launch monitoring windows
+		JFrame mapMonitorFrame = new JFrame("ServerMonitor");
+		mapMonitorFrame.setVisible(true);
+		mapMonitorFrame.setSize(500, 500);
+		MapMonitor mapMonitor = new MapMonitor(this, 500, 500);
+		mapMonitorFrame.add(mapMonitor);
+		monitoringFrames.add(mapMonitorFrame);
 	}
 
 	public void mainLoop() {
@@ -91,6 +107,10 @@ public class Server {
 			long startTime = System.currentTimeMillis();
 			this.tick();
 			long endTime = System.currentTimeMillis();
+			
+			for (JFrame f : monitoringFrames) {
+				f.repaint();
+			}
 			
 			long remainingTime = Constants.MILLISECONDS_PER_TICK - (endTime - startTime);
 			if (remainingTime > 0) {

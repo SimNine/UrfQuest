@@ -8,6 +8,6 @@ public class Constants {
 	
 	public static final int MAP_CHUNK_SIZE = 32;
 	
-	public static final int MILLISECONDS_PER_TICK = 50;
+	public static final int MILLISECONDS_PER_TICK = 20;
 
 }
