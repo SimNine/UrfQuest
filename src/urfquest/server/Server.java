@@ -153,7 +153,7 @@ public class Server {
 		
 		switch (m.type) {
 			case PLAYER_REQUEST: {
-				this.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.toString());
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
@@ -169,14 +169,14 @@ public class Server {
 				break;
 			}
 			case PLAYER_SET_MOVE_VECTOR: {
-				this.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to set the velocity and direction of their player
 				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
 				player.setMovementVector((Vector)m.payload);
 				break;
 			}
 			case MAP_REQUEST: {
-				this.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.toString());
 				// - Recieves a request from a client to load a new map
 				// - Sends metadata of the requested map to the client - TODO
 				// - Sends chunks nearby the player to the client
@@ -217,7 +217,7 @@ public class Server {
 				break;
 			}
 			case CHUNK_LOAD: {
-				this.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
 				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -230,7 +230,7 @@ public class Server {
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				this.getLogger().debug(m.clientID + " - " + m.toString());
+				this.getLogger().debug(m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 				Player p = state.getPlayer(playerID);
 				String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
@@ -242,7 +242,7 @@ public class Server {
 				break;
 			}
 			case CHAT_MESSAGE: {
-				this.getLogger().info(m.clientID + " - " + m.toString());
+				this.getLogger().info(m.toString());
 				
 				ChatMessage chatMessage = (ChatMessage)m.payload;
 				if (m.clientID == this.id) {

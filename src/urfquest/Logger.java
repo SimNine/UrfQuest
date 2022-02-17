@@ -43,34 +43,34 @@ public class Logger {
 	
 	
 	public void all(String s) {
-		log("ALL: " + s, LogLevel.ALL);
+		log("ALL : " + s, LogLevel.ALL);
 	}
 	
 	public void error(String s) {
-		log("ERROR: " + s, LogLevel.ERROR);
+		log("ERROR : " + s, LogLevel.ERROR);
 	}
 	
 	public void warning(String s) {
-		log("WARNING: " + s, LogLevel.WARNING);
+		log("WARNING : " + s, LogLevel.WARNING);
 	}
 	
 	public void info(String s) {
-		log("INFO: " + s, LogLevel.INFO);
+		log("INFO : " + s, LogLevel.INFO);
 	}
 	
 	public void debug(String s) {
-		log("DEBUG: " + s, LogLevel.DEBUG);
+		log("DEBUG : " + s, LogLevel.DEBUG);
 	}
 	
 	public void verbose(String s) {
-		log("VERBOSE: " + s, LogLevel.VERBOSE);
+		log("VERBOSE : " + s, LogLevel.VERBOSE);
 	}
 	
 	
 	
 	private void log(String s, LogLevel logLevel) {
 		if (logLevel.compareTo(this.logLevel) <= 0) {
-			s = System.currentTimeMillis() + " - " + this.prefix + ": " + s;
+			s = System.currentTimeMillis() + " " + this.prefix + " " + s;
 			
 			System.out.println(s);
 			writer.println(s);

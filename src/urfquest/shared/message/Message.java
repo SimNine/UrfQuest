@@ -33,53 +33,52 @@ public class Message implements Serializable {
 	public Object entitySubtype;
 	
 	public String toString() {
-		String ret = type.name() + " - ";
+		String ret = "MSG " + type.name() + " clientID:" + this.clientID;
 		
 		switch (type) {
 		case PING:
 			break;
 		case CHUNK_LOAD:
-			ret += "mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
+			ret += ",mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
 			break;
 		case CHAT_MESSAGE: {
 			ChatMessage m = (ChatMessage)payload;
-			ret += "Source: " + m.source + ", Message: " + m.message;
+			ret += ",source:" + m.source + ",message:" + m.message;
 			break;
 		}
 			
 		// temporary / debugging
 		case DEBUG_PLAYER_INFO:
-			ret += "Pos: " + (String)payload;
+			ret += ",pos:" + (String)payload;
 			break;
 			
 		// only sent by client
 		case PLAYER_SET_MOVE_VECTOR: {
 			Vector v = (Vector)this.payload;
-			ret += "entityID:" + this.entityID + ",direction:" + v.dirRadians + ",velocity:" + v.magnitude;
+			ret += ",entityID:" + this.entityID + ",direction:" + v.dirRadians + ",velocity:" + v.magnitude;
 			break;
 		}
 		case PLAYER_REQUEST:
-			ret += "name:" + entityName;
+			ret += ",name:" + entityName;
 			break;
 		case MAP_REQUEST:
-			ret += "mapID:" + this.mapID;
+			ret += ",mapID:" + this.mapID;
 			break;
 		
 		// only sent by server
 		case ENTITY_SET_POS:
-			ret += "entityID:" + this.entityID + ",x:" + pos[0] + ",y:" + pos[1];
+			ret += ",entityID:" + this.entityID + ",x:" + pos[0] + ",y:" + pos[1];
 			break;
 		case CONNECTION_CONFIRMED:
-			ret += "clientID:" + clientID;
 			break;
 		case ENTITY_INIT:
-			ret += "entityID:" + this.entityID + ",type:" + entityType.toString() + ",";
+			ret += ",entityID:" + this.entityID + ",type:" + entityType.toString() + ",";
 			if (entityType == EntityType.PLAYER) {
-				ret += "name:" + this.entityName;
+				ret += ",name:" + this.entityName;
 			}
 			break;
 		default:
-			ret += "unrecognized message";
+			ret += ",unrecognized_message";
 			break;
 		}
 		return ret;

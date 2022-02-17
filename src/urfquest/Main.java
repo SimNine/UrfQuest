@@ -26,7 +26,7 @@ public class Main {
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
 	
-	public static LogLevel debugLevel = LogLevel.INFO;
+	public static LogLevel debugLevel = LogLevel.ALL;
 	
 	public static void main(String[] args) {
 		mainLogger = new Logger(LogLevel.ALL, "LAUNCHER");
@@ -75,7 +75,7 @@ public class Main {
 			}
 			playerName = dialog.playerName.getText();
 			if (dialog.useDebug.isSelected()) {
-				debugLevel = LogLevel.DEBUG;
+				debugLevel = LogLevel.ALL;
 			} else {
 				debugLevel = LogLevel.INFO;
 			}
