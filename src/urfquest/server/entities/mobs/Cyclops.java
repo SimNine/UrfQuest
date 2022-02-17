@@ -8,6 +8,10 @@ import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
+import urfquest.shared.message.EntityType;
+import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
+import urfquest.shared.message.MobType;
 
 public class Cyclops extends Mob {
 	private int thinkingDelay;
@@ -35,8 +39,17 @@ public class Cyclops extends Mob {
 		
 		shotgun = new Item(srv, this.state, this.map, 0, 0, 15);
 		intelligence = 50;
-		routine = new IdleRoutine(this);
+		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
+		
+		Message msg = new Message();
+		msg.type = MessageType.ENTITY_INIT;
+		msg.entityType = EntityType.MOB;
+		msg.entitySubtype = MobType.CYCLOPS;
+		msg.pos = this.getPos();
+		msg.entityID = this.id;
+		msg.mapID = m.id;
+		server.sendMessageToAllClients(msg);
 	}
 
 	public void tick() {
@@ -50,13 +63,10 @@ public class Cyclops extends Mob {
 			think();
 			thinkingDelay = intelligence;
 		}
-	
-		// TODO: update with Vector
-		// get new movement vector
-//		routine.update();
-//		direction = routine.suggestedDirection();
-//		velocity = routine.suggestedVelocity();
-//		attemptMove(direction, velocity);
+
+		routine.update();
+		this.movementVector = routine.getSuggestedMovementVector();
+		super.attemptIncrementPos();
 		
 		// try firing shotgun
 //		if (this.distanceTo(Main.server.getGame().getPlayer()) < 10 && 

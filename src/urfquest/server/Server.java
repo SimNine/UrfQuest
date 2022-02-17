@@ -13,8 +13,9 @@ import javax.swing.JFrame;
 
 import urfquest.IDGenerator;
 import urfquest.Logger;
-import urfquest.LogLevel;
+import urfquest.Main;
 import urfquest.client.Client;
+import urfquest.server.commands.CommandProcessor;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
@@ -22,6 +23,7 @@ import urfquest.server.monitoring.MapMonitor;
 import urfquest.server.state.State;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
+import urfquest.shared.MessageQueue;
 import urfquest.shared.Vector;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
@@ -54,7 +56,7 @@ public class Server {
 		
 		this.state = new State(this);
         
-        this.logger = new Logger(LogLevel.DEBUG, "SERVER");
+        this.logger = new Logger(Main.debugLevel, "SERVER");
         
         this.serverSocket = null;
 	}

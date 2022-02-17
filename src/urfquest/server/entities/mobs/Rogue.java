@@ -41,7 +41,7 @@ public class Rogue extends Mob {
 		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 13));
 		
 		intelligence = 50;
-		routine = new IdleRoutine(this);
+		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
 	}
 

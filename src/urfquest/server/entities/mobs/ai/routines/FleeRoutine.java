@@ -1,5 +1,6 @@
 package urfquest.server.entities.mobs.ai.routines;
 
+import urfquest.server.Server;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.entities.mobs.ai.actions.IdleAction;
 import urfquest.server.entities.mobs.ai.actions.MoveAction;
@@ -7,8 +8,8 @@ import urfquest.server.entities.mobs.ai.actions.MoveAction;
 public class FleeRoutine extends MobRoutine {
 	private Mob other;
 
-	public FleeRoutine(Mob m, Mob other) {
-		super(m);
+	public FleeRoutine(Server server, Mob m, Mob other) {
+		super(server, m);
 		this.other = other;
 		update();
 	}

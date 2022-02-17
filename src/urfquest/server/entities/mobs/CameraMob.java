@@ -21,7 +21,7 @@ public class CameraMob extends Mob {
 		
 		health = 100.0;
 		maxHealth = 100.0;
-		routine = new IdleRoutine(this);
+		routine = new IdleRoutine(server, this);
 		
 		this.mode = mode;
 	}

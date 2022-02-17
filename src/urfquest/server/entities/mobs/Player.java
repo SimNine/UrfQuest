@@ -54,39 +54,6 @@ public class Player extends Mob {
 		msg.entityID = this.id;
 		server.sendMessageToAllClients(msg);
 	}
-	
-	public void attemptIncrementPos() {
-		if (this.movementVector.magnitude == 0.0) {
-			return;
-		} else {
-			double xComp = movementVector.magnitude*Math.cos(movementVector.dirRadians);
-			double yComp = movementVector.magnitude*Math.sin(movementVector.dirRadians);
-			attemptIncrementPos(xComp, yComp);
-		}
-	}
-	
-	public void attemptIncrementPos(double x, double y) {
-		double newX = bounds.getCenterX() + x;
-		double newY = bounds.getCenterY() + y;
-		
-		boolean canMove = true;
-		
-		// check if this move is valid on the x-axis
-		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
-			canMove = false;
-		}
-		
-		// check if this move is valid on the y-axis
-		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
-			canMove = false;
-		}
-				
-		if (canMove) {
-			this.incrementPos(x, y);
-		} else {
-			this.setPos(bounds.getX(), bounds.getY());
-		}
-	}
 
 	/*
 	 * per-tick updater

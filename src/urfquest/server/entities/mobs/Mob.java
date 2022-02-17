@@ -39,6 +39,43 @@ public abstract class Mob extends Entity {
 		// do nothing by default
 	}
 	
+	/*
+	 * Position management
+	 */
+	
+	public void attemptIncrementPos() {
+		if (this.movementVector.magnitude == 0.0) {
+			return;
+		} else {
+			double xComp = movementVector.magnitude*Math.cos(movementVector.dirRadians);
+			double yComp = movementVector.magnitude*Math.sin(movementVector.dirRadians);
+			attemptIncrementPos(xComp, yComp);
+		}
+	}
+	
+	public void attemptIncrementPos(double x, double y) {
+		double newX = bounds.getCenterX() + x;
+		double newY = bounds.getCenterY() + y;
+		
+		boolean canMove = true;
+		
+		// check if this move is valid on the x-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
+			canMove = false;
+		}
+		
+		// check if this move is valid on the y-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
+			canMove = false;
+		}
+				
+		if (canMove) {
+			this.incrementPos(x, y);
+		} else {
+			this.setPos(bounds.getX(), bounds.getY());
+		}
+	}
+	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public int[] tileAtDistance(double d) {
 		double xComp = d*Math.cos(movementVector.dirRadians);
@@ -57,26 +94,13 @@ public abstract class Mob extends Entity {
 		
 		return ret;
 	}
-
-	public void setDirection(double dirRadians) {
-		movementVector.dirRadians = dirRadians;
-	}
-	
-	public void setHealth(double h) {
-		health = h;
-		healthbarVisibility = 500;
-	}
-	
-	public void setVelocity(double s) {
-		movementVector.magnitude = s;
-	}
 	
 	public double getDirection() {
 		return movementVector.dirRadians;
 	}
-	
-	public double getHealth() {
-		return health;
+
+	public void setDirection(double dirRadians) {
+		movementVector.dirRadians = dirRadians;
 	}
 	
 	public double getVelocity() {
@@ -87,12 +111,29 @@ public abstract class Mob extends Entity {
 		return defaultVelocity;
 	}
 	
-	public void incrementHealth(double amt) {
-		setHealth(health + amt);
+	public void setVelocity(double s) {
+		movementVector.magnitude = s;
 	}
 	
 	public void incrementVelocity(double amt) {
 		setVelocity(movementVector.magnitude + amt);
+	}
+	
+	/*
+	 * Stat management
+	 */
+	
+	public void setHealth(double h) {
+		health = h;
+		healthbarVisibility = 500;
+	}
+	
+	public double getHealth() {
+		return health;
+	}
+	
+	public void incrementHealth(double amt) {
+		setHealth(health + amt);
 	}
 	
 	public void incrementMana(double amt) {

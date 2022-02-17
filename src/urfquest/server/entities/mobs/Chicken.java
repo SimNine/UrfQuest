@@ -30,8 +30,8 @@ public class Chicken extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		// routine = new IdleRoutine(this);
-		intelligence = 50;
+		routine = new IdleRoutine(server, this);
+		intelligence = 20;
 		thinkingDelay = intelligence;
 		
 		Message msg = new Message();
@@ -57,8 +57,9 @@ public class Chicken extends Mob {
 		}
 		
 		// execute the current action
-		// routine.update();
-		// attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
+		routine.update();
+		this.movementVector = routine.getSuggestedMovementVector();
+		super.attemptIncrementPos();
 	}
 	
 	private void think() {

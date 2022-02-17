@@ -21,7 +21,7 @@ public class Logger {
         	logDir.mkdir();
         }
         
-        File log = new File(logDir, System.currentTimeMillis() + ".log");
+        File log = new File(logDir, System.currentTimeMillis() + "_" + prefix + ".log");
         try {
 			writer = new PrintWriter(log);
 		} catch (FileNotFoundException e) {

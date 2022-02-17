@@ -1,8 +1,11 @@
-package urfquest.server;
+package urfquest.server.commands;
 
 import java.util.HashMap;
 
+import urfquest.server.ClientThread;
+import urfquest.server.Server;
 import urfquest.server.entities.mobs.Chicken;
+import urfquest.server.entities.mobs.Cyclops;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.shared.ChatMessage;
@@ -58,7 +61,7 @@ public class CommandProcessor {
 				"Gets the position of the specified player, or the sender's position if no player is specified",
 				CommandPermissions.NORMAL) {
 					@Override
-					public void runCommand(Server server, String[] args, ClientThread clientThread) {						
+					public void runCommand(Server server, String[] args, ClientThread clientThread) {
 						Message m = new Message();
 						m.type = MessageType.CHAT_MESSAGE;
 						
@@ -179,6 +182,7 @@ public class CommandProcessor {
 							int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientThread.id);
 							Player thisPlayer = server.getState().getPlayer(thisPlayerID);
 							map = thisPlayer.getMap();
+							pos = thisPlayer.getPos();
 						} else {
 							try {
 								map = server.getState().getSurfaceMap();
@@ -199,6 +203,14 @@ public class CommandProcessor {
 								map.addMob(c);
 								break;
 							}
+							case "CYCLOPS": {
+								Cyclops c = new Cyclops(server, server.getState(),
+										map,
+										pos[0],
+										pos[1]);
+								map.addMob(c);
+								break;
+							}
 							default: {
 								CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 								return;
@@ -207,6 +219,33 @@ public class CommandProcessor {
 					}
 		};
 		commands.put("summon", summonCommand);
+		
+		Command opCommand = new Command("/op", "<player_name>", 
+				"Grants the specified player op permissions",
+				CommandPermissions.SERVER) {
+					@Override
+					public void runCommand(Server server, String[] args, ClientThread clientThread) {
+						if (args.length < 2) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
+
+						Message m = new Message();
+						m.type = MessageType.CHAT_MESSAGE;
+						Integer otherClientID = server.getUserMap().getClientIdFromPlayerName(args[1]);
+						if (otherClientID == null) { // if the specified player wasn't found
+							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
+						} else {
+							ClientThread c = server.getClient(otherClientID);
+							c.setCommandPermissions(CommandPermissions.OP);
+							m.payload = new ChatMessage(ChatMessage.serverSource, args[1] + " granted op permissions");
+						}
+
+						int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
+						server.sendMessageToClientOrServer(m, clientThreadID);
+					}
+		};
+		commands.put("op", opCommand);
 	}
 	
 	public static void sendIncorrectArgumentsMessage(Server server, Command command, ClientThread clientThread) {

@@ -1,25 +1,21 @@
 package urfquest.server.entities.mobs.ai.actions;
 
+import urfquest.shared.Vector;
+
 public class MoveAction extends MobAction {
-	private int direction;
-	private double velocity;
+	private Vector vector;
 	
-	public MoveAction(int duration, int direction, double velocity) {
+	public MoveAction(int duration, double direction, double velocity) {
 		this.duration = duration;
-		this.direction = direction;
-		this.velocity = velocity;
+		this.vector = new Vector(direction, velocity);
 	}
 	
 	public boolean shouldEnd() {
 		return (duration <= 0);
 	}
 
-	public int suggestedDirection() {
-		return direction;
-	}
-
-	public double suggestedVelocity() {
-		return velocity;
+	public Vector getSuggestedMovementVector() {
+		return vector;
 	}
 
 	public void update() {

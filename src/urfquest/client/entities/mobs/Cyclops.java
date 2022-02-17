@@ -16,6 +16,15 @@ public class Cyclops extends Mob {
 	private static BufferedImage pic;
 	
 	//private Item shotgun;
+	
+	static {
+		try {
+			pic = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			Main.mainLogger.error("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
+		}
+	}
 
 	public Cyclops(Client c, int id, Map m, double x, double y) {
 		super(c, id, m, x, y);
@@ -44,15 +53,6 @@ public class Cyclops extends Mob {
 //		}
 //	
 //		attemptMove(direction, velocity);
-	}
-	
-	public static void initCyclops() {
-		try {
-			pic = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			Main.mainLogger.error("Image could not be read at: " + assetPath + "cyclops_unscaled.png");
-		}
 	}
 
 	protected void drawEntity(Graphics g) {

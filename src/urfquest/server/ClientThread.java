@@ -8,6 +8,7 @@ import java.net.SocketException;
 
 import urfquest.IDGenerator;
 import urfquest.client.Client;
+import urfquest.server.commands.CommandPermissions;
 import urfquest.shared.message.Message;
 
 public class ClientThread {

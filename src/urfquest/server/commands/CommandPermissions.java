@@ -1,4 +1,4 @@
-package urfquest.server;
+package urfquest.server.commands;
 
 public class CommandPermissions {
 

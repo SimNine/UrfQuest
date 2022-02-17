@@ -8,10 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
-import urfquest.server.Command;
-import urfquest.server.CommandPermissions;
-import urfquest.server.CommandProcessor;
 import urfquest.server.Server;
+import urfquest.server.commands.Command;
+import urfquest.server.commands.CommandPermissions;
+import urfquest.server.commands.CommandProcessor;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;

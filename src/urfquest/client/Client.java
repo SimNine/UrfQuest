@@ -14,9 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import urfquest.Logger;
-import urfquest.LogLevel;
+import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Chicken;
+import urfquest.client.entities.mobs.Cyclops;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
@@ -51,7 +52,7 @@ public class Client {
 	
 	public Client(Server server, String playerName) {
 		this.state = new State(this);
-		this.logger = new Logger(LogLevel.DEBUG, "CLIENT");
+		this.logger = new Logger(Main.debugLevel, "CLIENT");
 		this.playerName = playerName;
 		
 		this.server = server;
@@ -60,7 +61,7 @@ public class Client {
 	
 	public Client(Socket socket, String playerName) {
 		this.state = new State(this);
-		this.logger = new Logger(LogLevel.DEBUG, "CLIENT");
+		this.logger = new Logger(Main.debugLevel, "CLIENT");
 		this.playerName = playerName;
 		
 		// initialize streams on the socket
@@ -153,6 +154,7 @@ public class Client {
 						}
 					}
 				} else if (m.entityType == EntityType.MOB) {
+					// TODO: spawn entity only on the specified map, which should be retrieved based on m.mapID
 					switch ((MobType) m.entitySubtype) {
 						case CHICKEN: {
 							Chicken chicken = new Chicken(this, m.entityID, 
@@ -160,6 +162,14 @@ public class Client {
 														  m.pos[0], 
 														  m.pos[1]);
 							state.getCurrentMap().addMob(chicken);
+							break;
+						}
+						case CYCLOPS: {
+							Cyclops cyclops = new Cyclops(this, m.entityID,
+														  state.getCurrentMap(),
+														  m.pos[0],
+														  m.pos[1]);
+							state.getCurrentMap().addMob(cyclops);
 							break;
 						}
 						default: {

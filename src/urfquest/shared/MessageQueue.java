@@ -1,4 +1,4 @@
-package urfquest.server;
+package urfquest.shared;
 
 import java.util.ArrayList;
 

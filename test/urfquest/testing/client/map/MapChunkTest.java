@@ -21,7 +21,7 @@ class MapChunkTest {
 		{4, 5, 6, 7, 8, 9, 10, 11},
 		{5, 6, 7, 8, 9, 10, 11, 12},
 		{6, 7, 8, 9, 10, 11, 12, 13},
-		{7, 8, 9, 10, 11, 12, 13, 14}
+		{7, 8, 9, 10, 11, 12, 13, 13}
 	};
 
 	@BeforeAll
@@ -130,7 +130,7 @@ class MapChunkTest {
 		Assertions.assertEquals(0, c.getTileTypeAt(0, 0));
 		Assertions.assertEquals(8, c.getTileTypeAt(2, 6));
 		Assertions.assertEquals(5, c.getTileTypeAt(4, 1));
-		Assertions.assertEquals(14, c.getTileTypeAt(7, 7));
+		Assertions.assertEquals(13, c.getTileTypeAt(7, 7));
 		Assertions.assertEquals(0, c.getTileSubtypeAt(0, 0));
 		Assertions.assertEquals(0, c.getTileSubtypeAt(2, 6));
 		Assertions.assertEquals(0, c.getTileSubtypeAt(4, 1));
@@ -140,11 +140,11 @@ class MapChunkTest {
 		Assertions.assertEquals(0, c.getTileTypeAt(0, 0));
 		Assertions.assertEquals(8, c.getTileTypeAt(2, 6));
 		Assertions.assertEquals(5, c.getTileTypeAt(4, 1));
-		Assertions.assertEquals(14, c.getTileTypeAt(7, 7));
+		Assertions.assertEquals(13, c.getTileTypeAt(7, 7));
 		Assertions.assertEquals(0, c.getTileSubtypeAt(0, 0));
 		Assertions.assertEquals(8, c.getTileSubtypeAt(2, 6));
 		Assertions.assertEquals(5, c.getTileSubtypeAt(4, 1));
-		Assertions.assertEquals(14, c.getTileSubtypeAt(7, 7));
+		Assertions.assertEquals(13, c.getTileSubtypeAt(7, 7));
 	}
 
 }

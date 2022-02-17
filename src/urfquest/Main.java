@@ -25,7 +25,8 @@ public class Main {
 	private static int port = 7096;
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
-	private static LogLevel debugLevel = LogLevel.INFO;
+	
+	public static LogLevel debugLevel = LogLevel.INFO;
 	
 	public static void main(String[] args) {
 		mainLogger = new Logger(LogLevel.ALL, "LAUNCHER");

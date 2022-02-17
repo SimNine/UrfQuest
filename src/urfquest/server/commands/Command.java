@@ -1,4 +1,7 @@
-package urfquest.server;
+package urfquest.server.commands;
+
+import urfquest.server.ClientThread;
+import urfquest.server.Server;
 
 public abstract class Command {
 	

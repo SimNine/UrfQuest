@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import urfquest.client.Client;
 import urfquest.client.entities.mobs.Player;
-import urfquest.server.CommandPermissions;
 import urfquest.server.Server;
+import urfquest.server.commands.CommandPermissions;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
 import urfquest.shared.message.Message;
