@@ -2,6 +2,7 @@ package urfquest.client;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,7 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class QuestPanel extends JPanel {
+public class QuestPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 	private Client client;
 	
 	public int dispCenterX, dispCenterY; // the center of this JPanel relative to the window's top-left corner, in pixels
@@ -100,154 +101,177 @@ public class QuestPanel extends JPanel {
 		requestFocusInWindow();
 		setSize(initwidth, initheight);
 		
+		this.addKeyListener(this);
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
+		
 		initAssets();
-		
-		addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {
-				keys.add(e.getKeyCode());
-	    		scanHeldKeys();
-				
-				// if currently on the keybinding page
-				if (overlays.peek() == keybindingView) {
-					keybindingView.keypress(e.getKeyCode());
-				} else {
-					if (e.getKeyCode() == keybindings.FULLSCREEN) {
-						client.resetFrame(client.isFullscreen);
-					} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
-						// TODO: incorporate a method to cycle through all modes
-						if (client.getLogger().getLogLevel() == LogLevel.DEBUG) {
-							client.getLogger().setLogLevel(LogLevel.WARNING);
-						} else {
-							client.getLogger().setLogLevel(LogLevel.DEBUG);
-						}
-					}
-				}
-				
-				if (isUserIngame) {
-					if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-						pause();
-					}
-					
-					if (guiOpen) {
-						GUIContainer currentOverlay = overlays.peek();
-						if (currentOverlay == mapView) {
-							if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
-								swap(gameStatus);
-								guiOpen = false;
-							}
-						} else if (currentOverlay == craftingView) {
-							if (e.getKeyCode() == keybindings.CRAFTING) {
-								swap(gameStatus);
-								guiOpen = false;
-							}
-						} else if (currentOverlay == chatOverlay) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-								guiOpen = false;
-								chatOverlay.setOpaqueChatbox(false);
-							}
-							chatOverlay.keypress(e);
-						}
-					} else {
-						if (e.getKeyCode() == keybindings.CONSOLE) {
-							//String command = JOptionPane.showInputDialog(UrfQuest.panel, "Command Prompt", null);
-							//CommandProcessor.process(command);
-						} else if (e.getKeyCode() == keybindings.CYCLE_MINIMAP) {
-							gameStatus.cycleMinimapSize();
-						} else if (e.getKeyCode() == keybindings.DROPITEM) {
-							client.getState().getPlayer().dropOneOfSelectedItem();
-						} else if (e.getKeyCode() == keybindings.BUILDMODE) {
-							//UrfQuestClient.client.getState().toggleBuildMode();
-						} else if (e.getKeyCode() == KeyEvent.VK_1) {
-							client.getState().getPlayer().setSelectedEntry(0);
-						} else if (e.getKeyCode() == KeyEvent.VK_2) {
-							client.getState().getPlayer().setSelectedEntry(1);
-						} else if (e.getKeyCode() == KeyEvent.VK_3) {
-							client.getState().getPlayer().setSelectedEntry(2);
-						} else if (e.getKeyCode() == KeyEvent.VK_4) {
-							client.getState().getPlayer().setSelectedEntry(3);
-						} else if (e.getKeyCode() == KeyEvent.VK_5) {
-							client.getState().getPlayer().setSelectedEntry(4);
-						} else if (e.getKeyCode() == KeyEvent.VK_6) {
-							client.getState().getPlayer().setSelectedEntry(5);
-						} else if (e.getKeyCode() == KeyEvent.VK_7) {
-							client.getState().getPlayer().setSelectedEntry(6);
-						} else if (e.getKeyCode() == KeyEvent.VK_8) {
-							client.getState().getPlayer().setSelectedEntry(7);
-						} else if (e.getKeyCode() == KeyEvent.VK_9) {
-							client.getState().getPlayer().setSelectedEntry(8);
-						} else if (e.getKeyCode() == KeyEvent.VK_0) {
-							client.getState().getPlayer().setSelectedEntry(9);
-						} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
-							swap(mapView);
-							guiOpen = true;
-						} else if (e.getKeyCode() == keybindings.CRAFTING) {
-							swap(craftingView);
-							guiOpen = true;
-						} else if (e.getKeyCode() == keybindings.MAPLINK) {
-							client.getState().getPlayer().useTileUnderneath();
-						} else if (e.getKeyCode() == keybindings.CHAT) {
-							guiOpen = true;
-							chatOverlay.setOpaqueChatbox(true);
-						} else if (e.getKeyCode() == KeyEvent.VK_F4) {
-							client.getLogger().debug("F4 pressed at: " + 
-													 client.getState().getPlayer().getCenter()[0] + "," +
-													 client.getState().getPlayer().getCenter()[1]);
-							
-							Message m = new Message();
-							m.type = MessageType.DEBUG_PLAYER_INFO;
-							client.send(m);
-						}
-					}
-				} else {
-					if (!(overlays.getLast() instanceof KeybindingOverlay)) {
-						if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-							unpause();
-						}
-					}
-				}
-			}
-			public void keyReleased(KeyEvent e) {
-				keys.remove(e.getKeyCode());
-	    		scanHeldKeys();
-				client.getLogger().verbose("key released: " + e.getKeyChar());
-			}
-			public void keyTyped(KeyEvent e) {}
-		});
-		
-		addMouseMotionListener(new MouseMotionListener() {
-			public void mouseDragged(MouseEvent e) {
-				mousePos[0] = e.getX();
-				mousePos[1] = e.getY();
-				if (client.getState().isBuildMode() && client.getState().isGameRunning() && !guiOpen) {
-					gameBoard.click();
-				}
-			}
-			public void mouseMoved(MouseEvent e) {
-				mousePos[0] = e.getX();
-				mousePos[1] = e.getY();
-			}
-		});
-		
-		addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				Iterator<GUIContainer> it = overlays.iterator();
-				while (it.hasNext()) {
-					if (it.next().click()) {
-						return;
-					}
-				}
-			}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {
-				mouseDown = true;
-			}
-			public void mouseReleased(MouseEvent e) {
-				mouseDown = false;
-				client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
-			}
-		});
 	}
+	
+	/*
+	 * Listeners
+	 */
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		keys.add(e.getKeyCode());
+		scanHeldKeys();
+		
+		// if currently on the keybinding page
+		if (overlays.peek() == keybindingView) {
+			keybindingView.keypress(e.getKeyCode());
+		} else {
+			if (e.getKeyCode() == keybindings.FULLSCREEN) {
+				client.resetFrame(client.isFullscreen);
+			} else if (e.getKeyCode() == keybindings.CYCLE_DEBUG) {
+				// TODO: incorporate a method to cycle through all modes
+				if (client.getLogger().getLogLevel() == LogLevel.DEBUG) {
+					client.getLogger().setLogLevel(LogLevel.WARNING);
+				} else {
+					client.getLogger().setLogLevel(LogLevel.DEBUG);
+				}
+			}
+		}
+		
+		if (isUserIngame) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				pause();
+			}
+			
+			if (guiOpen) {
+				GUIContainer currentOverlay = overlays.peek();
+				if (currentOverlay == mapView) {
+					if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
+						swap(gameStatus);
+						guiOpen = false;
+					}
+				} else if (currentOverlay == craftingView) {
+					if (e.getKeyCode() == keybindings.CRAFTING) {
+						swap(gameStatus);
+						guiOpen = false;
+					}
+				} else if (currentOverlay == chatOverlay) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						guiOpen = false;
+						chatOverlay.setOpaqueChatbox(false);
+					}
+					chatOverlay.keypress(e);
+				}
+			} else {
+				if (e.getKeyCode() == keybindings.CONSOLE) {
+					//String command = JOptionPane.showInputDialog(UrfQuest.panel, "Command Prompt", null);
+					//CommandProcessor.process(command);
+				} else if (e.getKeyCode() == keybindings.CYCLE_MINIMAP) {
+					gameStatus.cycleMinimapSize();
+				} else if (e.getKeyCode() == keybindings.DROPITEM) {
+					client.getState().getPlayer().dropOneOfSelectedItem();
+				} else if (e.getKeyCode() == keybindings.BUILDMODE) {
+					//UrfQuestClient.client.getState().toggleBuildMode();
+				} else if (e.getKeyCode() == KeyEvent.VK_1) {
+					client.getState().getPlayer().setSelectedEntry(0);
+				} else if (e.getKeyCode() == KeyEvent.VK_2) {
+					client.getState().getPlayer().setSelectedEntry(1);
+				} else if (e.getKeyCode() == KeyEvent.VK_3) {
+					client.getState().getPlayer().setSelectedEntry(2);
+				} else if (e.getKeyCode() == KeyEvent.VK_4) {
+					client.getState().getPlayer().setSelectedEntry(3);
+				} else if (e.getKeyCode() == KeyEvent.VK_5) {
+					client.getState().getPlayer().setSelectedEntry(4);
+				} else if (e.getKeyCode() == KeyEvent.VK_6) {
+					client.getState().getPlayer().setSelectedEntry(5);
+				} else if (e.getKeyCode() == KeyEvent.VK_7) {
+					client.getState().getPlayer().setSelectedEntry(6);
+				} else if (e.getKeyCode() == KeyEvent.VK_8) {
+					client.getState().getPlayer().setSelectedEntry(7);
+				} else if (e.getKeyCode() == KeyEvent.VK_9) {
+					client.getState().getPlayer().setSelectedEntry(8);
+				} else if (e.getKeyCode() == KeyEvent.VK_0) {
+					client.getState().getPlayer().setSelectedEntry(9);
+				} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
+					swap(mapView);
+					guiOpen = true;
+				} else if (e.getKeyCode() == keybindings.CRAFTING) {
+					swap(craftingView);
+					guiOpen = true;
+				} else if (e.getKeyCode() == keybindings.MAPLINK) {
+					client.getState().getPlayer().useTileUnderneath();
+				} else if (e.getKeyCode() == keybindings.CHAT) {
+					guiOpen = true;
+					chatOverlay.setOpaqueChatbox(true);
+				} else if (e.getKeyCode() == KeyEvent.VK_F4) {
+					client.getLogger().debug("F4 pressed at: " + 
+											 client.getState().getPlayer().getCenter()[0] + "," +
+											 client.getState().getPlayer().getCenter()[1]);
+					
+					Message m = new Message();
+					m.type = MessageType.DEBUG_PLAYER_INFO;
+					client.send(m);
+				}
+			}
+		} else {
+			if (!(overlays.getLast() instanceof KeybindingOverlay)) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					unpause();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		keys.remove(e.getKeyCode());
+		scanHeldKeys();
+		client.getLogger().verbose("key released: " + e.getKeyChar());
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Iterator<GUIContainer> it = overlays.iterator();
+		while (it.hasNext()) {
+			if (it.next().click()) {
+				return;
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		mouseDown = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		mouseDown = false;
+		client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		mousePos[0] = e.getX();
+		mousePos[1] = e.getY();
+		if (client.getState().isBuildMode() && client.getState().isGameRunning() && !guiOpen) {
+			gameBoard.click();
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		mousePos[0] = e.getX();
+		mousePos[1] = e.getY();
+	}
+	
+	/*
+	 * Class methods
+	 */
 	
 	private void scanHeldKeys() {
 		if (guiOpen) {
@@ -408,6 +432,8 @@ public class QuestPanel extends JPanel {
 			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
 			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());
 		}
+		
+		// Toolkit.getDefaultToolkit().sync();
 	}
 	
 	// sets the dimensions of the panel, in pixels
