@@ -6,7 +6,6 @@ import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -16,9 +15,9 @@ public class Chicken extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(Server srv, State s, Map m, double x, double y) {
-		super(srv, s, m, x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	public Chicken(Server srv, Map m, double[] pos) {
+		super(srv, m, pos);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 
 		defaultVelocity = 0.02;
 		movementVector.magnitude = defaultVelocity;
@@ -80,7 +79,7 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new Item(this.server, this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 4));
+			this.map.addItem(new Item(this.server, this.map, this.getCenter(), 4));
 		}
 	}
 }

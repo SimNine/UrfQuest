@@ -5,7 +5,6 @@ import java.awt.geom.Rectangle2D;
 import urfquest.IDGenerator;
 import urfquest.server.Server;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
@@ -13,22 +12,20 @@ import urfquest.shared.message.MessageType;
 
 public abstract class Entity {
 	protected Server server;
+	protected Map map;
 	
 	protected Rectangle2D.Double bounds;
-	protected State state;
-	protected Map map;
 	
 	public int id;
 	
-	protected Entity(Server srv, State s, Map m, double x, double y) {
+	protected Entity(Server srv, Map m, double[] pos) {
 		this.server = srv;
 		
 		id = IDGenerator.newID();
 		
 		map = m;
-		state = s;
 		
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 	}
 	
 	public abstract void tick();
@@ -54,7 +51,7 @@ public abstract class Entity {
 		this.setPos(bounds.getX() + x, bounds.getY() + y);
 	}
 	
-	protected void move(Vector vector) {
+	protected void incrementPos(Vector vector) {
 		double newX = bounds.getX();
 		double newY = bounds.getY();
 		double xComp = vector.magnitude*Math.cos(vector.dirRadians);

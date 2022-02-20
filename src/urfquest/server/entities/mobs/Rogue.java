@@ -21,9 +21,9 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(Server srv, State s, Map m, double x, double y) {
-		super(srv, s, m, x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	public Rogue(Server srv, State s, Map m, double[] pos) {
+		super(srv, m, pos);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 
 		defaultVelocity = 0.013;
 		movementVector.magnitude = defaultVelocity;
@@ -36,9 +36,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 16));
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 15));
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 13));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 16));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 15));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 13));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);

@@ -4,7 +4,6 @@ import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.Vector;
 
@@ -25,8 +24,8 @@ public abstract class Mob extends Entity {
 	
 	protected MobRoutine routine;
 
-	protected Mob(Server srv, State s, Map m, double x, double y) {
-		super(srv, s, m, x, y);
+	protected Mob(Server srv, Map m, double[] pos) {
+		super(srv, m, pos);
 	}
 	
 	public void setMovementVector(Vector vector) {

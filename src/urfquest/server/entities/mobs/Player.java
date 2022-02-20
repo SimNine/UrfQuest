@@ -26,9 +26,9 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(Server srv, State s, Map m, double x, double y, String name, ClientThread c) {
-		super(srv, s, m, x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	public Player(Server srv, State s, Map m, double[] pos, String name, ClientThread c) {
+		super(srv, m, pos);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -38,9 +38,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 19));
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 17));
-		inventory.addItem(new Item(srv, this.state, this.map, 0, 0, 18));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 19));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 17));
+		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 18));
 		
 		this.name = name;
 		this.client = c;

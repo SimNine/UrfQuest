@@ -61,5 +61,19 @@ public class ArrayUtils {
 		
 		return ret;	
 	}
+	
+	/*
+	 * double array utilities
+	 */
+	
+	public static double[] castToDoubleArr(int[] a) {
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = (double)a[i];
+		}
+		
+		return ret;
+	}
 
 }

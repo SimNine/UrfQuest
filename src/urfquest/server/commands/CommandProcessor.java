@@ -196,18 +196,12 @@ public class CommandProcessor {
 						
 						switch (args[1].toUpperCase()) {
 							case "CHICKEN": {
-								Chicken c = new Chicken(server, server.getState(), 
-														map, 
-														pos[0], 
-														pos[1]);
+								Chicken c = new Chicken(server, map, pos);
 								map.addMob(c);
 								break;
 							}
 							case "CYCLOPS": {
-								Cyclops c = new Cyclops(server, server.getState(),
-										map,
-										pos[0],
-										pos[1]);
+								Cyclops c = new Cyclops(server, map, pos);
 								map.addMob(c);
 								break;
 							}

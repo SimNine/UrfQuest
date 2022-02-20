@@ -7,7 +7,6 @@ import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -19,11 +18,11 @@ public class Cyclops extends Mob {
 	
 	private Item shotgun;
 
-	public Cyclops(Server srv, State s, Map m, double x, double y) {
-		super(srv, s, m, x, y);
+	public Cyclops(Server srv, Map m, double[] pos) {
+		super(srv, m, pos);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(x, y, 10, 10);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 
@@ -37,7 +36,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(srv, this.state, this.map, 0, 0, 15);
+		shotgun = new Item(srv, this.map, new double[]{0, 0}, 15);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
@@ -92,6 +91,6 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		this.map.addItem(new Item(this.server, this.state, this.map, bounds.getCenterX(), bounds.getCenterY(), 6));
+		this.map.addItem(new Item(this.server, this.map, this.getCenter(), 6));
 	}
 }

@@ -1,18 +1,18 @@
 package urfquest.server.entities.projectiles;
 
+import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public class RocketExplosion extends Projectile {
 
-	public RocketExplosion(State s, Map m, double x, double y, Entity source) {
-		super(s, m, x, y, source);
+	public RocketExplosion(Server s, Map m, double[] pos, Entity source) {
+		super(s, m, pos, source);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		this.velocity = 0;
-		this.direction = 0;
+		this.movementVector = new Vector(0, 0);
 	}
 
 	public void tick() {

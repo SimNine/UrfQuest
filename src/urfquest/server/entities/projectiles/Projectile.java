@@ -1,17 +1,17 @@
 package urfquest.server.entities.projectiles;
 
+import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
+import urfquest.shared.Vector;
 
 public abstract class Projectile extends Entity {
-	protected double velocity;
-	protected int direction;
+	protected Vector movementVector;
 	protected Entity source;
 
-	protected Projectile(State s, Map m, double x, double y, Entity source) {
-		super(c, s, m, x, y);
+	protected Projectile(Server s, Map m, double[] pos, Entity source) {
+		super(s, m, pos);
 		this.source = source;
 	}
 	

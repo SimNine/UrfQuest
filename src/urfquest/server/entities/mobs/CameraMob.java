@@ -13,8 +13,8 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(Server srv, State s, Map m, double x, double y, int mode) {
-		super(srv, s, m, x, y);
+	public CameraMob(Server srv, State s, Map m, double[] pos, int mode) {
+		super(srv, m, pos);
 		
 		movementVector.magnitude = 0.01;
 		movementVector.dirRadians = server.randomDouble()*2.0*Math.PI;

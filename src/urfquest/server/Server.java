@@ -21,6 +21,7 @@ import urfquest.server.map.Map;
 import urfquest.server.map.MapChunk;
 import urfquest.server.monitoring.MapMonitor;
 import urfquest.server.state.State;
+import urfquest.shared.ArrayUtils;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
 import urfquest.shared.MessageQueue;
@@ -160,9 +161,9 @@ public class Server {
 				String playerName = m.entityName;
 				Player newPlayer = new Player(this, this.state, 
 											  this.state.getSurfaceMap(), 
-											  this.state.getSurfaceMap().getHomeCoords()[0], 
-											  this.state.getSurfaceMap().getHomeCoords()[1], 
-											  playerName, c);
+											  ArrayUtils.castToDoubleArr(this.state.getSurfaceMap().getHomeCoords()), 
+											  playerName, 
+											  c);
 				this.state.addPlayer(newPlayer);
 				this.state.getSurfaceMap().addPlayer(newPlayer);
 				userMap.addEntry(c.id, newPlayer.id, playerName);

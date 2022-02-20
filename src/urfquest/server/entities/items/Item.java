@@ -3,6 +3,7 @@ package urfquest.server.entities.items;
 import java.awt.geom.Rectangle2D;
 
 import urfquest.Logger;
+import urfquest.LogLevel;
 import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Chicken;
@@ -12,9 +13,9 @@ import urfquest.server.entities.projectiles.GrenadeProjectile;
 import urfquest.server.entities.projectiles.Rocket;
 import urfquest.server.entities.projectiles.RocketExplosion;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.server.tiles.MapLink;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.ArrayUtils;
 
 public class Item extends Entity {
 	public static final String assetPath = "/assets/items/";
@@ -102,18 +103,18 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(Server srv, State s, Map m, double x, double y, int type) {
-		this(srv, s, m, x, y, type, 1, -1);
+	public Item(Server srv, Map m, double[] pos, int type) {
+		this(srv, m, pos, type, -1);
 	}
 	
-	public Item(Server srv, State s, Map m, double x, double y, int type, int durability) {
-		this(srv, s, m, x, y, type, 1, durability);
+	public Item(Server srv, Map m, double[] pos, int type, int durability) {
+		this(srv, m, pos, type, 1, durability);
 	}
 	
-	public Item(Server srv, State s, Map m, double x, double y, int type, int stackSize, int durability) {
-		super(srv, s, m, x, y);
+	public Item(Server srv, Map m, double[] pos, int type, int stackSize, int durability) {
+		super(srv, m, pos);
 		this.server = srv;
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 		
 		this.itemType = type;
 		this.cooldown = 0;
@@ -145,9 +146,10 @@ public class Item extends Entity {
 		}
 		
 		switch (itemType) {
-		case Item.EMPTY_ITEM:
+		case Item.EMPTY_ITEM: {
 			throw new IllegalStateException("something fucked up");
-		case Item.ASTRAL_RUNE:
+		}
+		case Item.ASTRAL_RUNE: {
 			if (m.getMana() < 50.0) {
 				return false;
 			} // else
@@ -156,20 +158,23 @@ public class Item extends Entity {
 			m.incrementMana(-50.0);
 			double[] pos = m.getCenter();
 			for (int i = 0; i < 180; i++) {
-				m.getMap().addProjectile(new Bullet(this.state, this.map, pos[0], pos[1], i*2, Bullet.getDefaultVelocity(), m));
+				// TODO: reimplement?
+				// m.getMap().addProjectile(new Bullet(this.server, this.map, pos, i*2, Bullet.getDefaultVelocity(), m));
 			}
 			return true;
-		case Item.COSMIC_RUNE:
+		}
+		case Item.COSMIC_RUNE: {
 			if (m.getMana() < 5.0) {
 				return false;
 			} // else
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-5.0);
-			double[] pos3 = m.getPos();
-			m.getMap().addMob(new Chicken(this.server, this.state, this.map, pos3[0], pos3[1]));
+			double[] pos = m.getPos();
+			m.getMap().addMob(new Chicken(this.server, this.map, pos));
 			return true;
-		case Item.LAW_RUNE:
+		}
+		case Item.LAW_RUNE: {
 			if (m.getMana() < 30.0) {
 				return false;
 			}
@@ -179,7 +184,8 @@ public class Item extends Entity {
 			int[] home = m.getMap().getHomeCoords();
 			m.setPos(home[0], home[1]);
 			return true;
-		case Item.CHICKEN_LEG:
+		}
+		case Item.CHICKEN_LEG: {
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -188,7 +194,8 @@ public class Item extends Entity {
 				m.incrementFullness(5.0);
 				return true;
 			}
-		case Item.CHEESE:
+		}
+		case Item.CHEESE: {
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -197,6 +204,7 @@ public class Item extends Entity {
 				m.setFullness(m.getMaxFullness());
 				return true;
 			}
+		}
 		case Item.BONE:
 			return false;
 		case Item.GEM:
@@ -205,59 +213,64 @@ public class Item extends Entity {
 			return false;
 		case Item.STONE:
 			return false;
-		case Item.MIC:
+		case Item.MIC: {
 			if (m.getMana() < 30.0) {
 				return false;
 			}
 			cooldown = getMaxCooldown();
 			
 			for (int i = 0; i < 20; i++) {
-				map.addProjectile(new RocketExplosion(this.state, m.getMap(), bounds.x + (server.randomDouble() - 0.5)*20, bounds.y + (server.randomDouble() - 0.5)*20, this));
+				map.addProjectile(new RocketExplosion(server, m.getMap(), this.getCenter(), this));
 			}
 			return true;
-		case Item.KEY:
+		}
+		case Item.KEY: {
 			return false;
-		case Item.GRENADE_ITEM:
+		}
+		case Item.GRENADE_ITEM: {
 			cooldown = getMaxCooldown();
 			
-			m.getMap().addProjectile(new GrenadeProjectile(this.state, m.getMap(), m.getCenter()[0], m.getCenter()[1], m));
+			m.getMap().addProjectile(new GrenadeProjectile(server, m.getMap(), m.getCenter(), m));
 			return true;
-		case Item.PISTOL:
+		}
+		case Item.PISTOL: {
 			cooldown = getMaxCooldown();
 			
-			double[] pos1 = m.getCenter();
-			int dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
-			m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos1[0], pos1[1], dir, Bullet.getDefaultVelocity(), m));
+			double[] pos = m.getCenter();
+			double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
+			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
 			return true;
-		case Item.RPG:
+		}
+		case Item.RPG: {
 			cooldown = getMaxCooldown();
 			
-			double[] pos2 = m.getCenter();
-			int dir1 = m.getDirection();
-			m.getMap().addProjectile(new Rocket(this.state, m.getMap(), pos2[0], pos2[1], dir1, Rocket.getDefaultVelocity(), m));
+			double[] pos = m.getCenter();
+			double dir = m.getDirection();
+			m.getMap().addProjectile(new Rocket(server, m.getMap(), pos, dir, server.randomDouble()*0.04 + 0.08, m));
 			
 			return true;
-		case Item.SHOTGUN:
+		}
+		case Item.SHOTGUN: {
 			cooldown = getMaxCooldown();
 			
-			double[] pos4 = m.getCenter();
-			int dir4;
+			double[] pos = m.getCenter();
 			int numShots = 15 + (int)(server.randomDouble()*5);
-			
 			for (int i = 0; i < numShots; i++) {
-				dir4 = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
-				m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos4[0], pos4[1], dir4, Bullet.getDefaultVelocity(), m));
+				double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
+				m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
 			}
 			
 			return true;
-		case Item.SMG:
+		}
+		case Item.SMG: {
 			cooldown = getMaxCooldown();
 			
-			double[] pos5 = m.getCenter();
-			int dir5 = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
-			m.getMap().addProjectile(new Bullet(this.state, m.getMap(), pos5[0], pos5[1], dir5, Bullet.getDefaultVelocity(), m));
+			double[] pos = m.getCenter();
+			double dir = m.getDirection() + (server.randomDouble() - 0.5)*10;
+			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
 			return true;
-		case Item.PICKAXE:
+		}
+		case Item.PICKAXE: {
 			int[] tile = m.tileAtDistance(1.0);
 			if (tile[0] == Tiles.BOULDER) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
@@ -271,22 +284,22 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 					double rand = server.randomDouble();
 					if (rand > .95) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.LAW_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.LAW_RUNE));
 					} else if (rand > .90) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.COSMIC_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.COSMIC_RUNE));
 					} else if (rand > .85) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.ASTRAL_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.ASTRAL_RUNE));
 					} else if (rand > .82) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.SHOTGUN));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.SHOTGUN));
 					} else if (rand > .79) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.SMG));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.SMG));
 					} else if (rand > .75) {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.GRENADE_ITEM));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.GRENADE_ITEM));
 					} else {
-						m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.STONE));
+						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.STONE));
 					}
 				}
-				m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.STONE));
+				m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.STONE));
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile[0] == Tiles.STONE) {
@@ -294,9 +307,9 @@ public class Item extends Entity {
 				if (tile[1] == Tiles.STONE_DEF) {
 					// nothing else
 				} else if (tile[1] == Tiles.COPPERORE_STONE) {
-					m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.COPPER_ORE));
+					m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.COPPER_ORE));
 				} else if (tile[1] == Tiles.IRONORE_STONE) {
-					m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.IRON_ORE));
+					m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.IRON_ORE));
 				}
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
 				cooldown = getMaxCooldown();			
@@ -304,18 +317,20 @@ public class Item extends Entity {
 			} else {
 				return false;
 			}
-		case Item.HATCHET:
+		}
+		case Item.HATCHET: {
 			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				m.getMap().addItem(new Item(this.server, this.state, this.map, coords[0], coords[1], Item.LOG));
+				m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.LOG));
 				
 				cooldown = getMaxCooldown();
 				return true;
 			} else {
 				return false;
 			}
-		case Item.SHOVEL:
+		}
+		case Item.SHOVEL: {
 			if (m.tileAtDistance(0)[0] == Tiles.GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
 				if (server.randomDouble() > .05) {
@@ -326,7 +341,7 @@ public class Item extends Entity {
 					//int caveSize = 400;
 					
 					// create new map
-					Map newCaveMap = new Map(srv, Map.CAVE_MAP);
+					Map newCaveMap = new Map(server, Map.CAVE_MAP);
 					int xHome = newCaveMap.getHomeCoords()[0];
 					int yHome = newCaveMap.getHomeCoords()[1];
 					newCaveMap.setTileAt(xHome, yHome, 13);
@@ -337,7 +352,7 @@ public class Item extends Entity {
 					newCaveMap.setActiveTile(xHome, yHome, newLink);
 					
 					//debug
-					if (this.server.getLogger().getLogLevel().compareTo(LogLevel.LOG_DEBUG) >= 0) {
+					if (this.server.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 						this.server.getLogger().debug("soruce: " + coords[0] + ", " + coords[1]);
 						this.server.getLogger().debug("exit: " + xHome + ", " + yHome);
 					}
@@ -348,6 +363,7 @@ public class Item extends Entity {
 			} else {
 				return false;
 			}
+		}
 		case Item.IRON_ORE:
 			return false;
 		case Item.COPPER_ORE:
@@ -400,7 +416,7 @@ public class Item extends Entity {
 	}
 	
 	public Item clone() {
-		return new Item(this.server, this.state, this.map, bounds.x, bounds.y, itemType, stackSize, durability);
+		return new Item(this.server, this.map, this.getPos(), durability);
 	}
 	
 	/*

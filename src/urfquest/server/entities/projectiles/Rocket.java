@@ -1,22 +1,22 @@
 package urfquest.server.entities.projectiles;
 
+import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
-import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public class Rocket extends Projectile {
 
-	public Rocket(State s, Map m, double x, double y, int dir, double velocity, Entity source) {
-		super(s, m, x, y, source);
+	public Rocket(Server s, Map m, double[] pos, double dirRadians, double velocity, Entity source) {
+		super(s, m, pos, source);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		this.velocity = velocity;
-		this.direction = dir;
+		this.movementVector = new Vector(dirRadians, velocity);
 	}
 
 	public void tick() {
-		this.incrementPos(velocity*Math.cos(Math.toRadians(direction)), velocity*Math.sin(Math.toRadians(direction)));
+		this.incrementPos(this.movementVector);
 		if(!Tiles.isPenetrable(map.getTileTypeAt((int)bounds.x, (int)bounds.y))) {
 			// animStage = 1000;
 			explode();
@@ -39,7 +39,7 @@ public class Rocket extends Projectile {
 	}
 	
 	private void explode() {
-		map.addProjectile(new RocketExplosion(this.state, this.map, bounds.x, bounds.y, this));
+		map.addProjectile(new RocketExplosion(server, this.map, this.getPos(), this));
 	}
 
 }
