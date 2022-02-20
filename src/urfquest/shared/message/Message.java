@@ -19,9 +19,7 @@ public class Message implements Serializable {
 	public int[] xyChunk = new int[2];
 	
 	public double[] pos = new double[2];
-	
-	public double direction = 0.0;
-	public double velocity = 0.0;
+	public Vector vector = null;
 	
 	public int clientID = 0;
 	public int entityID = 0;
@@ -54,7 +52,7 @@ public class Message implements Serializable {
 			
 		// only sent by client
 		case PLAYER_SET_MOVE_VECTOR: {
-			Vector v = (Vector)this.payload;
+			Vector v = this.vector;
 			ret += ",entityID:" + this.entityID + ",direction:" + v.dirRadians + ",velocity:" + v.magnitude;
 			break;
 		}

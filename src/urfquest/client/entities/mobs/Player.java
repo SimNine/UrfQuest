@@ -167,10 +167,10 @@ public class Player extends Mob {
 	
 	private int animStage = 0;
 
-	public Player(Client c, int id, Map currMap, double x, double y, String name) {
-		super(c, id, currMap, x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
-		velocity = Constants.DEFAULT_PLAYER_VELOCITY;
+	public Player(Client c, int id, Map currMap, double[] pos, String name) {
+		super(c, id, currMap, pos);
+		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.defaultVelocity = Constants.DEFAULT_PLAYER_VELOCITY;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -185,8 +185,7 @@ public class Player extends Mob {
 	}
 	
 	public void setMovementVector(double dirRadians, double velocity) {
-		this.velocity = velocity;
-		this.direction = dirRadians;
+		this.movementVector = new Vector(dirRadians, velocity);
 
 		// TODO: re-add this after implementing client tick
 		//double xComp = velocity*Math.cos(direction);
@@ -195,7 +194,7 @@ public class Player extends Mob {
 		
 		Message m = new Message();
 		m.type = MessageType.PLAYER_SET_MOVE_VECTOR;
-		m.payload = new Vector(direction, velocity);
+		m.vector = this.movementVector;
 		this.client.send(m);
 	}
 	
@@ -364,7 +363,7 @@ public class Player extends Mob {
 			animStage = -1;
 		}
 		
-		g.drawImage(img[(int)(direction/(Math.PI/4.0))][animStage/STEP_SIZE], 
+		g.drawImage(img[(int)(this.movementVector.dirRadians/(Math.PI/4.0))][animStage/STEP_SIZE], 
 					client.getPanel().gameToWindowX(bounds.getX()), 
 					client.getPanel().gameToWindowY(bounds.getY()), 
 					null);
@@ -380,7 +379,7 @@ public class Player extends Mob {
 	
 	public void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawString("direction: " + this.direction, 
+		g.drawString("direction: " + this.movementVector.dirRadians, 
 				client.getPanel().gameToWindowX(bounds.getX()), 
 				client.getPanel().gameToWindowY(bounds.getY()));
 		g.drawString("moveStage: " + this.animStage, 

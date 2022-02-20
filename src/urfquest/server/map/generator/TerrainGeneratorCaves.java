@@ -1,7 +1,6 @@
 package urfquest.server.map.generator;
 
 import urfquest.server.map.MapChunk;
-import urfquest.server.map.SimplexNoiseClass;
 import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
 

@@ -10,10 +10,10 @@ import urfquest.client.map.Map;
 public class RocketExhaust extends Particle {
 	private Color color;
 
-	public RocketExhaust(Client c, int id, Map m, double x, double y) {
-		super(c, id, m, x, y, (int)(Math.random()*360.0), 0.04, 100);
+	public RocketExhaust(Client c, int id, Map m, double[] pos) {
+		super(c, id, m, pos, (Math.random()*Math.PI*2), 0.04, 100);
 		color = new Color(255, 255, 255, 255);
-		bounds.setFrame(x, y, 0, 0);
+		bounds.setFrame(pos[0], pos[1], 0, 0);
 	}
 
 	protected void drawEntity(Graphics g) {
@@ -48,7 +48,7 @@ public class RocketExhaust extends Particle {
 //		}
 		
 		// change shape and size
-		this.move(-0.02, -0.02);
+		this.incrementPos(-0.02, -0.02);
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.04, bounds.height + 0.04);
 	}
 }

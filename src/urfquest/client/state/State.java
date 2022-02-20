@@ -5,6 +5,7 @@ import urfquest.client.entities.mobs.CameraMob;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.Map;
+import urfquest.shared.ArrayUtils;
 import urfquest.shared.Constants;
 
 public class State {
@@ -23,8 +24,7 @@ public class State {
 		this.isGameRunning = false;
 		this.currentMap = new Map(c, Constants.CLIENT_CACHED_MAP_DIAMETER);
 		this.camera = new CameraMob(this.client, -1, currentMap, 
-				currentMap.getHomeCoords()[0], 
-				currentMap.getHomeCoords()[1], 
+				ArrayUtils.castToDoubleArr(currentMap.getHomeCoords()), 
 				CameraMob.STILL_MODE);
 	}
 	

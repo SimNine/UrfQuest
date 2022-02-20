@@ -143,7 +143,7 @@ public class Client {
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
 				if (m.entityType == EntityType.PLAYER) {
-					Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos[0], m.pos[1], m.entityName);
+					Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos, m.entityName);
 					state.getCurrentMap().addPlayer(player);
 					player.setMap(state.getCurrentMap());
 					
@@ -159,16 +159,14 @@ public class Client {
 						case CHICKEN: {
 							Chicken chicken = new Chicken(this, m.entityID, 
 														  state.getCurrentMap(), 
-														  m.pos[0], 
-														  m.pos[1]);
+														  m.pos);
 							state.getCurrentMap().addMob(chicken);
 							break;
 						}
 						case CYCLOPS: {
 							Cyclops cyclops = new Cyclops(this, m.entityID,
 														  state.getCurrentMap(),
-														  m.pos[0],
-														  m.pos[1]);
+														  m.pos);
 							state.getCurrentMap().addMob(cyclops);
 							break;
 						}

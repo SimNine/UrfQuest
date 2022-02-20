@@ -5,16 +5,15 @@ import java.awt.Graphics;
 import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
+import urfquest.shared.Vector;
 
 public abstract class Particle extends Entity {
-	protected int dir;
-	protected double velocity;
+	protected Vector movementVector;
 	private int duration;
 
-	protected Particle(Client c, int id, Map m, double x, double y, int dir, double vel, int duration) {
-		super(c, id, m, x, y);
-		this.dir = dir;
-		this.velocity = vel;
+	protected Particle(Client c, int id, Map m, double[] pos, double dir, double vel, int duration) {
+		super(c, id, m, pos);
+		this.movementVector = new Vector(dir, vel);
 		this.duration = duration;
 	}
 

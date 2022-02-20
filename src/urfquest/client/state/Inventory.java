@@ -58,22 +58,23 @@ public class Inventory {
 	// takes one of the selected item out of the stack and returns it
 	// (removes the stack if the item is unstackable)
 	public Item removeOneOfSelectedItem() {
-		if (entries[selectedEntry] != null) {
-			if (entries[selectedEntry].maxStackSize() == 1) {
-				Item temp = entries[selectedEntry];
-				removeSelectedEntry();
-				return temp;
-			}
-			Item i = entries[selectedEntry].clone();
-			if (entries[selectedEntry].currStackSize() > 1) {
-				entries[selectedEntry].incStackSize(-1);
-			} else {
-				removeSelectedEntry();
-			}
-			return i;
-		} else {
-			return null;
-		}
+//		if (entries[selectedEntry] != null) {
+//			if (entries[selectedEntry].maxStackSize() == 1) {
+//				Item temp = entries[selectedEntry];
+//				removeSelectedEntry();
+//				return temp;
+//			}
+//			Item i = entries[selectedEntry].clone();
+//			if (entries[selectedEntry].currStackSize() > 1) {
+//				entries[selectedEntry].incStackSize(-1);
+//			} else {
+//				removeSelectedEntry();
+//			}
+//			return i;
+//		} else {
+//			return null;
+//		}
+		return null;
 	}
 	
 	public Item getSelectedItem() {

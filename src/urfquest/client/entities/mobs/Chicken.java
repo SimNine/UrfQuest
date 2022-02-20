@@ -23,11 +23,10 @@ public class Chicken extends Mob {
 		}
 	}
 	
-	public Chicken(Client c, int id, Map m, double x, double y) {
-		super(c, id, m, x, y);
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+	public Chicken(Client c, int id, Map m, double[] pos) {
+		super(c, id, m, pos);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 		
-		velocity = 0.02;
 		defaultVelocity = 0.02;
 		
 		health = 10.0;

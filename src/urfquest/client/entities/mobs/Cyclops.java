@@ -26,15 +26,14 @@ public class Cyclops extends Mob {
 		}
 	}
 
-	public Cyclops(Client c, int id, Map m, double x, double y) {
-		super(c, id, m, x, y);
+	public Cyclops(Client c, int id, Map m, double[] pos) {
+		super(c, id, m, pos);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(x, y, 10, 10);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
-		velocity = 0.01;
 		defaultVelocity = 0.01;
 		
 		health = 50.0;

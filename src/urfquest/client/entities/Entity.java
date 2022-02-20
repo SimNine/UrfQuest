@@ -8,6 +8,7 @@ import urfquest.LogLevel;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.map.Map;
+import urfquest.shared.Vector;
 
 public abstract class Entity {
 	protected Client client;
@@ -17,10 +18,10 @@ public abstract class Entity {
 	
 	public int id;
 	
-	protected Entity(Client c, int id, Map m, double x, double y) {
+	protected Entity(Client c, int id, Map m, double[] pos) {
 		this.client = c;
 		this.id = id;
-		bounds = new Rectangle2D.Double(x, y, 1, 1);
+		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 		map = m;
 	}
 	
@@ -31,20 +32,14 @@ public abstract class Entity {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	public void move(double x, double y) {
+	public void incrementPos(double x, double y) {
 		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	protected void move(int direction, double magnitude) {
-		double newX = bounds.getX();
-		double newY = bounds.getY();
-		double xComp = magnitude*Math.cos(Math.toRadians(direction));
-		double yComp = magnitude*Math.sin(Math.toRadians(direction));
-		
-		newX += xComp;
-		newY += yComp;
-		
-		bounds.setRect(newX, newY, bounds.getWidth(), bounds.getHeight());
+	protected void incrementPos(Vector v) {
+		double xComp = v.magnitude*Math.cos(Math.toRadians(v.magnitude));
+		double yComp = v.magnitude*Math.sin(Math.toRadians(v.magnitude));
+		this.incrementPos(xComp, yComp);
 	}
 	
 	// gets the object's position as a double array with length 2 (x, y)

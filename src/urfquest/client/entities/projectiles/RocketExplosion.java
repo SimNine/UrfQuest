@@ -1,22 +1,24 @@
 package urfquest.client.entities.projectiles;
 
+import java.awt.Graphics;
+
 import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.map.Map;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public class RocketExplosion extends Projectile {
 
-	public RocketExplosion(Client c, double x, double y, Entity source, Map m) {
-		super(null, x, y, source, m);
+	public RocketExplosion(Client c, int id, double[] pos, Entity source, Map m) {
+		super(c, id, m, pos, source);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		this.velocity = 0;
-		this.direction = 0;
+		this.movementVector = new Vector(0, 0);
 	}
 
 	public void update() {
-		this.move(-0.04, -0.04);
+		this.incrementPos(-0.04, -0.04);
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.08, bounds.height + 0.08);
 		
 		// clear trees
@@ -37,5 +39,11 @@ public class RocketExplosion extends Projectile {
 	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-0.15);
+	}
+
+	@Override
+	protected void drawEntity(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }

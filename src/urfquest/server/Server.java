@@ -25,7 +25,6 @@ import urfquest.shared.ArrayUtils;
 import urfquest.shared.ChatMessage;
 import urfquest.shared.Constants;
 import urfquest.shared.MessageQueue;
-import urfquest.shared.Vector;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -166,14 +165,14 @@ public class Server {
 											  c);
 				this.state.addPlayer(newPlayer);
 				this.state.getSurfaceMap().addPlayer(newPlayer);
-				userMap.addEntry(c.id, newPlayer.id, playerName);
+				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
 				break;
 			}
 			case PLAYER_SET_MOVE_VECTOR: {
 				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to set the velocity and direction of their player
 				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
-				player.setMovementVector((Vector)m.payload);
+				player.setMovementVector(m.vector);
 				break;
 			}
 			case MAP_REQUEST: {

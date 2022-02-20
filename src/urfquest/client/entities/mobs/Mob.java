@@ -8,11 +8,11 @@ import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
-	protected double direction = 0;
-	protected double velocity;
+	protected Vector movementVector;
 	protected double defaultVelocity;
 	
 	protected double health;
@@ -23,8 +23,9 @@ public abstract class Mob extends Entity {
 	protected double maxFullness;
 	protected int healthbarVisibility = 0;
 
-	protected Mob(Client c, int id, Map m, double x, double y) {
-		super(c, id, m, x, y);
+	protected Mob(Client c, int id, Map m, double[] pos) {
+		super(c, id, m, pos);
+		this.movementVector = new Vector(0, 0);
 	}
 
 	public abstract void update();
@@ -61,15 +62,15 @@ public abstract class Mob extends Entity {
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public int[] tileAtDistance(double d) {
-		double xComp = d*Math.cos(Math.toRadians(direction));
-		double yComp = d*Math.sin(Math.toRadians(direction));
+		double xComp = d*Math.cos(this.movementVector.dirRadians);
+		double yComp = d*Math.sin(this.movementVector.dirRadians);
 		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
 	public int[] tileCoordsAtDistance(double d) {
-		double xComp = d*Math.cos(Math.toRadians(direction));
-		double yComp = d*Math.sin(Math.toRadians(direction));
+		double xComp = d*Math.cos(this.movementVector.dirRadians);
+		double yComp = d*Math.sin(this.movementVector.dirRadians);
 		
 		int[] ret = new int[2];
 		ret[0] = (int)(bounds.getCenterX() + xComp);
@@ -79,8 +80,8 @@ public abstract class Mob extends Entity {
 	}
 
 	// setters, getters, and incrementers
-	public void setDirection(int dir) {
-		direction = dir % 360;
+	public void setDirection(double dirRadians) {
+		this.movementVector.dirRadians = dirRadians;
 	}
 	
 	public void setHealth(double h) {
@@ -89,11 +90,11 @@ public abstract class Mob extends Entity {
 	}
 	
 	public void setVelocity(double s) {
-		velocity = s;
+		this.movementVector.magnitude = s;
 	}
 	
 	public double getDirection() {
-		return direction;
+		return this.movementVector.dirRadians;
 	}
 	
 	public double getHealth() {
@@ -101,7 +102,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	public double getVelocity() {
-		return velocity;
+		return this.movementVector.magnitude;
 	}
 	
 	public double getDefaultVelocity() {
@@ -113,7 +114,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	public void incrementVelocity(double amt) {
-		setVelocity(velocity + amt);
+		setVelocity(this.movementVector.magnitude + amt);
 	}
 	
 	public void incrementMana(double amt) {
@@ -166,6 +167,8 @@ public abstract class Mob extends Entity {
 		map = m;
 	}
 
+	
+	
 	/*
 	 * Drawing methods
 	 */

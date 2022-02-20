@@ -1,4 +1,4 @@
-package urfquest.server.map;
+package urfquest.server.map.generator;
 
 import java.util.Random;
 

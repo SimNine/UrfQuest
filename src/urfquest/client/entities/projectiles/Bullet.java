@@ -3,24 +3,24 @@ package urfquest.client.entities.projectiles;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import urfquest.Main;
+import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.map.Map;
 import urfquest.client.tiles.Tiles;
+import urfquest.shared.Vector;
 
 public class Bullet extends Projectile {
 
-	public Bullet(double x, double y, int dir, double velocity, Entity source, Map m) {
-		super(null, x, y, source, m);
+	public Bullet(Client c, int id, Map m, double[] pos, double dir, double velocity, Entity source) {
+		super(c, id, m, pos, source);
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
-		this.velocity = velocity;
-		direction = dir;
+		this.movementVector = new Vector(dir, velocity);
 	}
 
 	public void update() {
-		this.move(velocity*Math.cos(Math.toRadians(direction)), velocity*Math.sin(Math.toRadians(direction)));
+		this.incrementPos(this.movementVector);
 		if(!Tiles.isPenetrable(map.getTileTypeAt((int)bounds.x, (int)bounds.y))) {
 			// animStage = 1000;
 			splashParticles();
@@ -52,8 +52,8 @@ public class Bullet extends Projectile {
 	public void drawEntity(Graphics g) {
 		int tileWidth = QuestPanel.TILE_WIDTH;
 		g.setColor(Color.BLACK);
-		g.fillOval(Main.panel.gameToWindowX(bounds.getX()), 
-				   Main.panel.gameToWindowY(bounds.getY()),
+		g.fillOval(client.getPanel().gameToWindowX(bounds.getX()), 
+				   client.getPanel().gameToWindowY(bounds.getY()),
 				   (int)(bounds.getWidth()*tileWidth), 
 				   (int)(bounds.getHeight()*tileWidth));
 	}

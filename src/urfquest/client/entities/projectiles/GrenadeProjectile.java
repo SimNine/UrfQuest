@@ -1,5 +1,7 @@
 package urfquest.client.entities.projectiles;
 
+import java.awt.Graphics;
+
 import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
@@ -7,8 +9,8 @@ import urfquest.client.map.Map;
 
 public class GrenadeProjectile extends Projectile {
 
-	public GrenadeProjectile(Client c, double x, double y, Entity source, Map m) {
-		super(c, null, x, y, source, m);
+	public GrenadeProjectile(Client c, int id, Map m, double[] pos, Entity source) {
+		super(c, id, m, pos, source);
 		
 		bounds.setFrame(bounds.x, bounds.y, 1, 1);
 	}
@@ -24,5 +26,11 @@ public class GrenadeProjectile extends Projectile {
 
 	public void collideWith(Mob m) {
 		// do nothing
+	}
+
+	@Override
+	protected void drawEntity(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }
