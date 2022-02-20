@@ -15,17 +15,19 @@ public abstract class Entity {
 	protected Map map;
 	
 	protected Rectangle2D.Double bounds;
+	protected Vector movementVector;
 	
 	public int id;
 	
 	protected Entity(Server srv, Map m, double[] pos) {
 		this.server = srv;
 		
-		id = IDGenerator.newID();
+		this.id = IDGenerator.newID();
 		
-		map = m;
+		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.movementVector = new Vector(0.0, 0.0);
 		
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.map = m;
 	}
 	
 	public abstract void tick();
@@ -35,6 +37,96 @@ public abstract class Entity {
 	/*
 	 * Position management
 	 */
+	
+	public Vector getMovementVector() {
+		return this.movementVector;
+	}
+	
+	public void setMovementVector(double dirRadians, double magnitude) {
+		this.setMovementVector(new Vector(dirRadians, magnitude));
+	}
+	
+	public void setMovementVector(Vector vector) {
+		this.movementVector = vector;
+		
+		Message m = new Message();
+		m.type = MessageType.ENTITY_SET_MOVE_VECTOR;
+		m.vector = this.movementVector;
+		m.entityID = this.id;
+		server.sendMessageToAllClients(m);
+	}
+	
+	public void attemptIncrementPos() {
+		if (this.movementVector.magnitude == 0.0) {
+			return;
+		} else {
+			double xComp = movementVector.magnitude*Math.cos(movementVector.dirRadians);
+			double yComp = movementVector.magnitude*Math.sin(movementVector.dirRadians);
+			attemptIncrementPos(xComp, yComp);
+		}
+	}
+	
+	public void attemptIncrementPos(double x, double y) {
+		double newX = bounds.getCenterX() + x;
+		double newY = bounds.getCenterY() + y;
+		
+		boolean canMove = true;
+		
+		// check if this move is valid on the x-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
+			canMove = false;
+		}
+		
+		// check if this move is valid on the y-axis
+		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
+			canMove = false;
+		}
+				
+		if (canMove) {
+			this.incrementPos(x, y);
+		} else {
+			this.setPos(bounds.getX(), bounds.getY());
+		}
+	}
+	
+	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
+	public int[] tileAtDistance(double d) {
+		double xComp = d*Math.cos(movementVector.dirRadians);
+		double yComp = d*Math.sin(movementVector.dirRadians);
+		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
+	}
+	
+	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
+	public int[] tileCoordsAtDistance(double d) {
+		double xComp = d*Math.cos(movementVector.dirRadians);
+		double yComp = d*Math.sin(movementVector.dirRadians);
+		
+		int[] ret = new int[2];
+		ret[0] = (int)(bounds.getCenterX() + xComp);
+		ret[1] = (int)(bounds.getCenterY() + yComp);
+		
+		return ret;
+	}
+	
+	public double getDirection() {
+		return movementVector.dirRadians;
+	}
+
+	public void setDirection(double dirRadians) {
+		this.setMovementVector(dirRadians, movementVector.magnitude);
+	}
+	
+	public double getVelocity() {
+		return movementVector.magnitude;
+	}
+	
+	public void setVelocity(double velocity) {
+		this.setMovementVector(movementVector.dirRadians, velocity);
+	}
+	
+	public void incrementVelocity(double amt) {
+		this.setVelocity(movementVector.magnitude + amt);
+	}
 	
 	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
@@ -52,15 +144,9 @@ public abstract class Entity {
 	}
 	
 	protected void incrementPos(Vector vector) {
-		double newX = bounds.getX();
-		double newY = bounds.getY();
 		double xComp = vector.magnitude*Math.cos(vector.dirRadians);
 		double yComp = vector.magnitude*Math.sin(vector.dirRadians);
-		
-		newX += xComp;
-		newY += yComp;
-		
-		this.setPos(newX, newY);
+		this.incrementPos(xComp, yComp);
 	}
 	
 	public double[] getPos() {

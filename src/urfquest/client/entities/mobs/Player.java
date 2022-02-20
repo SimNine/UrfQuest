@@ -170,7 +170,6 @@ public class Player extends Mob {
 	public Player(Client c, int id, Map currMap, double[] pos, String name) {
 		super(c, id, currMap, pos);
 		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
-		this.defaultVelocity = Constants.DEFAULT_PLAYER_VELOCITY;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -184,18 +183,15 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public void setMovementVector(double dirRadians, double velocity) {
-		this.movementVector = new Vector(dirRadians, velocity);
-
-		// TODO: re-add this after implementing client tick
-		//double xComp = velocity*Math.cos(direction);
-		//double yComp = velocity*Math.sin(direction);
-		//super.move(xComp, yComp);
-		
-		Message m = new Message();
-		m.type = MessageType.PLAYER_SET_MOVE_VECTOR;
-		m.vector = this.movementVector;
-		this.client.send(m);
+	public void setMovementVector(double dirRadians, double velocity, boolean byClient) {
+		if (byClient) {
+			Message m = new Message();
+			m.type = MessageType.PLAYER_SET_MOVE_VECTOR;
+			m.vector = new Vector(dirRadians, velocity);
+			this.client.send(m);
+		} else {
+			this.movementVector = new Vector(dirRadians, velocity);
+		}
 	}
 	
 	public void setPos(double x, double y) {

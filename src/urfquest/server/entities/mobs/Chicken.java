@@ -6,6 +6,7 @@ import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
+import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -18,9 +19,7 @@ public class Chicken extends Mob {
 	public Chicken(Server srv, Map m, double[] pos) {
 		super(srv, m, pos);
 		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
-
-		defaultVelocity = 0.02;
-		movementVector.magnitude = defaultVelocity;
+		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CHICKEN;
 		
 		health = 10.0;
 		maxHealth = 10.0;
@@ -59,6 +58,10 @@ public class Chicken extends Mob {
 		routine.update();
 		this.movementVector = routine.getSuggestedMovementVector();
 		super.attemptIncrementPos();
+	}
+	
+	public double getBaseSpeed() {
+		return Constants.DEFAULT_VELOCITY_CHICKEN;
 	}
 	
 	private void think() {

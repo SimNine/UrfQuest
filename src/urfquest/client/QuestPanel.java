@@ -336,11 +336,11 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 			}
 		}
 		
-		double velocity = (keysHeld ? Constants.DEFAULT_PLAYER_VELOCITY : 0);
+		double velocity = (keysHeld ? Constants.DEFAULT_VELOCITY_PLAYER : 0);
 		Player p = client.getState().getPlayer();
 		if (p != null) {
 			direction = (keysHeld ? direction : p.getDirection());
-			p.setMovementVector(direction, velocity);
+			p.setMovementVector(direction, velocity, true);
 		} else {
 			//client.getState().getCamera().move(xDiff, yDiff);
 		}

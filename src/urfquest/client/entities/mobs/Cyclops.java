@@ -34,8 +34,6 @@ public class Cyclops extends Mob {
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
-		defaultVelocity = 0.01;
-		
 		health = 50.0;
 		maxHealth = 50.0;
 		mana = 0.0;

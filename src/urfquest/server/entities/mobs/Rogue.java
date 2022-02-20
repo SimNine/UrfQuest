@@ -10,6 +10,7 @@ import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
+import urfquest.shared.Constants;
 
 public class Rogue extends Mob {
 	
@@ -23,10 +24,9 @@ public class Rogue extends Mob {
 
 	public Rogue(Server srv, State s, Map m, double[] pos) {
 		super(srv, m, pos);
+		
 		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
-
-		defaultVelocity = 0.013;
-		movementVector.magnitude = defaultVelocity;
+		movementVector.magnitude = Constants.DEFAULT_VELOCITY_ROGUE;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -228,5 +228,10 @@ public class Rogue extends Mob {
 	
 	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
 		inventory.tryCrafting(input, output);
+	}
+
+	@Override
+	public double getBaseSpeed() {
+		return Constants.DEFAULT_VELOCITY_ROGUE;
 	}
 }

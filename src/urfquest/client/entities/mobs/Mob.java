@@ -8,12 +8,9 @@ import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
 import urfquest.client.tiles.Tiles;
-import urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
-	protected Vector movementVector;
-	protected double defaultVelocity;
 	
 	protected double health;
 	protected double mana;
@@ -25,7 +22,6 @@ public abstract class Mob extends Entity {
 
 	protected Mob(Client c, int id, Map m, double[] pos) {
 		super(c, id, m, pos);
-		this.movementVector = new Vector(0, 0);
 	}
 
 	public abstract void update();
@@ -80,41 +76,18 @@ public abstract class Mob extends Entity {
 	}
 
 	// setters, getters, and incrementers
-	public void setDirection(double dirRadians) {
-		this.movementVector.dirRadians = dirRadians;
-	}
 	
 	public void setHealth(double h) {
 		health = h;
 		healthbarVisibility = 500;
 	}
 	
-	public void setVelocity(double s) {
-		this.movementVector.magnitude = s;
-	}
-	
-	public double getDirection() {
-		return this.movementVector.dirRadians;
-	}
-	
 	public double getHealth() {
 		return health;
 	}
 	
-	public double getVelocity() {
-		return this.movementVector.magnitude;
-	}
-	
-	public double getDefaultVelocity() {
-		return defaultVelocity;
-	}
-	
 	public void incrementHealth(double amt) {
 		setHealth(health + amt);
-	}
-	
-	public void incrementVelocity(double amt) {
-		setVelocity(this.movementVector.magnitude + amt);
 	}
 	
 	public void incrementMana(double amt) {

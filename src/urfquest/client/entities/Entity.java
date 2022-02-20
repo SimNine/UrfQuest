@@ -14,6 +14,8 @@ public abstract class Entity {
 	protected Client client;
 	
 	protected Rectangle2D.Double bounds;
+	protected Vector movementVector;
+	
 	protected Map map;
 	
 	public int id;
@@ -21,11 +23,15 @@ public abstract class Entity {
 	protected Entity(Client c, int id, Map m, double[] pos) {
 		this.client = c;
 		this.id = id;
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
-		map = m;
+		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.movementVector = new Vector(0, 0);
+		this.map = m;
 	}
 	
-	// Updating methods
+	/*
+	 * Position management
+	 */
+	
 	public abstract void update();
 	
 	public void setPos(double x, double y) {
@@ -42,7 +48,6 @@ public abstract class Entity {
 		this.incrementPos(xComp, yComp);
 	}
 	
-	// gets the object's position as a double array with length 2 (x, y)
 	public double[] getPos() {
 		double[] ret = new double[2];
 		ret[0] = bounds.getX();
@@ -57,6 +62,42 @@ public abstract class Entity {
 		return ret;
 	}
 	
+	/*
+	 * MovementVector management
+	 */
+	
+	public void setMovementVector(Vector v) {
+		this.movementVector = v;
+	}
+	
+	public void setMovementVector(double dirRadians, double velocity) {
+		this.movementVector = new Vector(dirRadians, velocity);
+	}
+	
+	public void setDirection(double dirRadians) {
+		this.movementVector.dirRadians = dirRadians;
+	}
+	
+	public double getDirection() {
+		return this.movementVector.dirRadians;
+	}
+	
+	public void setVelocity(double s) {
+		this.movementVector.magnitude = s;
+	}
+	
+	public double getVelocity() {
+		return this.movementVector.magnitude;
+	}
+	
+	public void incrementVelocity(double amt) {
+		setVelocity(this.movementVector.magnitude + amt);
+	}
+	
+	/*
+	 * Entity size management
+	 */
+	
 	public double getWidth() {
 		return bounds.getWidth();
 	}
@@ -65,7 +106,10 @@ public abstract class Entity {
 		return bounds.getHeight();
 	}
 
-	// map methods
+	/*
+	 * Misc
+	 */
+	
 	public Map getMap() {
 		return map;
 	}

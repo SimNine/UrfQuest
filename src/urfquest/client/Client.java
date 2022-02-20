@@ -198,6 +198,14 @@ public class Client {
 				}
 				break;
 			}
+			case ENTITY_SET_MOVE_VECTOR: {
+				this.getLogger().verbose(m.toString());
+				Entity e = state.getCurrentMap().getEntity(m.entityID);
+				if (e != null) {
+					e.setMovementVector(m.vector);
+				}
+				break;
+			}
 			case MAP_METADATA: {
 				this.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)

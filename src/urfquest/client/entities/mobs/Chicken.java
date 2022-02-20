@@ -27,8 +27,6 @@ public class Chicken extends Mob {
 		super(c, id, m, pos);
 		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
 		
-		defaultVelocity = 0.02;
-		
 		health = 10.0;
 		maxHealth = 10.0;
 		mana = 0.0;

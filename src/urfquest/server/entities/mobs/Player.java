@@ -11,6 +11,7 @@ import urfquest.server.map.Map;
 import urfquest.server.state.Inventory;
 import urfquest.server.state.State;
 import urfquest.server.tiles.Tiles;
+import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -227,5 +228,10 @@ public class Player extends Mob {
 	
 	public void setPickupRange(double d) {
 		pickupRange = d;
+	}
+
+	@Override
+	public double getBaseSpeed() {
+		return Constants.DEFAULT_VELOCITY_PLAYER;
 	}
 }

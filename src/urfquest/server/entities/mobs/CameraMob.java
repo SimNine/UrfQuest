@@ -6,6 +6,7 @@ import urfquest.server.Server;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.server.state.State;
+import urfquest.shared.Constants;
 
 public class CameraMob extends Mob {
 	public static int STILL_MODE = 1301;
@@ -54,5 +55,10 @@ public class CameraMob extends Mob {
 
 	protected void drawEntity(Graphics g) {
 		// do nothing
+	}
+
+	@Override
+	public double getBaseSpeed() {
+		return Constants.DEFAULT_VELOCITY_CAMERA;
 	}
 }

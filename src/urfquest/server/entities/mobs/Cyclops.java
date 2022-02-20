@@ -7,6 +7,7 @@ import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
+import urfquest.shared.Constants;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -25,9 +26,7 @@ public class Cyclops extends Mob {
 		bounds = new Rectangle2D.Double(pos[0], pos[1], 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
-
-		defaultVelocity = 0.01;
-		movementVector.magnitude = 0.01;
+		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CYCLOPS;
 		
 		health = 50.0;
 		maxHealth = 50.0;
@@ -92,5 +91,10 @@ public class Cyclops extends Mob {
 	
 	public void onDeath() {
 		this.map.addItem(new Item(this.server, this.map, this.getCenter(), 6));
+	}
+
+	@Override
+	public double getBaseSpeed() {
+		return Constants.DEFAULT_VELOCITY_CYCLOPS;
 	}
 }
