@@ -4,6 +4,7 @@ public enum MessageType {
 	PING,
 	CHUNK_LOAD,
 	CHAT_MESSAGE,
+	DISCONNECT_CLIENT,
 	
 	// temporary
 	DEBUG_PLAYER_INFO,

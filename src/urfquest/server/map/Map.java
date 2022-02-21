@@ -600,16 +600,32 @@ public class Map {
 		players.put(p.id, p);
 	}
 	
+	public void removeItem(int entityID) {
+		items.remove(entityID);
+	}
+	
 	public void removeItem(Item i) {
 		items.remove(i.id);
+	}
+	
+	public void removeMob(int entityID) {
+		mobs.remove(entityID);
 	}
 	
 	public void removeMob(Mob m) {
 		mobs.remove(m.id);
 	}
 	
+	public void removeProjectile(int entityID) {
+		projectiles.remove(entityID);
+	}
+	
 	public void removeProjectile(Projectile p) {
 		projectiles.remove(p.id);
+	}
+	
+	public void removePlayer(int entityID) {
+		players.remove(entityID);
 	}
 	
 	public void removePlayer(Player p) {

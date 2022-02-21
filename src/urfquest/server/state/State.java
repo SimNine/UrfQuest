@@ -38,12 +38,18 @@ public class State {
 		players.put(p.id, p);
 	}
 	
-	public Player getPlayer(int id) {
-		return players.get(id);
+	public Player getPlayer(int entityID) {
+		return players.get(entityID);
 	}
 	
-	public Player removePlayer(int id) {
-		return players.remove(id);
+	public Player removePlayer(int entityID) {
+		for (Map m : maps.values()) {
+			if (m.getPlayers().containsKey(entityID)) {
+				m.removePlayer(entityID);
+				break;
+			}
+		}
+		return players.remove(entityID);
 	}
 	
 	/*

@@ -9,6 +9,7 @@ import java.net.SocketException;
 import urfquest.client.Client;
 import urfquest.server.commands.CommandPermissions;
 import urfquest.shared.message.Message;
+import urfquest.shared.message.MessageType;
 
 public class ClientThread {
 	
@@ -20,8 +21,6 @@ public class ClientThread {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
-	private boolean stopped;
-	
 	private int commandPermissions;
 	
 	public int id;
@@ -30,7 +29,6 @@ public class ClientThread {
 		this.server = serv;
 		this.id = IDGenerator.newID();
 		this.setCommandPermissions(CommandPermissions.NORMAL);
-		this.stopped = false;
 	}
 
 	public ClientThread(Server serv, Socket s) {
@@ -56,25 +54,37 @@ public class ClientThread {
 	}
 
 	public void mainLoop() {
-		while (!stopped) {
+		while (true) {
 			try {
 				Message m = (Message)in.readObject();
 				m.clientID = id;
 				this.server.intakeMessage(m);
 			} catch (SocketException e) {
 				this.server.getLogger().info("Client " + id + " connection reset");
-				stopped = true;
+				this.beginDisconnectProcess("Client window closed");
+				break;
 				// e.printStackTrace();
 			} catch (IOException e) {
 				this.server.getLogger().warning("Client " + id + " disconnected with error");
-				stopped = true;
+				this.beginDisconnectProcess("A connection error has occurred");
 				e.printStackTrace();
+				break;
 			} catch (ClassNotFoundException e) {
 				this.server.getLogger().warning("Message class not found");
 				e.printStackTrace();
 			}
 		}
-		
+	}
+	
+	private void beginDisconnectProcess(String reason) {
+		Message m = new Message();
+		m.type = MessageType.DISCONNECT_CLIENT;
+		m.clientID = id;
+		m.payload = reason;
+		server.intakeMessage(m);
+	}
+	
+	public void stop() {
 		try {
 			socket.close();
 			this.server.getLogger().info("Client " + this.id + " connection closed");
@@ -83,24 +93,14 @@ public class ClientThread {
 		}
 	}
 	
-	public void stop() throws IOException {
-		stopped = true;
-	}
-	
 	public void send(Message m) {
 		if (socket == null) {
 			client.processMessage(m);
 		} else {
 			try {
 				out.writeObject(m);
-			} catch (SocketException e) {
-				// TODO: look into the appropriate way to handle disconnection
-				try {
-					this.stop();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			} catch (IOException e) {
+				this.beginDisconnectProcess("A connection error has occurred");
 				e.printStackTrace();
 			}
 		}

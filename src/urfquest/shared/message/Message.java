@@ -44,6 +44,10 @@ public class Message implements Serializable {
 			ret += ",source:" + m.source + ",message:" + m.message;
 			break;
 		}
+		case DISCONNECT_CLIENT: {
+			ret += ",reason:\"" + (String)this.payload + "\"";
+			break;
+		}
 			
 		// temporary / debugging
 		case DEBUG_PLAYER_INFO:

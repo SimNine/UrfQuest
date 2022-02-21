@@ -228,6 +228,16 @@ public class Client {
 				System.exit(1);
 				break;
 			}
+			case DISCONNECT_CLIENT: {
+				this.getLogger().info(m.toString());
+				if (m.clientID == this.clientID) {
+					JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
+					System.exit(1);
+				} else {
+					chatMessages.addFirst(new ChatMessage("SERVER", (String)m.payload));
+				}
+				break;
+			}
 			default: {
 				this.getLogger().debug(m.toString());
 				break;

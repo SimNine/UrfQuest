@@ -149,6 +149,10 @@ public class Server {
 	
 	public void processMessage(Message m) {
 		ClientThread c = clients.get(m.clientID);
+		if (c == null) {
+			this.getLogger().warning(m.type + " from client " + m.clientID + " skipped; client not found");
+			return;
+		}
 		
 		switch (m.type) {
 			case PLAYER_REQUEST: {
@@ -269,6 +273,34 @@ public class Server {
 				}
 				break;
 			}
+			case DISCONNECT_CLIENT: {
+				this.getLogger().info(m.toString());
+				// - Recieves a request from either this client or the server to disconnect
+				// - Cleans up the client's resources
+				int clientID = m.clientID;
+				int playerID = userMap.getPlayerIdFromClientId(clientID);
+				String playerName = userMap.getPlayerNameFromClientId(clientID);
+				
+				// If client never successfully requested a player, do nothing
+				if (playerName == null) {
+					break;
+				}
+				
+				// TODO: this is not sustainable design. find a way to clean up entites correctly
+				// Clean up this client's Player
+				this.state.removePlayer(playerID);
+				
+				this.clients.remove(clientID);
+				this.userMap.removeByClientId(clientID);
+				c.send(m);
+				c.stop();
+				
+				m = new Message();
+				m.type = MessageType.DISCONNECT_CLIENT;
+				m.payload = playerName + " has been disconnected";
+				this.sendMessageToAllClients(m);
+				break;
+			}
 			default: {
 				this.getLogger().debug(m.clientID + " - =UNKNOWN MESSAGE= - " + m.toString());
 				break;
@@ -319,13 +351,16 @@ public class Server {
 			e.printStackTrace();
 		}
 		
+		// send disconnect message to every client
+		Message m = new Message();
+		m.type = MessageType.DISCONNECT_CLIENT;
+		m.payload = "The server has shut down";
+		
 		// close all sockets
 		for (ClientThread t : clients.values()) {
-			try {
-				t.stop();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			m.clientID = t.id;
+			t.send(m);
+			t.stop();
 		}
 	}
 	
