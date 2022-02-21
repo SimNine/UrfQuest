@@ -288,13 +288,16 @@ public class Server {
 				
 				// TODO: this is not sustainable design. find a way to clean up entites correctly
 				// Clean up this client's Player
-				this.state.removePlayer(playerID);
+				Player p = this.state.removePlayer(playerID);
+				p.destroy();
 				
+				// Remove this client from the server state
 				this.clients.remove(clientID);
 				this.userMap.removeByClientId(clientID);
 				c.send(m);
 				c.stop();
 				
+				// Alert all other clients that this client has been disconnected
 				m = new Message();
 				m.type = MessageType.DISCONNECT_CLIENT;
 				m.payload = playerName + " has been disconnected";

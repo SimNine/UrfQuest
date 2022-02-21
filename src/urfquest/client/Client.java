@@ -238,6 +238,11 @@ public class Client {
 				}
 				break;
 			}
+			case ENTITY_DESTROY: {
+				this.getLogger().debug(m.toString());
+				state.getCurrentMap().removeEntity(m.entityID);
+				break;
+			}
 			default: {
 				this.getLogger().debug(m.toString());
 				break;

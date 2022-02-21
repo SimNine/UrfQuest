@@ -32,6 +32,13 @@ public abstract class Entity {
 	
 	public abstract void tick();
 	
+	public void destroy() {
+		Message m = new Message();
+		m.type = MessageType.ENTITY_DESTROY;
+		m.entityID = this.id;
+		server.sendMessageToAllClients(m);
+	}
+	
 	
 	
 	/*
