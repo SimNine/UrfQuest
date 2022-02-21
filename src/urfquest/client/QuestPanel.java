@@ -73,7 +73,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	public KeybindingOverlay keybindingView;
 	
 	private boolean guiOpen = false;
-	private boolean isUserIngame = false;
+	private boolean isUserIngame = true;
 	
 	private Keybindings keybindings = new Keybindings();
 
@@ -411,7 +411,8 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 		overlays.push(gameBoard);
 		//overlays.push(gameWeather);
 		overlays.push(gameStatus);
-		overlays.push(mainMenu);
+		overlays.push(chatOverlay);
+		//overlays.push(mainMenu);
 	}
 	
 	public Deque<GUIContainer> getOverlays() {

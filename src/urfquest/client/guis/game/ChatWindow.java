@@ -42,7 +42,8 @@ public class ChatWindow extends GUIContainer {
 		} else if (!keyEvent.isActionKey() &&
 					keyEvent.getKeyCode() != KeyEvent.VK_CONTROL &&
 					keyEvent.getKeyCode() != KeyEvent.VK_SHIFT &&
-					keyEvent.getKeyCode() != KeyEvent.VK_ALT) {
+					keyEvent.getKeyCode() != KeyEvent.VK_ALT &&
+					keyEvent.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
 			this.currentMessage += keyEvent.getKeyChar();
 		}
 	}
