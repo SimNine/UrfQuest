@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-import urfquest.IDGenerator;
 import urfquest.client.Client;
 import urfquest.server.commands.CommandPermissions;
 import urfquest.shared.message.Message;
@@ -62,8 +61,12 @@ public class ClientThread {
 				Message m = (Message)in.readObject();
 				m.clientID = id;
 				this.server.intakeMessage(m);
+			} catch (SocketException e) {
+				this.server.getLogger().info("Client " + id + " connection reset");
+				stopped = true;
+				// e.printStackTrace();
 			} catch (IOException e) {
-				this.server.getLogger().info("Client " + id + " disconnected");
+				this.server.getLogger().warning("Client " + id + " disconnected with error");
 				stopped = true;
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {

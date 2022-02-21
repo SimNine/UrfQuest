@@ -3,7 +3,7 @@ package urfquest.server.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import urfquest.IDGenerator;
+import urfquest.server.IDGenerator;
 import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.Mob;

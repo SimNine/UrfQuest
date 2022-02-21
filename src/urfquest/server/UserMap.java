@@ -93,6 +93,22 @@ public class UserMap {
 	
 	
 	/*
+	 * Existence checking
+	 */
+	
+	public boolean containsClientID(int clientID) {
+		return this.clientIdToPlayerId.containsKey(clientID);
+	}
+	
+	public boolean containsPlayerID(int playerID) {
+		return this.playerIdToClientId.containsKey(playerID);
+	}
+	
+	public boolean containsPlayerName(String playerName) {
+		return this.playerNameToClientId.containsKey(playerName);
+	}
+	
+	/*
 	 * Removal of entries
 	 */
 	

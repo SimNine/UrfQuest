@@ -52,6 +52,7 @@ public class Player extends Mob {
 		msg.entityType = EntityType.PLAYER;
 		msg.pos = this.getPos();
 		msg.clientID = c.id;
+		msg.mapID = this.map.id;
 		msg.entityID = this.id;
 		server.sendMessageToAllClients(msg);
 	}

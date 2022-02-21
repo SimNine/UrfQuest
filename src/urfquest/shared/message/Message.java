@@ -75,6 +75,10 @@ public class Message implements Serializable {
 				ret += ",name:" + this.entityName;
 			}
 			break;
+		case SERVER_ERROR: {
+			ret += ",error:\"" + (String)this.payload + "\",";
+			break;
+		}
 		default:
 			ret += ",unrecognized_message";
 			break;

@@ -11,7 +11,6 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import urfquest.IDGenerator;
 import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.Client;
@@ -157,11 +156,20 @@ public class Server {
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
+
 				String playerName = m.entityName;
+				if (this.userMap.containsPlayerName(playerName)) {
+					m = new Message();
+					m.type = MessageType.SERVER_ERROR;
+					m.payload = "A player with the name \"" + playerName + "\" already exists.";
+					c.send(m);
+					break;
+				}
+				
 				Player newPlayer = new Player(this, this.state, 
 											  this.state.getSurfaceMap(), 
 											  ArrayUtils.castToDoubleArr(this.state.getSurfaceMap().getHomeCoords()), 
-											  playerName, 
+											  playerName,
 											  c);
 				this.state.addPlayer(newPlayer);
 				this.state.getSurfaceMap().addPlayer(newPlayer);

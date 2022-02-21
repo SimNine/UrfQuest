@@ -2,7 +2,7 @@ package urfquest.server.entities;
 
 import java.awt.geom.Rectangle2D;
 
-import urfquest.IDGenerator;
+import urfquest.server.IDGenerator;
 import urfquest.server.Server;
 import urfquest.server.map.Map;
 import urfquest.server.tiles.Tiles;

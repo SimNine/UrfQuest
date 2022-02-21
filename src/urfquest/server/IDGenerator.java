@@ -1,4 +1,4 @@
-package urfquest;
+package urfquest.server;
 
 public class IDGenerator {
 	

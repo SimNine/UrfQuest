@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayDeque;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import urfquest.Logger;
@@ -219,6 +220,12 @@ public class Client {
 			case CHAT_MESSAGE: {
 				this.getLogger().info(m.toString());
 				chatMessages.addFirst((ChatMessage)m.payload);
+				break;
+			}
+			case SERVER_ERROR: {
+				this.getLogger().all(m.toString());
+				JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
+				System.exit(1);
 				break;
 			}
 			default: {
