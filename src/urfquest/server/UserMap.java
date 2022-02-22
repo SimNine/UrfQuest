@@ -147,4 +147,12 @@ public class UserMap {
 		playerNameToPlayerId.remove(playerName);
 	}
 	
+	/*
+	 * Misc
+	 */
+	
+	public int size() {
+		return clientIdToPlayerId.size();
+	}
+	
 }

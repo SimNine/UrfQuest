@@ -145,6 +145,10 @@ public class CommandProcessor {
 						if (clientThread == null) {
 							CommandProcessor.sendSimpleResponseMessage(server, null, "This command cannot be run as the server.");
 						}
+						if (args.length != 3) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
 						
 						double xPos, yPos;
 						try {
@@ -186,8 +190,8 @@ public class CommandProcessor {
 						} else {
 							try {
 								map = server.getState().getSurfaceMap();
-								pos[0] = Double.parseDouble(args[1]);
-								pos[1] = Double.parseDouble(args[2]);
+								pos[0] = Double.parseDouble(args[2]);
+								pos[1] = Double.parseDouble(args[3]);
 							} catch (Exception e) {
 								CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 								return;
@@ -216,10 +220,10 @@ public class CommandProcessor {
 		
 		Command opCommand = new Command("/op", "<player_name>", 
 				"Grants the specified player op permissions",
-				CommandPermissions.SERVER) {
+				CommandPermissions.OP) {
 					@Override
 					public void runCommand(Server server, String[] args, ClientThread clientThread) {
-						if (args.length < 2) {
+						if (args.length != 2) {
 							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 							return;
 						}
@@ -228,7 +232,7 @@ public class CommandProcessor {
 						m.type = MessageType.CHAT_MESSAGE;
 						Integer otherClientID = server.getUserMap().getClientIdFromPlayerName(args[1]);
 						if (otherClientID == null) { // if the specified player wasn't found
-							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
+							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player \"" + args[1] + "\" not found");
 						} else {
 							ClientThread c = server.getClient(otherClientID);
 							c.setCommandPermissions(CommandPermissions.OP);
@@ -240,6 +244,54 @@ public class CommandProcessor {
 					}
 		};
 		commands.put("op", opCommand);
+		
+		Command kickCommand = new Command("/kick", "<player_name>", 
+				"Kicks the specified player from the server",
+				CommandPermissions.OP) {
+					@Override
+					public void runCommand(Server server, String[] args, ClientThread clientThread) {
+						if (args.length != 2) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
+
+						Integer otherClientID = server.getUserMap().getClientIdFromPlayerName(args[1]);
+						int thisClientID = (clientThread == null) ? server.getServerID() : clientThread.id;
+						if (otherClientID == null) { // if the specified player wasn't found
+							Message m = new Message();
+							m.type = MessageType.CHAT_MESSAGE;
+							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
+							server.sendMessageToClientOrServer(m, thisClientID);
+						} else if (otherClientID == thisClientID) { // specified player is self
+							Message m = new Message();
+							m.type = MessageType.CHAT_MESSAGE;
+							m.payload = new ChatMessage(ChatMessage.serverSource, "You cannot kick yourself");
+							server.sendMessageToClientOrServer(m, thisClientID);
+						} else {
+							Message m = new Message();
+							m.type = MessageType.DISCONNECT_CLIENT;
+							m.clientID = otherClientID;
+							m.payload = "You have been kicked from the server";
+							server.intakeMessage(m);
+						}
+					}
+		};
+		commands.put("kick", kickCommand);
+		
+		Command stopCommand = new Command("/stop", "", 
+				"Stops the server",
+				CommandPermissions.OP) {
+					@Override
+					public void runCommand(Server server, String[] args, ClientThread clientThread) {
+						if (args.length != 1) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
+						
+						server.shutdown();
+					}
+		};
+		commands.put("stop", stopCommand);
 	}
 	
 	public static void sendIncorrectArgumentsMessage(Server server, Command command, ClientThread clientThread) {
@@ -257,7 +309,7 @@ public class CommandProcessor {
 
 	public static void processCommand(Server server, String commandStr, ClientThread clientThread) {
 		if (clientThread != null) {
-			server.getLogger().info(clientThread.id + " sent raw command: " + commandStr);
+			server.getLogger().info("Client " + clientThread.id + " sent raw command: \"" + commandStr + "\"");
 		}
 		
 		String tokens[] = commandStr.substring(1).split(" ");

@@ -56,8 +56,8 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2s = p1s.getPos()[0];
 		double yPos2s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2s, 0.01);
-		Assertions.assertEquals(yPos1s, yPos2s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s, yPos2s, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -76,32 +76,32 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2s = p1s.getPos()[0];
 		double yPos2s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2s, 0.01);
-		Assertions.assertEquals(yPos1s, yPos2s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s, yPos2s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move south 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.SOUTH, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos3s = p1s.getPos()[0];
 		double yPos3s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos3s, 0.01);
-		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos3s, 0.01);
+		Assertions.assertEquals(xPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos3s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos3s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move west 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.WEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos4s = p1s.getPos()[0];
 		double yPos4s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s, xPos4s, 0.01);
-		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos4s, 0.01);
+		Assertions.assertEquals(xPos1s, xPos4s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos4s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move north 10 times
 		c1.getState().getPlayer().setMovementVector(Vector.NORTH, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos5s = p1s.getPos()[0];
 		double yPos5s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s, xPos5s, 0.01);
-		Assertions.assertEquals(yPos1s, yPos5s, 0.01);
+		Assertions.assertEquals(xPos1s, xPos5s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s, yPos5s, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -121,32 +121,32 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2s = p1s.getPos()[0];
 		double yPos2s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s + stepDistanceComponent, xPos2s, 0.01);
-		Assertions.assertEquals(yPos1s + stepDistanceComponent, yPos2s, 0.01);
+		Assertions.assertEquals(xPos1s + stepDistanceComponent, xPos2s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s + stepDistanceComponent, yPos2s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move southwest 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.SOUTHWEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos3s = p1s.getPos()[0];
 		double yPos3s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s, xPos3s, 0.01);
-		Assertions.assertEquals(yPos1s + stepDistanceComponent*2, yPos3s, 0.01);
+		Assertions.assertEquals(xPos1s, xPos3s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s + stepDistanceComponent*2, yPos3s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move northwest 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.NORTHWEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos4s = p1s.getPos()[0];
 		double yPos4s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s - stepDistanceComponent, xPos4s, 0.01);
-		Assertions.assertEquals(yPos1s + stepDistanceComponent, yPos4s, 0.01);
+		Assertions.assertEquals(xPos1s - stepDistanceComponent, xPos4s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s + stepDistanceComponent, yPos4s, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move east 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.NORTHEAST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos5s = p1s.getPos()[0];
 		double yPos5s = p1s.getPos()[1];
-		Assertions.assertEquals(xPos1s, xPos5s, 0.01);
-		Assertions.assertEquals(yPos1s, yPos5s, 0.01);
+		Assertions.assertEquals(xPos1s, xPos5s, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1s, yPos5s, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -165,8 +165,8 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2c = p1c.getPos()[0];
 		double yPos2c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2c, 0.01);
-		Assertions.assertEquals(yPos1c, yPos2c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c, yPos2c, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -185,32 +185,32 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2c = p1c.getPos()[0];
 		double yPos2c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2c, 0.01);
-		Assertions.assertEquals(yPos1c, yPos2c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos2c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c, yPos2c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move south 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.SOUTH, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos3c = p1c.getPos()[0];
 		double yPos3c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos3c, 0.01);
-		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos3c, 0.01);
+		Assertions.assertEquals(xPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, xPos3c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos3c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move west 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.WEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos4c = p1c.getPos()[0];
 		double yPos4c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c, xPos4c, 0.01);
-		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos4c, 0.01);
+		Assertions.assertEquals(xPos1c, xPos4c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, yPos4c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move north 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.NORTH, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos5c = p1c.getPos()[0];
 		double yPos5c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c, xPos5c, 0.01);
-		Assertions.assertEquals(yPos1c, yPos5c, 0.01);
+		Assertions.assertEquals(xPos1c, xPos5c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c, yPos5c, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -230,32 +230,32 @@ class BasicPlayerMovementTest {
 		s.tick(numStepsMoved);
 		double xPos2c = p1c.getPos()[0];
 		double yPos2c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c + stepDistanceComponent, xPos2c, 0.01);
-		Assertions.assertEquals(yPos1c + stepDistanceComponent, yPos2c, 0.01);
+		Assertions.assertEquals(xPos1c + stepDistanceComponent, xPos2c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c + stepDistanceComponent, yPos2c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move southwest 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.SOUTHWEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos3c = p1c.getPos()[0];
 		double yPos3c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c, xPos3c, 0.01);
-		Assertions.assertEquals(yPos1c + stepDistanceComponent*2, yPos3c, 0.01);
+		Assertions.assertEquals(xPos1c, xPos3c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c + stepDistanceComponent*2, yPos3c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move northwest 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.NORTHWEST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos4c = p1c.getPos()[0];
 		double yPos4c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c - stepDistanceComponent, xPos4c, 0.01);
-		Assertions.assertEquals(yPos1c + stepDistanceComponent, yPos4c, 0.01);
+		Assertions.assertEquals(xPos1c - stepDistanceComponent, xPos4c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c + stepDistanceComponent, yPos4c, Constants.TESTING_POSITION_TOLERANCE);
 
 		// move northeast 10 ticks
 		c1.getState().getPlayer().setMovementVector(Vector.NORTHEAST, Constants.DEFAULT_VELOCITY_PLAYER, true);
 		s.tick(numStepsMoved);
 		double xPos5c = p1c.getPos()[0];
 		double yPos5c = p1c.getPos()[1];
-		Assertions.assertEquals(xPos1c, xPos5c, 0.01);
-		Assertions.assertEquals(yPos1c, yPos5c, 0.01);
+		Assertions.assertEquals(xPos1c, xPos5c, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(yPos1c, yPos5c, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 }

@@ -231,8 +231,12 @@ public class Client {
 			case DISCONNECT_CLIENT: {
 				this.getLogger().info(m.toString());
 				if (m.clientID == this.clientID) {
-					JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
-					System.exit(1);
+					if (this.server == null) {
+						JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
+						System.exit(1);
+					} else {
+						// TODO: find a way to disconnect locally attached clients
+					}
 				} else {
 					chatMessages.addFirst(new ChatMessage("SERVER", (String)m.payload));
 				}
