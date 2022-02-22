@@ -1,6 +1,8 @@
 package urfquest.server;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -14,6 +16,7 @@ import javax.swing.JFrame;
 import urfquest.Logger;
 import urfquest.Main;
 import urfquest.client.Client;
+import urfquest.server.commands.CommandPermissions;
 import urfquest.server.commands.CommandProcessor;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
@@ -39,6 +42,7 @@ public class Server {
 	private MessageQueue incomingMessages = new MessageQueue();
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private UserMap userMap = new UserMap();
+	private HashSet<String> opsList = new HashSet<String>();
 	
 	private ArrayDeque<ChatMessage> chatMessages = new ArrayDeque<ChatMessage>();
 	
@@ -62,6 +66,22 @@ public class Server {
 
 	public Server(long seed, int port) {
 		this(seed);
+        
+		// Try to load list of op-permission players from file
+		File opsListFile = new File(Constants.FILE_OPS_LIST);
+		if (opsListFile.exists()) {
+			try {
+				this.logger.info("Loading ops file");
+				BufferedReader opsReader = new BufferedReader(new FileReader(opsListFile));
+				String line = null;
+				while ((line = opsReader.readLine()) != null) {
+					opsList.add(line.strip());
+				}
+				opsReader.close();
+			} catch (IOException e) {
+				this.logger.error("Malformed ops file");
+			}
+		}
 		
 		// launch master listener
 		try {
@@ -178,6 +198,10 @@ public class Server {
 				this.state.addPlayer(newPlayer);
 				this.state.getSurfaceMap().addPlayer(newPlayer);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
+				
+				if (opsList.contains(playerName)) {
+					c.setCommandPermissions(CommandPermissions.OP);
+				}
 				break;
 			}
 			case PLAYER_SET_MOVE_VECTOR: {
@@ -384,8 +408,13 @@ public class Server {
 	 */
 	
 	public void attachLocalClient(Client c) {
+		attachLocalClient(c, CommandPermissions.NORMAL);
+	}
+	
+	public void attachLocalClient(Client c, int commandPermissions) {
 		ClientThread t = new ClientThread(this, c);
 		clients.put(t.id, t);
+		t.setCommandPermissions(commandPermissions);
 		
 		// send connection confirmation message
 		Message m = new Message();

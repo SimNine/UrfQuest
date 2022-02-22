@@ -15,5 +15,8 @@ public class Constants {
 	public static final int MILLISECONDS_PER_TICK = 20;
 	
 	public static final double TESTING_POSITION_TOLERANCE = 0.01;
+	
+	public static final String FILE_STARTUP_PREFS = "startup.config";
+	public static final String FILE_OPS_LIST = "ops.config";
 
 }

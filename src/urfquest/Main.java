@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 
 import urfquest.client.Client;
 import urfquest.server.Server;
+import urfquest.shared.Constants;
 
 public class Main {
 	
@@ -39,7 +40,7 @@ public class Main {
 			playerName = args[3];
 		} else if (args.length == 0) {
 			// try to load last used config from file
-			File startupPrefs = new File("startupPrefs.config");
+			File startupPrefs = new File(Constants.FILE_STARTUP_PREFS);
 			if (startupPrefs.exists()) {
 				try {
 					mainLogger.info("loading config file");

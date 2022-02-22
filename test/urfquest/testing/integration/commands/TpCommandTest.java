@@ -36,11 +36,8 @@ class TpCommandTest {
 		c1 = new Client(s, "Chris");
 		c2 = new Client(s, "Nick");
 		
-		s.attachLocalClient(c1);
-		s.attachLocalClient(c2);
-		
-		s.getClient(c1.getClientID()).setCommandPermissions(CommandPermissions.OP);
-		s.getClient(c2.getClientID()).setCommandPermissions(CommandPermissions.OP);
+		s.attachLocalClient(c1, CommandPermissions.OP);
+		s.attachLocalClient(c2, CommandPermissions.OP);
 	}
 
 	@AfterEach
