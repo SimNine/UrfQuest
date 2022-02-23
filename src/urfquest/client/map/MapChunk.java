@@ -4,13 +4,13 @@ import java.awt.image.BufferedImage;
 
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.tiles.ActiveTile;
-import urfquest.client.tiles.Tiles;
 import urfquest.shared.Constants;
+import urfquest.shared.Tile;
 
 public class MapChunk {
 
 	private int[][] tileTypes;
-	private int[][] tileSubtypes;
+	private int[][] objectTypes;
 	
 	private ActiveTile[][] activeTiles;
 	
@@ -22,11 +22,17 @@ public class MapChunk {
 	
 	public MapChunk(int width, int height) {
 		tileTypes = new int[width][height];
-		tileSubtypes = new int[width][height];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				tileTypes[x][y] = Constants.DEFAULT_CHUNK_TILE;
+			}
+		}
+		objectTypes = new int[width][height];
 		activeTiles = new ActiveTile[width][height];
 
 		minimap = new BufferedImage(tileTypes.length, tileTypes[0].length, BufferedImage.TYPE_4BYTE_ABGR);
 	}
+	
 	
 	/*
 	 * Tile manipulation
@@ -34,34 +40,38 @@ public class MapChunk {
 	
 	public int getTileTypeAt(int x, int y) {
 		if (x < 0 || y < 0)
-			return -1;
+			return Tile.TILE_VOID;
 		if (x >= tileTypes.length || y >= tileTypes[0].length)
-			return -1;
+			return Tile.TILE_VOID;
 		return tileTypes[x][y];
 	}
 
-	// TODO: tiles with no subtype should probably return -1
-	public int getTileSubtypeAt(int x, int y) {
+	public int getObjectTypeAt(int x, int y) {
 		if (x < 0 || y < 0)
-			return 0;
+			return Tile.TILE_VOID;
 		if (x >= tileTypes.length || y >= tileTypes[0].length)
-			return 0;
-		return tileSubtypes[x][y];
+			return Tile.TILE_VOID;
+		return objectTypes[x][y];
 	}
 	
 	public int[] getTileAt(int x, int y) {
-		return new int[] {getTileTypeAt(x, y), getTileSubtypeAt(x, y)};
+		return new int[] {getTileTypeAt(x, y), getObjectTypeAt(x, y)};
 	}
 	
-	public void setTileAt(int x, int y, int type) {
-		tileTypes[x][y] = type;
-		tileSubtypes[x][y] = 0;
-		this.setMinimapAt(x, y, type);
+	public void setTileAt(int x, int y, int tileType, int objectType) {
+		tileTypes[x][y] = tileType;
+		objectTypes[x][y] = objectType;
+		this.setMinimapAt(x, y, tileType, objectType);
 	}
 	
-	public void setTileAt(int x, int y, int type, int subtype) {
-		setTileAt(x, y, type);
-		tileSubtypes[x][y] = subtype;
+	public void setTileTypeAt(int x, int y, int tileType) {
+		int objectType = objectTypes[x][y];
+		setTileAt(x, y, tileType, objectType);
+	}
+	
+	public void setObjectTypeAt(int x, int y, int objectType) {
+		int tileType = tileTypes[x][y];
+		setTileAt(x, y, tileType, objectType);
 	}
 	
 	public void setAllTileTypes(int[][] types) {
@@ -69,9 +79,11 @@ public class MapChunk {
 		this.generateMinimap();
 	}
 	
-	public void setAllTileSubtypes(int[][] subtypes) {
-		this.tileSubtypes = subtypes;
+	public void setAllObjectTypes(int[][] subtypes) {
+		this.objectTypes = subtypes;
+		this.generateMinimap();
 	}
+	
 	
 	/*
 	 * ActiveTile management
@@ -92,7 +104,6 @@ public class MapChunk {
 	}
 	
 	
-	
 	/*
 	 * Minimap management
 	 */
@@ -101,7 +112,7 @@ public class MapChunk {
 	public void generateMinimap() {
 		for (int x = 0; x < tileTypes.length; x++) {
 			for (int y = 0; y < tileTypes[0].length; y++) {
-				int color = Tiles.minimapColor(this.getTileTypeAt(x, y));
+				int color = Tile.minimapColor(this.getTileAt(x, y));
 				minimap.setRGB(x, y, color);
 			}
 		}
@@ -111,8 +122,12 @@ public class MapChunk {
 		return minimap;
 	}
 	
-	private void setMinimapAt(int x, int y, int type) {
-		minimap.setRGB(x, y, Tiles.minimapColor(type));
+	private void setMinimapAt(int x, int y, int tileType, int objectType) {
+		if (objectType != Tile.TILE_VOID) {
+			minimap.setRGB(x, y, Tile.minimapColor(tileType, objectType));
+		} else {
+			minimap.setRGB(x, y, Tile.minimapColor(tileType, objectType));
+		}
 	}
 
 }

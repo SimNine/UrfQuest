@@ -1,8 +1,8 @@
 package urfquest.server.map.generator;
 
 import urfquest.server.map.MapChunk;
-import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
+import urfquest.shared.Tile;
 
 public class TerrainGeneratorSimplex extends TerrainGenerator {
 
@@ -55,11 +55,11 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileAt(x, y, Tiles.GRASS);
+					chunk.setTileTypeAt(x, y, Tile.TILE_GRASS);
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileAt(x, y, Tiles.SAND);
+					chunk.setTileTypeAt(x, y, Tile.TILE_SAND);
 				} else {
-					chunk.setTileAt(x, y, Tiles.WATER);
+					chunk.setTileTypeAt(x, y, Tile.TILE_WATER);
 				}
 			}
 		}
@@ -68,33 +68,34 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				if (boulderNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
-					if (chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
-						chunk.setTileAt(x, y, Tiles.BOULDER, Tiles.GRASS_BOULDER);
-					} else if (chunk.getTileTypeAt(x, y) == Tiles.WATER) {
-						chunk.setTileAt(x, y, Tiles.BOULDER, Tiles.WATER_BOULDER);
-					} else if (chunk.getTileTypeAt(x, y) == Tiles.SAND) {
-						chunk.setTileAt(x, y, Tiles.BOULDER, Tiles.SAND_BOULDER);
-					}
+					chunk.setObjectTypeAt(x, y, Tile.OBJECT_BOULDER);
+//					if (chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
+//						chunk.setTileAt(x, y, Tile.TILE_GRASS, Tile.OBJECT_BOULDER);
+//					} else if (chunk.getTileTypeAt(x, y) == Tile.TILE_WATER) {
+//						chunk.setTileAt(x, y, Tile.TILE_WATER, Tile.OBJECT_BOULDER);
+//					} else if (chunk.getTileTypeAt(x, y) == Tile.TILE_SAND) {
+//						chunk.setTileAt(x, y, Tile.TILE_SAND, Tile.OBJECT_BOULDER);
+//					}
 				}
 			}
 		}
 		
-		// generate flowers
+		// generate flowers (only on grass)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				if (flowerNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
-					if (chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
-						chunk.setTileAt(x, y, Tiles.GRASS, Tiles.GRASS_FLOWERS);
+					if (chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
+						chunk.setObjectTypeAt(x, y, Tile.OBJECT_FLOWERS);
 					}
 				}
 			}
 		}
 		
-		// generate trees (only on land tiles)
+		// generate trees (only on grass)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (treeNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tiles.GRASS) {
-					chunk.setTileAt(x, y, Tiles.TREE);
+				if (treeNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
+					chunk.setObjectTypeAt(x, y, Tile.OBJECT_TREE);
 				}
 			}
 		}

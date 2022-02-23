@@ -13,7 +13,7 @@ import urfquest.client.entities.mobs.Player;
 import urfquest.client.entities.particles.Particle;
 import urfquest.client.entities.projectiles.Projectile;
 import urfquest.client.tiles.ActiveTile;
-import urfquest.client.tiles.Tiles;
+import urfquest.shared.Tile;
 import urfquest.shared.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -60,6 +60,7 @@ public class Map {
 									BufferedImage.TYPE_4BYTE_ABGR);
 	}
 
+	
 	/*
 	 * Tick updater
 	 */
@@ -178,6 +179,7 @@ public class Map {
 //		updateTiles();
 //	}
 	
+	
 	/*
 	 * Tile manipulation
 	 */
@@ -185,35 +187,36 @@ public class Map {
 	public int getTileTypeAt(int x, int y) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		if (chunk == null)
-			return -1;
+			return Tile.TILE_VOID;
 		int[] pos = getPosInChunk(x, y);
 		
 		return chunk.getTileTypeAt(pos[0], pos[1]);
 	}
 	
-	public int getTileSubtypeAt(int x, int y) {
+	public int getObjectTypeAt(int x, int y) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		if (chunk == null)
-			return -1;
+			return Tile.TILE_VOID;
 		int[] pos = getPosInChunk(x, y);
 		
-		return chunk.getTileSubtypeAt(pos[0], pos[1]);
+		return chunk.getObjectTypeAt(pos[0], pos[1]);
 	}
 	
 	public int[] getTileAt(int x, int y) {
-		return new int[] {getTileTypeAt(x, y), getTileSubtypeAt(x, y)};
+		return new int[] {getTileTypeAt(x, y), getObjectTypeAt(x, y)};
 	}
 	
 	public void setTileAt(int x, int y, int type) {
 		setTileAt(x, y, type, 0);
 	}
 	
-	public void setTileAt(int x, int y, int type, int subtype) {
+	public void setTileAt(int x, int y, int type, int objectType) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		int[] pos = getPosInChunk(x, y);
 		
-		chunk.setTileAt(pos[0], pos[1], type, subtype);
+		chunk.setTileAt(pos[0], pos[1], type, objectType);
 	}
+	
 	
 	/*
 	 * Chunk manipulation
@@ -331,7 +334,6 @@ public class Map {
 	}	
 	
 	
-	
 	/*
 	 * Minimap management
 	 */
@@ -361,13 +363,12 @@ public class Map {
 	}
 	
 	
-	
 	/*
 	 * Misc map manipulation
 	 */
 	
 	public boolean setHomeCoords(int x, int y) {
-		if (Tiles.isWalkable(getTileTypeAt(x, y))) {
+		if (Tile.isWalkable(getTileAt(x, y))) {
 			homeCoords[0] = x;
 			homeCoords[1] = y;
 			return true;
@@ -379,7 +380,6 @@ public class Map {
 	public int[] getHomeCoords() {
 		return homeCoords;
 	}
-	
 	
 	
 	/*
@@ -406,6 +406,7 @@ public class Map {
 			tile.use(m);
 		}
 	}
+	
 	
 	/*
 	 * Entity management
@@ -527,7 +528,6 @@ public class Map {
 		mobs.remove(entityID);
 		projectiles.remove(entityID);
 	}
-	
 	
 	
 	/*

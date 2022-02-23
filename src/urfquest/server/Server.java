@@ -231,7 +231,7 @@ public class Server {
 						
 						MapChunk chunk = map.getChunk(x, y);
 						m.payload = chunk.getAllTileTypes();
-						m.payload2 = chunk.getAllTileSubtypes();
+						m.payload2 = chunk.getAllObjectTypes();
 						m.xyChunk[0] = x;
 						m.xyChunk[1] = y;
 						c.send(m);
@@ -261,7 +261,7 @@ public class Server {
 					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 				}
 				m.payload = chunk.getAllTileTypes();
-				m.payload2 = chunk.getAllTileSubtypes();
+				m.payload2 = chunk.getAllObjectTypes();
 				c.send(m);
 				break;
 			}

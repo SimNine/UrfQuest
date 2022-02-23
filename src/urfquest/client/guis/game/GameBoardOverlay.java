@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import urfquest.LogLevel;
-import urfquest.Logger;
 import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
@@ -16,7 +15,8 @@ import urfquest.client.entities.projectiles.Projectile;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.map.Map;
-import urfquest.client.tiles.Tiles;
+import urfquest.client.tiles.TileImages;
+import urfquest.shared.Tile;
 
 public class GameBoardOverlay extends GUIContainer {
 	private int selectedTileTransparency = 255;
@@ -74,7 +74,7 @@ public class GameBoardOverlay extends GUIContainer {
 				int yRoot = - rootY + y * TILE_WIDTH;
 				int[] tile = currMap.getTileAt(ulX + x, ulY + y);
 				int animStage = getAnimStage(tile[0], tile[1]);
-				g.drawImage(Tiles.getTileImage(tile[0], tile[1], animStage), xRoot, yRoot, null);
+				g.drawImage(TileImages.getTileImage(tile[0], tile[1], animStage), xRoot, yRoot, null);
 			}
 		}
 
@@ -250,7 +250,7 @@ public class GameBoardOverlay extends GUIContainer {
 	
 	// gets the appropriate animstage for Tiles.getTileImage(type, subtype, animstage)
 	private int getAnimStage(int type, int subtype) {
-		if (type == Tiles.WATER) {
+		if (type == Tile.TILE_WATER) {
 			return (tileAnimStage / 30) % 3;
 		} else {
 			return 0;

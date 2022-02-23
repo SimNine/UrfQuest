@@ -5,7 +5,7 @@ import java.awt.geom.Rectangle2D;
 import urfquest.server.IDGenerator;
 import urfquest.server.Server;
 import urfquest.server.map.Map;
-import urfquest.server.tiles.Tiles;
+import urfquest.shared.Tile;
 import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -80,12 +80,12 @@ public abstract class Entity {
 		boolean canMove = true;
 		
 		// check if this move is valid on the x-axis
-		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
+		if (!Tile.isWalkable(map.getTileAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
 			canMove = false;
 		}
 		
 		// check if this move is valid on the y-axis
-		if (!Tiles.isWalkable(map.getTileTypeAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
+		if (!Tile.isWalkable(map.getTileAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
 			canMove = false;
 		}
 				
@@ -230,7 +230,7 @@ public abstract class Entity {
 		double xCurr = this.getCenter()[0];
 		double yCurr = this.getCenter()[1];
 		for (int i = 0; i < numSteps; i++) {
-			if (!Tiles.isWalkable(this.server.getState().getSurfaceMap().getTileTypeAt((int) xCurr, (int) yCurr))) {
+			if (!Tile.isWalkable(this.server.getState().getSurfaceMap().getTileAt((int) xCurr, (int) yCurr))) {
 				return false;
 			}
 			xCurr += xComp;

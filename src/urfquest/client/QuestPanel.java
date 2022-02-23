@@ -28,7 +28,7 @@ import urfquest.client.guis.game.GameStatusOverlay;
 import urfquest.client.guis.game.GameWeatherOverlay;
 import urfquest.client.guis.game.MapViewOverlay;
 import urfquest.client.guis.menus.KeybindingOverlay;
-import urfquest.client.tiles.Tiles;
+import urfquest.client.tiles.TileImages;
 import urfquest.shared.Constants;
 import urfquest.shared.Vector;
 import urfquest.shared.message.Message;
@@ -496,6 +496,6 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	
 	private void initAssets() {
 		Player.initGraphics();
-		Tiles.initGraphics();
+		TileImages.initGraphics();
 	}
 }

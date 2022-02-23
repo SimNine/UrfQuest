@@ -11,6 +11,7 @@ public class Constants {
 	public static final double DEFAULT_VELOCITY_ROGUE = 0.13;
 	
 	public static final int MAP_CHUNK_SIZE = 32;
+	public static final int DEFAULT_CHUNK_TILE = Tile.TILE_DIRT;
 	
 	public static final int MILLISECONDS_PER_TICK = 20;
 	
@@ -18,5 +19,7 @@ public class Constants {
 	
 	public static final String FILE_STARTUP_PREFS = "startup.config";
 	public static final String FILE_OPS_LIST = "ops.config";
+	
+	public static final long DEFAULT_SERVER_SEED = 0;
 
 }

@@ -1,8 +1,8 @@
 package urfquest.server.map.generator;
 
 import urfquest.server.map.MapChunk;
-import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
+import urfquest.shared.Tile;
 
 public class TerrainGeneratorCaves extends TerrainGenerator {
 
@@ -48,11 +48,11 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileAt(x, y, Tiles.DIRT);
+					chunk.setTileTypeAt(x, y, Tile.TILE_DIRT);
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileAt(x, y, Tiles.BEDROCK);
+					chunk.setTileTypeAt(x, y, Tile.TILE_BEDROCK);
 				} else {
-					chunk.setTileAt(x, y, Tiles.VOID);
+					chunk.setTileTypeAt(x, y, Tile.TILE_VOID);
 				}
 			}
 		}
@@ -60,8 +60,8 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate stone veins
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (stoneNoise.getNoiseAt(x, y)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tiles.DIRT) {
-					chunk.setTileAt(x, y, Tiles.STONE);
+				if (stoneNoise.getNoiseAt(x, y)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tile.TILE_DIRT) {
+					chunk.setTileTypeAt(x, y, Tile.OBJECT_STONE);
 				}
 			}
 		}
@@ -69,8 +69,8 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate ore (only on stone)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (oreNoise.getNoiseAt(x, y) > 0.80f && chunk.getTileTypeAt(x, y) == Tiles.STONE) {
-					chunk.setTileAt(x, y, Tiles.STONE, Tiles.IRONORE_STONE);
+				if (oreNoise.getNoiseAt(x, y) > 0.80f && chunk.getTileTypeAt(x, y) == Tile.OBJECT_STONE) {
+					chunk.setTileAt(x, y, Tile.OBJECT_STONE, Tile.OBJECT_IRON_ORE);
 				}
 			}
 		}

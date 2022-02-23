@@ -4,7 +4,7 @@ import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.Mob;
 import urfquest.server.map.Map;
-import urfquest.server.tiles.Tiles;
+import urfquest.shared.Tile;
 import urfquest.shared.Vector;
 
 public class Rocket extends Projectile {
@@ -17,7 +17,7 @@ public class Rocket extends Projectile {
 
 	public void tick() {
 		this.incrementPos(this.movementVector);
-		if(!Tiles.isPenetrable(map.getTileTypeAt((int)bounds.x, (int)bounds.y))) {
+		if(!Tile.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
 			// animStage = 1000;
 			explode();
 		}

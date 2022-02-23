@@ -14,8 +14,8 @@ import urfquest.server.entities.projectiles.Rocket;
 import urfquest.server.entities.projectiles.RocketExplosion;
 import urfquest.server.map.Map;
 import urfquest.server.tiles.MapLink;
-import urfquest.server.tiles.Tiles;
 import urfquest.shared.ArrayUtils;
+import urfquest.shared.Tile;
 
 public class Item extends Entity {
 	public static final String assetPath = "/assets/items/";
@@ -272,16 +272,16 @@ public class Item extends Entity {
 		}
 		case Item.PICKAXE: {
 			int[] tile = m.tileAtDistance(1.0);
-			if (tile[0] == Tiles.BOULDER) {
+			if (tile[0] == Tile.OBJECT_BOULDER) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				if (tile[1] == Tiles.GRASS_BOULDER) {
-					m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				} else if (tile[1] == Tiles.WATER_BOULDER) {
-					m.getMap().setTileAt(coords[0], coords[1], Tiles.WATER);
-				} else if (tile[1] == Tiles.SAND_BOULDER) {
-					m.getMap().setTileAt(coords[0], coords[1], Tiles.SAND);
-				} else if (tile[1] == Tiles.DIRT_BOULDER) {
-					m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
+				if (tile[1] == Tile.GRASS_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_GRASS);
+				} else if (tile[1] == Tile.WATER_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_WATER);
+				} else if (tile[1] == Tile.SAND_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_SAND);
+				} else if (tile[1] == Tile.DIRT_BOULDER) {
+					m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_DIRT);
 					double rand = server.randomDouble();
 					if (rand > .95) {
 						m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.LAW_RUNE));
@@ -302,16 +302,16 @@ public class Item extends Entity {
 				m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.STONE));
 				cooldown = getMaxCooldown();
 				return true;
-			} else if (tile[0] == Tiles.STONE) {
+			} else if (tile[0] == Tile.OBJECT_STONE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				if (tile[1] == Tiles.STONE_DEF) {
+				if (tile[1] == Tile.STONE_DEF) {
 					// nothing else
-				} else if (tile[1] == Tiles.COPPERORE_STONE) {
+				} else if (tile[1] == Tile.COPPERORE_STONE) {
 					m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.COPPER_ORE));
-				} else if (tile[1] == Tiles.IRONORE_STONE) {
+				} else if (tile[1] == Tile.IRONORE_STONE) {
 					m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.IRON_ORE));
 				}
-				m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
+				m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_DIRT);
 				cooldown = getMaxCooldown();			
 				return true;
 			} else {
@@ -319,9 +319,9 @@ public class Item extends Entity {
 			}
 		}
 		case Item.HATCHET: {
-			if (m.tileAtDistance(1.0)[0] == Tiles.TREE) {
+			if (m.tileAtDistance(1.0)[0] == Tile.OBJECT_TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
-				m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
+				m.getMap().setTileAt(coords[0], coords[1], Tile.TILE_GRASS);
 				m.getMap().addItem(new Item(this.server, this.map, ArrayUtils.castToDoubleArr(coords), Item.LOG));
 				
 				cooldown = getMaxCooldown();
@@ -331,7 +331,7 @@ public class Item extends Entity {
 			}
 		}
 		case Item.SHOVEL: {
-			if (m.tileAtDistance(0)[0] == Tiles.GRASS) {
+			if (m.tileAtDistance(0)[0] == Tile.TILE_GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
 				if (server.randomDouble() > .05) {
 					m.getMap().setTileAt(coords[0], coords[1], 0);

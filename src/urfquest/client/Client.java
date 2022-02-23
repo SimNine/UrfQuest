@@ -186,7 +186,7 @@ public class Client {
 					c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 				}
 				c.setAllTileTypes((int[][])m.payload);
-				c.setAllTileSubtypes((int[][])m.payload2);
+				c.setAllObjectTypes((int[][])m.payload2);
 				state.getCurrentMap().generateMinimap();
 				break;
 			}

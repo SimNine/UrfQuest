@@ -7,7 +7,7 @@ import urfquest.client.Client;
 import urfquest.client.QuestPanel;
 import urfquest.client.entities.Entity;
 import urfquest.client.map.Map;
-import urfquest.client.tiles.Tiles;
+import urfquest.shared.Tile;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
@@ -41,13 +41,13 @@ public abstract class Mob extends Entity {
 		boolean ret = false;
 		
 		// attempt to move on the x-axis
-		if (Tiles.isWalkable(map.getTileTypeAt((int)(newX + xComp), (int)newY))) {
+		if (Tile.isWalkable(map.getTileAt((int)(newX + xComp), (int)newY))) {
 			newX += xComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
 		// attempt to move on the y-axis
-		if (Tiles.isWalkable(map.getTileTypeAt((int)newX, (int)(newY + yComp)))) {
+		if (Tile.isWalkable(map.getTileAt((int)newX, (int)(newY + yComp)))) {
 			newY += yComp;
 			ret = true;
 		} // else (if collision) do nothing

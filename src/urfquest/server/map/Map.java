@@ -15,8 +15,8 @@ import urfquest.server.map.generator.TerrainGeneratorSavannah;
 import urfquest.server.map.generator.TerrainGeneratorSimplex;
 import urfquest.server.map.generator.TerrainGeneratorTemplate;
 import urfquest.server.tiles.ActiveTile;
-import urfquest.server.tiles.Tiles;
 import urfquest.shared.Constants;
+import urfquest.shared.Tile;
 
 public class Map {
 	private Server server;
@@ -79,7 +79,6 @@ public class Map {
 			}
 		}
 	}
-	
 	
 	
 	/*
@@ -384,20 +383,20 @@ public class Map {
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				setTileAt(homeCoords[0]+x, homeCoords[1]+y, Tiles.GRASS);
+				setTileAt(homeCoords[0]+x, homeCoords[1]+y, Tile.TILE_GRASS);
 			}
 		}
 
-		setTileAt(homeCoords[0]-2, homeCoords[1]-2, Tiles.HEALTH_PAD);
-		setTileAt(homeCoords[0]-2, homeCoords[1]+2, Tiles.HURT_PAD);
-		setTileAt(homeCoords[0]+2, homeCoords[1]-2, Tiles.MANA_PAD);
-		setTileAt(homeCoords[0]+2, homeCoords[1]+2, Tiles.SPEED_PAD);
+		setTileAt(homeCoords[0]-2, homeCoords[1]-2, Tile.TILE_HEALTH_PAD);
+		setTileAt(homeCoords[0]-2, homeCoords[1]+2, Tile.TILE_HURT_PAD);
+		setTileAt(homeCoords[0]+2, homeCoords[1]-2, Tile.TILE_MANA_PAD);
+		setTileAt(homeCoords[0]+2, homeCoords[1]+2, Tile.TILE_SPEED_PAD);
 	}
 	
 	private void findHomeCoords() {
 		int spawnCenterX = (int)((server.randomDouble()-0.5)*10);
 		int spawnCenterY = (int)((server.randomDouble()-0.5)*10);
-		while (!Tiles.isWalkable(getTileTypeAt(spawnCenterX, spawnCenterY))) {
+		while (!Tile.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
 			spawnCenterX = (int)((server.randomDouble()-0.5)*10);
 			spawnCenterY = (int)((server.randomDouble()-0.5)*10);
 		}
@@ -486,7 +485,7 @@ public class Map {
 	public int getTileTypeAt(int x, int y) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		if (chunk == null) {
-			return -1;
+			return Tile.TILE_VOID;
 		}
 		
 		int[] posInChunk = getCoordsInChunk(x, y);
@@ -496,10 +495,10 @@ public class Map {
 	public int getTileSubtypeAt(int x, int y) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		if (chunk == null)
-			return 0;
+			return Tile.TILE_VOID;
 
 		int[] posInChunk = getCoordsInChunk(x, y);
-		return chunk.getTileSubtypeAt(posInChunk[0], posInChunk[1]);
+		return chunk.getObjectTypeAt(posInChunk[0], posInChunk[1]);
 	}
 	
 	public int[] getTileAt(int x, int y) {
@@ -510,14 +509,14 @@ public class Map {
 		setTileAt(x, y, type, 0);
 	}
 	
-	public void setTileAt(int x, int y, int type, int subtype) {
+	public void setTileAt(int x, int y, int type, int objectType) {
 		MapChunk chunk = getChunkAtPos(x, y);
 		if (chunk == null) {
 			chunk = createChunkAtPos(x, y);
 		}
 
 		int[] posInChunk = getCoordsInChunk(x, y);
-		chunk.setTileAt(posInChunk[0], posInChunk[1], type, subtype);
+		chunk.setTileAt(posInChunk[0], posInChunk[1], type, objectType);
 	}
 	
 	public int[] getCoordsInChunk(int x, int y) {
@@ -530,13 +529,12 @@ public class Map {
 	}
 	
 	
-	
 	/*
 	 * Misc map manipulation
 	 */
 	
 	public boolean setHomeCoords(int x, int y) {
-		if (Tiles.isWalkable(getTileTypeAt(x, y))) {
+		if (Tile.isWalkable(getTileAt(x, y))) {
 			homeCoords[0] = x;
 			homeCoords[1] = y;
 			return true;
@@ -548,7 +546,6 @@ public class Map {
 	public int[] getHomeCoords() {
 		return homeCoords;
 	}
-	
 	
 	
 	/*
@@ -577,7 +574,6 @@ public class Map {
 			tile.use(m);
 		}
 	}
-	
 	
 	
 	/*
@@ -663,7 +659,6 @@ public class Map {
 	public int getNumPlayers() {
 		return players.size();
 	}
-	
 	
 	
 	/*

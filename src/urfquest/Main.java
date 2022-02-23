@@ -104,7 +104,7 @@ public class Main {
 		if (mode == StartupMode.FULL) {
 			// client and server
 			Thread serverThread = new Thread(() -> {
-				startServer(0, port);
+				startServer(Constants.DEFAULT_SERVER_SEED, port);
 			});
 			serverThread.setName("ServerProcessorThread");
 			serverThread.start();
@@ -119,13 +119,13 @@ public class Main {
 			startClient(ip, port, playerName);
 		} else if (mode == StartupMode.SERVER_ONLY) {
 			// server only
-			startServer(0, port);
+			startServer(Constants.DEFAULT_SERVER_SEED, port);
 		}
 		
 		mainLogger.info("all launcher tasks done");
 	}
 	
-	private static void startServer(int seed, int port) {
+	private static void startServer(long seed, int port) {
 		mainLogger.all("Starting server on port " + port);
 		Server server = new Server(seed, port);
 		server.getLogger().setLogLevel(debugLevel);

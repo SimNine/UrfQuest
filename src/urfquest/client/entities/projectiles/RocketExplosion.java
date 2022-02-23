@@ -6,7 +6,7 @@ import urfquest.client.Client;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Mob;
 import urfquest.client.map.Map;
-import urfquest.client.tiles.Tiles;
+import urfquest.shared.Tile;
 import urfquest.shared.Vector;
 
 public class RocketExplosion extends Projectile {
@@ -26,8 +26,8 @@ public class RocketExplosion extends Projectile {
 		    int xPos = (int)Math.round(bounds.getCenterX() + bounds.width/2 * Math.cos((Math.PI/10)*i) - 0.5);
 		    int yPos = (int)Math.round(bounds.getCenterY() + bounds.width/2 * Math.sin((Math.PI/10)*i) - 0.5);
 
-		    if (map.getTileTypeAt(xPos, yPos) == Tiles.TREE) {
-		    	map.setTileAt(xPos, yPos, Tiles.GRASS);
+		    if (map.getTileTypeAt(xPos, yPos) == Tile.OBJECT_TREE) {
+		    	map.setTileAt(xPos, yPos, Tile.TILE_GRASS);
 		    }
 		}
 	}
