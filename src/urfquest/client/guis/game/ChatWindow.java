@@ -2,14 +2,23 @@ package urfquest.client.guis.game;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import urfquest.client.Client;
 import urfquest.client.guis.GUIAnchor;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.GUIObject;
 import urfquest.shared.ChatMessage;
+import urfquest.shared.Constants;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 
@@ -17,13 +26,24 @@ public class ChatWindow extends GUIContainer {
 	
 	private String currentMessage = "";
 	private boolean isOpaque = false;
-	private Font chatFont = new Font("Courier", Font.BOLD, 15);
+	//private Font chatFont = new Font("DialogInput", Font.PLAIN, 20);
+	private Font chatFont;
 
 	public ChatWindow(Client c,
 					  GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, 
 					  String name, GUIObject parent, 
 					  Color bkg, Color borderColor, int borderThickness) {
 		super(c, anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
+		try {
+			chatFont = Font.createFont(Font.TRUETYPE_FONT, new File("MinecraftRegular-Bmg3.otf"));
+			chatFont = chatFont.deriveFont(Font.PLAIN, Constants.DEFAULT_TEXT_SIZE);
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void keypress(KeyEvent keyEvent) {
@@ -62,22 +82,28 @@ public class ChatWindow extends GUIContainer {
 	public void draw(Graphics g) {
 		super.draw(g);
 		
-		// set chat text graphics
+		// Set chat text graphics
 		g.setColor(Color.BLACK);
 		g.setFont(this.chatFont);
-		int fontHeight = g.getFontMetrics().getHeight()/2;
 		int offset = 5;
+		int fontHeight = g.getFontMetrics().getHeight()/2 + offset;
 		
-		// draw the in-progress chat message if the box is currently opaque
+		//int yPos = this.bounds.y + this.bounds.height - offset - fontHeight;
+		int yPos = this.bounds.y + this.bounds.height - offset;
+		
+		// Draw the in-progress chat message if the box is currently opaque
 		if (isOpaque) {
-			g.drawString(currentMessage, this.bounds.x + 5, this.bounds.y + this.bounds.height - offset);
-			g.fillRect(this.bounds.x + 5 + g.getFontMetrics().stringWidth(currentMessage),
-					   this.bounds.y + this.bounds.height - fontHeight - offset,
-					   3, fontHeight);
+			BufferedImage img = this.drawString(currentMessage, this.bounds.width - offset*2, fontHeight);
+			yPos -= img.getHeight();
+			g.drawImage(img, this.bounds.x + offset, yPos, null);
+			
+			// Draw cursor
+			if (System.currentTimeMillis() % 1000 > 500) {
+				g.fillRect(this.bounds.x + 6 + g.getFontMetrics().stringWidth(currentMessage), yPos, 3, Constants.DEFAULT_TEXT_SIZE);
+			}
 		}
 		
-		// draw each of the current chat messages
-		int yPos = -g.getFontMetrics().getHeight()/2;
+		// Draw each of the current chat messages
 		for (ChatMessage m : this.client.getAllChatMessages()) {
 			String toDraw = "";
 			if (m.source.equals(ChatMessage.serverSource)) {
@@ -87,13 +113,42 @@ public class ChatWindow extends GUIContainer {
 				toDraw = m.source + "> ";
 			}
 			toDraw += m.message;
-			g.drawString(toDraw, this.bounds.x + 5, 
-						 this.bounds.y + this.bounds.height + yPos - offset);
-			yPos += -fontHeight;
 			
-			if (yPos < (this.bounds.height - fontHeight*2) * -1) {
+			BufferedImage img = this.drawString(toDraw, this.bounds.width - offset*2, fontHeight);
+			yPos -= img.getHeight();
+			g.drawImage(img, this.bounds.x + offset, yPos, null);
+			
+			if (yPos < this.bounds.y - fontHeight) {
 				break;
 			}
 		}
+	}
+	
+	private BufferedImage drawString(String s, int widthBound, int fontHeight) {
+		BufferedImage img = new BufferedImage(widthBound, this.bounds.height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2d = (Graphics2D)img.getGraphics();
+		
+		g2d.setColor(Color.BLACK);
+		g2d.setFont(chatFont);
+		FontMetrics fontMetrics = g2d.getFontMetrics(chatFont);
+		Iterator<String> it = Arrays.stream(s.split(" ")).iterator();
+		String accumulation = "";
+		int yPos = fontHeight;
+		while (it.hasNext()) {
+			String nextWord = it.next();
+			if (fontMetrics.stringWidth(accumulation + nextWord) < widthBound) {
+				accumulation += nextWord + " ";
+			} else {
+				g2d.drawString(accumulation, 0, yPos);
+				yPos += fontHeight;
+				accumulation = nextWord;
+			}
+		}
+		if (!accumulation.isBlank()) {
+			g2d.drawString(accumulation, 0, yPos);
+		}
+		
+		img = img.getSubimage(0, 0, widthBound, yPos);
+		return img;
 	}
 }
