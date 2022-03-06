@@ -32,7 +32,7 @@ public class FleeRoutine extends MobRoutine {
 	
 	private void addAction() {
 		if (other != null) {
-			int angle = other.angleTo(mob) + (int)(server.randomDouble()*30);
+			double angle = other.angleTo(mob) + server.randomDouble()*Math.PI/4.0;
 			actions.add(new MoveAction(50, angle, mob.getVelocity()*1.5));
 		} else {
 			actions.add(new IdleAction(10));

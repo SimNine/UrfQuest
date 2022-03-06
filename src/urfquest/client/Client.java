@@ -19,6 +19,7 @@ import urfquest.Main;
 import urfquest.client.entities.Entity;
 import urfquest.client.entities.mobs.Chicken;
 import urfquest.client.entities.mobs.Cyclops;
+import urfquest.client.entities.mobs.NPCHuman;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.map.MapChunk;
 import urfquest.client.state.State;
@@ -169,6 +170,13 @@ public class Client {
 														  state.getCurrentMap(),
 														  m.pos);
 							state.getCurrentMap().addMob(cyclops);
+							break;
+						}
+						case NPC_HUMAN: {
+							NPCHuman npc = new NPCHuman(this, m.entityID,
+														state.getCurrentMap(),
+														m.pos, m.entityName);
+							state.getCurrentMap().addMob(npc);
 							break;
 						}
 						default: {

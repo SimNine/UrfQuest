@@ -4,6 +4,8 @@ import urfquest.shared.Vector;
 
 public class IdleAction extends MobAction {
 	
+	public Vector movementVector = new Vector(0, 0);
+	
 	public IdleAction(int duration) {
 		this.duration = duration;
 	}
@@ -13,7 +15,7 @@ public class IdleAction extends MobAction {
 	}
 	
 	public Vector getSuggestedMovementVector() {
-		return new Vector(0, 0);
+		return movementVector;
 	}
 
 	public void update() {

@@ -8,6 +8,7 @@ import urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.shared.Constants;
+import urfquest.shared.Vector;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
@@ -63,7 +64,7 @@ public class Cyclops extends Mob {
 		}
 
 		routine.update();
-		this.movementVector = routine.getSuggestedMovementVector();
+		this.updateMovementVector(routine.getSuggestedMovementVector());
 		super.attemptIncrementPos();
 		
 		// try firing shotgun

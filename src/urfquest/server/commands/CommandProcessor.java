@@ -6,6 +6,7 @@ import urfquest.server.ClientThread;
 import urfquest.server.Server;
 import urfquest.server.entities.mobs.Chicken;
 import urfquest.server.entities.mobs.Cyclops;
+import urfquest.server.entities.mobs.NPCHuman;
 import urfquest.server.entities.mobs.Player;
 import urfquest.server.map.Map;
 import urfquest.shared.ChatMessage;
@@ -207,6 +208,11 @@ public class CommandProcessor {
 							case "CYCLOPS": {
 								Cyclops c = new Cyclops(server, map, pos);
 								map.addMob(c);
+								break;
+							}
+							case "NPC": {
+								NPCHuman n = new NPCHuman(server, map, pos);
+								map.addMob(n);
 								break;
 							}
 							default: {

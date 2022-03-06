@@ -4,6 +4,7 @@ import urfquest.server.Server;
 import urfquest.server.entities.Entity;
 import urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import urfquest.server.map.Map;
+import urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
@@ -29,6 +30,15 @@ public abstract class Mob extends Entity {
 	}
 	
 	public abstract double getBaseSpeed();
+	
+	public void updateMovementVector(Vector v) {
+		if (v != this.movementVector) {
+			if (v.magnitude == 0) {
+				v.dirRadians = this.movementVector.dirRadians;
+			}
+			this.setMovementVector(v);
+		}
+	}
 	
 	/*
 	 * Stat management

@@ -4,5 +4,6 @@ public enum MobType {
 	NONE,
 	PLAYER,
 	CHICKEN,
-	CYCLOPS
+	CYCLOPS,
+	NPC_HUMAN
 }

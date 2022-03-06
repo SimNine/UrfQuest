@@ -18,6 +18,7 @@ import java.util.Set;
 
 import urfquest.LogLevel;
 import urfquest.client.entities.Entity;
+import urfquest.client.entities.mobs.NPCHuman;
 import urfquest.client.entities.mobs.Player;
 import urfquest.client.guis.GUIContainer;
 import urfquest.client.guis.OverlayInit;
@@ -496,6 +497,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	
 	private void initAssets() {
 		Player.initGraphics();
+		NPCHuman.initGraphics();
 		TileImages.initGraphics();
 	}
 }

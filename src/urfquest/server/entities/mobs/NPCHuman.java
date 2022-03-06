@@ -7,27 +7,26 @@ import urfquest.server.entities.items.Item;
 import urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import urfquest.server.map.Map;
 import urfquest.shared.Constants;
-import urfquest.shared.Vector;
 import urfquest.shared.message.EntityType;
 import urfquest.shared.message.Message;
 import urfquest.shared.message.MessageType;
 import urfquest.shared.message.MobType;
 
-public class Chicken extends Mob {
+public class NPCHuman extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(Server srv, Map m, double[] pos) {
+	public NPCHuman(Server srv, Map m, double[] pos) {
 		super(srv, m, pos);
 		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CHICKEN;
+		movementVector.magnitude = Constants.DEFAULT_VELOCITY_PLAYER;
 		
-		health = 10.0;
-		maxHealth = 10.0;
-		mana = 0.0;
-		maxMana = 0.0;
-		fullness = 0.0;
-		maxFullness = 0.0;
+		health = 100.0;
+		maxHealth = 100.0;
+		mana = 100.0;
+		maxMana = 100.0;
+		fullness = 100.0;
+		maxFullness = 100.0;
 		
 		routine = new IdleRoutine(server, this);
 		intelligence = 20;
@@ -36,10 +35,11 @@ public class Chicken extends Mob {
 		Message msg = new Message();
 		msg.type = MessageType.ENTITY_INIT;
 		msg.entityType = EntityType.MOB;
-		msg.entitySubtype = MobType.CHICKEN;
+		msg.entitySubtype = MobType.NPC_HUMAN;
 		msg.pos = this.getPos();
 		msg.entityID = this.id;
 		msg.mapID = m.id;
+		msg.entityName = "NewNPC";
 		server.sendMessageToAllClients(msg);
 	}
 
@@ -62,7 +62,7 @@ public class Chicken extends Mob {
 	}
 	
 	public double getBaseSpeed() {
-		return Constants.DEFAULT_VELOCITY_CHICKEN;
+		return Constants.DEFAULT_VELOCITY_PLAYER;
 	}
 	
 	private void think() {
