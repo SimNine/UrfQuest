@@ -22,7 +22,7 @@ public class State {
 	public State(Client c) {
 		this.client = c;
 		this.isGameRunning = false;
-		this.currentMap = new Map(c, Constants.CLIENT_CACHED_MAP_DIAMETER);
+		this.currentMap = new Map(c, 0, Constants.CLIENT_CACHED_MAP_DIAMETER);
 		this.camera = new CameraMob(this.client, -1, currentMap, 
 				ArrayUtils.castToDoubleArr(currentMap.getHomeCoords()), 
 				CameraMob.STILL_MODE);
@@ -32,13 +32,23 @@ public class State {
 		return isGameRunning;
 	}
 	
+	public boolean isBuildMode() {
+		return isBuildMode;
+	}
+	
+	
+	/*
+	 * Map
+	 */
+	
+	public void createNewMap(int id) {
+		this.currentMap = new Map(client, id, Constants.CLIENT_CACHED_MAP_DIAMETER);
+	}
+	
 	public Map getCurrentMap() {
 		return currentMap;
 	}
 	
-	public boolean isBuildMode() {
-		return isBuildMode;
-	}
 
 	/*
 	 * Player
@@ -51,6 +61,7 @@ public class State {
 	public void setPlayer(Player p) {
 		this.player = p;
 	}
+	
 	
 	/*
 	 * Camera

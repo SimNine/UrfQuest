@@ -221,8 +221,9 @@ public class Server {
 				
 				Map map = state.getAllMaps().get(m.mapID);
 				
-//					m = new Message();
-//					m.type = MessageType.MAP_METADATA;
+				m = new Message();
+				m.mapID = map.id;
+				m.type = MessageType.MAP_METADATA;
 				
 				for (int x = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; x < Constants.CLIENT_CACHED_MAP_DIAMETER/2; x++) {
 					for (int y = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; y < Constants.CLIENT_CACHED_MAP_DIAMETER/2; y++) {
@@ -238,9 +239,6 @@ public class Server {
 					}
 				}
 
-				// TODO: OtherPlayerMovementTest's second test case occasionally fails here.
-				// When this happens, the loop below does not iterate, even though there are players
-				// on the map. This causes the existing player to not be found on the new client.
 				for (Player player : map.getPlayers().values()) {
 					m = new Message();
 					m.type = MessageType.ENTITY_INIT;

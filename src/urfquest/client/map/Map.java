@@ -21,6 +21,8 @@ import urfquest.shared.message.MessageType;
 public class Map {
 	private Client client;
 	
+	public final int id;
+	
 	public static final int EMPTY_MAP = 5000;
 	public static final int SIMPLEX_MAP = 5001;
 	public static final int SAVANNAH_MAP = 5002;
@@ -43,8 +45,9 @@ public class Map {
 	private ArrayList<Particle> addParticles = new ArrayList<Particle>();
 	private ArrayList<Particle> removeParticles = new ArrayList<Particle>();
 	
-	public Map(Client c, int loadedChunkSize) {
+	public Map(Client c, int id, int loadedChunkSize) {
 		this.client = c;
+		this.id = id;
 		
 		localChunks = new MapChunk[loadedChunkSize][loadedChunkSize];
 		localChunkOrigin[0] = localChunkOrigin[1] = 0 - (loadedChunkSize / 2);

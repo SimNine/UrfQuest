@@ -13,6 +13,7 @@ public class Constants {
 	
 	public static final String FILE_STARTUP_PREFS = "startup.config";
 	
+	
 	/*
 	 * CLIENT ONLY
 	 */
@@ -20,6 +21,7 @@ public class Constants {
 	public static final int CLIENT_CACHED_MAP_DIAMETER = 8;
 	
 	public static final int DEFAULT_TEXT_SIZE = 20;
+	
 	
 	/*
 	 * SERVER ONLY
@@ -30,6 +32,6 @@ public class Constants {
 	public static final double TESTING_POSITION_TOLERANCE = 0.01;
 	public static final String FILE_OPS_LIST = "ops.config";
 	
-	public static final long DEFAULT_SERVER_SEED = 0;
+	public static final long DEFAULT_SERVER_SEED = 5;
 
 }

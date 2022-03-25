@@ -102,14 +102,10 @@ public class Main {
 		
 		// start either the client, the server, or both
 		if (mode == StartupMode.FULL) {
-			// client and server
-			Thread serverThread = new Thread(() -> {
-				startServer(Constants.DEFAULT_SERVER_SEED, port);
-			});
-			serverThread.setName("ServerProcessorThread");
-			serverThread.start();
+			startServer(Constants.DEFAULT_SERVER_SEED, port);
 			try {
-				Thread.sleep(300);
+				// Sleep briefly to give the server time to boot up
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -129,7 +125,6 @@ public class Main {
 		mainLogger.all("Starting server on port " + port);
 		Server server = new Server(seed, port);
 		server.getLogger().setLogLevel(debugLevel);
-		server.initListenerThread();
 		Thread serverThread = new Thread(new Runnable() {
 			public void run() {
 				server.mainLoop();
@@ -137,6 +132,8 @@ public class Main {
 		});
 		serverThread.setName("LocalServerThread");
 		serverThread.start();
+		
+		server.initListenerThread();
 	}
 
 	private static void startClient(String ip, int port, String playerName) {
@@ -146,6 +143,7 @@ public class Main {
 		Socket socket = null;
         try {
 			socket = new Socket(ip, port);
+	        mainLogger.debug(socket.toString());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -78,6 +78,6 @@ public class CraftingOverlay extends GUIContainer {
 	
 	public void draw(Graphics g) {
 		super.draw(g);
-		inputs.removeAllObjects();
+		//inputs.removeAllObjects();
 	}
 }

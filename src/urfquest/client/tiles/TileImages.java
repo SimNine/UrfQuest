@@ -34,6 +34,7 @@ public class TileImages {
 		TILE_IMAGES[Tile.TILE_SPEED_PAD] = loadImage("speedPad.png");
 		TILE_IMAGES[Tile.TILE_WATER] = loadImage("water.png");
 		TILE_IMAGES[Tile.TILE_SAND] = loadImage("sand.png");
+		TILE_IMAGES[Tile.TILE_FLOOR_WOOD] = loadImage("floor_wood.png");
 		
 		TILE_IMAGES[Tile.OBJECT_FLOWERS] = loadImage("grass_flowers.png");
 		TILE_IMAGES[Tile.OBJECT_TREE] = loadImage("tree_scaled.png");
@@ -43,6 +44,7 @@ public class TileImages {
 		TILE_IMAGES[Tile.OBJECT_IRON_ORE] = loadImage("ironore_scaled_30px.png");
 		TILE_IMAGES[Tile.OBJECT_COPPER_ORE] = loadImage("copperore_scaled_30px.png");
 		TILE_IMAGES[Tile.OBJECT_CHEST] = loadImage("chest_scaled_30px.png");
+		TILE_IMAGES[Tile.OBJECT_WALL_STONE] = loadImage("wall_stone.png");
 	}
 	
 	
@@ -53,9 +55,9 @@ public class TileImages {
 	private static BufferedImage loadImage(String s) {
 		try {
 			return ImageIO.read(Main.self.getClass().getResourceAsStream(tileRoot + s));
-		} catch (IOException e) {
-			Main.mainLogger.error("this was unable to be loaded: " + s);
-			e.printStackTrace();
+		} catch (IOException | IllegalArgumentException e) {
+			Main.mainLogger.error("Tile image \"" + s + "\" was unable to be loaded");
+			//e.printStackTrace();
 		}
 		return null;
 	}

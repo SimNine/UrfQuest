@@ -20,6 +20,7 @@ public class Tile {
 	public static final int TILE_WATER;
 	public static final int TILE_SAND;
 	public static final int TILE_DIRT;
+	public static final int TILE_FLOOR_WOOD;
 	
 	// Object tiles
 	public static final int OBJECT_FLOWERS;
@@ -30,6 +31,7 @@ public class Tile {
 	public static final int OBJECT_IRON_ORE;
 	public static final int OBJECT_COPPER_ORE;
 	public static final int OBJECT_CHEST;
+	public static final int OBJECT_WALL_STONE;
 
 	public static final int NUM_TILE_TYPES;
 	
@@ -52,6 +54,7 @@ public class Tile {
 		TILE_WATER = i++;
 		TILE_SAND = i++;
 		TILE_DIRT = i++;
+		TILE_FLOOR_WOOD = i++;
 		
 		// Object tiles
 		OBJECT_FLOWERS = i++;
@@ -62,6 +65,7 @@ public class Tile {
 		OBJECT_IRON_ORE = i++;
 		OBJECT_COPPER_ORE = i++;
 		OBJECT_CHEST = i++;
+		OBJECT_WALL_STONE = i++;
 		
 		NUM_TILE_TYPES = i;
 	}
@@ -98,6 +102,8 @@ public class Tile {
 		BOOLEAN_PROPERTIES[TILE_SAND][PROPERTY_PENETRABLE] = true;
 		BOOLEAN_PROPERTIES[TILE_DIRT][PROPERTY_WALKABLE] = true;
 		BOOLEAN_PROPERTIES[TILE_DIRT][PROPERTY_PENETRABLE] = true;
+		BOOLEAN_PROPERTIES[TILE_FLOOR_WOOD][PROPERTY_WALKABLE] = true;
+		BOOLEAN_PROPERTIES[TILE_FLOOR_WOOD][PROPERTY_PENETRABLE] = true;
 
 		BOOLEAN_PROPERTIES[OBJECT_FLOWERS][PROPERTY_WALKABLE] = true;
 		BOOLEAN_PROPERTIES[OBJECT_FLOWERS][PROPERTY_PENETRABLE] = true;
@@ -115,6 +121,8 @@ public class Tile {
 		BOOLEAN_PROPERTIES[OBJECT_COPPER_ORE][PROPERTY_PENETRABLE] = false;
 		BOOLEAN_PROPERTIES[OBJECT_CHEST][PROPERTY_WALKABLE] = false;
 		BOOLEAN_PROPERTIES[OBJECT_CHEST][PROPERTY_PENETRABLE] = false;
+		BOOLEAN_PROPERTIES[OBJECT_WALL_STONE][PROPERTY_WALKABLE] = false;
+		BOOLEAN_PROPERTIES[OBJECT_WALL_STONE][PROPERTY_PENETRABLE] = false;
 	}
 
 	private static final int[][] INT_PROPERTIES = new int[NUM_TILE_TYPES][1];
@@ -130,6 +138,7 @@ public class Tile {
 		INT_PROPERTIES[TILE_WATER][0] = Color.BLUE.getRGB();
 		INT_PROPERTIES[TILE_SAND][0] = Color.YELLOW.brighter().getRGB();
 		INT_PROPERTIES[TILE_DIRT][0] = new Color(179, 136, 37).getRGB();
+		INT_PROPERTIES[TILE_FLOOR_WOOD][0] = new Color(179, 136, 37).getRGB();
 		
 		INT_PROPERTIES[OBJECT_FLOWERS][0] = Color.CYAN.getRGB();
 		INT_PROPERTIES[OBJECT_TREE][0] = Color.GREEN.darker().getRGB();
@@ -139,6 +148,7 @@ public class Tile {
 		INT_PROPERTIES[OBJECT_IRON_ORE][0] = Color.GRAY.darker().getRGB();
 		INT_PROPERTIES[OBJECT_COPPER_ORE][0] = Color.ORANGE.getRGB();
 		INT_PROPERTIES[OBJECT_CHEST][0] = Color.ORANGE.darker().getRGB();
+		INT_PROPERTIES[OBJECT_WALL_STONE][0] = Color.DARK_GRAY.getRGB();
 	}
 	
 	/*

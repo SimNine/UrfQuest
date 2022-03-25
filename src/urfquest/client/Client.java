@@ -218,7 +218,7 @@ public class Client {
 			case MAP_METADATA: {
 				this.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)
-				// TODO - currently unused
+				state.createNewMap(m.mapID);
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {

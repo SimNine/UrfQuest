@@ -18,7 +18,7 @@ public abstract class Entity {
 	
 	protected Map map;
 	
-	public int id;
+	public final int id;
 	
 	protected Entity(Client c, int id, Map m, double[] pos) {
 		this.client = c;

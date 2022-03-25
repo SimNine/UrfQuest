@@ -2,6 +2,7 @@ package urfquest.server.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import urfquest.server.IDGenerator;
 import urfquest.server.Server;
@@ -14,6 +15,8 @@ import urfquest.server.map.generator.TerrainGeneratorCaves;
 import urfquest.server.map.generator.TerrainGeneratorSavannah;
 import urfquest.server.map.generator.TerrainGeneratorSimplex;
 import urfquest.server.map.generator.TerrainGeneratorTemplate;
+import urfquest.server.map.populator.HousePopulator;
+import urfquest.server.map.structures.Structure;
 import urfquest.server.tiles.ActiveTile;
 import urfquest.shared.Constants;
 import urfquest.shared.Tile;
@@ -32,11 +35,14 @@ public class Map {
 	private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
 	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
 	
+	private HashSet<Structure> structures = new HashSet<Structure>();
+	
 	private int[] homeCoords = new int[2];
 	
 	private HashMap<Integer, HashMap<Integer, MapChunk>> chunks;
 	
 	private TerrainGenerator generator;
+	private HousePopulator populator;
 	
 	public int id;
 	
@@ -63,13 +69,14 @@ public class Map {
 			// generateCyclopses();
 			break;
 		}
+		populator = new HousePopulator(server);
 		
 		chunks = new HashMap<Integer, HashMap<Integer, MapChunk>>();
-		for (int xChunk = -5; xChunk < 5; xChunk++) {
-			for (int yChunk = -5; yChunk < 5; yChunk++) {
-				this.createChunk(xChunk, yChunk);
-			}
-		}
+//		for (int xChunk = -5; xChunk < 5; xChunk++) {
+//			for (int yChunk = -5; yChunk < 5; yChunk++) {
+//				this.createChunk(xChunk, yChunk);
+//			}
+//		}
 		
 		if (type != EMPTY_MAP) {
 			if (type == CAVE_MAP) {
@@ -259,14 +266,20 @@ public class Map {
 		if (column == null) {
 			column = new HashMap<Integer, MapChunk>();
 			chunks.put(xChunk, column);
-			MapChunk chunk = generator.generateChunk(xChunk, yChunk);
-			column.put(yChunk, chunk);
-			return chunk;
-		} else {
-			MapChunk chunk = generator.generateChunk(xChunk, yChunk);
-			column.put(yChunk, chunk);
-			return chunk;
 		}
+		
+		MapChunk chunk = generator.generateChunk(xChunk, yChunk);
+		column.put(yChunk, chunk);
+		
+		Structure s = populator.populateChunk(this, xChunk, yChunk);
+		if (s != null) {
+			structures.add(s);
+		}
+		for (Structure struct : structures) {
+			populator.generateStructure(this, struct.getPosition(), struct.getDimensions());
+		}
+		
+		return chunk;
 	}
 	
 	private MapChunk createChunkAtPos(int x, int y) {
@@ -379,7 +392,8 @@ public class Map {
 	 */
 	
 	private void generateStartingArea() {
-		findHomeCoords();
+		//findHomeCoords();
+		homeCoords = new int[] {0, 0};
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
@@ -393,6 +407,7 @@ public class Map {
 		setTileAt(homeCoords[0]+2, homeCoords[1]+2, Tile.TILE_SPEED_PAD);
 	}
 	
+	// TODO: this is broken and prone to not letting the server initialize. fix
 	private void findHomeCoords() {
 		int spawnCenterX = (int)((server.randomDouble()-0.5)*10);
 		int spawnCenterY = (int)((server.randomDouble()-0.5)*10);
