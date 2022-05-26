@@ -2,7 +2,6 @@ package urfquest.shared.message;
 
 public enum MessageType {
 	PING,
-	CHUNK_LOAD,
 	CHAT_MESSAGE,
 	DISCONNECT_CLIENT,
 	
@@ -13,6 +12,7 @@ public enum MessageType {
 	PLAYER_SET_MOVE_VECTOR,
 	PLAYER_REQUEST,
 	MAP_REQUEST,
+	CHUNK_REQUEST,
 	
 	// sent only by server
 	CONNECTION_CONFIRMED,
@@ -20,6 +20,7 @@ public enum MessageType {
 	ENTITY_SET_POS,
 	ENTITY_SET_MOVE_VECTOR,
 	ENTITY_DESTROY,
-	MAP_METADATA,
+	MAP_INIT,
+	CHUNK_INIT,
 	SERVER_ERROR
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import urfquest.Logger;
 import urfquest.server.IDGenerator;
 import urfquest.server.Server;
 import urfquest.server.entities.items.Item;
@@ -51,6 +52,8 @@ public class Map {
 		
 		this.id = IDGenerator.newID();
 		
+		System.out.println("Generating map with ID :" + this.id);
+		
 		switch (type) {
 		case EMPTY_MAP:
 			break;
@@ -71,12 +74,13 @@ public class Map {
 		}
 		populator = new HousePopulator(server);
 		
+		// generate four center chunks in order to generate starting area
 		chunks = new HashMap<Integer, HashMap<Integer, MapChunk>>();
-//		for (int xChunk = -5; xChunk < 5; xChunk++) {
-//			for (int yChunk = -5; yChunk < 5; yChunk++) {
-//				this.createChunk(xChunk, yChunk);
-//			}
-//		}
+		for (int xChunk = -1; xChunk < 1; xChunk++) {
+			for (int yChunk = -1; yChunk < 1; yChunk++) {
+				this.createChunk(xChunk, yChunk);
+			}
+		}
 		
 		if (type != EMPTY_MAP) {
 			if (type == CAVE_MAP) {
@@ -271,11 +275,9 @@ public class Map {
 		MapChunk chunk = generator.generateChunk(xChunk, yChunk);
 		column.put(yChunk, chunk);
 		
-		Structure s = populator.populateChunk(this, xChunk, yChunk);
-		if (s != null) {
-			structures.add(s);
-		}
-		for (Structure struct : structures) {
+		Structure struct = populator.populateChunk(this, xChunk, yChunk);
+		if (struct != null) {
+			structures.add(struct);
 			populator.generateStructure(this, struct.getPosition(), struct.getDimensions());
 		}
 		

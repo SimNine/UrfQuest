@@ -113,7 +113,7 @@ public class Player extends Mob {
 	
 	public void setPos(double x, double y) {
 		super.setPos(x, y);
-
+		
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
 		int mapWidth = map.getMapDiameter();
@@ -138,6 +138,8 @@ public class Player extends Mob {
 			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] + 1);
 			map.requestMissingChunks();
 		}
+
+		map.requestMissingChunks();
 	}
 
 	/*

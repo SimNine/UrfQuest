@@ -80,7 +80,7 @@ public class HousePopulator extends TerrainPopulator {
 		
 		// Resident
 		// TODO: this line is causing client message parsing errors. look into it
-		//map.addMob(new NPCHuman(server, map, new double[] {pos[0] + dims[0]/2, pos[1] + dims[1]/2}));
+		map.addMob(new NPCHuman(server, map, new double[] {pos[0] + dims[0]/2, pos[1] + dims[1]/2}));
 	}
 
 }

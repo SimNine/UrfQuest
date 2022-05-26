@@ -132,7 +132,7 @@ public class Client {
 				break;
 			}
 			case ENTITY_INIT: {
-				this.getLogger().debug(m.toString());
+				this.getLogger().debug("DEBUG: " + m.toString());
 				// - Initializes an entity of the given type
 				
 				// If this entity is not on the current map, do nothing
@@ -153,6 +153,7 @@ public class Client {
 						state.setPlayer(player);
 						if (this.server == null) {
 							this.initFrontend();
+							state.getCurrentMap().requestMissingChunks();
 						}
 					}
 				} else if (m.entityType == EntityType.MOB) {
@@ -186,7 +187,7 @@ public class Client {
 				}
 				break;
 			}
-			case CHUNK_LOAD: {
+			case CHUNK_INIT: {
 				this.getLogger().verbose(m.toString());
 				// - Loads the payloads of this message into the specified chunk
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
@@ -215,7 +216,7 @@ public class Client {
 				}
 				break;
 			}
-			case MAP_METADATA: {
+			case MAP_INIT: {
 				this.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)
 				state.createNewMap(m.mapID);

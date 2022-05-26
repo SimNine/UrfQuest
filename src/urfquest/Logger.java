@@ -12,6 +12,11 @@ public class Logger {
 	
 	private PrintWriter writer;
 	
+	
+	/*
+	 * set up logger
+	 */
+	
 	public Logger(LogLevel logLevel, String prefix) {
 		this.logLevel = logLevel;
 		this.prefix = prefix;
@@ -41,6 +46,9 @@ public class Logger {
 	}
 	
 	
+	/*
+	 * logging methods
+	 */
 	
 	public void all(String s) {
 		log("ALL : " + s, LogLevel.ALL);

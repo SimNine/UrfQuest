@@ -36,9 +36,6 @@ public class Message implements Serializable {
 		switch (type) {
 		case PING:
 			break;
-		case CHUNK_LOAD:
-			ret += ",mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
-			break;
 		case CHAT_MESSAGE: {
 			ChatMessage m = (ChatMessage)payload;
 			ret += ",source:" + m.source + ",message:" + m.message;
@@ -66,6 +63,9 @@ public class Message implements Serializable {
 		case MAP_REQUEST:
 			ret += ",mapID:" + this.mapID;
 			break;
+		case CHUNK_REQUEST:
+			ret += ",mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
+			break;
 		
 		// only sent by server
 		case ENTITY_SET_POS:
@@ -84,6 +84,14 @@ public class Message implements Serializable {
 			if (entityType == EntityType.PLAYER) {
 				ret += ",name:" + this.entityName;
 			}
+			break;
+		}
+		case MAP_INIT: {
+			ret += ",mapID:" + this.mapID;
+			break;
+		}
+		case CHUNK_INIT: {
+			ret += ",mapID:" + mapID + ",xChunk:" + xyChunk[0] + ",yChunk:" + xyChunk[1];
 			break;
 		}
 		case SERVER_ERROR: {

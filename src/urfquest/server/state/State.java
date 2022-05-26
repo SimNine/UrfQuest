@@ -20,6 +20,7 @@ public class State {
 		this.maps.put(surfaceMap.id, surfaceMap);
 	}
 
+	
 	/*
 	 * Ticker and updater
 	 */
@@ -29,6 +30,7 @@ public class State {
 			m.tick();
 		}
 	}
+	
 	
 	/*
 	 * Player management
@@ -52,6 +54,7 @@ public class State {
 		return players.remove(entityID);
 	}
 	
+	
 	/*
 	 * Map management
 	 */
@@ -59,9 +62,9 @@ public class State {
 	public Map getSurfaceMap() {
 		return surfaceMap;
 	}
-
-	public HashMap<Integer, Map> getAllMaps() {
-		return maps;
+	
+	public Map getMapByID(int id) {
+		return maps.get(id);
 	}
 
 	public void setAllMaps(HashMap<Integer, Map> maps) {

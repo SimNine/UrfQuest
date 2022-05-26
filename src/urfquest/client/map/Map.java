@@ -316,7 +316,7 @@ public class Map {
 			for (int y = 0; y < localChunks[0].length; y++) {
 				if (localChunks[x][y] == null) {
 					Message m = new Message();
-					m.type = MessageType.CHUNK_LOAD;
+					m.type = MessageType.CHUNK_REQUEST;
 					m.xyChunk = new int[] {
 						x + localChunkOrigin[0],
 						y + localChunkOrigin[1]

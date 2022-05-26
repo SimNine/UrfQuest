@@ -27,10 +27,10 @@ public class Main {
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
 	
-	public static LogLevel debugLevel = LogLevel.INFO;
+	public static LogLevel debugLevel = LogLevel.ALL;
 	
 	public static void main(String[] args) {
-		mainLogger = new Logger(LogLevel.ALL, "LAUNCHER");
+		mainLogger = new Logger(debugLevel, "LAUNCHER");
 		
 		// check for proper number of arguments
 		if (args.length == 3) {
@@ -49,7 +49,7 @@ public class Main {
 					port = Integer.parseInt(prefsReader.readLine());
 					mode = StartupMode.valueOf(Integer.parseInt(prefsReader.readLine()));
 					playerName = prefsReader.readLine();
-					debugLevel = LogLevel.valueOf(prefsReader.readLine());
+//					debugLevel = LogLevel.valueOf(prefsReader.readLine());
 					prefsReader.close();
 				} catch (IOException e) {
 					System.err.println("Malformed prefs file. going with defaults");
@@ -76,9 +76,9 @@ public class Main {
 			}
 			playerName = dialog.playerName.getText();
 			if (dialog.useDebug.isSelected()) {
-				debugLevel = LogLevel.ALL;
+//				debugLevel = LogLevel.ALL;
 			} else {
-				debugLevel = LogLevel.INFO;
+//				debugLevel = LogLevel.INFO;
 			}
 			
 			// save inputs to prefs file
@@ -89,7 +89,7 @@ public class Main {
 				prefsWriter.println(port + "");
 				prefsWriter.println(mode.value + "");
 				prefsWriter.println(playerName);
-				prefsWriter.println(debugLevel);
+//				prefsWriter.println(debugLevel);
 				prefsWriter.close();
 			} catch (IOException e) {
 				System.err.println("Error writing startup prefs to file");

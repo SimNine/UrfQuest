@@ -219,25 +219,12 @@ public class Server {
 				// - Sends all entities currently on the map
 				// TODO: narrow the number of entities that are sent
 				
-				Map map = state.getAllMaps().get(m.mapID);
+				Map map = state.getMapByID(m.mapID);
 				
 				m = new Message();
 				m.mapID = map.id;
-				m.type = MessageType.MAP_METADATA;
-				
-				for (int x = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; x < Constants.CLIENT_CACHED_MAP_DIAMETER/2; x++) {
-					for (int y = -Constants.CLIENT_CACHED_MAP_DIAMETER/2; y < Constants.CLIENT_CACHED_MAP_DIAMETER/2; y++) {
-						m = new Message();
-						m.type = MessageType.CHUNK_LOAD;
-						
-						MapChunk chunk = map.getChunk(x, y);
-						m.payload = chunk.getAllTileTypes();
-						m.payload2 = chunk.getAllObjectTypes();
-						m.xyChunk[0] = x;
-						m.xyChunk[1] = y;
-						c.send(m);
-					}
-				}
+				m.type = MessageType.MAP_INIT;
+				c.send(m);
 
 				for (Player player : map.getPlayers().values()) {
 					m = new Message();
@@ -250,10 +237,11 @@ public class Server {
 				}
 				break;
 			}
-			case CHUNK_LOAD: {
+			case CHUNK_REQUEST: {
 				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
+				m.type = MessageType.CHUNK_INIT;
 				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (chunk == null) {
 					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
