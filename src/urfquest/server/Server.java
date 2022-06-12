@@ -174,9 +174,10 @@ public class Server {
 			return;
 		}
 		
+		m.print(this.getLogger());
+		
 		switch (m.type) {
 			case PLAYER_REQUEST: {
-				this.getLogger().info(m.toString());
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
@@ -205,14 +206,12 @@ public class Server {
 				break;
 			}
 			case PLAYER_SET_MOVE_VECTOR: {
-				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to set the velocity and direction of their player
 				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
 				player.setMovementVector(m.vector);
 				break;
 			}
 			case MAP_REQUEST: {
-				this.getLogger().info(m.toString());
 				// - Recieves a request from a client to load a new map
 				// - Sends metadata of the requested map to the client - TODO
 				// - Sends chunks nearby the player to the client
@@ -238,7 +237,6 @@ public class Server {
 				break;
 			}
 			case CHUNK_REQUEST: {
-				this.getLogger().debug(m.toString());
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
 				m.type = MessageType.CHUNK_INIT;
@@ -252,7 +250,6 @@ public class Server {
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				this.getLogger().debug(m.toString());
 				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
 				Player p = state.getPlayer(playerID);
 				String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
@@ -264,8 +261,6 @@ public class Server {
 				break;
 			}
 			case CHAT_MESSAGE: {
-				this.getLogger().info(m.toString());
-				
 				ChatMessage chatMessage = (ChatMessage)m.payload;
 				if (m.clientID == this.id) {
 					chatMessage.source = "SERVER";
@@ -284,7 +279,6 @@ public class Server {
 				break;
 			}
 			case DISCONNECT_CLIENT: {
-				this.getLogger().info(m.toString());
 				// - Recieves a request from either this client or the server to disconnect
 				// - Cleans up the client's resources
 				int clientID = m.clientID;
@@ -315,7 +309,6 @@ public class Server {
 				break;
 			}
 			default: {
-				this.getLogger().debug(m.clientID + " - =UNKNOWN MESSAGE= - " + m.toString());
 				break;
 			}
 		}

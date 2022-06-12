@@ -106,13 +106,13 @@ public class Client {
 	}
 	
 	public void processMessage(Message m) {
+		m.print(this.getLogger());
+		
 		switch (m.type) {
 			case PING: {
-				this.getLogger().verbose(m.toString());
 				break;
 			}
 			case CONNECTION_CONFIRMED: {
-				this.getLogger().info(m.toString());
 				// - Assigns this client its clientID
 				// - Informs this client of the surface map's ID
 				// - Sends a request to the server to load the current map
@@ -132,7 +132,6 @@ public class Client {
 				break;
 			}
 			case ENTITY_INIT: {
-				this.getLogger().debug("DEBUG: " + m.toString());
 				// - Initializes an entity of the given type
 				
 				// If this entity is not on the current map, do nothing
@@ -188,7 +187,6 @@ public class Client {
 				break;
 			}
 			case CHUNK_INIT: {
-				this.getLogger().verbose(m.toString());
 				// - Loads the payloads of this message into the specified chunk
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (c == null) {
@@ -200,7 +198,6 @@ public class Client {
 				break;
 			}
 			case ENTITY_SET_POS: {
-				this.getLogger().verbose(m.toString());
 				// - Sets the position of the given entity
 				Entity e = state.getCurrentMap().getEntity(m.entityID);
 				if (e != null) {
@@ -209,7 +206,6 @@ public class Client {
 				break;
 			}
 			case ENTITY_SET_MOVE_VECTOR: {
-				this.getLogger().verbose(m.toString());
 				Entity e = state.getCurrentMap().getEntity(m.entityID);
 				if (e != null) {
 					e.setMovementVector(m.vector);
@@ -217,28 +213,23 @@ public class Client {
 				break;
 			}
 			case MAP_INIT: {
-				this.getLogger().info(m.toString());
 				// - Loads metadata about the current map (id, climate, etc)
 				state.createNewMap(m.mapID);
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				this.getLogger().info(m.toString());
 				break;
 			}
 			case CHAT_MESSAGE: {
-				this.getLogger().info(m.toString());
 				chatMessages.addFirst((ChatMessage)m.payload);
 				break;
 			}
 			case SERVER_ERROR: {
-				this.getLogger().all(m.toString());
 				JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
 				System.exit(1);
 				break;
 			}
 			case DISCONNECT_CLIENT: {
-				this.getLogger().info(m.toString());
 				if (m.clientID == this.clientID) {
 					if (this.server == null) {
 						JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
@@ -252,12 +243,10 @@ public class Client {
 				break;
 			}
 			case ENTITY_DESTROY: {
-				this.getLogger().debug(m.toString());
 				state.getCurrentMap().removeEntity(m.entityID);
 				break;
 			}
 			default: {
-				this.getLogger().debug(m.toString());
 				break;
 			}
 		}
