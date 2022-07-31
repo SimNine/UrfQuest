@@ -21,7 +21,7 @@ import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.tiles.TileImages;
 
 public class Item extends Entity {
-	public static final String assetPath = "/assets/items/";
+	public static final String assetPath = "/xyz/urffer/urfquest/assets/items/";
 	
 	public static final int EMPTY_ITEM = 0;
 	public static final int ASTRAL_RUNE = 1;

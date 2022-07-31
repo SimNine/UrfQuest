@@ -10,7 +10,7 @@ import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
 
 public abstract class Mob extends Entity {
-	protected final static String assetPath = "/assets/entities/";
+	protected final static String assetPath = "/xyz/urffer/urfquest/assets/entities/";
 	
 	protected double health;
 	protected double mana;

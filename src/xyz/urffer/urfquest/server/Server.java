@@ -169,7 +169,12 @@ public class Server {
 	
 	public void processMessage(Message m) {
 		ClientThread c = clients.get(m.clientID);
-		if (c == null) {
+		if (m.clientID == this.id) {
+			if (m.type != MessageType.CHAT_MESSAGE) {
+				this.getLogger().error("Non-chat message recieved from server console");
+				return;
+			}
+		} else if (c == null) {
 			this.getLogger().warning(m.type + " from client " + m.clientID + " skipped; client not found");
 			return;
 		}
