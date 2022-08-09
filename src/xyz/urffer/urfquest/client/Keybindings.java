@@ -24,7 +24,7 @@ public class Keybindings {
 		ret += "BUILDMODE: " + KeyEvent.getKeyText(BUILDMODE) + "\n";
 		ret += "MAPLINK: " + KeyEvent.getKeyText(MAPLINK) + "\n";
 		ret += "CRAFTING: " + KeyEvent.getKeyText(CRAFTING) + "\n";
-		ret += "CYCLE_DEBUG: " + KeyEvent.getKeyText(CRAFTING) + "\n";
+		ret += "CYCLE_DEBUG: " + KeyEvent.getKeyText(CYCLE_DEBUG) + "\n";
 		ret += "CHAT: " + KeyEvent.getKeyText(CHAT) + "\n";
 		return ret;
 	}
