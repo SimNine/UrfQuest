@@ -52,7 +52,7 @@ This project **does not** adhere to [Semantic Versioning](https://semver.org/spe
 ### Changed
 - Changed magnetic pickup to have a range specific to each player
 - Redid tile display system
-	- Tile images are now stored in a 3d array: [type][subtype][animStage]
+	- Tile images are now stored in a 3d array: `[type][subtype][animStage]`
 	- "Type" is the overall type of the tile; all tiles of a type have the same collision properties
 	- "Subtype" affects the appearance of a tile, and what items it drops
 	- "animStage" represents all the frames
