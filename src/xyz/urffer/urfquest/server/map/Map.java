@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.server.IDGenerator;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.Item;
@@ -52,7 +51,7 @@ public class Map {
 		
 		this.id = IDGenerator.newID();
 		
-		System.out.println("Generating map with ID :" + this.id);
+		server.getLogger().info("Generating map with ID: " + this.id);
 		
 		switch (type) {
 		case EMPTY_MAP:

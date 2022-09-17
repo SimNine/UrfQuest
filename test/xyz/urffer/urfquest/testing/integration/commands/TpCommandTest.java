@@ -13,8 +13,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class TpCommandTest {
 	
@@ -51,10 +50,9 @@ class TpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
@@ -73,10 +71,9 @@ class TpCommandTest {
 		double[] p1pos1 = p1.getPos();
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
 		double[] p1pos2 = p1.getPos();
@@ -94,10 +91,9 @@ class TpCommandTest {
 		double[] p1pos1 = p1.getPos();
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
 		double[] p1pos2 = p1.getPos();
@@ -115,10 +111,9 @@ class TpCommandTest {
 		double[] p1pos1 = p1.getPos();
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
 		double[] p1pos2 = p1.getPos();
@@ -136,10 +131,9 @@ class TpCommandTest {
 		double[] p1pos1 = p1.getPos();
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
 		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
 		double[] p1pos2 = p1.getPos();

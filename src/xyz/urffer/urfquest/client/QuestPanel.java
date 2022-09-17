@@ -35,8 +35,7 @@ import xyz.urffer.urfquest.client.guis.menus.KeybindingOverlay;
 import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Vector;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
 
 @SuppressWarnings("serial")
 public class QuestPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
@@ -202,12 +201,12 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 					guiOpen = true;
 					chatOverlay.setOpaqueChatbox(true);
 				} else if (e.getKeyCode() == KeyEvent.VK_F4) {
-					client.getLogger().debug("F4 pressed at: " + 
-											 client.getState().getPlayer().getCenter()[0] + "," +
-											 client.getState().getPlayer().getCenter()[1]);
+					String playerPosString = client.getState().getPlayer().getCenter()[0] + "," +
+							 				 client.getState().getPlayer().getCenter()[1];
+					client.getLogger().debug("F4 pressed at: " + playerPosString);
 					
-					Message m = new Message();
-					m.type = MessageType.DEBUG_PLAYER_INFO;
+					MessageDebugPlayer m = new MessageDebugPlayer();
+					m.playerPosString = playerPosString;
 					client.send(m);
 				}
 			}

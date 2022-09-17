@@ -12,9 +12,7 @@ import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Tile;
-import xyz.urffer.urfquest.shared.message.EntityType;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
 
 public class Player extends Mob {
 	
@@ -46,14 +44,12 @@ public class Player extends Mob {
 		this.name = name;
 		this.client = c;
 		
-		Message msg = new Message();
-		msg.type = MessageType.ENTITY_INIT;
-		msg.entityName = this.name;
-		msg.entityType = EntityType.PLAYER;
-		msg.pos = this.getPos();
-		msg.clientID = c.id;
-		msg.mapID = this.map.id;
+		MessagePlayerInit msg = new MessagePlayerInit();
+		msg.clientOwnerID = c.id;
 		msg.entityID = this.id;
+		msg.entityName = this.name;
+		msg.pos = this.getPos();
+		msg.mapID = this.map.id;
 		server.sendMessageToAllClients(msg);
 	}
 

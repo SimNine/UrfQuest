@@ -15,8 +15,7 @@ import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
 import xyz.urffer.urfquest.client.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Tile;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 
 public class Map {
 	private Client client;
@@ -315,8 +314,8 @@ public class Map {
 		for (int x = 0; x < localChunks.length; x++) {
 			for (int y = 0; y < localChunks[0].length; y++) {
 				if (localChunks[x][y] == null) {
-					Message m = new Message();
-					m.type = MessageType.CHUNK_REQUEST;
+					MessageRequestChunk m = new MessageRequestChunk();
+					m.mapID = this.id;
 					m.xyChunk = new int[] {
 						x + localChunkOrigin[0],
 						y + localChunkOrigin[1]

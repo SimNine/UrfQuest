@@ -8,8 +8,9 @@ import java.net.SocketException;
 
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.Message;
+import xyz.urffer.urfquest.shared.protocol.Packet;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
 public class ClientThread {
 	
@@ -56,9 +57,9 @@ public class ClientThread {
 	public void mainLoop() {
 		while (true) {
 			try {
-				Message m = (Message)in.readObject();
-				m.clientID = id;
-				this.server.intakeMessage(m);
+				Packet p = (Packet)in.readObject();
+				p.setClientID(this.id);
+				this.server.intakePacket(p);
 			} catch (SocketException e) {
 				this.server.getLogger().info("Client " + id + " connection reset");
 				this.beginDisconnectProcess("Client window closed");
@@ -77,11 +78,12 @@ public class ClientThread {
 	}
 	
 	private void beginDisconnectProcess(String reason) {
-		Message m = new Message();
-		m.type = MessageType.DISCONNECT_CLIENT;
-		m.clientID = id;
-		m.payload = reason;
-		server.intakeMessage(m);
+		MessageDisconnect m = new MessageDisconnect();
+		m.reason = reason;
+		m.disconnectedClientID = this.id;
+		
+		Packet p = new Packet(this.id, m);
+		server.intakePacket(p);
 	}
 	
 	public void stop() {
@@ -98,11 +100,13 @@ public class ClientThread {
 	}
 	
 	public void send(Message m) {
+		Packet p = new Packet(server.getServerID(), m);
+		
 		if (socket == null) {
-			client.processMessage(m);
+			client.processPacket(p);
 		} else {
 			try {
-				out.writeObject(m);
+				out.writeObject(p);
 			} catch (IOException e) {
 				this.beginDisconnectProcess("A connection error has occurred");
 				e.printStackTrace();

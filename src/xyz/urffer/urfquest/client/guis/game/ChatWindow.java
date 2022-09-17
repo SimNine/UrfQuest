@@ -19,8 +19,7 @@ import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.GUIObject;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 public class ChatWindow extends GUIContainer {
 	
@@ -49,9 +48,8 @@ public class ChatWindow extends GUIContainer {
 	public void keypress(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (currentMessage.length() > 0) {
-				Message m = new Message();
-				m.type = MessageType.CHAT_MESSAGE;
-				m.payload = new ChatMessage(null, currentMessage);
+				MessageChat m = new MessageChat();
+				m.chatMessage = new ChatMessage(null, currentMessage);
 				this.client.send(m);
 			}
 			

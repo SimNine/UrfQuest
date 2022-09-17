@@ -14,8 +14,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class SummonCommandTest {
 	
@@ -55,10 +54,9 @@ class SummonCommandTest {
 		
 		Assertions.assertEquals(0, s.getState().getSurfaceMap().getNumMobs());
 		Assertions.assertEquals(0, c1.getState().getCurrentMap().getNumMobs());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
@@ -85,10 +83,9 @@ class SummonCommandTest {
 		
 		Assertions.assertEquals(0, s.getState().getSurfaceMap().getNumMobs());
 		Assertions.assertEquals(0, c1.getState().getCurrentMap().getNumMobs());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());

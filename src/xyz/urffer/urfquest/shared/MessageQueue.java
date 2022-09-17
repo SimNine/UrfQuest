@@ -2,13 +2,13 @@ package xyz.urffer.urfquest.shared;
 
 import java.util.ArrayList;
 
-import xyz.urffer.urfquest.shared.message.Message;
+import xyz.urffer.urfquest.shared.protocol.Packet;
 
 public class MessageQueue {
 	
-	private ArrayList<Message> messages = new ArrayList<Message>();
+	private ArrayList<Packet> messages = new ArrayList<Packet>();
 	
-	public synchronized Message poll() {
+	public synchronized Packet poll() {
 		if (messages.isEmpty())
 			try {
 				wait();
@@ -16,11 +16,11 @@ public class MessageQueue {
 				e.printStackTrace();
 			}
 		
-		Message m = messages.remove(0);
+		Packet m = messages.remove(0);
 		return m;
 	}
 	
-	public synchronized void add(Message m) {
+	public synchronized void add(Packet m) {
 		messages.add(m);
 		notify();
 	}

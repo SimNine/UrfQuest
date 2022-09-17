@@ -45,6 +45,14 @@ public class Logger {
 		this.logLevel = level;
 	}
 	
+	public String getPrefix() {
+		return this.prefix;
+	}
+	
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
 	
 	/*
 	 * logging methods

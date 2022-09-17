@@ -25,10 +25,23 @@ import xyz.urffer.urfquest.client.map.MapChunk;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.message.EntityType;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
-import xyz.urffer.urfquest.shared.message.MobType;
+import xyz.urffer.urfquest.shared.protocol.Message;
+import xyz.urffer.urfquest.shared.protocol.Packet;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChunkInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMapInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
+import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
 public class Client {
 	
@@ -52,19 +65,21 @@ public class Client {
 	public boolean isFullscreen;
 	private QuestPanel panel;
 	
-	public Client(Server server, String playerName) {
+	private Client(String playerName) {
 		this.state = new State(this);
-		this.logger = new Logger(Main.debugLevel, "CLIENT");
+		this.logger = new Logger(Main.debugLevel, "CLIENT(-)");
 		this.playerName = playerName;
+	}
+	
+	public Client(Server server, String playerName) {
+		this(playerName);
 		
 		this.server = server;
 		this.socket = null;
 	}
 	
 	public Client(Socket socket, String playerName) {
-		this.state = new State(this);
-		this.logger = new Logger(Main.debugLevel, "CLIENT");
-		this.playerName = playerName;
+		this(playerName);
 		
 		// initialize streams on the socket
 		this.server = null;
@@ -83,8 +98,8 @@ public class Client {
 		this.logger.all("Main loop started");
 		try {
 			while (true) {
-				Message m = (Message)in.readObject();
-				processMessage(m);
+				Packet p = (Packet)in.readObject();
+				processPacket(p);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -105,10 +120,10 @@ public class Client {
 		return this.clientID;
 	}
 	
-	public void processMessage(Message m) {
-		m.print(this.getLogger());
+	public void processPacket(Packet p) {
+		p.print(this.getLogger());
 		
-		switch (m.type) {
+		switch (p.getType()) {
 			case PING: {
 				break;
 			}
@@ -117,18 +132,20 @@ public class Client {
 				// - Informs this client of the surface map's ID
 				// - Sends a request to the server to load the current map
 				// - Sends a request to the server to create a player
+				MessageConnectionConfirmed m = (MessageConnectionConfirmed)p.getMessage();
+				
 				this.clientID = m.clientID;
-				int surfaceMapID = m.mapID;
+				this.logger.setPrefix("CLIENT(" + this.clientID + ")");
 				
-				m = new Message();
-				m.type = MessageType.MAP_REQUEST;
-				m.mapID = surfaceMapID;
-				this.send(m);
+				int surfaceMapID = m.startingMapID;
 				
-				m = new Message();
-				m.type = MessageType.PLAYER_REQUEST;
-				m.entityName = this.playerName;
-				this.send(m);
+				MessageRequestMap mrm = new MessageRequestMap();
+				mrm.mapID = surfaceMapID;
+				this.send(mrm);
+				
+				MessageRequestPlayer mrp = new MessageRequestPlayer();
+				mrp.entityName = this.playerName;
+				this.send(mrp);
 				break;
 			}
 			case ENTITY_INIT: {
@@ -143,19 +160,9 @@ public class Client {
 				// - If the entity is a player with the ID of this client:
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
-				if (m.entityType == EntityType.PLAYER) {
-					Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos, m.entityName);
-					state.getCurrentMap().addPlayer(player);
-					player.setMap(state.getCurrentMap());
-					
-					if (m.clientID == this.clientID) {
-						state.setPlayer(player);
-						if (this.server == null) {
-							this.initFrontend();
-							state.getCurrentMap().requestMissingChunks();
-						}
-					}
-				} else if (m.entityType == EntityType.MOB) {
+				MessageEntityInit m = (MessageEntityInit)p.getMessage();
+				
+				if (m.entityType == EntityType.MOB) {
 					// TODO: spawn entity only on the specified map, which should be retrieved based on m.mapID
 					switch ((MobType) m.entitySubtype) {
 						case CHICKEN: {
@@ -186,19 +193,48 @@ public class Client {
 				}
 				break;
 			}
+			case PLAYER_INIT: {
+				// - Initializes a player
+				// -- Assign it to this client
+				// -- Initialize this client's frontend
+				
+				// If this entity is not on the current map, do nothing
+				// TODO: must implement MAP_METADATA first
+				// if (m.mapID != state.getCurrentMap().id) {
+				// 		return;
+				// }
+				MessagePlayerInit m = (MessagePlayerInit)p.getMessage();
+				
+				Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos, m.entityName);
+				state.getCurrentMap().addPlayer(player);
+				player.setMap(state.getCurrentMap());
+				
+				if (m.clientOwnerID == this.clientID) {
+					state.setPlayer(player);
+					if (this.server == null) {
+						this.initFrontend();
+						state.getCurrentMap().requestMissingChunks();
+					}
+				}
+				break;
+			}
 			case CHUNK_INIT: {
 				// - Loads the payloads of this message into the specified chunk
+				MessageChunkInit m = (MessageChunkInit)p.getMessage();
+				
 				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (c == null) {
 					c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 				}
-				c.setAllTileTypes((int[][])m.payload);
-				c.setAllObjectTypes((int[][])m.payload2);
+				c.setAllTileTypes(m.tileTypes);
+				c.setAllObjectTypes(m.objectTypes);
 				state.getCurrentMap().generateMinimap();
 				break;
 			}
 			case ENTITY_SET_POS: {
 				// - Sets the position of the given entity
+				MessageEntitySetPos m = (MessageEntitySetPos)p.getMessage();
+				
 				Entity e = state.getCurrentMap().getEntity(m.entityID);
 				if (e != null) {
 					e.setPos(m.pos[0], m.pos[1]);
@@ -206,6 +242,8 @@ public class Client {
 				break;
 			}
 			case ENTITY_SET_MOVE_VECTOR: {
+				MessageEntitySetMoveVector m = (MessageEntitySetMoveVector)p.getMessage();
+				
 				Entity e = state.getCurrentMap().getEntity(m.entityID);
 				if (e != null) {
 					e.setMovementVector(m.vector);
@@ -214,6 +252,8 @@ public class Client {
 			}
 			case MAP_INIT: {
 				// - Loads metadata about the current map (id, climate, etc)
+				MessageMapInit m = (MessageMapInit)p.getMessage();
+				
 				state.createNewMap(m.mapID);
 				break;
 			}
@@ -221,28 +261,36 @@ public class Client {
 				break;
 			}
 			case CHAT_MESSAGE: {
-				chatMessages.addFirst((ChatMessage)m.payload);
+				MessageChat m = (MessageChat)p.getMessage();
+				
+				chatMessages.addFirst(m.chatMessage);
 				break;
 			}
 			case SERVER_ERROR: {
-				JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
+				MessageServerError m = (MessageServerError)p.getMessage();
+				
+				JOptionPane.showMessageDialog(new JFrame(), m.errorMessage);
 				System.exit(1);
 				break;
 			}
 			case DISCONNECT_CLIENT: {
-				if (m.clientID == this.clientID) {
+				MessageDisconnect m = (MessageDisconnect)p.getMessage();
+				
+				if (m.disconnectedClientID == this.clientID) {
 					if (this.server == null) {
-						JOptionPane.showMessageDialog(new JFrame(), (String)m.payload);
+						JOptionPane.showMessageDialog(new JFrame(), m.reason);
 						System.exit(1);
 					} else {
 						// TODO: find a way to disconnect locally attached clients
 					}
 				} else {
-					chatMessages.addFirst(new ChatMessage("SERVER", (String)m.payload));
+					chatMessages.addFirst(new ChatMessage("SERVER", m.reason));
 				}
 				break;
 			}
 			case ENTITY_DESTROY: {
+				MessageEntityDestroy m = (MessageEntityDestroy)p.getMessage();
+				
 				state.getCurrentMap().removeEntity(m.entityID);
 				break;
 			}
@@ -253,12 +301,12 @@ public class Client {
 	}
 	
 	public void send(Message m) {
+		Packet p = new Packet(this.clientID, m);
 		if (socket == null) {
-			m.clientID = this.clientID;
-			server.processMessage(m);
+			server.processPacket(p);
 		} else {
 			try {
-				out.writeObject(m);
+				out.writeObject(p);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -27,9 +27,23 @@ import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
-import xyz.urffer.urfquest.shared.message.EntityType;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.Message;
+import xyz.urffer.urfquest.shared.protocol.Packet;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChunkInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMapInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
+import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
 public class Server {
 	private long seed;
@@ -39,7 +53,7 @@ public class Server {
 	private State state;
 	
 	private ServerSocket serverSocket = null;
-	private MessageQueue incomingMessages = new MessageQueue();
+	private MessageQueue incomingPackets = new MessageQueue();
 	private HashMap<Integer, ClientThread> clients = new HashMap<>();
 	private UserMap userMap = new UserMap();
 	private HashSet<String> opsList = new HashSet<String>();
@@ -57,11 +71,13 @@ public class Server {
 		this.random = new Random(seed);
 		this.id = IDGenerator.newID();
 		
+        this.logger = new Logger(Main.debugLevel, "SERVER(" + this.id + ")");
+		
 		this.state = new State(this);
         
-        this.logger = new Logger(Main.debugLevel, "SERVER");
-        
         this.serverSocket = null;
+        
+        this.logger.info("Initialized server with ID: " + this.id);
 	}
 
 	public Server(long seed, int port) {
@@ -99,11 +115,11 @@ public class Server {
 					try {
 						String line = reader.readLine();
 						
-						Message m = new Message();
-						m.clientID = id;
-						m.type = MessageType.CHAT_MESSAGE;
-						m.payload = new ChatMessage("SERVER", line);
-						incomingMessages.add(m);
+						MessageChat m = new MessageChat();
+						m.chatMessage = new ChatMessage("SERVER", line);
+						
+						Packet p = new Packet(id, m);
+						incomingPackets.add(p);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -145,9 +161,9 @@ public class Server {
 	}
 	
 	public void tick() {
-		while (!incomingMessages.isEmpty()) {
-			Message m = incomingMessages.poll();
-			this.processMessage(m);
+		while (!incomingPackets.isEmpty()) {
+			Packet m = incomingPackets.poll();
+			this.processPacket(m);
 		}
 		
 		this.state.tick();
@@ -163,36 +179,44 @@ public class Server {
 		new ServerListenerThread(this);
 	}
 	
-	public void intakeMessage(Message m) {
-		incomingMessages.add(m);
+	public void intakePacket(Packet m) {
+		incomingPackets.add(m);
 	}
 	
-	public void processMessage(Message m) {
-		ClientThread c = clients.get(m.clientID);
-		if (m.clientID == this.id) {
-			if (m.type != MessageType.CHAT_MESSAGE) {
+	public void processPacket(Packet p) {
+		ClientThread c = clients.get(p.getClientID());
+		if (p.getClientID() == this.id) {
+			if (p.getType() == MessageType.CHAT_MESSAGE) {
+				MessageChat mc = (MessageChat)p.getMessage();
+				ChatMessage chatMessage = mc.chatMessage;
+				chatMessage.source = "SERVER";
+				this.sendMessageToAllClients(mc);
+			} else if (p.getType() == MessageType.DISCONNECT_CLIENT) {
+				c = clients.get(((MessageDisconnect)p.getMessage()).disconnectedClientID);
+			} else {
 				this.getLogger().error("Non-chat message recieved from server console");
 				return;
 			}
 		} else if (c == null) {
-			this.getLogger().warning(m.type + " from client " + m.clientID + " skipped; client not found");
+			this.getLogger().warning(p.getType() + " from client " + p.getClientID() + " skipped; client not found");
 			return;
 		}
 		
-		m.print(this.getLogger());
+		// Log the message
+		p.print(this.getLogger());
 		
-		switch (m.type) {
+		switch (p.getType()) {
 			case PLAYER_REQUEST: {
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
+				MessageRequestPlayer m = (MessageRequestPlayer)p.getMessage();
 
 				String playerName = m.entityName;
 				if (this.userMap.containsPlayerName(playerName)) {
-					m = new Message();
-					m.type = MessageType.SERVER_ERROR;
-					m.payload = "A player with the name \"" + playerName + "\" already exists.";
-					c.send(m);
+					MessageServerError mse = new MessageServerError();
+					mse.errorMessage = "A player with the name \"" + playerName + "\" already exists.";
+					sendMessageToSingleClient(mse, c.id);
 					break;
 				}
 				
@@ -212,7 +236,9 @@ public class Server {
 			}
 			case PLAYER_SET_MOVE_VECTOR: {
 				// - Recieves a request from a client to set the velocity and direction of their player
-				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID));
+				MessagePlayerSetMoveVector m = (MessagePlayerSetMoveVector)p.getMessage();
+				
+				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(c.id));
 				player.setMovementVector(m.vector);
 				break;
 			}
@@ -222,58 +248,60 @@ public class Server {
 				// - Sends chunks nearby the player to the client
 				// - Sends all entities currently on the map
 				// TODO: narrow the number of entities that are sent
+				MessageRequestMap m = (MessageRequestMap)p.getMessage();
 				
 				Map map = state.getMapByID(m.mapID);
 				
-				m = new Message();
-				m.mapID = map.id;
-				m.type = MessageType.MAP_INIT;
-				c.send(m);
+				MessageMapInit mmi = new MessageMapInit();
+				mmi.mapID = map.id;
+				sendMessageToSingleClient(mmi, c.id);
 
 				for (Player player : map.getPlayers().values()) {
-					m = new Message();
-					m.type = MessageType.ENTITY_INIT;
-					m.entityType = EntityType.PLAYER;
-					m.entityID = player.id;
-					m.entityName = player.getName();
-					m.pos = player.getPos();
-					c.send(m);
+					MessagePlayerInit mpi = new MessagePlayerInit();
+					mpi.clientOwnerID = userMap.getClientIdFromPlayerId(player.id);
+					mpi.mapID = map.id;
+					mpi.entityID = player.id;
+					mpi.entityName = player.getName();
+					mpi.pos = player.getPos();
+					sendMessageToSingleClient(mpi, c.id);
 				}
 				break;
 			}
 			case CHUNK_REQUEST: {
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
-				m.type = MessageType.CHUNK_INIT;
-				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+				MessageRequestChunk m = (MessageRequestChunk)p.getMessage();
+				
+				MessageChunkInit mci = new MessageChunkInit();
+				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
 				if (chunk == null) {
-					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(m.clientID)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
 				}
-				m.payload = chunk.getAllTileTypes();
-				m.payload2 = chunk.getAllObjectTypes();
-				c.send(m);
+				mci.xyChunk = m.xyChunk;
+				mci.tileTypes = chunk.getAllTileTypes();
+				mci.objectTypes = chunk.getAllObjectTypes();
+				sendMessageToSingleClient(mci, c.id);
 				break;
 			}
 			case DEBUG_PLAYER_INFO: {
-				int playerID = userMap.getPlayerIdFromClientId(m.clientID);
-				Player p = state.getPlayer(playerID);
-				String playerPos = p.getCenter()[0] + "," + p.getCenter()[1];
+				// MessageDebugPlayer m = (MessageDebugPlayer)p.getMessage();
 				
-				m = new Message();
-				m.type = MessageType.DEBUG_PLAYER_INFO;
-				m.payload = playerPos;
-				c.send(m);
+				int playerID = userMap.getPlayerIdFromClientId(c.id);
+				Player player = state.getPlayer(playerID);
+				String playerPos = player.getCenter()[0] + "," + player.getCenter()[1];
+				
+				MessageDebugPlayer mdp = new MessageDebugPlayer();
+				mdp.playerPosString = playerPos;
+				sendMessageToSingleClient(mdp, c.id);
 				break;
 			}
 			case CHAT_MESSAGE: {
-				ChatMessage chatMessage = (ChatMessage)m.payload;
-				if (m.clientID == this.id) {
-					chatMessage.source = "SERVER";
-				} else {
-					int playerID = userMap.getPlayerIdFromClientId(m.clientID);
-					Player p = state.getPlayer(playerID);
-					chatMessage.source = p.getName();
-				}
+				MessageChat m = (MessageChat)p.getMessage();
+				
+				ChatMessage chatMessage = m.chatMessage;
+				int playerID = userMap.getPlayerIdFromClientId(p.getClientID());
+				Player player = state.getPlayer(playerID);
+				chatMessage.source = player.getName();
 				chatMessages.addFirst(chatMessage);
 				
 				if (chatMessage.message.charAt(0) == '/') {
@@ -286,31 +314,41 @@ public class Server {
 			case DISCONNECT_CLIENT: {
 				// - Recieves a request from either this client or the server to disconnect
 				// - Cleans up the client's resources
-				int clientID = m.clientID;
-				int playerID = userMap.getPlayerIdFromClientId(clientID);
-				String playerName = userMap.getPlayerNameFromClientId(clientID);
+				MessageDisconnect m = (MessageDisconnect)p.getMessage();
+				
+				int playerID = userMap.getPlayerIdFromClientId(m.disconnectedClientID);
+				String playerName = userMap.getPlayerNameFromClientId(m.disconnectedClientID);
+				
+				// If the sending client is trying to disconnect someone other than themself, and is not the server,
+				// show warning and do nothing
+				if (p.getClientID() != m.disconnectedClientID &&
+					p.getClientID() != this.id) {
+					logger.warning("Client " + p.getClientID() + " sent a MessageDisconnect with non-self target, Client " + m.disconnectedClientID);
+					break;
+				}
 				
 				// If client never successfully requested a player, do nothing
 				if (playerName == null) {
+					logger.warning("Client " + p.getClientID() + " tried to disconnect without ever being assigned a player");
 					break;
 				}
 				
 				// TODO: this is not sustainable design. find a way to clean up entites correctly
 				// Clean up this client's Player
-				Player p = this.state.removePlayer(playerID);
-				p.destroy();
+				Player player = this.state.removePlayer(playerID);
+				player.destroy();
 				
 				// Remove this client from the server state
-				this.clients.remove(clientID);
-				this.userMap.removeByClientId(clientID);
-				c.send(m);
+				sendMessageToSingleClient(m, m.disconnectedClientID);
+				this.clients.remove(m.disconnectedClientID);
+				this.userMap.removeByClientId(m.disconnectedClientID);
 				c.stop();
 				
 				// Alert all other clients that this client has been disconnected
-				m = new Message();
-				m.type = MessageType.DISCONNECT_CLIENT;
-				m.payload = playerName + " has been disconnected";
-				this.sendMessageToAllClients(m);
+				MessageDisconnect md = new MessageDisconnect();
+				md.reason = playerName + " has been disconnected";
+				md.disconnectedClientID = m.disconnectedClientID;
+				this.sendMessageToAllClients(md);
 				break;
 			}
 			default: {
@@ -321,7 +359,11 @@ public class Server {
 	
 	public void sendMessageToClientOrServer(Message m, int id) {
 		if (id == this.id) {
-			System.out.println(((ChatMessage)m.payload).message);
+			if (m.getType() == MessageType.CHAT_MESSAGE) {
+				System.out.println(((MessageChat)m).chatMessage);
+			} else {
+				this.intakePacket(new Packet(this.id, m));
+			}
 		} else {
 			sendMessageToSingleClient(m, id);
 		}
@@ -333,8 +375,8 @@ public class Server {
 	}
 	
 	public void sendMessageToAllClients(Message m) {
-		for (ClientThread c : clients.values()) {
-			c.send(m);
+		for (int clientID : clients.keySet()) {
+			sendMessageToSingleClient(m, clientID);
 		}
 	}
 	
@@ -363,13 +405,12 @@ public class Server {
 		}
 		
 		// send disconnect message to every client
-		Message m = new Message();
-		m.type = MessageType.DISCONNECT_CLIENT;
-		m.payload = "The server has shut down";
+		MessageDisconnect m = new MessageDisconnect();
+		m.reason = "The server has shut down";
 		
 		// close all sockets
 		for (ClientThread t : clients.values()) {
-			m.clientID = t.id;
+			m.disconnectedClientID = t.id;
 			t.send(m);
 			t.stop();
 		}
@@ -401,11 +442,10 @@ public class Server {
 		t.setCommandPermissions(commandPermissions);
 		
 		// send connection confirmation message
-		Message m = new Message();
-		m.type = MessageType.CONNECTION_CONFIRMED;
+		MessageConnectionConfirmed m = new MessageConnectionConfirmed();
 		m.clientID = t.id;
-		m.mapID = state.getSurfaceMap().id;
-		t.send(m);
+		m.startingMapID = state.getSurfaceMap().id;
+		sendMessageToSingleClient(m, t.id);
 	}
 	
 	public void addClient(int clientID, ClientThread clientThread) {

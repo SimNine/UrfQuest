@@ -13,8 +13,7 @@ import xyz.urffer.urfquest.server.commands.Command;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.server.commands.CommandProcessor;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class HelpCommandTest {
 	
@@ -54,9 +53,8 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(CommandProcessor.commands.size(), c1.getAllChatMessages().size());
@@ -75,10 +73,9 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(9, c1.getAllChatMessages().size());
@@ -97,10 +94,9 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(4, c1.getAllChatMessages().size());
@@ -119,10 +115,9 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(2, c1.getAllChatMessages().size());
@@ -139,10 +134,9 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(1, c1.getAllChatMessages().size());
@@ -162,10 +156,9 @@ class HelpCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(1, c1.getAllChatMessages().size());

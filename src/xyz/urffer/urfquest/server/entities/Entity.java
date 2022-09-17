@@ -7,8 +7,9 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 
 public abstract class Entity {
 	protected Server server;
@@ -33,8 +34,7 @@ public abstract class Entity {
 	public abstract void tick();
 	
 	public void destroy() {
-		Message m = new Message();
-		m.type = MessageType.ENTITY_DESTROY;
+		MessageEntityDestroy m = new MessageEntityDestroy();
 		m.entityID = this.id;
 		server.sendMessageToAllClients(m);
 	}
@@ -56,8 +56,7 @@ public abstract class Entity {
 	public void setMovementVector(Vector vector) {
 		this.movementVector = vector;
 		
-		Message m = new Message();
-		m.type = MessageType.ENTITY_SET_MOVE_VECTOR;
+		MessageEntitySetMoveVector m = new MessageEntitySetMoveVector();
 		m.vector = this.movementVector;
 		m.entityID = this.id;
 		server.sendMessageToAllClients(m);
@@ -138,8 +137,7 @@ public abstract class Entity {
 	public void setPos(double x, double y) {
 		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
 		
-		Message m = new Message();
-		m.type = MessageType.ENTITY_SET_POS;
+		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;
 		m.pos[0] = bounds.getX();
 		m.pos[1] = bounds.getY();

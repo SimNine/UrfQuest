@@ -1,4 +1,4 @@
-package xyz.urffer.urfquest.shared.message;
+package xyz.urffer.urfquest.shared.protocol.types;
 
 public enum MessageType {
 	PING,
@@ -20,6 +20,7 @@ public enum MessageType {
 	ENTITY_SET_POS,
 	ENTITY_SET_MOVE_VECTOR,
 	ENTITY_DESTROY,
+	PLAYER_INIT,
 	MAP_INIT,
 	CHUNK_INIT,
 	SERVER_ERROR

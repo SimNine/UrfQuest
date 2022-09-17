@@ -20,8 +20,7 @@ import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Vector;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
 
 public class Player extends Mob {
 
@@ -103,9 +102,9 @@ public class Player extends Mob {
 	
 	public void setMovementVector(double dirRadians, double velocity, boolean byClient) {
 		if (byClient) {
-			Message m = new Message();
-			m.type = MessageType.PLAYER_SET_MOVE_VECTOR;
+			MessagePlayerSetMoveVector m = new MessagePlayerSetMoveVector();
 			m.vector = new Vector(dirRadians, velocity);
+			m.entityID = this.id;
 			this.client.send(m);
 		} else {
 			this.movementVector = new Vector(dirRadians, velocity);

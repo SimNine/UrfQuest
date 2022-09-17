@@ -11,8 +11,7 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class OpCommandTest {
 	
@@ -52,10 +51,9 @@ class OpCommandTest {
 		
 		Assertions.assertEquals(CommandPermissions.OP, s.getClient(c1.getClientID()).getCommandPermissions());
 		Assertions.assertEquals(CommandPermissions.NORMAL, s.getClient(c2.getClientID()).getCommandPermissions());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(1, c1.getAllChatMessages().size());
@@ -79,10 +77,9 @@ class OpCommandTest {
 		
 		Assertions.assertEquals(CommandPermissions.OP, s.getClient(c1.getClientID()).getCommandPermissions());
 		Assertions.assertEquals(CommandPermissions.NORMAL, s.getClient(c2.getClientID()).getCommandPermissions());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(1, c1.getAllChatMessages().size());
@@ -106,10 +103,9 @@ class OpCommandTest {
 		
 		Assertions.assertEquals(CommandPermissions.OP, s.getClient(c1.getClientID()).getCommandPermissions());
 		Assertions.assertEquals(CommandPermissions.NORMAL, s.getClient(c2.getClientID()).getCommandPermissions());
-		
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(null, messageText);
+
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
 		Assertions.assertEquals(1, c1.getAllChatMessages().size());

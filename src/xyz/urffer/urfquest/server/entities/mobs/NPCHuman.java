@@ -7,10 +7,9 @@ import xyz.urffer.urfquest.server.entities.items.Item;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.message.EntityType;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
-import xyz.urffer.urfquest.shared.message.MobType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
+import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
 public class NPCHuman extends Mob {
 	private int thinkingDelay;
@@ -32,8 +31,7 @@ public class NPCHuman extends Mob {
 		intelligence = 20;
 		thinkingDelay = intelligence;
 		
-		Message msg = new Message();
-		msg.type = MessageType.ENTITY_INIT;
+		MessageEntityInit msg = new MessageEntityInit();
 		msg.entityType = EntityType.MOB;
 		msg.entitySubtype = MobType.NPC_HUMAN;
 		msg.pos = this.getPos();

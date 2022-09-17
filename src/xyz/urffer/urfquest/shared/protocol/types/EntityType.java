@@ -1,4 +1,4 @@
-package xyz.urffer.urfquest.shared.message;
+package xyz.urffer.urfquest.shared.protocol.types;
 
 public enum EntityType {
 	NONE,

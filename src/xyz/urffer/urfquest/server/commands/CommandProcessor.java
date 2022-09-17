@@ -10,8 +10,8 @@ import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.message.Message;
-import xyz.urffer.urfquest.shared.message.MessageType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
 public class CommandProcessor {
 	
@@ -31,27 +31,25 @@ public class CommandProcessor {
 						
 						if (args.length > 1) {
 							Command c = CommandProcessor.commands.get(args[1]);
-							Message m = new Message();
-							m.type = MessageType.CHAT_MESSAGE;
+							MessageChat mc = new MessageChat();
 							String payloadMessage;
 							if (c == null) {
 								payloadMessage = CommandProcessor.commandNotRecognized;
 							} else {
 								payloadMessage = c.base + " " + c.usage + " - " + c.description;
 							}
-							m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
-							server.sendMessageToClientOrServer(m, clientThreadID);
+							mc.chatMessage = new ChatMessage(ChatMessage.serverSource, payloadMessage);
+							server.sendMessageToClientOrServer(mc, clientThreadID);
 						} else {
 							for (Command c : CommandProcessor.commands.values()) {
 								if (clientThread != null && c.permissionLevel < clientThread.getCommandPermissions()) {
 									continue;
 								}
 								
-								Message m = new Message();
-								m.type = MessageType.CHAT_MESSAGE;
+								MessageChat mc = new MessageChat();
 								String payloadMessage = c.base + " " + c.usage + " - " + c.description;
-								m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
-								server.sendMessageToClientOrServer(m, clientThreadID);
+								mc.chatMessage = new ChatMessage(ChatMessage.serverSource, payloadMessage);
+								server.sendMessageToClientOrServer(mc, clientThreadID);
 							}
 						}
 					}
@@ -63,24 +61,23 @@ public class CommandProcessor {
 				CommandPermissions.NORMAL) {
 					@Override
 					public void runCommand(Server server, String[] args, ClientThread clientThread) {
-						Message m = new Message();
-						m.type = MessageType.CHAT_MESSAGE;
+						MessageChat m = new MessageChat();
 						
 						if (args.length > 1) {
 							Integer playerID = server.getUserMap().getPlayerIdFromPlayerName(args[1]);
 							if (playerID == null) { // if the specified player wasn't found
-								m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
 							} else {
 								Player p = server.getState().getPlayer(playerID);
 								double[] pos = p.getPos();
-								m.payload = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos[0] + "," + pos[1] + ")");
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos[0] + "," + pos[1] + ")");
 							}
 						} else {
 							if (clientThread == null) {
-								m.payload = new ChatMessage(ChatMessage.serverSource, "This command must be used with an argument when sent from the server");
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "This command must be used with an argument when sent from the server");
 							} else {
 								double[] pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientThread.id)).getPos();
-								m.payload = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos[0] + "," + pos[1] + ")");
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos[0] + "," + pos[1] + ")");
 							}
 						}
 
@@ -99,14 +96,13 @@ public class CommandProcessor {
 							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 						}
 						
-						Message m = new Message();
-						m.type = MessageType.CHAT_MESSAGE;
+						MessageChat m = new MessageChat();
 						String payloadString = "";
 						for (String s : server.getUserMap().getAllPlayerNames()) {
 							payloadString += ", " + s;
 						}
 						payloadString = "Online players: " + payloadString.substring(2);
-						m.payload = new ChatMessage(ChatMessage.serverSource, payloadString);
+						m.chatMessage = new ChatMessage(ChatMessage.serverSource, payloadString);
 
 						int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
 						server.sendMessageToClientOrServer(m, clientThreadID);
@@ -123,8 +119,7 @@ public class CommandProcessor {
 							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 						}
 						
-						Message m = new Message();
-						m.type = MessageType.CHAT_MESSAGE;
+						MessageChat m = new MessageChat();
 						String thisPlayerName;
 						if (clientThread == null) {
 							thisPlayerName = "SERVER";
@@ -132,7 +127,7 @@ public class CommandProcessor {
 							thisPlayerName = server.getUserMap().getPlayerNameFromClientId(clientThread.id);
 						}
 						args[0] = "";
-						m.payload = new ChatMessage(ChatMessage.serverSource, thisPlayerName + String.join(" ", args));
+						m.chatMessage = new ChatMessage(ChatMessage.serverSource, thisPlayerName + String.join(" ", args));
 						server.sendMessageToAllClients(m);
 					}
 		};
@@ -234,15 +229,14 @@ public class CommandProcessor {
 							return;
 						}
 
-						Message m = new Message();
-						m.type = MessageType.CHAT_MESSAGE;
+						MessageChat m = new MessageChat();
 						Integer otherClientID = server.getUserMap().getClientIdFromPlayerName(args[1]);
 						if (otherClientID == null) { // if the specified player wasn't found
-							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player \"" + args[1] + "\" not found");
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Specified player \"" + args[1] + "\" not found");
 						} else {
 							ClientThread c = server.getClient(otherClientID);
 							c.setCommandPermissions(CommandPermissions.OP);
-							m.payload = new ChatMessage(ChatMessage.serverSource, args[1] + " granted op permissions");
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, args[1] + " granted op permissions");
 						}
 
 						int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
@@ -264,21 +258,18 @@ public class CommandProcessor {
 						Integer otherClientID = server.getUserMap().getClientIdFromPlayerName(args[1]);
 						int thisClientID = (clientThread == null) ? server.getServerID() : clientThread.id;
 						if (otherClientID == null) { // if the specified player wasn't found
-							Message m = new Message();
-							m.type = MessageType.CHAT_MESSAGE;
-							m.payload = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
+							MessageChat m = new MessageChat();
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
 							server.sendMessageToClientOrServer(m, thisClientID);
 						} else if (otherClientID == thisClientID) { // specified player is self
-							Message m = new Message();
-							m.type = MessageType.CHAT_MESSAGE;
-							m.payload = new ChatMessage(ChatMessage.serverSource, "You cannot kick yourself");
+							MessageChat m = new MessageChat();
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "You cannot kick yourself");
 							server.sendMessageToClientOrServer(m, thisClientID);
 						} else {
-							Message m = new Message();
-							m.type = MessageType.DISCONNECT_CLIENT;
-							m.clientID = otherClientID;
-							m.payload = "You have been kicked from the server";
-							server.intakeMessage(m);
+							MessageDisconnect m = new MessageDisconnect();
+							m.disconnectedClientID = otherClientID;
+							m.reason = "You have been kicked from the server";
+							server.sendMessageToClientOrServer(m, server.getServerID());
 						}
 					}
 		};
@@ -305,9 +296,8 @@ public class CommandProcessor {
 	}
 	
 	public static void sendSimpleResponseMessage(Server server, ClientThread clientThread, String payloadMessage) {
-		Message m = new Message();
-		m.type = MessageType.CHAT_MESSAGE;
-		m.payload = new ChatMessage(ChatMessage.serverSource, payloadMessage);
+		MessageChat m = new MessageChat();
+		m.chatMessage = new ChatMessage(ChatMessage.serverSource, payloadMessage);
 		
 		int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
 		server.sendMessageToClientOrServer(m, clientThreadID);
