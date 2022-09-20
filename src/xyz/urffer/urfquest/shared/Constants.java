@@ -32,6 +32,6 @@ public class Constants {
 	public static final double TESTING_POSITION_TOLERANCE = 0.01;
 	public static final String FILE_OPS_LIST = "ops.config";
 	
-	public static final long DEFAULT_SERVER_SEED = 17;
+	public static final long DEFAULT_SERVER_SEED = 10;
 
 }

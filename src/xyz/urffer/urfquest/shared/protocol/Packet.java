@@ -12,12 +12,12 @@ public class Packet implements Serializable {
 	private static final long serialVersionUID = 6605902089966153417L;
 
 	private MessageType type;
-	private int clientID;
+	private int senderID;
 	private Message message;
 	
-	public Packet(int clientID, Message message) {
+	public Packet(int senderID, Message message) {
 		this.type = message.getType();
-		this.clientID = clientID;
+		this.senderID = senderID;
 		this.message = message;
 	}
 	
@@ -25,12 +25,12 @@ public class Packet implements Serializable {
 		return this.type;
 	}
 	
-	public int getClientID() {
-		return this.clientID;
+	public int getSenderID() {
+		return this.senderID;
 	}
 	
-	public void setClientID(int clientID) {
-		this.clientID = clientID;
+	public void setSenderID(int senderID) {
+		this.senderID = senderID;
 	}
 	
 	public Message getMessage() {
@@ -38,7 +38,7 @@ public class Packet implements Serializable {
 	}
 	
 	public void print(Logger logger) {
-		String ret = "MSG:" + type.name() + ",senderID:" + this.clientID;
+		String ret = "MSG:" + type.name() + ",senderID:" + this.senderID;
 		message.print(ret, logger);
 	}
 }

@@ -34,7 +34,6 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageChunkInit;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMapInit;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
@@ -42,7 +41,6 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
 public class Server {
@@ -184,8 +182,8 @@ public class Server {
 	}
 	
 	public void processPacket(Packet p) {
-		ClientThread c = clients.get(p.getClientID());
-		if (p.getClientID() == this.id) {
+		ClientThread c = clients.get(p.getSenderID());
+		if (p.getSenderID() == this.id) {
 			if (p.getType() == MessageType.CHAT_MESSAGE) {
 				MessageChat mc = (MessageChat)p.getMessage();
 				ChatMessage chatMessage = mc.chatMessage;
@@ -198,7 +196,7 @@ public class Server {
 				return;
 			}
 		} else if (c == null) {
-			this.getLogger().warning(p.getType() + " from client " + p.getClientID() + " skipped; client not found");
+			this.getLogger().warning(p.getType() + " from client " + p.getSenderID() + " skipped; client not found");
 			return;
 		}
 		
@@ -299,7 +297,7 @@ public class Server {
 				MessageChat m = (MessageChat)p.getMessage();
 				
 				ChatMessage chatMessage = m.chatMessage;
-				int playerID = userMap.getPlayerIdFromClientId(p.getClientID());
+				int playerID = userMap.getPlayerIdFromClientId(p.getSenderID());
 				Player player = state.getPlayer(playerID);
 				chatMessage.source = player.getName();
 				chatMessages.addFirst(chatMessage);
@@ -321,15 +319,15 @@ public class Server {
 				
 				// If the sending client is trying to disconnect someone other than themself, and is not the server,
 				// show warning and do nothing
-				if (p.getClientID() != m.disconnectedClientID &&
-					p.getClientID() != this.id) {
-					logger.warning("Client " + p.getClientID() + " sent a MessageDisconnect with non-self target, Client " + m.disconnectedClientID);
+				if (p.getSenderID() != m.disconnectedClientID &&
+					p.getSenderID() != this.id) {
+					logger.warning("Client " + p.getSenderID() + " sent a MessageDisconnect with non-self target, Client " + m.disconnectedClientID);
 					break;
 				}
 				
 				// If client never successfully requested a player, do nothing
 				if (playerName == null) {
-					logger.warning("Client " + p.getClientID() + " tried to disconnect without ever being assigned a player");
+					logger.warning("Client " + p.getSenderID() + " tried to disconnect without ever being assigned a player");
 					break;
 				}
 				

@@ -58,7 +58,7 @@ public class ClientThread {
 		while (true) {
 			try {
 				Packet p = (Packet)in.readObject();
-				p.setClientID(this.id);
+				p.setSenderID(this.id);
 				this.server.intakePacket(p);
 			} catch (SocketException e) {
 				this.server.getLogger().info("Client " + id + " connection reset");

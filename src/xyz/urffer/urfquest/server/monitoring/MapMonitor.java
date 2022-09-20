@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.server.Server;
+import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.ArrayUtils;
@@ -57,6 +58,13 @@ public class MapMonitor extends PannablePanel {
 			g.setColor(Color.BLACK);
 			g.drawString(p.getName(), -xScr + pPos[0], -yScr + pPos[1]);
 			g.fillRect(-xScr + pPos[0], -yScr + pPos[1], 5, 5);
+		}
+		
+		// draw mobs with purple nameplates
+		for (Mob m : server.getState().getSurfaceMap().getMobs().values()) {
+			int[] pPos = ArrayUtils.castToIntArr(m.getPos());
+			g.setColor(Color.MAGENTA);
+			g.fillRect(-xScr + pPos[0], -yScr + pPos[1], 3, 3);
 		}
 	}
 

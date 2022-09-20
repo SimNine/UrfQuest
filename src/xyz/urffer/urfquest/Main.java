@@ -27,7 +27,7 @@ public class Main {
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
 	
-	public static LogLevel debugLevel = LogLevel.VERBOSE;
+	public static LogLevel debugLevel = LogLevel.INFO;
 	
 	public static void main(String[] args) {
 		mainLogger = new Logger(debugLevel, "LAUNCHER");
