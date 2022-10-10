@@ -10,6 +10,7 @@ public class Constants {
 	
 	public static final int MAP_CHUNK_SIZE = 32;
 	public static final int DEFAULT_CHUNK_TILE = Tile.TILE_DIRT;
+	public static final int DEFAULT_CHUNK_OBJECT = Tile.TILE_VOID;
 	
 	public static final String FILE_STARTUP_PREFS = "startup.config";
 	

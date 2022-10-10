@@ -1,5 +1,7 @@
 package xyz.urffer.urfquest.testing.client.map;
 
+import java.awt.image.BufferedImage;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -46,6 +48,10 @@ class MapChunkTest {
 	void testDefaultChunkSize() {
 		MapChunk c = new MapChunk();
 
+		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, -1));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, -1));
 		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(Constants.MAP_CHUNK_SIZE - 1, Constants.MAP_CHUNK_SIZE - 1));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(Constants.MAP_CHUNK_SIZE, Constants.MAP_CHUNK_SIZE));
 	}
@@ -54,6 +60,10 @@ class MapChunkTest {
 	void testCustomSquareChunkSize() {
 		MapChunk c = new MapChunk(50, 50);
 
+		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, -1));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, -1));
 		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(49, 49));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(49, 50));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(50, 49));
@@ -64,6 +74,10 @@ class MapChunkTest {
 	void testCustomRectangleChunkSize() {
 		MapChunk c = new MapChunk(20, 10);
 
+		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, -1));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, -1));
 		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(19, 9));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(19, 10));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(20, 9));
@@ -75,6 +89,10 @@ class MapChunkTest {
 		MapChunk c = new MapChunk(1, 1);
 
 		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, -1));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, -1));
+		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(1, 0));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, 1));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(1, 1));
@@ -84,6 +102,10 @@ class MapChunkTest {
 	void testGiantChunkSize() {
 		MapChunk c = new MapChunk(3000, 3000);
 
+		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(0, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, 0));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(0, -1));
+		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(-1, -1));
 		Assertions.assertEquals(Constants.DEFAULT_CHUNK_TILE, c.getTileTypeAt(2999, 2999));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(3000, 2999));
 		Assertions.assertEquals(Tile.TILE_VOID, c.getTileTypeAt(2999, 3000));
@@ -146,6 +168,16 @@ class MapChunkTest {
 		Assertions.assertEquals(8, c.getObjectTypeAt(2, 6));
 		Assertions.assertEquals(5, c.getObjectTypeAt(4, 1));
 		Assertions.assertEquals(13, c.getObjectTypeAt(7, 7));
+	}
+	
+	@Test
+	void testMinimapColor() {
+		BufferedImage minimapImage = chunk.getMinimap();
+        for (int x = 0; x < minimapImage.getWidth(); x++) {
+            for (int y = 0; y < minimapImage.getHeight(); y++) {
+                Assertions.assertEquals(Tile.minimapColor(Constants.DEFAULT_CHUNK_TILE, Tile.TILE_VOID), minimapImage.getRGB(x, y));
+            }
+        }
 	}
 
 }

@@ -22,15 +22,17 @@ public class MapChunk {
 	
 	public MapChunk(int width, int height) {
 		tileTypes = new int[width][height];
+		objectTypes = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				tileTypes[x][y] = Constants.DEFAULT_CHUNK_TILE;
+				objectTypes[x][y] = Constants.DEFAULT_CHUNK_OBJECT;
 			}
 		}
-		objectTypes = new int[width][height];
 		activeTiles = new ActiveTile[width][height];
 
 		minimap = new BufferedImage(tileTypes.length, tileTypes[0].length, BufferedImage.TYPE_4BYTE_ABGR);
+		this.generateMinimap();
 	}
 	
 	
