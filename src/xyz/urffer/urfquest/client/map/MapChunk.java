@@ -40,40 +40,40 @@ public class MapChunk {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(int x, int y) {
-		if (x < 0 || y < 0)
+	public int getTileTypeAt(int[] pos) {
+		if (pos[0] < 0 || pos[1] < 0)
 			return Tile.TILE_VOID;
-		if (x >= tileTypes.length || y >= tileTypes[0].length)
+		if (pos[0] >= tileTypes.length || pos[1] >= tileTypes[0].length)
 			return Tile.TILE_VOID;
-		return tileTypes[x][y];
+		return tileTypes[pos[0]][pos[1]];
 	}
 
-	public int getObjectTypeAt(int x, int y) {
-		if (x < 0 || y < 0)
+	public int getObjectTypeAt(int[] pos) {
+		if (pos[0] < 0 || pos[1] < 0)
 			return Tile.TILE_VOID;
-		if (x >= tileTypes.length || y >= tileTypes[0].length)
+		if (pos[0] >= tileTypes.length || pos[1] >= tileTypes[0].length)
 			return Tile.TILE_VOID;
-		return objectTypes[x][y];
+		return objectTypes[pos[0]][pos[1]];
 	}
 	
-	public int[] getTileAt(int x, int y) {
-		return new int[] {getTileTypeAt(x, y), getObjectTypeAt(x, y)};
+	public int[] getTileAt(int[] pos) {
+		return new int[] {getTileTypeAt(pos), getObjectTypeAt(pos)};
 	}
 	
-	public void setTileAt(int x, int y, int tileType, int objectType) {
-		tileTypes[x][y] = tileType;
-		objectTypes[x][y] = objectType;
-		this.setMinimapAt(x, y, tileType, objectType);
+	public void setTileAt(int[] pos, int tileType, int objectType) {
+		tileTypes[pos[0]][pos[1]] = tileType;
+		objectTypes[pos[0]][pos[1]] = objectType;
+		this.setMinimapAt(pos, tileType, objectType);
 	}
 	
-	public void setTileTypeAt(int x, int y, int tileType) {
-		int objectType = objectTypes[x][y];
-		setTileAt(x, y, tileType, objectType);
+	public void setTileTypeAt(int[] pos, int tileType) {
+		int objectType = objectTypes[pos[0]][pos[1]];
+		setTileAt(pos, tileType, objectType);
 	}
 	
-	public void setObjectTypeAt(int x, int y, int objectType) {
-		int tileType = tileTypes[x][y];
-		setTileAt(x, y, tileType, objectType);
+	public void setObjectTypeAt(int[] pos, int objectType) {
+		int tileType = tileTypes[pos[0]][pos[1]];
+		setTileAt(pos, tileType, objectType);
 	}
 	
 	public void setAllTileTypes(int[][] types) {
@@ -91,17 +91,17 @@ public class MapChunk {
 	 * ActiveTile management
 	 */
 
-	public void setActiveTile(int x, int y, ActiveTile at) {
-		activeTiles[x][y] = at;
+	public void setActiveTile(int[] pos, ActiveTile at) {
+		activeTiles[pos[0]][pos[1]] = at;
 	}
 	
-	public ActiveTile getActiveTile(int x, int y) {
-		return activeTiles[x][y];
+	public ActiveTile getActiveTile(int[] pos) {
+		return activeTiles[pos[0]][pos[1]];
 	}
 	
-	public void useActiveTile(int x, int y, Mob m) {
-		if (activeTiles[x][y] != null) {
-			activeTiles[x][y].use(m);
+	public void useActiveTile(int[] pos, Mob m) {
+		if (activeTiles[pos[0]][pos[1]] != null) {
+			activeTiles[pos[0]][pos[1]].use(m);
 		}
 	}
 	
@@ -114,7 +114,7 @@ public class MapChunk {
 	public void generateMinimap() {
 		for (int x = 0; x < tileTypes.length; x++) {
 			for (int y = 0; y < tileTypes[0].length; y++) {
-				int color = Tile.minimapColor(this.getTileAt(x, y));
+				int color = Tile.minimapColor(this.getTileAt(new int[] {x,y}));
 				minimap.setRGB(x, y, color);
 			}
 		}
@@ -124,11 +124,11 @@ public class MapChunk {
 		return minimap;
 	}
 	
-	private void setMinimapAt(int x, int y, int tileType, int objectType) {
+	private void setMinimapAt(int[] pos, int tileType, int objectType) {
 		if (objectType != Tile.TILE_VOID) {
-			minimap.setRGB(x, y, Tile.minimapColor(tileType, objectType));
+			minimap.setRGB(pos[0], pos[1], Tile.minimapColor(tileType, objectType));
 		} else {
-			minimap.setRGB(x, y, Tile.minimapColor(tileType, objectType));
+			minimap.setRGB(pos[0], pos[1], Tile.minimapColor(tileType, objectType));
 		}
 	}
 

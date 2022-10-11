@@ -48,7 +48,7 @@ public class RocketExhaust extends Particle {
 //		}
 		
 		// change shape and size
-		this.incrementPos(-0.02, -0.02);
+		this.incrementPos(new double[] {-0.02, -0.02});
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.04, bounds.height + 0.04);
 	}
 }

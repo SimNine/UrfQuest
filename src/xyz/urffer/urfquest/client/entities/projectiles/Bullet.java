@@ -21,7 +21,13 @@ public class Bullet extends Projectile {
 
 	public void update() {
 		this.incrementPos(this.movementVector);
-		if(!Tile.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
+		if (
+			!Tile.isPenetrable(
+				map.getTileAt(
+					new int[] {(int)bounds.x, (int)bounds.y}
+				)
+			)
+		) {
 			// animStage = 1000;
 			splashParticles();
 		}

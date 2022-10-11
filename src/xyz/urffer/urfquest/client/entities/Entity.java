@@ -34,18 +34,23 @@ public abstract class Entity {
 	
 	public abstract void update();
 	
-	public void setPos(double x, double y) {
-		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
+	public void setPos(double[] pos) {
+		bounds.setRect(pos[0], pos[1], bounds.getWidth(), bounds.getHeight());
 	}
 	
-	public void incrementPos(double x, double y) {
-		bounds.setRect(bounds.getX() + x, bounds.getY() + y, bounds.getWidth(), bounds.getHeight());
+	public void incrementPos(double[] pos) {
+		bounds.setRect(
+			bounds.getX() + pos[0],
+			bounds.getY() + pos[1],
+			bounds.getWidth(),
+			bounds.getHeight()
+		);
 	}
 	
 	protected void incrementPos(Vector v) {
 		double xComp = v.magnitude*Math.cos(Math.toRadians(v.magnitude));
 		double yComp = v.magnitude*Math.sin(Math.toRadians(v.magnitude));
-		this.incrementPos(xComp, yComp);
+		this.incrementPos(new double[] {xComp, yComp});
 	}
 	
 	public double[] getPos() {
@@ -122,8 +127,8 @@ public abstract class Entity {
 	}
 	
 	// returns whether the given coordinates are within the entity's bounding box
-	public boolean containsPoint(double x, double y) {
-		return bounds.contains(x, y);
+	public boolean containsPoint(double[] pos) {
+		return bounds.contains(pos[0], pos[1]);
 	}
 
 	/*

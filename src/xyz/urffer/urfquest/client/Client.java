@@ -165,23 +165,33 @@ public class Client {
 					// TODO: spawn entity only on the specified map, which should be retrieved based on m.mapID
 					switch ((MobType) m.entitySubtype) {
 						case CHICKEN: {
-							Chicken chicken = new Chicken(this, m.entityID, 
-														  state.getCurrentMap(), 
-														  m.pos);
+							Chicken chicken = new Chicken(
+								this,
+								m.entityID, 
+								state.getCurrentMap(),
+								m.pos
+							);
 							state.getCurrentMap().addMob(chicken);
 							break;
 						}
 						case CYCLOPS: {
-							Cyclops cyclops = new Cyclops(this, m.entityID,
-														  state.getCurrentMap(),
-														  m.pos);
+							Cyclops cyclops = new Cyclops(
+								this,
+								m.entityID,
+								state.getCurrentMap(),
+								m.pos
+							);
 							state.getCurrentMap().addMob(cyclops);
 							break;
 						}
 						case NPC_HUMAN: {
-							NPCHuman npc = new NPCHuman(this, m.entityID,
-														state.getCurrentMap(),
-														m.pos, m.entityName);
+							NPCHuman npc = new NPCHuman(
+								this,
+								m.entityID,
+								state.getCurrentMap(),
+								m.pos,
+								m.entityName
+							);
 							state.getCurrentMap().addMob(npc);
 							break;
 						}
@@ -234,7 +244,7 @@ public class Client {
 				
 				Entity e = state.getCurrentMap().getEntity(m.entityID);
 				if (e != null) {
-					e.setPos(m.pos[0], m.pos[1]);
+					e.setPos(m.pos);
 				}
 				break;
 			}

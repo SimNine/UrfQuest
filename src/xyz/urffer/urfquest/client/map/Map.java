@@ -184,37 +184,37 @@ public class Map {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public int getTileTypeAt(int[] pos) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return Tile.TILE_VOID;
-		int[] pos = getPosInChunk(x, y);
+		int[] posInChunk = getPosInChunk(pos);
 		
-		return chunk.getTileTypeAt(pos[0], pos[1]);
+		return chunk.getTileTypeAt(posInChunk);
 	}
 	
-	public int getObjectTypeAt(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public int getObjectTypeAt(int[] pos) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return Tile.TILE_VOID;
-		int[] pos = getPosInChunk(x, y);
+		int[] chunkInPos = getPosInChunk(pos);
 		
-		return chunk.getObjectTypeAt(pos[0], pos[1]);
+		return chunk.getObjectTypeAt(chunkInPos);
 	}
 	
-	public int[] getTileAt(int x, int y) {
-		return new int[] {getTileTypeAt(x, y), getObjectTypeAt(x, y)};
+	public int[] getTileAt(int[] pos) {
+		return new int[] {getTileTypeAt(pos), getObjectTypeAt(pos)};
 	}
 	
-	public void setTileAt(int x, int y, int type) {
-		setTileAt(x, y, type, 0);
+	public void setTileAt(int[] pos, int type) {
+		setTileAt(pos, type, 0);
 	}
 	
-	public void setTileAt(int x, int y, int type, int objectType) {
-		MapChunk chunk = getChunkAtPos(x, y);
-		int[] pos = getPosInChunk(x, y);
+	public void setTileAt(int[] pos, int type, int objectType) {
+		MapChunk chunk = getChunkAtPos(pos);
+		int[] posInChunk = getPosInChunk(pos);
 		
-		chunk.setTileAt(pos[0], pos[1], type, objectType);
+		chunk.setTileAt(posInChunk, type, objectType);
 	}
 	
 	
@@ -222,9 +222,9 @@ public class Map {
 	 * Chunk manipulation
 	 */
 	
-	private MapChunk getChunk(int xChunk, int yChunk) {
-		int xChunkLocal = xChunk - localChunkOrigin[0];
-		int yChunkLocal = yChunk - localChunkOrigin[1];
+	private MapChunk getChunk(int[] posChunk) {
+		int xChunkLocal = posChunk[0] - localChunkOrigin[0];
+		int yChunkLocal = posChunk[1] - localChunkOrigin[1];
 		
 		try {
 			return localChunks[xChunkLocal][yChunkLocal];
@@ -235,29 +235,29 @@ public class Map {
 		}
 	}
 	
-	public MapChunk getChunkAtPos(int x, int y) {
-		if (x < localChunkOrigin[0] * Constants.MAP_CHUNK_SIZE || 
-			y < localChunkOrigin[1] * Constants.MAP_CHUNK_SIZE)
+	public MapChunk getChunkAtPos(int[] pos) {
+		if (pos[0] < localChunkOrigin[0] * Constants.MAP_CHUNK_SIZE || 
+			pos[1] < localChunkOrigin[1] * Constants.MAP_CHUNK_SIZE)
 			return null;
-		if (x >= (localChunkOrigin[0] + localChunks.length) * Constants.MAP_CHUNK_SIZE || 
-			y >= (localChunkOrigin[1] + localChunks[0].length) * Constants.MAP_CHUNK_SIZE)
+		if (pos[0] >= (localChunkOrigin[0] + localChunks.length) * Constants.MAP_CHUNK_SIZE || 
+			pos[1] >= (localChunkOrigin[1] + localChunks[0].length) * Constants.MAP_CHUNK_SIZE)
 			return null;
 
-		int xChunk = Math.floorDiv(x, Constants.MAP_CHUNK_SIZE);
-		int yChunk = Math.floorDiv(y, Constants.MAP_CHUNK_SIZE);
-		return getChunk(xChunk, yChunk);
+		int xChunk = Math.floorDiv(pos[0], Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv(pos[1], Constants.MAP_CHUNK_SIZE);
+		return getChunk(new int[] {xChunk, yChunk});
 	}
 
-	private int[] getPosInChunk(int x, int y) {
-		x %= Constants.MAP_CHUNK_SIZE;
-		if (x < 0)
-			x += Constants.MAP_CHUNK_SIZE;
+	private int[] getPosInChunk(int[] pos) {
+		pos[0] %= Constants.MAP_CHUNK_SIZE;
+		if (pos[0] < 0)
+			pos[0] += Constants.MAP_CHUNK_SIZE;
 
-		y %= Constants.MAP_CHUNK_SIZE;
-		if (y < 0)
-			y += Constants.MAP_CHUNK_SIZE;
+		pos[1] %= Constants.MAP_CHUNK_SIZE;
+		if (pos[1] < 0)
+			pos[1] += Constants.MAP_CHUNK_SIZE;
 		
-		return new int[]{x, y};
+		return pos;
 	}
 
 	public int[] getLocalChunkOrigin() {
@@ -324,9 +324,9 @@ public class Map {
 		}
 	}
 	
-	private MapChunk createChunk(int xChunk, int yChunk) {
-		int xChunkLocal = xChunk - localChunkOrigin[0];
-		int yChunkLocal = yChunk - localChunkOrigin[1];
+	private MapChunk createChunk(int[] posChunk) {
+		int xChunkLocal = posChunk[0] - localChunkOrigin[0];
+		int yChunkLocal = posChunk[1] - localChunkOrigin[1];
 		
 		MapChunk newChunk = new MapChunk();
 		localChunks[xChunkLocal][yChunkLocal] = newChunk;
@@ -338,9 +338,9 @@ public class Map {
 		int[][] tileTypes,
 		int[][] objectTypes
 	) {
-		MapChunk chunk = this.getChunk(chunkPos[0], chunkPos[1]);
+		MapChunk chunk = this.getChunk(chunkPos);
 		if (chunk == null) {
-			chunk = this.createChunk(chunkPos[0], chunkPos[1]);
+			chunk = this.createChunk(chunkPos);
 		}
 		chunk.setAllTileTypes(tileTypes);
 		chunk.setAllObjectTypes(objectTypes);
@@ -382,10 +382,9 @@ public class Map {
 	 * Misc map manipulation
 	 */
 	
-	public boolean setHomeCoords(int x, int y) {
-		if (Tile.isWalkable(getTileAt(x, y))) {
-			homeCoords[0] = x;
-			homeCoords[1] = y;
+	public boolean setHomeCoords(int[] pos) {
+		if (Tile.isWalkable(getTileAt(pos))) {
+			homeCoords = pos;
 			return true;
 		} else {
 			return false;
@@ -401,22 +400,22 @@ public class Map {
 	 * ActiveTile management
 	 */
 
-	public void setActiveTile(int x, int y, ActiveTile at) {
-		MapChunk chunk = getChunkAtPos(x, y);
-		int[] pos = getPosInChunk(x, y);
+	public void setActiveTile(int[] pos, ActiveTile at) {
+		MapChunk chunk = getChunkAtPos(pos);
+		int[] posInChunk = getPosInChunk(pos);
 		
-		chunk.setActiveTile(pos[0], pos[1], at);
+		chunk.setActiveTile(posInChunk, at);
 	}
 	
-	public ActiveTile getActiveTile(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
-		int[] pos = getPosInChunk(x, y);
+	public ActiveTile getActiveTile(int[] pos) {
+		MapChunk chunk = getChunkAtPos(pos);
+		int[] posInChunk = getPosInChunk(pos);
 		
-		return chunk.getActiveTile(pos[0], pos[1]);
+		return chunk.getActiveTile(posInChunk);
 	}
 	
-	public void useActiveTile(int x, int y, Mob m) {
-		ActiveTile tile = getActiveTile(x, y);
+	public void useActiveTile(int[] pos, Mob m) {
+		ActiveTile tile = getActiveTile(pos);
 		if (tile != null) {
 			tile.use(m);
 		}
@@ -549,9 +548,9 @@ public class Map {
 	 * Special entity methods
 	 */
 	
-	public Mob mobAt(double x, double y) {
+	public Mob mobAt(double[] pos) {
 		for (Mob m : mobs.values()) {
-			if (m.containsPoint(x, y)) {
+			if (m.containsPoint(pos)) {
 				return m;
 			}
 		}

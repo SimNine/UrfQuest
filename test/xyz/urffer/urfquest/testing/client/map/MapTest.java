@@ -60,7 +60,7 @@ class MapTest {
 	
 	@Test
 	void testGetTileAtPos() {
-		Assertions.assertEquals(map.getTileAt(0, 0)[0], Tile.TILE_VOID);
+		Assertions.assertEquals(map.getTileAt(new int[] {0,0})[0], Tile.TILE_VOID);
 		
 		int[][] newTiles = new int[Constants.MAP_CHUNK_SIZE][Constants.MAP_CHUNK_SIZE];
 		int[][] newObjects = new int[Constants.MAP_CHUNK_SIZE][Constants.MAP_CHUNK_SIZE];
@@ -76,7 +76,7 @@ class MapTest {
 			newObjects
 		);
 		
-		Assertions.assertEquals(map.getTileAt(0, 0)[0], Tile.TILE_GRASS);
+		Assertions.assertEquals(map.getTileAt(new int[] {0,0})[0], Tile.TILE_GRASS);
 	}
 	
 	@Test

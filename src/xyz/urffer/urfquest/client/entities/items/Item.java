@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.client.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.tiles.TileImages;
+import xyz.urffer.urfquest.shared.ArrayUtils;
 
 public class Item extends Entity {
 	public static final String assetPath = "/xyz/urffer/urfquest/assets/items/";
@@ -168,8 +169,7 @@ public class Item extends Entity {
 	private int stackSize;
 	private int itemType;
 	
-	private double xVel = 0;
-	private double yVel = 0;
+	private double[] vel = new double[] {0, 0};
 	
 	private int dropTimeout = 500;
 	
@@ -247,7 +247,7 @@ public class Item extends Entity {
 			
 			m.incrementMana(-30.0);
 			int[] home = m.getMap().getHomeCoords();
-			m.setPos(home[0], home[1]);
+			m.setPos(ArrayUtils.castToDoubleArr(home));
 			return true;
 		case Item.CHICKEN_LEG:
 			cooldown = getMaxCooldown();
@@ -389,9 +389,9 @@ public class Item extends Entity {
 			if (m.tileAtDistance(0)[0] == TileImages.GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
 				if (Math.random() > .05) {
-					m.getMap().setTileAt(coords[0], coords[1], 0);
+					m.getMap().setTileAt(coords, 0);
 				} else {
-					m.getMap().setTileAt(coords[0], coords[1], 13);
+					m.getMap().setTileAt(coords, 13);
 					
 					//int caveSize = 400;
 					
@@ -428,7 +428,7 @@ public class Item extends Entity {
 	}
 	
 	public void update() {
-		incrementPos(xVel, yVel);
+		incrementPos(vel);
 		
 		if (getMaxCooldown() > -1) {
 			if (cooldown > 0) {
@@ -436,11 +436,11 @@ public class Item extends Entity {
 			}
 		}
 		
-		if (xVel != 0) {
-			xVel -= xVel*0.02;
+		if (vel[0] != 0) {
+			vel[0] -= vel[0]*0.02;
 		}
-		if (yVel != 0) {
-			yVel -= yVel*0.02;
+		if (vel[1] != 0) {
+			vel[1] -= vel[1]*0.02;
 		}
 		
 		if (dropTimeout > 0) {
@@ -453,17 +453,17 @@ public class Item extends Entity {
 		double yDiff = (m.getCenter()[1] - this.getCenter()[1]);
 		
 		if (xDiff > 0) { // if m is east of this
-			xVel += 0.002;
+			vel[0] += 0.002;
 		} else if (xDiff < 0) { // if m is west of this
-			xVel -= 0.002;
+			vel[0] -= 0.002;
 		} else {
 			// nada
 		}
 		
 		if (yDiff > 0) { // if m is south of this
-			yVel += 0.002;
+			vel[1] += 0.002;
 		} else if (yDiff < 0) { // if m is north of this
-			yVel -= 0.002;
+			vel[1] -= 0.002;
 		} else {
 			// nada
 		}

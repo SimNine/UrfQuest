@@ -41,18 +41,38 @@ public abstract class Mob extends Entity {
 		boolean ret = false;
 		
 		// attempt to move on the x-axis
-		if (Tile.isWalkable(map.getTileAt((int)(newX + xComp), (int)newY))) {
+		if (
+			Tile.isWalkable(
+				map.getTileAt(
+					new int[] {
+						(int)(newX + xComp), (int)newY
+					}
+				)
+			)
+		) {
 			newX += xComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
 		// attempt to move on the y-axis
-		if (Tile.isWalkable(map.getTileAt((int)newX, (int)(newY + yComp)))) {
+		if (Tile.isWalkable(
+				map.getTileAt(
+					new int[] {
+						(int)newX, (int)(newY + yComp)
+					}
+				)
+			)
+		) {
 			newY += yComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
-		bounds.setRect(newX - bounds.getWidth()/2.0, newY - bounds.getHeight()/2.0, bounds.getWidth(), bounds.getHeight());
+		bounds.setRect(
+			newX - bounds.getWidth()/2.0,
+			newY - bounds.getHeight()/2.0,
+			bounds.getWidth(),
+			bounds.getHeight()
+		);
 		return ret;
 	}
 	
@@ -60,7 +80,12 @@ public abstract class Mob extends Entity {
 	public int[] tileAtDistance(double d) {
 		double xComp = d*Math.cos(this.movementVector.dirRadians);
 		double yComp = d*Math.sin(this.movementVector.dirRadians);
-		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
+		return map.getTileAt(
+			new int[] {
+				(int)(bounds.getCenterX() + xComp),
+				(int)(bounds.getCenterY() + yComp)
+			}
+		);
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing

@@ -18,7 +18,7 @@ public class RocketExplosion extends Projectile {
 	}
 
 	public void update() {
-		this.incrementPos(-0.04, -0.04);
+		this.incrementPos(new double[] {-0.04, -0.04});
 		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.08, bounds.height + 0.08);
 		
 		// clear trees
@@ -26,8 +26,8 @@ public class RocketExplosion extends Projectile {
 		    int xPos = (int)Math.round(bounds.getCenterX() + bounds.width/2 * Math.cos((Math.PI/10)*i) - 0.5);
 		    int yPos = (int)Math.round(bounds.getCenterY() + bounds.width/2 * Math.sin((Math.PI/10)*i) - 0.5);
 
-		    if (map.getTileTypeAt(xPos, yPos) == Tile.OBJECT_TREE) {
-		    	map.setTileAt(xPos, yPos, Tile.TILE_GRASS);
+		    if (map.getTileTypeAt(new int[] {xPos, yPos}) == Tile.OBJECT_TREE) {
+		    	map.setTileAt(new int[] {xPos, yPos}, Tile.TILE_GRASS);
 		    }
 		}
 	}

@@ -18,6 +18,7 @@ import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.items.Item;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
+import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
@@ -111,14 +112,14 @@ public class Player extends Mob {
 		}
 	}
 	
-	public void setPos(double x, double y) {
-		super.setPos(x, y);
+	public void setPos(double[] pos) {
+		super.setPos(pos);
 		
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
 		int mapWidth = map.getMapDiameter();
-		int xChunk = Math.floorDiv((int) x, Constants.MAP_CHUNK_SIZE);
-		int yChunk = Math.floorDiv((int) y, Constants.MAP_CHUNK_SIZE);
+		int xChunk = Math.floorDiv((int) pos[0], Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv((int) pos[1], Constants.MAP_CHUNK_SIZE);
 		
 		int[] localChunkOrigin = map.getLocalChunkOrigin();
 		if (xChunk <= localChunkOrigin[0] + 1) {
@@ -226,7 +227,7 @@ public class Player extends Mob {
 		}
 		
 		double[] playerPos = getPos();
-		i.setPos(playerPos[0], playerPos[1]);
+		i.setPos(playerPos);
 		i.resetDropTimeout();
 		map.addItem(i);
 	}
@@ -256,7 +257,10 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
-		map.useActiveTile((int)getCenter()[0], (int)getCenter()[1], this);
+		map.useActiveTile(
+			ArrayUtils.castToIntArr(getCenter()),
+			this
+		);
 	}
 	
 	public double getPickupRange() {

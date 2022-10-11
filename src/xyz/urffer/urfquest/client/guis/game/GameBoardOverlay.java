@@ -72,7 +72,7 @@ public class GameBoardOverlay extends GUIContainer {
 			int xRoot = - rootX + x * TILE_WIDTH;
 			for (int y = 0; y < dispTileHeight + 2; y++) {
 				int yRoot = - rootY + y * TILE_WIDTH;
-				int[] tile = currMap.getTileAt(ulX + x, ulY + y);
+				int[] tile = currMap.getTileAt(new int[] {ulX + x, ulY + y});
 				int animStage = getAnimStage(tile[0], tile[1]);
 				g.drawImage(TileImages.getTileImage(tile[0], tile[1], animStage), xRoot, yRoot, null);
 			}
@@ -135,7 +135,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// get any mob underneath the mouse cursor, highlight it
-		Mob m = this.client.getState().getCurrentMap().mobAt(mouseCoordX, mouseCoordY);
+		Mob m = this.client.getState().getCurrentMap().mobAt(new double[] {mouseCoordX, mouseCoordY});
 		if (m != null) {
 			int tileWidth = QuestPanel.TILE_WIDTH;
 			int xTemp = client.getPanel().gameToWindowX(m.getPos()[0]);
@@ -160,18 +160,20 @@ public class GameBoardOverlay extends GUIContainer {
 	public boolean click() {
 		int mouseX = (int) client.getPanel().windowToGameX(client.getPanel().mousePos[0]);
 		int mouseY = (int) client.getPanel().windowToGameY(client.getPanel().mousePos[1]);
+		int[] mousePos = new int[] { mouseX, mouseY };
 		
 		Player p = this.client.getState().getPlayer();
-		if (mouseX < p.getPos()[0] + 3 &&
-				   mouseX > p.getPos()[0] - 3 &&
-				   mouseY < p.getPos()[1] + 3 &&
-				   mouseY > p.getPos()[1] - 3) {
-			p.getMap().useActiveTile(mouseX, mouseY, p);
+		if (
+			mouseX < p.getPos()[0] + 3 &&
+			mouseX > p.getPos()[0] - 3 &&
+			mouseY < p.getPos()[1] + 3 &&
+			mouseY > p.getPos()[1] - 3) {
+			p.getMap().useActiveTile(mousePos, p);
 		}
-		client.getLogger().debug("clicked: " + p.getMap().getTileAt(mouseX, mouseY)[0]);
+		client.getLogger().debug("clicked: " + p.getMap().getTileAt(mousePos)[0]);
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
-			this.client.getState().getCurrentMap().setTileAt(mouseX, mouseY, 15);
+			this.client.getState().getCurrentMap().setTileAt(mousePos, 15);
 			return true;
 		} else {
 			return false;
