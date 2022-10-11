@@ -13,6 +13,13 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.Constants;
 
+/**
+ * UrfQuest (name change pending). A top-down, single or multiplayer 
+ * procedurally generated adventure roleplaying game.
+ * 
+ * @author Chris Urffer
+ * @version %I%, %G%
+ */
 public class Main {
 	
 	// reference to instance of self. necessary for initialization of resources
@@ -29,6 +36,12 @@ public class Main {
 	
 	public static LogLevel debugLevel = LogLevel.INFO;
 	
+	/**
+	 * Starts either the server, client, or both. Instantiates loggers, reads 
+	 * startup preferences, parses arguments
+	 * @param args
+	 * 	set of arguments passed in via the command line
+	 */
 	public static void main(String[] args) {
 		mainLogger = new Logger(debugLevel, "LAUNCHER");
 		
@@ -121,8 +134,18 @@ public class Main {
 		mainLogger.info("all launcher tasks done");
 	}
 	
-	private static void startServer(long seed, int port) {
-		mainLogger.all("Starting server on port " + port);
+	/**
+	 * Starts a new Server on the specified port and with the specified seed.
+	 * 
+	 * @param seed
+	 * 	The number to use as random number generator seed for the server
+	 * @param port
+	 * 	The port to start the server on
+	 * @return
+	 * 	A new Server object, which the listener thread has been started for
+	 */
+	private static Server startServer(long seed, int port) {
+		mainLogger.info("Starting server on port " + port);
 		Server server = new Server(seed, port);
 		server.getLogger().setLogLevel(debugLevel);
 		Thread serverThread = new Thread(new Runnable() {
@@ -134,10 +157,26 @@ public class Main {
 		serverThread.start();
 		
 		server.initListenerThread();
+		
+		return server;
 	}
 
-	private static void startClient(String ip, int port, String playerName) {
-		mainLogger.all("Starting client, connecting to " + ip + ":" + port);
+	/**
+	 * Starts a new Client, connects it to the specified port and IP, and
+	 * 	requests the specified name for the Client's player.
+	 * 
+	 * @param ip
+	 * 	The IP to connect the Client to
+	 * @param port
+	 * 	The port to connect the Client to
+	 * @param playerName
+	 * 	The name to request from the server for this client's player
+	 * @return
+	 * 	A new client object, which has attempted to connect and requested
+	 * 	the given name
+	 */
+	private static Client startClient(String ip, int port, String playerName) {
+		mainLogger.info("Starting client, connecting to " + ip + ":" + port);
 		
 		// initialize the game client
 		Socket socket = null;
@@ -161,5 +200,7 @@ public class Main {
         });
         clientThread.setName("LocalClientThread");
         clientThread.start();
+        
+        return client;
 	}
 }

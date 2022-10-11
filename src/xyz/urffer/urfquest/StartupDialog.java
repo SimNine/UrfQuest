@@ -24,7 +24,25 @@ public class StartupDialog implements ActionListener {
 	public static final String CLIENT_ONLY_STRING = "Client only";
 	public static final String SERVER_CLIENT_STRING = "Both";
 	
-	public StartupDialog(String defaultIP, String defaultPortNum, StartupMode startupMode, String defaultPlayerName) {
+	/**
+	 * A dialog that is opened at startup to gather startup preferences
+	 * from the player.
+	 * 
+	 * @param defaultIP
+	 * 	The IP filled in the text box by default.
+	 * @param defaultPortNum
+	 * 	The port number filled in the text box by default.
+	 * @param defaultStartupMode
+	 * 	The startup mode by default.
+	 * @param defaultPlayerName
+	 * 	The requested player name by default.
+	 */
+	public StartupDialog(
+			String defaultIP,
+			String defaultPortNum,
+			StartupMode defaultStartupMode,
+			String defaultPlayerName
+		) {
 		
 		// set up text input panel
 		ip = new JTextField(defaultIP, 10);
@@ -50,7 +68,7 @@ public class StartupDialog implements ActionListener {
 		clientServer.setActionCommand(SERVER_CLIENT_STRING);
 		clientServer.addActionListener(this);
 		
-		switch (startupMode) {
+		switch (defaultStartupMode) {
 		case FULL:
 			clientServer.doClick();
 			break;

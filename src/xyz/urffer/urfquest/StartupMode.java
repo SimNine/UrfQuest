@@ -2,6 +2,13 @@ package xyz.urffer.urfquest;
 
 import java.util.HashMap;
 
+/**
+ * An enum specifying modes of startup. Either SERVER_ONLY, CLIENT_ONLY,
+ * 	or FULL.
+ * 
+ * @author URF-PC-2020
+ *
+ */
 public enum StartupMode {
 	FULL(0),
 	CLIENT_ONLY(1),
