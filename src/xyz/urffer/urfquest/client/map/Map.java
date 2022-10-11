@@ -1,5 +1,6 @@
 package xyz.urffer.urfquest.client.map;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -51,15 +52,12 @@ public class Map {
 		localChunks = new MapChunk[loadedChunkSize][loadedChunkSize];
 		localChunkOrigin[0] = localChunkOrigin[1] = 0 - (loadedChunkSize / 2);
 		
-		for (int x = 0; x < loadedChunkSize; x++) {
-			for (int y = 0; y < loadedChunkSize; y++) {
-				localChunks[x][y] = null;
-			}
-		}
-		
-		minimap = new BufferedImage(localChunks.length * Constants.MAP_CHUNK_SIZE, 
-									localChunks[0].length * Constants.MAP_CHUNK_SIZE, 
-									BufferedImage.TYPE_4BYTE_ABGR);
+		minimap = new BufferedImage(
+			localChunks.length * Constants.MAP_CHUNK_SIZE, 
+			localChunks[0].length * Constants.MAP_CHUNK_SIZE, 
+			BufferedImage.TYPE_4BYTE_ABGR
+		);
+		this.generateMinimap();
 	}
 
 	
@@ -224,7 +222,7 @@ public class Map {
 	 * Chunk manipulation
 	 */
 	
-	public MapChunk getChunk(int xChunk, int yChunk) {
+	private MapChunk getChunk(int xChunk, int yChunk) {
 		int xChunkLocal = xChunk - localChunkOrigin[0];
 		int yChunkLocal = yChunk - localChunkOrigin[1];
 		
@@ -326,14 +324,28 @@ public class Map {
 		}
 	}
 	
-	public MapChunk createChunk(int xChunk, int yChunk) {
+	private MapChunk createChunk(int xChunk, int yChunk) {
 		int xChunkLocal = xChunk - localChunkOrigin[0];
 		int yChunkLocal = yChunk - localChunkOrigin[1];
 		
 		MapChunk newChunk = new MapChunk();
 		localChunks[xChunkLocal][yChunkLocal] = newChunk;
 		return newChunk;
-	}	
+	}
+	
+	public void setChunk(
+		int[] chunkPos,
+		int[][] tileTypes,
+		int[][] objectTypes
+	) {
+		MapChunk chunk = this.getChunk(chunkPos[0], chunkPos[1]);
+		if (chunk == null) {
+			chunk = this.createChunk(chunkPos[0], chunkPos[1]);
+		}
+		chunk.setAllTileTypes(tileTypes);
+		chunk.setAllObjectTypes(objectTypes);
+		this.generateMinimap();
+	}
 	
 	
 	/*
@@ -343,6 +355,7 @@ public class Map {
 	// A minimap should be regenerated whenever this client recieves new chunks
 	public void generateMinimap() {
 		Graphics2D newMinimapGraphics = minimap.createGraphics();
+		newMinimapGraphics.setColor(Color.BLACK);
 		newMinimapGraphics.fillRect(0, 0, minimap.getWidth(), minimap.getHeight());
 		
 		for (int x = 0; x < localChunks.length; x++) {

@@ -136,7 +136,7 @@ public class Server {
 	}
 
 	public void mainLoop() {
-		this.logger.all("Main loop started");
+		this.logger.info("Main loop started");
 		
 		while (true) {
 			long startTime = System.currentTimeMillis();

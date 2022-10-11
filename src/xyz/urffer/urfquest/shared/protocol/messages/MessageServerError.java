@@ -20,7 +20,7 @@ public class MessageServerError extends Message {
 
 	@Override
 	public void print(String prefix, Logger logger) {
-		logger.all(prefix + "," + this.toString());
+		logger.error(prefix + "," + this.toString());
 	}
 
 	@Override

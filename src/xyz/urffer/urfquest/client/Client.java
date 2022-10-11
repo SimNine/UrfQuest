@@ -21,7 +21,6 @@ import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
-import xyz.urffer.urfquest.client.map.MapChunk;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -85,7 +84,7 @@ public class Client {
 		this.server = null;
 		this.socket = socket;
 		try {
-	        out = new ObjectOutputStream(socket.getOutputStream());
+			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
 			
 			this.getLogger().debug("Client: initialized streams");
@@ -95,7 +94,7 @@ public class Client {
 	}
 
 	public void mainLoop() {
-		this.logger.all("Main loop started");
+		this.logger.info("Main loop started");
 		try {
 			while (true) {
 				Packet p = (Packet)in.readObject();
@@ -222,13 +221,11 @@ public class Client {
 				// - Loads the payloads of this message into the specified chunk
 				MessageChunkInit m = (MessageChunkInit)p.getMessage();
 				
-				MapChunk c = state.getCurrentMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
-				if (c == null) {
-					c = state.getCurrentMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
-				}
-				c.setAllTileTypes(m.tileTypes);
-				c.setAllObjectTypes(m.objectTypes);
-				state.getCurrentMap().generateMinimap();
+				state.getCurrentMap().setChunk(
+					m.xyChunk,
+					m.tileTypes,
+					m.objectTypes
+				);
 				break;
 			}
 			case ENTITY_SET_POS: {
