@@ -7,6 +7,7 @@ import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 
 public class CameraMob extends Mob {
 	public static int STILL_MODE = 1301;
@@ -14,7 +15,7 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(Server srv, State s, Map m, double[] pos, int mode) {
+	public CameraMob(Server srv, State s, Map m, PairDouble pos, int mode) {
 		super(srv, m, pos);
 		
 		movementVector.magnitude = 0.01;

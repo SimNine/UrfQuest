@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 
 public class Chicken extends Mob {
 	private static BufferedImage pic;
@@ -23,9 +24,9 @@ public class Chicken extends Mob {
 		}
 	}
 	
-	public Chicken(Client c, int id, Map m, double[] pos) {
+	public Chicken(Client c, int id, Map m, PairDouble pos) {
 		super(c, id, m, pos);
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		health = 10.0;
 		maxHealth = 10.0;

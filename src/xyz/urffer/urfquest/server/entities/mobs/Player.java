@@ -11,6 +11,7 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
 
@@ -25,9 +26,9 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(Server srv, State s, Map m, double[] pos, String name, ClientThread c) {
+	public Player(Server srv, State s, Map m, PairDouble pos, String name, ClientThread c) {
 		super(srv, m, pos);
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -37,9 +38,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 19));
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 17));
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 18));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 19));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 17));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 18));
 		
 		this.name = name;
 		this.client = c;
@@ -101,8 +102,7 @@ public class Player extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (map.getTileTypeAt((int)(bounds.getCenterX()),
-							  	  (int)(bounds.getCenterY()))) {
+		switch (map.getTileTypeAt(this.getCenter().toInt())) {
 		case 0:
 			//nothing
 			break;
@@ -185,8 +185,7 @@ public class Player extends Mob {
 			return;
 		}
 		
-		double[] playerPos = getPos();
-		i.setPos(playerPos[0], playerPos[1]);
+		i.setPos(this.getPos().clone());
 		i.resetDropTimeout();
 		map.addItem(i);
 	}
@@ -216,7 +215,7 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
-		map.useActiveTile((int)getCenter()[0], (int)getCenter()[1], this);
+		map.useActiveTile(getCenter().toInt(), this);
 	}
 	
 	public double getPickupRange() {

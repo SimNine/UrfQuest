@@ -13,6 +13,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class TpCommandTest {
@@ -68,17 +69,17 @@ class TpCommandTest {
 		
 		Player p1 = c1.getState().getPlayer();
 		
-		double[] p1pos1 = p1.getPos();
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
+		PairDouble p1pos1 = p1.getPos();
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().x, p1pos1.x);
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().y, p1pos1.y);
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
-		double[] p1pos2 = p1.getPos();
-		Assertions.assertEquals(0.0, p1pos2[0]);
-		Assertions.assertEquals(0.0, p1pos2[1]);
+		PairDouble p1pos2 = p1.getPos();
+		Assertions.assertEquals(0.0, p1pos2.x);
+		Assertions.assertEquals(0.0, p1pos2.y);
 	}
 
 	@Test
@@ -88,17 +89,17 @@ class TpCommandTest {
 		
 		Player p1 = c1.getState().getPlayer();
 		
-		double[] p1pos1 = p1.getPos();
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
+		PairDouble p1pos1 = p1.getPos();
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().x, p1pos1.x);
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().y, p1pos1.y);
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
-		double[] p1pos2 = p1.getPos();
-		Assertions.assertEquals(midDistance, p1pos2[0]);
-		Assertions.assertEquals(midDistance, p1pos2[1]);
+		PairDouble p1pos2 = p1.getPos();
+		Assertions.assertEquals(midDistance, p1pos2.x);
+		Assertions.assertEquals(midDistance, p1pos2.y);
 	}
 
 	@Test
@@ -108,17 +109,17 @@ class TpCommandTest {
 		
 		Player p1 = c1.getState().getPlayer();
 		
-		double[] p1pos1 = p1.getPos();
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
+		PairDouble p1pos1 = p1.getPos();
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().x, p1pos1.x);
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().y, p1pos1.y);
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
-		double[] p1pos2 = p1.getPos();
-		Assertions.assertEquals(farDistance, p1pos2[0]);
-		Assertions.assertEquals(farDistance, p1pos2[1]);
+		PairDouble p1pos2 = p1.getPos();
+		Assertions.assertEquals(farDistance, p1pos2.x);
+		Assertions.assertEquals(farDistance, p1pos2.y);
 	}
 
 	@Test
@@ -128,16 +129,16 @@ class TpCommandTest {
 		
 		Player p1 = c1.getState().getPlayer();
 		
-		double[] p1pos1 = p1.getPos();
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[0], p1pos1[0]);
-		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords()[1], p1pos1[1]);
+		PairDouble p1pos1 = p1.getPos();
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().x, p1pos1.x);
+		Assertions.assertEquals(s.getState().getSurfaceMap().getHomeCoords().y, p1pos1.y);
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 		
-		double[] p1pos2 = p1.getPos();
-		Assertions.assertEquals(extremeDistance, p1pos2[0]);
-		Assertions.assertEquals(extremeDistance, p1pos2[1]);
+		PairDouble p1pos2 = p1.getPos();
+		Assertions.assertEquals(extremeDistance, p1pos2.x);
+		Assertions.assertEquals(extremeDistance, p1pos2.y);
 	}
 }

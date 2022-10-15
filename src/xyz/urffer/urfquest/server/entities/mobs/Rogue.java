@@ -11,6 +11,7 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 
 public class Rogue extends Mob {
 	
@@ -22,10 +23,10 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(Server srv, State s, Map m, double[] pos) {
+	public Rogue(Server srv, State s, Map m, PairDouble pos) {
 		super(srv, m, pos);
 		
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		movementVector.magnitude = Constants.DEFAULT_VELOCITY_ROGUE;
 		
 		health = 100.0;
@@ -36,9 +37,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 16));
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 15));
-		inventory.addItem(new Item(srv, this.map, new double[]{0, 0}, 13));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 16));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 15));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 13));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
@@ -136,8 +137,7 @@ public class Rogue extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (this.map.getTileTypeAt((int)(bounds.getCenterX()),
-									   (int)(bounds.getCenterY()))) {
+		switch (this.map.getTileTypeAt(this.getCenter().toInt())) {
 		case 0:
 			//nothing
 			break;
@@ -214,8 +214,9 @@ public class Rogue extends Mob {
 			return;
 		}
 		
-		double[] playerPos = getPos();
-		i.setPos(playerPos[0], playerPos[1]-1);
+		PairDouble playerPos = getPos();
+		playerPos.y -= 1;
+		i.setPos(playerPos);
 	}
 	
 	public void setSelectedEntry(int i) {

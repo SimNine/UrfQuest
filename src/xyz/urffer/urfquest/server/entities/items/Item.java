@@ -15,6 +15,7 @@ import xyz.urffer.urfquest.server.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.tiles.MapLink;
 import xyz.urffer.urfquest.shared.ArrayUtils;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class Item extends Entity {
@@ -103,18 +104,18 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(Server srv, Map m, double[] pos, int type) {
+	public Item(Server srv, Map m, PairDouble pos, int type) {
 		this(srv, m, pos, type, -1);
 	}
 	
-	public Item(Server srv, Map m, double[] pos, int type, int durability) {
+	public Item(Server srv, Map m, PairDouble pos, int type, int durability) {
 		this(srv, m, pos, type, 1, durability);
 	}
 	
-	public Item(Server srv, Map m, double[] pos, int type, int stackSize, int durability) {
+	public Item(Server srv, Map m, PairDouble pos, int type, int stackSize, int durability) {
 		super(srv, m, pos);
 		this.server = srv;
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		this.itemType = type;
 		this.cooldown = 0;

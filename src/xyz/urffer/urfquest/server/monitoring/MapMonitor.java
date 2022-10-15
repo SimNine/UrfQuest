@@ -10,8 +10,8 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.MapChunk;
-import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfutils.pannablepanel.PannablePanel;
 
 @SuppressWarnings("serial")
@@ -54,17 +54,17 @@ public class MapMonitor extends PannablePanel {
 		
 		// draw players with nameplates
 		for (Player p : server.getState().getSurfaceMap().getPlayers().values()) {
-			int[] pPos = ArrayUtils.castToIntArr(p.getPos());
+			PairInt pPos = p.getPos().toInt();
 			g.setColor(Color.BLACK);
-			g.drawString(p.getName(), -xScr + pPos[0], -yScr + pPos[1]);
-			g.fillRect(-xScr + pPos[0], -yScr + pPos[1], 5, 5);
+			g.drawString(p.getName(), -xScr + pPos.x, -yScr + pPos.y);
+			g.fillRect(-xScr + pPos.x, -yScr + pPos.y, 5, 5);
 		}
 		
 		// draw mobs with purple nameplates
 		for (Mob m : server.getState().getSurfaceMap().getMobs().values()) {
-			int[] pPos = ArrayUtils.castToIntArr(m.getPos());
+			PairInt pPos = m.getPos().toInt();
 			g.setColor(Color.MAGENTA);
-			g.fillRect(-xScr + pPos[0], -yScr + pPos[1], 3, 3);
+			g.fillRect(-xScr + pPos.x, -yScr + pPos.y, 3, 3);
 		}
 	}
 

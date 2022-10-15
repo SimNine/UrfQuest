@@ -62,6 +62,28 @@ public class ArrayUtils {
 		return ret;	
 	}
 	
+	public static int[] divide(int[] a, int[] b) {
+		assert(a.length == b.length): "Arrays are different lengths";
+		
+		int[] ret = new int[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] / b[i];
+		}
+		
+		return ret;	
+	}
+	
+	public static int[] divide(int[] a, int div) {
+		int[] ret = new int[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] / div;
+		}
+		
+		return ret;	
+	}
+	
 	/*
 	 * double array utilities
 	 */
@@ -75,5 +97,83 @@ public class ArrayUtils {
 		
 		return ret;
 	}
-
+	
+	public static double[] add(double[] a, double[] b) {
+		assert(a.length == b.length): "Arrays are different lengths";
+		
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] + b[i];
+		}
+		
+		return ret;	
+	}
+	
+	public static double[] subtract(double[] a, double[] b) {
+		assert(a.length == b.length): "Arrays are different lengths";
+		
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] - b[i];
+		}
+		
+		return ret;	
+	}
+	
+	public static double[] multiply(double[] a, double[] b) {
+		assert(a.length == b.length): "Arrays are different lengths";
+		
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] * b[i];
+		}
+		
+		return ret;	
+	}
+	
+	public static double[] multiply(double[] a, double mult) {
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] * mult;
+		}
+		
+		return ret;	
+	}
+	
+	public static double[] divide(double[] a, double[] b) {
+		assert(a.length == b.length): "Arrays are different lengths";
+		
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] / b[i];
+		}
+		
+		return ret;	
+	}
+	
+	public static double[] divide(double[] a, double div) {
+		double[] ret = new double[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = a[i] / div;
+		}
+		
+		return ret;	
+	}
+	
+	public static int[] floor(double[] a) {
+		int[] ret = new int[a.length];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = (int)Math.floor(a[i]);
+		}
+		
+		return ret;	
+	}
+	
 }

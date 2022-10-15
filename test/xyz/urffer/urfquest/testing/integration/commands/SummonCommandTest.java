@@ -69,8 +69,8 @@ class SummonCommandTest {
 		Assertions.assertEquals(1, c1.getState().getCurrentMap().getNumMobs());
 		Player p1c = c1.getState().getPlayer();
 		Mob mob = c1.getState().getCurrentMap().getMobs().values().iterator().next();
-		Assertions.assertEquals(p1c.getPos()[0], mob.getPos()[0], Constants.TESTING_POSITION_TOLERANCE);
-		Assertions.assertEquals(p1c.getPos()[1], mob.getPos()[1], Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(p1c.getPos().x, mob.getPos().x, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(p1c.getPos().y, mob.getPos().y, Constants.TESTING_POSITION_TOLERANCE);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ class SummonCommandTest {
 		Assertions.assertEquals(1, s.getState().getSurfaceMap().getNumMobs());
 		Assertions.assertEquals(1, c1.getState().getCurrentMap().getNumMobs());
 		Mob mob = c1.getState().getCurrentMap().getMobs().values().iterator().next();
-		Assertions.assertEquals(5.0, mob.getPos()[0], Constants.TESTING_POSITION_TOLERANCE);
-		Assertions.assertEquals(3.0, mob.getPos()[1], Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(5.0, mob.getPos().x, Constants.TESTING_POSITION_TOLERANCE);
+		Assertions.assertEquals(3.0, mob.getPos().y, Constants.TESTING_POSITION_TOLERANCE);
 	}
 }

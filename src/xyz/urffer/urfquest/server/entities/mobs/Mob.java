@@ -4,6 +4,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import xyz.urffer.urfquest.server.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
@@ -19,7 +20,7 @@ public abstract class Mob extends Entity {
 	
 	protected MobRoutine routine;
 
-	protected Mob(Server srv, Map m, double[] pos) {
+	protected Mob(Server srv, Map m, PairDouble pos) {
 		super(srv, m, pos);
 	}
 

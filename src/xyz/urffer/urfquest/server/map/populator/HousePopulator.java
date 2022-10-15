@@ -5,6 +5,8 @@ import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.structures.House;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class HousePopulator extends TerrainPopulator {
@@ -18,24 +20,23 @@ public class HousePopulator extends TerrainPopulator {
 	}
 
 	@Override
-	public House populateChunk(Map map, int xChunk, int yChunk) {
+	public House populateChunk(Map map, PairInt chunkPos) {
 		// get bottom-left corner coord offset
-		int xRoot = xChunk * Constants.MAP_CHUNK_SIZE;
-		int yRoot = yChunk * Constants.MAP_CHUNK_SIZE;
+		PairInt root = chunkPos.multiply(Constants.MAP_CHUNK_SIZE);
 		
 		// If a randomness check is passed, try to find a spot to put a house
 		if (server.randomDouble() > 0.95) {
 			int maxNumTries = 100;
 			int numTries = 0;
 			while (numTries < maxNumTries) {
-				int x = xRoot + (int)(Constants.MAP_CHUNK_SIZE*server.randomDouble());
-				int y = yRoot + (int)(Constants.MAP_CHUNK_SIZE*server.randomDouble());
+				int x = root.x + (int)(Constants.MAP_CHUNK_SIZE*server.randomDouble());
+				int y = root.y + (int)(Constants.MAP_CHUNK_SIZE*server.randomDouble());
 				int width = HOUSE_SIZE_MIN + (int)(server.randomDouble()*sizeDiff);
 				int height = HOUSE_SIZE_MIN + (int)(server.randomDouble()*sizeDiff);
-				int[] pos = new int[] {x, y};
-				int[] dims = new int[] {width, height};
+				PairInt pos = new PairInt(x, y);
+				PairInt dims = new PairInt(width, height);
 				if (this.isHousePlaceableAt(map, pos, dims)) {
-					return new House(new int[]{x, y}, new int[]{width, height});
+					return new House(pos, dims);
 				}
 				numTries++;
 			}
@@ -44,10 +45,11 @@ public class HousePopulator extends TerrainPopulator {
 		return null;
 	}
 	
-	private boolean isHousePlaceableAt(Map map, int[] pos, int[] dims) {
-		for (int x = pos[0]; x <= pos[0] + dims[0]; x++) {
-			for (int y = pos[1]; y <= pos[1] + dims[1]; y++) {
-				if (map.getTileAt(x, y)[0] != Tile.TILE_GRASS) {
+	private boolean isHousePlaceableAt(Map map, PairInt pos, PairInt dims) {
+		for (int x = pos.x; x <= pos.x + dims.x; x++) {
+			for (int y = pos.y; y <= pos.y + dims.y; y++) {
+				PairInt testPos = new PairInt(x,y);
+				if (map.getTileAt(testPos)[0] != Tile.TILE_GRASS) {
 					return false;
 				}
 			}
@@ -56,31 +58,32 @@ public class HousePopulator extends TerrainPopulator {
 		return true;
 	}
 	
-	public void generateStructure(Map map, int[] pos, int[] dims) {
+	public void generateStructure(Map map, PairInt pos, PairInt dims) {
 		// Floor
-		for (int x = pos[0]; x < pos[0] + dims[0]; x++) {
-			for (int y = pos[1]; y < pos[1] + dims[1]; y++) {
-				map.setTileAt(x, y, Tile.TILE_FLOOR_WOOD, Tile.TILE_VOID);
+		for (int x = pos.x; x < pos.x + dims.x; x++) {
+			for (int y = pos.y; y < pos.y + dims.y; y++) {
+				PairInt testPos = new PairInt(x,y);
+				map.setTileAt(testPos, Tile.TILE_FLOOR_WOOD, Tile.TILE_VOID);
 			}
 		}
 		
 		// Walls
-		for (int x = pos[0]; x <= pos[0] + dims[0]; x++) {
-			map.setTileAt(x, pos[1], Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
-			map.setTileAt(x, pos[1] + dims[1], Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+		for (int x = pos.x; x <= pos.x + dims.x; x++) {
+			map.setTileAt(new PairInt(x, pos.y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+			map.setTileAt(new PairInt(x, pos.y + dims.y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
 		}
-		for (int y = pos[1]; y <= pos[1] + dims[1]; y++) {
-			map.setTileAt(pos[0], y, Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
-			map.setTileAt(pos[0] + dims[0], y, Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+		for (int y = pos.y; y <= pos.y + dims.y; y++) {
+			map.setTileAt(new PairInt(pos.x, y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+			map.setTileAt(new PairInt(pos.x + dims.x, y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
 		}
 		
 		// Door
-		map.setTileAt(pos[0] + dims[0]/2, pos[1] + dims[1], 
+		map.setTileAt(new PairInt(pos.x + dims.x/2, pos.y + dims.y), 
 					  Tile.TILE_FLOOR_WOOD, Tile.TILE_VOID);
 		
 		// Resident
 		// TODO: this line is causing client message parsing errors. look into it
-		map.addMob(new NPCHuman(server, map, new double[] {pos[0] + dims[0]/2, pos[1] + dims[1]/2}));
+		map.addMob(new NPCHuman(server, map, new PairDouble(pos.x + dims.x/2, pos.y + dims.y/2)));
 	}
 
 }

@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.server.map.populator.HousePopulator;
 import xyz.urffer.urfquest.server.map.structures.Structure;
 import xyz.urffer.urfquest.server.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class Map {
@@ -37,7 +38,7 @@ public class Map {
 	
 	private HashSet<Structure> structures = new HashSet<Structure>();
 	
-	private int[] homeCoords = new int[2];
+	private PairInt homeCoords = new PairInt(0, 0);
 	
 	private HashMap<Integer, HashMap<Integer, MapChunk>> chunks;
 	
@@ -77,7 +78,7 @@ public class Map {
 		chunks = new HashMap<Integer, HashMap<Integer, MapChunk>>();
 		for (int xChunk = -1; xChunk < 1; xChunk++) {
 			for (int yChunk = -1; yChunk < 1; yChunk++) {
-				this.createChunk(xChunk, yChunk);
+				this.createChunk(new PairInt(xChunk, yChunk));
 			}
 		}
 		
@@ -246,35 +247,35 @@ public class Map {
 	 * Chunk manipulation
 	 */
 	
-	public MapChunk getChunk(int xChunk, int yChunk) {
-		HashMap<Integer, MapChunk> column = chunks.get(xChunk);
+	public MapChunk getChunk(PairInt posChunk) {
+		HashMap<Integer, MapChunk> column = chunks.get(posChunk.x);
 		if (column == null)
 			return null;
-		return column.get(yChunk);
+		return column.get(posChunk.y);
 	}
 	
-	public MapChunk getChunkAtPos(int x, int y) {
-		int xChunk = Math.floorDiv(x, Constants.MAP_CHUNK_SIZE);
-		int yChunk = Math.floorDiv(y, Constants.MAP_CHUNK_SIZE);
+	public MapChunk getChunkAtPos(PairInt pos) {
+		int xChunk = Math.floorDiv(pos.x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv(pos.y, Constants.MAP_CHUNK_SIZE);
 		
-		return getChunk(xChunk, yChunk);
+		return getChunk(new PairInt(xChunk, yChunk));
 	}
 	
 	public HashMap<Integer, HashMap<Integer, MapChunk>> getAllChunks() {
 		return chunks;
 	}
 	
-	public MapChunk createChunk(int xChunk, int yChunk) {
-		HashMap<Integer, MapChunk> column = chunks.get(xChunk);
+	public MapChunk createChunk(PairInt posChunk) {
+		HashMap<Integer, MapChunk> column = chunks.get(posChunk.x);
 		if (column == null) {
 			column = new HashMap<Integer, MapChunk>();
-			chunks.put(xChunk, column);
+			chunks.put(posChunk.x, column);
 		}
 		
-		MapChunk chunk = generator.generateChunk(xChunk, yChunk);
-		column.put(yChunk, chunk);
+		MapChunk chunk = generator.generateChunk(posChunk);
+		column.put(posChunk.y, chunk);
 		
-		Structure struct = populator.populateChunk(this, xChunk, yChunk);
+		Structure struct = populator.populateChunk(this, posChunk);
 		if (struct != null) {
 			structures.add(struct);
 			populator.generateStructure(this, struct.getPosition(), struct.getDimensions());
@@ -283,11 +284,10 @@ public class Map {
 		return chunk;
 	}
 	
-	private MapChunk createChunkAtPos(int x, int y) {
-		int xChunk = x / Constants.MAP_CHUNK_SIZE;
-		int yChunk = y / Constants.MAP_CHUNK_SIZE;
-		
-		return createChunk(xChunk, yChunk);
+	private MapChunk createChunkAtPos(PairInt pos) {
+		PairInt posChunk = pos.divide(Constants.MAP_CHUNK_SIZE);
+
+		return createChunk(posChunk);
 	}
 	
 	// update a number of chunks each tick
@@ -394,31 +394,31 @@ public class Map {
 	
 	private void generateStartingArea() {
 		//findHomeCoords();
-		homeCoords = new int[] {0, 0};
+		homeCoords = new PairInt(0, 0);
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				setTileAt(homeCoords[0]+x, homeCoords[1]+y, Tile.TILE_GRASS);
+				setTileAt(homeCoords.add(new PairInt(x,y)), Tile.TILE_GRASS);
 			}
 		}
 
-		setTileAt(homeCoords[0]-2, homeCoords[1]-2, Tile.TILE_HEALTH_PAD);
-		setTileAt(homeCoords[0]-2, homeCoords[1]+2, Tile.TILE_HURT_PAD);
-		setTileAt(homeCoords[0]+2, homeCoords[1]-2, Tile.TILE_MANA_PAD);
-		setTileAt(homeCoords[0]+2, homeCoords[1]+2, Tile.TILE_SPEED_PAD);
+		setTileAt(homeCoords.add(new PairInt(-2,-2)), Tile.TILE_HEALTH_PAD);
+		setTileAt(homeCoords.add(new PairInt(-2,2)), Tile.TILE_HURT_PAD);
+		setTileAt(homeCoords.add(new PairInt(2,-2)), Tile.TILE_MANA_PAD);
+		setTileAt(homeCoords.add(new PairInt(2,2)), Tile.TILE_SPEED_PAD);
 	}
 	
 	// TODO: this is broken and prone to not letting the server initialize. fix
 	private void findHomeCoords() {
-		int spawnCenterX = (int)((server.randomDouble()-0.5)*10);
-		int spawnCenterY = (int)((server.randomDouble()-0.5)*10);
-		while (!Tile.isWalkable(getTileAt(spawnCenterX, spawnCenterY))) {
-			spawnCenterX = (int)((server.randomDouble()-0.5)*10);
-			spawnCenterY = (int)((server.randomDouble()-0.5)*10);
+		PairInt spawnCenter = new PairInt(0, 0);
+		spawnCenter.x = (int)((server.randomDouble()-0.5)*10);
+		spawnCenter.y = (int)((server.randomDouble()-0.5)*10);
+		while (!Tile.isWalkable(getTileAt(spawnCenter))) {
+			spawnCenter.x = (int)((server.randomDouble()-0.5)*10);
+			spawnCenter.y = (int)((server.randomDouble()-0.5)*10);
 		}
 		
-		homeCoords[0] = spawnCenterX;
-		homeCoords[1] = spawnCenterY;
+		homeCoords = spawnCenter;
 	}
 //	
 //	private void generateBorderWall() {
@@ -498,48 +498,48 @@ public class Map {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public int getTileTypeAt(PairInt pos) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null) {
 			return Tile.TILE_VOID;
 		}
 		
-		int[] posInChunk = getCoordsInChunk(x, y);
-		return chunk.getTileTypeAt(posInChunk[0], posInChunk[1]);
+		PairInt posInChunk = getCoordsInChunk(pos);
+		return chunk.getTileTypeAt(posInChunk);
 	}
 	
-	public int getTileSubtypeAt(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public int getTileSubtypeAt(PairInt pos) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return Tile.TILE_VOID;
 
-		int[] posInChunk = getCoordsInChunk(x, y);
-		return chunk.getObjectTypeAt(posInChunk[0], posInChunk[1]);
+		PairInt posInChunk = getCoordsInChunk(pos);
+		return chunk.getObjectTypeAt(posInChunk);
 	}
 	
-	public int[] getTileAt(int x, int y) {
-		return new int[] {getTileTypeAt(x, y), getTileSubtypeAt(x, y)};
+	public int[] getTileAt(PairInt pos) {
+		return new int[] {getTileTypeAt(pos), getTileSubtypeAt(pos)};
 	}
 	
-	public void setTileAt(int x, int y, int type) {
-		setTileAt(x, y, type, 0);
+	public void setTileAt(PairInt pos, int type) {
+		setTileAt(pos, type, 0);
 	}
 	
-	public void setTileAt(int x, int y, int type, int objectType) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public void setTileAt(PairInt pos, int type, int objectType) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null) {
-			chunk = createChunkAtPos(x, y);
+			chunk = createChunkAtPos(pos);
 		}
 
-		int[] posInChunk = getCoordsInChunk(x, y);
-		chunk.setTileAt(posInChunk[0], posInChunk[1], type, objectType);
+		PairInt posInChunk = getCoordsInChunk(pos);
+		chunk.setTileAt(posInChunk, type, objectType);
 	}
 	
-	public int[] getCoordsInChunk(int x, int y) {
-		int[] returns = new int[2];
+	public PairInt getCoordsInChunk(PairInt pos) {
+		PairInt returns = new PairInt(0,0);
 		
-		returns[0] = Math.floorMod(x, Constants.MAP_CHUNK_SIZE);
-		returns[1] = Math.floorMod(y, Constants.MAP_CHUNK_SIZE);
+		returns.x = Math.floorMod(pos.x, Constants.MAP_CHUNK_SIZE);
+		returns.y = Math.floorMod(pos.y, Constants.MAP_CHUNK_SIZE);
 		
 		return returns;
 	}
@@ -549,17 +549,16 @@ public class Map {
 	 * Misc map manipulation
 	 */
 	
-	public boolean setHomeCoords(int x, int y) {
-		if (Tile.isWalkable(getTileAt(x, y))) {
-			homeCoords[0] = x;
-			homeCoords[1] = y;
+	public boolean setHomeCoords(PairInt pos) {
+		if (Tile.isWalkable(getTileAt(pos))) {
+			homeCoords = pos.clone();
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public int[] getHomeCoords() {
+	public PairInt getHomeCoords() {
 		return homeCoords;
 	}
 	
@@ -568,24 +567,24 @@ public class Map {
 	 * ActiveTile management
 	 */
 
-	public void setActiveTile(int x, int y, ActiveTile at) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public void setActiveTile(PairInt pos, ActiveTile at) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null) {
-			chunk = createChunkAtPos(x, y);
+			chunk = createChunkAtPos(pos);
 		}
 		
-		chunk.setActiveTile(x, y, at);
+		chunk.setActiveTile(pos, at);
 	}
 	
-	public ActiveTile getActiveTile(int x, int y) {
-		MapChunk chunk = getChunkAtPos(x, y);
+	public ActiveTile getActiveTile(PairInt pos) {
+		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return null;
-		return chunk.getActiveTile(x, y);
+		return chunk.getActiveTile(pos);
 	}
 	
-	public void useActiveTile(int x, int y, Mob m) {
-		ActiveTile tile = getActiveTile(x, y);
+	public void useActiveTile(PairInt pos, Mob m) {
+		ActiveTile tile = getActiveTile(pos);
 		if (tile != null) {
 			tile.use(m);
 		}

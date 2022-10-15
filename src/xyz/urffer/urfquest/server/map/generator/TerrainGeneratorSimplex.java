@@ -2,6 +2,7 @@ package xyz.urffer.urfquest.server.map.generator;
 
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class TerrainGeneratorSimplex extends TerrainGenerator {
@@ -26,11 +27,10 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		treeNoise = new SimplexNoiseClass(seed, (float) 0.04);
 	}
 	
-	public MapChunk generateChunk(int xChunk, int yChunk) {
+	public MapChunk generateChunk(PairInt chunkPos) {
 		
 		// get bottom-left corner coord offset
-		int xRoot = xChunk * Constants.MAP_CHUNK_SIZE;
-		int yRoot = yChunk * Constants.MAP_CHUNK_SIZE;
+		PairInt rootOffset = chunkPos.multiply(Constants.MAP_CHUNK_SIZE);
 		
 		// instatiate new chunk
 		MapChunk chunk = new MapChunk();
@@ -43,9 +43,16 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate land and water
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				float terrainNoiseValue = terrainNoise.getNoiseAt(x + xRoot, y + yRoot);
-				float distortionNoiseValue = distortionNoise.getNoiseAt(x + xRoot, y + yRoot);
-				float distortionDistributionValue = distortionDistribution.getNoiseAt(x + xRoot, y + yRoot);
+				PairInt pos = new PairInt(x, y);
+				float terrainNoiseValue = terrainNoise.getNoiseAt(
+					pos.add(rootOffset)
+				);
+				float distortionNoiseValue = distortionNoise.getNoiseAt(
+					pos.add(rootOffset)
+				);
+				float distortionDistributionValue = distortionDistribution.getNoiseAt(
+					pos.add(rootOffset)
+				);
 				if (enableDistortionDistribution && distortionDistributionValue > .5) {
 					distortionNoiseValue *= (distortionDistributionValue - 0.5)*2;
 				}
@@ -55,11 +62,11 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileTypeAt(x, y, Tile.TILE_GRASS);
+					chunk.setTileTypeAt(pos, Tile.TILE_GRASS);
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileTypeAt(x, y, Tile.TILE_SAND);
+					chunk.setTileTypeAt(pos, Tile.TILE_SAND);
 				} else {
-					chunk.setTileTypeAt(x, y, Tile.TILE_WATER);
+					chunk.setTileTypeAt(pos, Tile.TILE_WATER);
 				}
 			}
 		}
@@ -67,8 +74,9 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate boulders
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (boulderNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
-					chunk.setObjectTypeAt(x, y, Tile.OBJECT_BOULDER);
+				PairInt pos = new PairInt(x, y);
+				if (boulderNoise.getNoiseAt(pos.add(rootOffset))*2 - 1.6 > random.nextDouble()) {
+					chunk.setObjectTypeAt(pos, Tile.OBJECT_BOULDER);
 //					if (chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
 //						chunk.setTileAt(x, y, Tile.TILE_GRASS, Tile.OBJECT_BOULDER);
 //					} else if (chunk.getTileTypeAt(x, y) == Tile.TILE_WATER) {
@@ -83,9 +91,10 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate flowers (only on grass)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (flowerNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1.6 > random.nextDouble()) {
-					if (chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
-						chunk.setObjectTypeAt(x, y, Tile.OBJECT_FLOWERS);
+				PairInt pos = new PairInt(x, y);
+				if (flowerNoise.getNoiseAt(pos.add(rootOffset))*2 - 1.6 > random.nextDouble()) {
+					if (chunk.getTileTypeAt(pos) == Tile.TILE_GRASS) {
+						chunk.setObjectTypeAt(pos, Tile.OBJECT_FLOWERS);
 					}
 				}
 			}
@@ -94,8 +103,10 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 		// generate trees (only on grass)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (treeNoise.getNoiseAt(x + xRoot, y + yRoot)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
-					chunk.setObjectTypeAt(x, y, Tile.OBJECT_TREE);
+				PairInt pos = new PairInt(x, y);
+				if (treeNoise.getNoiseAt(pos.add(rootOffset))*2 - 1 > random.nextDouble() && 
+					chunk.getTileTypeAt(pos) == Tile.TILE_GRASS) {
+					chunk.setObjectTypeAt(pos, Tile.OBJECT_TREE);
 				}
 			}
 		}

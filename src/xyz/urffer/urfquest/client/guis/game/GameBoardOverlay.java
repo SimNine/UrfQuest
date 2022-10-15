@@ -16,6 +16,8 @@ import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.tiles.TileImages;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class GameBoardOverlay extends GUIContainer {
@@ -51,8 +53,8 @@ public class GameBoardOverlay extends GUIContainer {
 	private void drawBoard(Graphics g) {
 		int dispTileWidth = client.getPanel().dispTileWidth;
 		int dispTileHeight = client.getPanel().dispTileHeight;
-		int dispCenterX = client.getPanel().dispCenterX;
-		int dispCenterY = client.getPanel().dispCenterY;
+		int dispCenterX = client.getPanel().dispCenter.x;
+		int dispCenterY = client.getPanel().dispCenter.y;
 		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
 		Map currMap = this.client.getState().getCurrentMap();
 		Entity camera = this.client.getState().getPlayer();
@@ -60,19 +62,19 @@ public class GameBoardOverlay extends GUIContainer {
 		// get the rendering offset
 		int rootX = (int)(TILE_WIDTH - (dispCenterX % TILE_WIDTH));
 		int rootY = (int)(TILE_WIDTH - (dispCenterY % TILE_WIDTH));
-		rootX += (camera.getPos()[0] % 1)*TILE_WIDTH;
-		rootY += (camera.getPos()[1] % 1)*TILE_WIDTH;
+		rootX += (camera.getPos().x % 1)*TILE_WIDTH;
+		rootY += (camera.getPos().y % 1)*TILE_WIDTH;
 		
 		// get the block coordinate of the upper-left corner
-		int ulX = ((int)camera.getPos()[0] - dispTileWidth/2) - 1;
-		int ulY = ((int)camera.getPos()[1] - dispTileHeight/2) - 1;
+		int ulX = ((int)camera.getPos().x - dispTileWidth/2) - 1;
+		int ulY = ((int)camera.getPos().y - dispTileHeight/2) - 1;
 		
 		// draw the tiles
 		for (int x = 0; x < dispTileWidth + 2; x++) {
 			int xRoot = - rootX + x * TILE_WIDTH;
 			for (int y = 0; y < dispTileHeight + 2; y++) {
 				int yRoot = - rootY + y * TILE_WIDTH;
-				int[] tile = currMap.getTileAt(new int[] {ulX + x, ulY + y});
+				int[] tile = currMap.getTileAt(new PairInt(ulX + x, ulY + y));
 				int animStage = getAnimStage(tile[0], tile[1]);
 				g.drawImage(TileImages.getTileImage(tile[0], tile[1], animStage), xRoot, yRoot, null);
 			}
@@ -119,10 +121,10 @@ public class GameBoardOverlay extends GUIContainer {
 				for (int i = 0; i < 3; i++) {
 					g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
 				}
-			} else if (mouseX < p.getPos()[0] + 3 &&
-					   mouseX > p.getPos()[0] - 3 &&
-					   mouseY < p.getPos()[1] + 3 &&
-					   mouseY > p.getPos()[1] - 3) {
+			} else if (mouseX < p.getPos().x + 3 &&
+					   mouseX > p.getPos().x - 3 &&
+					   mouseY < p.getPos().y + 3 &&
+					   mouseY > p.getPos().y - 3) {
 				int xRoot = - rootX + (mouseX - ulX)*TILE_WIDTH;
 				int yRoot = - rootY + (mouseY - ulY)*TILE_WIDTH;
 				g.setColor(new Color(255, 0, 0, selectedTileTransparency));
@@ -135,13 +137,13 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		// get any mob underneath the mouse cursor, highlight it
-		Mob m = this.client.getState().getCurrentMap().mobAt(new double[] {mouseCoordX, mouseCoordY});
+		Mob m = this.client.getState().getCurrentMap().mobAt(new PairDouble(mouseCoordX, mouseCoordY));
 		if (m != null) {
 			int tileWidth = QuestPanel.TILE_WIDTH;
-			int xTemp = client.getPanel().gameToWindowX(m.getPos()[0]);
-			int yTemp = client.getPanel().gameToWindowY(m.getPos()[1]);
+			int xTemp = client.getPanel().gameToWindowX(m.getPos().x);
+			int yTemp = client.getPanel().gameToWindowY(m.getPos().y);
 			g.setColor(Color.RED);
-			g.drawRect(xTemp, yTemp, (int)(m.getWidth()*tileWidth), (int)(m.getHeight()*tileWidth));
+			g.drawRect(xTemp, yTemp, (int)(m.getDims().x*tileWidth), (int)(m.getDims().y*tileWidth));
 		}
 		
 		// when debugging, draw the grid itself
@@ -160,14 +162,14 @@ public class GameBoardOverlay extends GUIContainer {
 	public boolean click() {
 		int mouseX = (int) client.getPanel().windowToGameX(client.getPanel().mousePos[0]);
 		int mouseY = (int) client.getPanel().windowToGameY(client.getPanel().mousePos[1]);
-		int[] mousePos = new int[] { mouseX, mouseY };
+		PairInt mousePos = new PairInt(mouseX, mouseY);
 		
 		Player p = this.client.getState().getPlayer();
 		if (
-			mouseX < p.getPos()[0] + 3 &&
-			mouseX > p.getPos()[0] - 3 &&
-			mouseY < p.getPos()[1] + 3 &&
-			mouseY > p.getPos()[1] - 3) {
+			mouseX < p.getPos().x + 3 &&
+			mouseX > p.getPos().x - 3 &&
+			mouseY < p.getPos().y + 3 &&
+			mouseY > p.getPos().y - 3) {
 			p.getMap().useActiveTile(mousePos, p);
 		}
 		client.getLogger().debug("clicked: " + p.getMap().getTileAt(mousePos)[0]);
@@ -189,9 +191,9 @@ public class GameBoardOverlay extends GUIContainer {
 
 		g.setColor(Color.WHITE);
 		g.drawString(client.getPanel().keys.toString(), 10, 10);
-		g.drawString("PlayerUpperLeftCoords: " + player.getPos()[0] + ", " + player.getPos()[1], 10, 20);
-		g.drawString("PlayerCenterCoords: " + player.getCenter()[0] + ", " + player.getCenter()[1], 10, 30);
-		g.drawString("DisplayCenter: " + client.getPanel().dispCenterX + ", " + client.getPanel().dispCenterY, 10, 40);
+		g.drawString("PlayerUpperLeftCoords: " + player.getPos().x + ", " + player.getPos().y, 10, 20);
+		g.drawString("PlayerCenterCoords: " + player.getCenter().x + ", " + player.getCenter().y, 10, 30);
+		g.drawString("DisplayCenter: " + client.getPanel().dispCenter.x + ", " + client.getPanel().dispCenter.y, 10, 40);
 		g.drawString("DisplayDimensionsInTiles: " + client.getPanel().dispTileWidth + ", " + client.getPanel().dispTileHeight, 10,
 				50);
 		g.drawString("CharacterDirection: " + player.getDirection(), 10, 60);
@@ -208,18 +210,18 @@ public class GameBoardOverlay extends GUIContainer {
 		Entity camera = this.client.getState().getPlayer();
 		
 		for (Mob m : currMap.getMobs().values()) {
-			if (m.getCenter()[0] > camera.getPos()[0] - 30 &&
-				m.getCenter()[0] < camera.getPos()[0] + 30 &&
-				m.getCenter()[1] > camera.getPos()[1] - 30 &&
-				m.getCenter()[1] < camera.getPos()[1] + 30)
+			if (m.getCenter().x > camera.getPos().x - 30 &&
+				m.getCenter().x < camera.getPos().x + 30 &&
+				m.getCenter().y > camera.getPos().y - 30 &&
+				m.getCenter().y < camera.getPos().y + 30)
 			m.draw(g);
 		}
 
 		for (Item i : currMap.getItems().values()) {
-			if (i.getCenter()[0] > camera.getPos()[0] - 30 &&
-				i.getCenter()[0] < camera.getPos()[0] + 30 &&
-				i.getCenter()[1] > camera.getPos()[1] - 30 &&
-				i.getCenter()[1] < camera.getPos()[1] + 30)
+			if (i.getCenter().x > camera.getPos().x - 30 &&
+				i.getCenter().x < camera.getPos().x + 30 &&
+				i.getCenter().y > camera.getPos().y - 30 &&
+				i.getCenter().y < camera.getPos().y + 30)
 			i.draw(g);
 		}
 		
@@ -232,18 +234,18 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 
 		for (Player player : currMap.getPlayers().values()) {
-			if (player.getCenter()[0] > camera.getPos()[0] - 30 &&
-				player.getCenter()[0] < camera.getPos()[0] + 30 &&
-				player.getCenter()[1] > camera.getPos()[1] - 30 &&
-				player.getCenter()[1] < camera.getPos()[1] + 30) {
+			if (player.getCenter().x > camera.getPos().x - 30 &&
+				player.getCenter().x < camera.getPos().x + 30 &&
+				player.getCenter().y > camera.getPos().y - 30 &&
+				player.getCenter().y < camera.getPos().y + 30) {
 				player.draw(g);
 			}
 		}
 	}
 
 	private void drawCrosshair(Graphics g) {
-		int dispCenterX = client.getPanel().dispCenterX;
-		int dispCenterY = client.getPanel().dispCenterY;
+		int dispCenterX = client.getPanel().dispCenter.x;
+		int dispCenterY = client.getPanel().dispCenter.y;
 
 		g.setColor(Color.WHITE);
 		g.drawLine(dispCenterX + 5, dispCenterY + 15, dispCenterX + 25, dispCenterY + 15);

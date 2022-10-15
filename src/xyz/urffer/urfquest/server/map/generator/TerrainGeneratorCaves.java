@@ -2,6 +2,7 @@ package xyz.urffer.urfquest.server.map.generator;
 
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class TerrainGeneratorCaves extends TerrainGenerator {
@@ -24,7 +25,7 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		oreNoise = new SimplexNoiseClass(seed, (float) 0.04);
 	}
 	
-	public MapChunk generateChunk(int xChunk, int yChunk) {
+	public MapChunk generateChunk(PairInt chunkPos) {
 		
 		MapChunk chunk = new MapChunk();
 		
@@ -36,9 +37,11 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate accessible areas
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				float terrainNoiseValue = terrainNoise.getNoiseAt(x, y);
-				float distortionNoiseValue = distortionNoise.getNoiseAt(x, y);
-				float distortionDistributionValue = distortionDistribution.getNoiseAt(x, y);
+				PairInt pos = new PairInt(x, y);
+				
+				float terrainNoiseValue = terrainNoise.getNoiseAt(pos);
+				float distortionNoiseValue = distortionNoise.getNoiseAt(pos);
+				float distortionDistributionValue = distortionDistribution.getNoiseAt(pos);
 				if (enableDistortionDistribution && distortionDistributionValue > .5) {
 					distortionNoiseValue *= (distortionDistributionValue - 0.5)*2;
 				}
@@ -48,11 +51,11 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileTypeAt(x, y, Tile.TILE_DIRT);
+					chunk.setTileTypeAt(pos, Tile.TILE_DIRT);
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileTypeAt(x, y, Tile.TILE_BEDROCK);
+					chunk.setTileTypeAt(pos, Tile.TILE_BEDROCK);
 				} else {
-					chunk.setTileTypeAt(x, y, Tile.TILE_VOID);
+					chunk.setTileTypeAt(pos, Tile.TILE_VOID);
 				}
 			}
 		}
@@ -60,8 +63,9 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate stone veins
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (stoneNoise.getNoiseAt(x, y)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(x, y) == Tile.TILE_DIRT) {
-					chunk.setTileTypeAt(x, y, Tile.OBJECT_STONE);
+				PairInt pos = new PairInt(x, y);
+				if (stoneNoise.getNoiseAt(pos)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(pos) == Tile.TILE_DIRT) {
+					chunk.setTileTypeAt(pos, Tile.OBJECT_STONE);
 				}
 			}
 		}
@@ -69,8 +73,9 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		// generate ore (only on stone)
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
-				if (oreNoise.getNoiseAt(x, y) > 0.80f && chunk.getTileTypeAt(x, y) == Tile.OBJECT_STONE) {
-					chunk.setTileAt(x, y, Tile.OBJECT_STONE, Tile.OBJECT_IRON_ORE);
+				PairInt pos = new PairInt(x, y);
+				if (oreNoise.getNoiseAt(pos) > 0.80f && chunk.getTileTypeAt(pos) == Tile.OBJECT_STONE) {
+					chunk.setTileAt(pos, Tile.OBJECT_STONE, Tile.OBJECT_IRON_ORE);
 				}
 			}
 		}

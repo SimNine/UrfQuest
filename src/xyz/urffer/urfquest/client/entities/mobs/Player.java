@@ -18,8 +18,9 @@ import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.items.Item;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
-import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
 
@@ -85,9 +86,9 @@ public class Player extends Mob {
 	
 	private double pickupRange = 3.0;
 
-	public Player(Client c, int id, Map currMap, double[] pos, String name) {
+	public Player(Client c, int id, Map currMap, PairDouble pos, String name) {
 		super(c, id, currMap, pos);
-		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -112,31 +113,31 @@ public class Player extends Mob {
 		}
 	}
 	
-	public void setPos(double[] pos) {
+	public void setPos(PairDouble pos) {
 		super.setPos(pos);
 		
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
 		int mapWidth = map.getMapDiameter();
-		int xChunk = Math.floorDiv((int) pos[0], Constants.MAP_CHUNK_SIZE);
-		int yChunk = Math.floorDiv((int) pos[1], Constants.MAP_CHUNK_SIZE);
+		int xChunk = Math.floorDiv((int) pos.x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv((int) pos.y, Constants.MAP_CHUNK_SIZE);
 		
-		int[] localChunkOrigin = map.getLocalChunkOrigin();
-		if (xChunk <= localChunkOrigin[0] + 1) {
-			map.shiftMapChunks(localChunkOrigin[0] - 1, localChunkOrigin[1]);
+		PairInt localChunkOrigin = map.getLocalChunkOrigin();
+		if (xChunk <= localChunkOrigin.x + 1) {
+			map.shiftMapChunks(localChunkOrigin.add(new PairInt(-1,0)));
 			map.requestMissingChunks();
-		} else if (xChunk >= localChunkOrigin[0] + mapWidth - 1) {
-			map.shiftMapChunks(localChunkOrigin[0] + 1, localChunkOrigin[1]);
+		} else if (xChunk >= localChunkOrigin.x + mapWidth - 1) {
+			map.shiftMapChunks(localChunkOrigin.add(new PairInt(1,0)));
 			map.requestMissingChunks();
 		}
 
 		// it's necessary to refresh the local chunk origin in case it was shifted above
 		localChunkOrigin = map.getLocalChunkOrigin();
-		if (yChunk <= localChunkOrigin[1] + 1) {
-			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] - 1);
+		if (yChunk <= localChunkOrigin.y + 1) {
+			map.shiftMapChunks(localChunkOrigin.add(new PairInt(0,-1)));
 			map.requestMissingChunks();
-		} else if (yChunk >= localChunkOrigin[1] + mapWidth - 1) {
-			map.shiftMapChunks(localChunkOrigin[0], localChunkOrigin[1] + 1);
+		} else if (yChunk >= localChunkOrigin.y + mapWidth - 1) {
+			map.shiftMapChunks(localChunkOrigin.add(new PairInt(0,1)));
 			map.requestMissingChunks();
 		}
 
@@ -226,7 +227,7 @@ public class Player extends Mob {
 			return;
 		}
 		
-		double[] playerPos = getPos();
+		PairDouble playerPos = getPos();
 		i.setPos(playerPos);
 		i.resetDropTimeout();
 		map.addItem(i);
@@ -257,10 +258,7 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
-		map.useActiveTile(
-			ArrayUtils.castToIntArr(getCenter()),
-			this
-		);
+		map.useActiveTile(getCenter().toInt(), this);
 	}
 	
 	public double getPickupRange() {

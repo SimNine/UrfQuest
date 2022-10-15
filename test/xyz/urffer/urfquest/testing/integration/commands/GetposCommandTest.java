@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class GetposCommandTest {
@@ -57,8 +58,8 @@ class GetposCommandTest {
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
-		double[] p1pos = c1.getState().getPlayer().getPos();
-		Assertions.assertEquals("Your position is (" + p1pos[0] + "," + p1pos[1] + ")", 
+		PairDouble p1pos = c1.getState().getPlayer().getPos();
+		Assertions.assertEquals("Your position is (" + p1pos.x + "," + p1pos.y + ")", 
 				c1.getAllChatMessages().getFirst().message);
 	}
 
@@ -79,8 +80,8 @@ class GetposCommandTest {
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
-		double[] p2pos = c2.getState().getPlayer().getPos();
-		Assertions.assertEquals("Nick's position is (" + p2pos[0] + "," + p2pos[1] + ")", 
+		PairDouble p2pos = c2.getState().getPlayer().getPos();
+		Assertions.assertEquals("Nick's position is (" + p2pos.x + "," + p2pos.y + ")", 
 				c1.getAllChatMessages().getFirst().message);
 	}
 

@@ -5,6 +5,8 @@ import java.awt.geom.Rectangle2D;
 import xyz.urffer.urfquest.server.IDGenerator;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
@@ -20,12 +22,12 @@ public abstract class Entity {
 	
 	public int id;
 	
-	protected Entity(Server srv, Map m, double[] pos) {
+	protected Entity(Server srv, Map m, PairDouble pos) {
 		this.server = srv;
 		
 		this.id = IDGenerator.newID();
 		
-		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		this.movementVector = new Vector(0.0, 0.0);
 		
 		this.map = m;
@@ -68,30 +70,30 @@ public abstract class Entity {
 		} else {
 			double xComp = movementVector.magnitude*Math.cos(movementVector.dirRadians);
 			double yComp = movementVector.magnitude*Math.sin(movementVector.dirRadians);
-			attemptIncrementPos(xComp, yComp);
+			attemptIncrementPos(new PairDouble(xComp, yComp));
 		}
 	}
 	
-	public void attemptIncrementPos(double x, double y) {
-		double newX = bounds.getCenterX() + x;
-		double newY = bounds.getCenterY() + y;
+	public void attemptIncrementPos(PairDouble delta) {
+		double newX = bounds.getCenterX() + delta.x;
+		double newY = bounds.getCenterY() + delta.y;
 		
 		boolean canMove = true;
 		
 		// check if this move is valid on the x-axis
-		if (!Tile.isWalkable(map.getTileAt((int)Math.floor(newX), (int)Math.floor(bounds.getCenterY())))) {
+		if (!Tile.isWalkable(map.getTileAt(new PairDouble(newX, bounds.getCenterY()).floor()))) {
 			canMove = false;
 		}
 		
 		// check if this move is valid on the y-axis
-		if (!Tile.isWalkable(map.getTileAt((int)Math.floor(bounds.getCenterX()), (int)Math.floor(newY)))) {
+		if (!Tile.isWalkable(map.getTileAt(new PairDouble(bounds.getCenterX(), newY).floor()))) {
 			canMove = false;
 		}
 				
 		if (canMove) {
-			this.incrementPos(x, y);
+			this.incrementPos(delta);
 		} else {
-			this.setPos(bounds.getX(), bounds.getY());
+			this.setPos(this.getPos());
 		}
 	}
 	
@@ -99,17 +101,18 @@ public abstract class Entity {
 	public int[] tileAtDistance(double d) {
 		double xComp = d*Math.cos(movementVector.dirRadians);
 		double yComp = d*Math.sin(movementVector.dirRadians);
-		return map.getTileAt((int)(bounds.getCenterX() + xComp), (int)(bounds.getCenterY() + yComp));
+		return map.getTileAt(new PairDouble(bounds.getCenterX() + xComp, bounds.getCenterY() + yComp).floor());
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
-	public int[] tileCoordsAtDistance(double d) {
+	public PairInt tileCoordsAtDistance(double d) {
 		double xComp = d*Math.cos(movementVector.dirRadians);
 		double yComp = d*Math.sin(movementVector.dirRadians);
 		
-		int[] ret = new int[2];
-		ret[0] = (int)(bounds.getCenterX() + xComp);
-		ret[1] = (int)(bounds.getCenterY() + yComp);
+		PairInt ret = new PairDouble(
+			bounds.getCenterX() + xComp,
+			bounds.getCenterY() + yComp
+		).toInt();
 		
 		return ret;
 	}
@@ -134,37 +137,38 @@ public abstract class Entity {
 		this.setVelocity(movementVector.magnitude + amt);
 	}
 	
-	public void setPos(double x, double y) {
-		bounds.setRect(x, y, bounds.getWidth(), bounds.getHeight());
+	public void setPos(PairDouble pos) {
+		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;
-		m.pos[0] = bounds.getX();
-		m.pos[1] = bounds.getY();
+		m.pos = this.getPos();
 		this.server.sendMessageToAllClients(m);
 	}
 	
-	public void incrementPos(double x, double y) {
-		this.setPos(bounds.getX() + x, bounds.getY() + y);
+	public void incrementPos(PairDouble delta) {
+		this.setPos(this.getPos().add(delta));
 	}
 	
 	protected void incrementPos(Vector vector) {
 		double xComp = vector.magnitude*Math.cos(vector.dirRadians);
 		double yComp = vector.magnitude*Math.sin(vector.dirRadians);
-		this.incrementPos(xComp, yComp);
+		this.incrementPos(new PairDouble(xComp, yComp));
 	}
 	
-	public double[] getPos() {
-		double[] ret = new double[2];
-		ret[0] = bounds.getX();
-		ret[1] = bounds.getY();
+	public PairDouble getPos() {
+		PairDouble ret = new PairDouble(
+			bounds.getX(),
+			bounds.getY()
+		);
 		return ret;
 	}
 	
-	public double[] getCenter() {
-		double[] ret = new double[2];
-		ret[0] = bounds.getCenterX();
-		ret[1] = bounds.getCenterY();
+	public PairDouble getCenter() {
+		PairDouble ret = new PairDouble(
+			bounds.getCenterX(),
+			bounds.getCenterY()
+		);
 		return ret;
 	}
 	
@@ -181,10 +185,10 @@ public abstract class Entity {
 	
 	// returns whether this entity's center is within a certain distance of another's
 	public boolean isWithinDistance(Entity other, double distance) {
-		if (other.getCenter()[0] > this.getCenter()[0] + distance ||
-			other.getCenter()[0] < this.getCenter()[0] - distance ||
-			other.getCenter()[1] > this.getCenter()[1] + distance ||
-			other.getCenter()[1] < this.getCenter()[1] - distance) {
+		if (other.getCenter().x > this.getCenter().x + distance ||
+			other.getCenter().x < this.getCenter().x - distance ||
+			other.getCenter().y > this.getCenter().y + distance ||
+			other.getCenter().y < this.getCenter().y - distance) {
 			return false;
 		} else {
 			return (distanceTo(other) <= distance);
@@ -194,15 +198,15 @@ public abstract class Entity {
 	// returns the distance from this entity's center to another's
 	public double distanceTo(Entity e) {
 		return Math.sqrt(
-						 Math.pow(this.bounds.getCenterX() - e.bounds.getCenterX(), 2) +
-						 Math.pow(this.bounds.getCenterY() - e.bounds.getCenterY(), 2)
-						);
+			Math.pow(this.bounds.getCenterX() - e.bounds.getCenterX(), 2) +
+			Math.pow(this.bounds.getCenterY() - e.bounds.getCenterY(), 2)
+		);
 	}
 	
 	// returns the angle (going clockwise, starting at cardinal east) from this entity's center to another
 	public int angleTo(Entity e) {
-		double denom = this.getCenter()[0] - e.getCenter()[0];
-		double num = this.getCenter()[1] - e.getCenter()[1];
+		double denom = this.getCenter().x - e.getCenter().x;
+		double num = this.getCenter().y - e.getCenter().y;
 		
 		int angle = 0;
 		if (denom > 0) {
@@ -221,18 +225,17 @@ public abstract class Entity {
 		int angleTo = angleTo(e);
 		double xComp = checkStepSize*Math.cos(Math.toRadians(angleTo));
 		double yComp = checkStepSize*Math.sin(Math.toRadians(angleTo));
+		PairDouble step = new PairDouble (xComp, yComp);
 		
 		double distTo = distanceTo(e);
 		double numSteps = distTo / checkStepSize;
 		
-		double xCurr = this.getCenter()[0];
-		double yCurr = this.getCenter()[1];
+		PairDouble posCurr = this.getCenter();
 		for (int i = 0; i < numSteps; i++) {
-			if (!Tile.isWalkable(this.server.getState().getSurfaceMap().getTileAt((int) xCurr, (int) yCurr))) {
+			if (!Tile.isWalkable(this.server.getState().getSurfaceMap().getTileAt(posCurr.toInt()))) {
 				return false;
 			}
-			xCurr += xComp;
-			yCurr += yComp;
+			posCurr = posCurr.add(step);
 		}
 		
 		return true;

@@ -1,6 +1,7 @@
 package xyz.urffer.urfquest.shared.protocol.messages;
 
 import xyz.urffer.urfquest.Logger;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
@@ -16,7 +17,7 @@ public class MessageEntityInit extends Message {
 	public String entityName;
 	public EntityType entityType;
 	public Object entitySubtype;
-	public double[] pos = new double[2];
+	public PairDouble pos = new PairDouble(0,0);
 	public int mapID;
 
 	@Override

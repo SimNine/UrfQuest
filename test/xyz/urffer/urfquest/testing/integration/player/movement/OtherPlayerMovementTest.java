@@ -37,12 +37,12 @@ class OtherPlayerMovementTest {
 		int numStepsMoved = 10;
 		
 		// check initial position
-		double x1c1p1 = c1p1.getPos()[0];
-		double y1c1p1 = c1p1.getPos()[1];
+		double x1c1p1 = c1p1.getPos().x;
+		double y1c1p1 = c1p1.getPos().y;
 		Assertions.assertTrue(x1c1p1 > -5.0 && x1c1p1 < 5.0);
 		Assertions.assertTrue(y1c1p1 > -5.0 && y1c1p1 < 5.0);
-		double x1c2p1 = c2p1.getPos()[0];
-		double y1c2p1 = c2p1.getPos()[1];
+		double x1c2p1 = c2p1.getPos().x;
+		double y1c2p1 = c2p1.getPos().y;
 		Assertions.assertTrue(x1c2p1 > -5.0 && x1c2p1 < 5.0);
 		Assertions.assertTrue(y1c2p1 > -5.0 && y1c2p1 < 5.0);
 
@@ -51,12 +51,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check second position
-		double x2c1p1 = c1p1.getPos()[0];
-		double y2c1p1 = c1p1.getPos()[1];
+		double x2c1p1 = c1p1.getPos().x;
+		double y2c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x2c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1, y2c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x2c2p1 = c2p1.getPos()[0];
-		double y2c2p1 = c2p1.getPos()[1];
+		double x2c2p1 = c2p1.getPos().x;
+		double y2c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1, y2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 	}
@@ -70,12 +70,12 @@ class OtherPlayerMovementTest {
 		int numStepsMoved = 10;
 		
 		// check initial position
-		double x1c1p1 = c1p1.getPos()[0];
-		double y1c1p1 = c1p1.getPos()[1];
+		double x1c1p1 = c1p1.getPos().x;
+		double y1c1p1 = c1p1.getPos().y;
 		Assertions.assertTrue(x1c1p1 > -5.0 && x1c1p1 < 5.0);
 		Assertions.assertTrue(y1c1p1 > -5.0 && y1c1p1 < 5.0);
-		double x1c2p1 = c2p1.getPos()[0];
-		double y1c2p1 = c2p1.getPos()[1];
+		double x1c2p1 = c2p1.getPos().x;
+		double y1c2p1 = c2p1.getPos().y;
 		Assertions.assertTrue(x1c2p1 > -5.0 && x1c2p1 < 5.0);
 		Assertions.assertTrue(y1c2p1 > -5.0 && y1c2p1 < 5.0);
 
@@ -84,12 +84,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check second position
-		double x2c1p1 = c1p1.getPos()[0];
-		double y2c1p1 = c1p1.getPos()[1];
+		double x2c1p1 = c1p1.getPos().x;
+		double y2c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x2c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1, y2c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x2c2p1 = c2p1.getPos()[0];
-		double y2c2p1 = c2p1.getPos()[1];
+		double x2c2p1 = c2p1.getPos().x;
+		double y2c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1, y2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -98,12 +98,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check third position
-		double x3c1p1 = c1p1.getPos()[0];
-		double y3c1p1 = c1p1.getPos()[1];
+		double x3c1p1 = c1p1.getPos().x;
+		double y3c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x3c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, y3c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x3c2p1 = c2p1.getPos()[0];
-		double y3c2p1 = c2p1.getPos()[1];
+		double x3c2p1 = c2p1.getPos().x;
+		double y3c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, x3c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, y3c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -112,12 +112,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check fourth position
-		double x4c1p1 = c1p1.getPos()[0];
-		double y4c1p1 = c1p1.getPos()[1];
+		double x4c1p1 = c1p1.getPos().x;
+		double y4c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1, x4c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, y4c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x4c2p1 = c2p1.getPos()[0];
-		double y4c2p1 = c2p1.getPos()[1];
+		double x4c2p1 = c2p1.getPos().x;
+		double y4c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1, x4c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1 + numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER, y4c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -126,12 +126,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check fifth position
-		double x5c1p1 = c1p1.getPos()[0];
-		double y5c1p1 = c1p1.getPos()[1];
+		double x5c1p1 = c1p1.getPos().x;
+		double y5c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1, x5c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1, y5c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x5c2p1 = c2p1.getPos()[0];
-		double y5c2p1 = c2p1.getPos()[1];
+		double x5c2p1 = c2p1.getPos().x;
+		double y5c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1, x5c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1, y5c2p1, Constants.TESTING_POSITION_TOLERANCE);
 	}
@@ -146,12 +146,12 @@ class OtherPlayerMovementTest {
 		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER*Math.sin(Math.toRadians(45));
 		
 		// check initial position
-		double x1c1p1 = c1p1.getPos()[0];
-		double y1c1p1 = c1p1.getPos()[1];
+		double x1c1p1 = c1p1.getPos().x;
+		double y1c1p1 = c1p1.getPos().y;
 		Assertions.assertTrue(x1c1p1 > -5.0 && x1c1p1 < 5.0);
 		Assertions.assertTrue(y1c1p1 > -5.0 && y1c1p1 < 5.0);
-		double x1c2p1 = c2p1.getPos()[0];
-		double y1c2p1 = c2p1.getPos()[1];
+		double x1c2p1 = c2p1.getPos().x;
+		double y1c2p1 = c2p1.getPos().y;
 		Assertions.assertTrue(x1c2p1 > -5.0 && x1c2p1 < 5.0);
 		Assertions.assertTrue(y1c2p1 > -5.0 && y1c2p1 < 5.0);
 
@@ -160,12 +160,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check second position
-		double x2c1p1 = c1p1.getPos()[0];
-		double y2c1p1 = c1p1.getPos()[1];
+		double x2c1p1 = c1p1.getPos().x;
+		double y2c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1 + stepDistanceComponent, x2c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1 + stepDistanceComponent, y2c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x2c2p1 = c2p1.getPos()[0];
-		double y2c2p1 = c2p1.getPos()[1];
+		double x2c2p1 = c2p1.getPos().x;
+		double y2c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1 + stepDistanceComponent, x2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1 + stepDistanceComponent, y2c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -174,12 +174,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check third position
-		double x3c1p1 = c1p1.getPos()[0];
-		double y3c1p1 = c1p1.getPos()[1];
+		double x3c1p1 = c1p1.getPos().x;
+		double y3c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1, x3c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1 + stepDistanceComponent*2, y3c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x3c2p1 = c2p1.getPos()[0];
-		double y3c2p1 = c2p1.getPos()[1];
+		double x3c2p1 = c2p1.getPos().x;
+		double y3c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1, x3c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1 + stepDistanceComponent*2, y3c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -188,12 +188,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check fourth position
-		double x4c1p1 = c1p1.getPos()[0];
-		double y4c1p1 = c1p1.getPos()[1];
+		double x4c1p1 = c1p1.getPos().x;
+		double y4c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1 - stepDistanceComponent, x4c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1 + stepDistanceComponent, y4c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x4c2p1 = c2p1.getPos()[0];
-		double y4c2p1 = c2p1.getPos()[1];
+		double x4c2p1 = c2p1.getPos().x;
+		double y4c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1 - stepDistanceComponent, x4c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1 + stepDistanceComponent, y4c2p1, Constants.TESTING_POSITION_TOLERANCE);
 
@@ -202,12 +202,12 @@ class OtherPlayerMovementTest {
 		s.tick(numStepsMoved);
 		
 		// check fifth position
-		double x5c1p1 = c1p1.getPos()[0];
-		double y5c1p1 = c1p1.getPos()[1];
+		double x5c1p1 = c1p1.getPos().x;
+		double y5c1p1 = c1p1.getPos().y;
 		Assertions.assertEquals(x1c1p1, x5c1p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c1p1, y5c1p1, Constants.TESTING_POSITION_TOLERANCE);
-		double x5c2p1 = c2p1.getPos()[0];
-		double y5c2p1 = c2p1.getPos()[1];
+		double x5c2p1 = c2p1.getPos().x;
+		double y5c2p1 = c2p1.getPos().y;
 		Assertions.assertEquals(x1c2p1, x5c2p1, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(y1c2p1, y5c2p1, Constants.TESTING_POSITION_TOLERANCE);
 	}

@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 
 public class Cyclops extends Mob {
 
@@ -26,11 +27,11 @@ public class Cyclops extends Mob {
 		}
 	}
 
-	public Cyclops(Client c, int id, Map m, double[] pos) {
+	public Cyclops(Client c, int id, Map m, PairDouble pos) {
 		super(c, id, m, pos);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 10, 10);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
@@ -54,8 +55,8 @@ public class Cyclops extends Mob {
 
 	protected void drawEntity(Graphics g) {
 		g.drawImage(pic, 
-					(int) client.getPanel().gameToWindowX(bounds.getX()), 
-					(int) client.getPanel().gameToWindowY(bounds.getY()), 
+					(int) client.getPanel().gameToWindowX(this.getPos().x), 
+					(int) client.getPanel().gameToWindowY(this.getPos().y), 
 					null);
 		drawHealthBar(g);
 	}

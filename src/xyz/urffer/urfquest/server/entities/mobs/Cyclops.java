@@ -8,6 +8,7 @@ import xyz.urffer.urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
@@ -18,11 +19,11 @@ public class Cyclops extends Mob {
 	
 	private Item shotgun;
 
-	public Cyclops(Server srv, Map m, double[] pos) {
+	public Cyclops(Server srv, Map m, PairDouble pos) {
 		super(srv, m, pos);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 10, 10);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CYCLOPS;
@@ -34,7 +35,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(srv, this.map, new double[]{0, 0}, 15);
+		shotgun = new Item(srv, this.map, new PairDouble(0, 0), 15);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;

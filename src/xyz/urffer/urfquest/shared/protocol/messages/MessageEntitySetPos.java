@@ -1,6 +1,7 @@
 package xyz.urffer.urfquest.shared.protocol.messages;
 
 import xyz.urffer.urfquest.Logger;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
@@ -12,7 +13,7 @@ public class MessageEntitySetPos extends Message {
 	private static final long serialVersionUID = 1065420566717112677L;
 	
 	public int entityID = 0;
-	public double[] pos = new double[2];
+	public PairDouble pos;
 
 	@Override
 	public MessageType getType() {
@@ -26,7 +27,7 @@ public class MessageEntitySetPos extends Message {
 
 	@Override
 	public String toString() {
-		return "entityID:" + this.entityID + ",x:" + pos[0] + ",y:" + pos[1];
+		return "entityID:" + this.entityID + ",x:" + pos.x + ",y:" + pos.y;
 	}
 
 }

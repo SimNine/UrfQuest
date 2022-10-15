@@ -8,6 +8,7 @@ import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Entity {
@@ -20,10 +21,10 @@ public abstract class Entity {
 	
 	public final int id;
 	
-	protected Entity(Client c, int id, Map m, double[] pos) {
+	protected Entity(Client c, int id, Map m, PairDouble pos) {
 		this.client = c;
 		this.id = id;
-		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		this.movementVector = new Vector(0, 0);
 		this.map = m;
 	}
@@ -34,14 +35,14 @@ public abstract class Entity {
 	
 	public abstract void update();
 	
-	public void setPos(double[] pos) {
-		bounds.setRect(pos[0], pos[1], bounds.getWidth(), bounds.getHeight());
+	public void setPos(PairDouble pos) {
+		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	public void incrementPos(double[] pos) {
+	public void incrementPos(PairDouble pos) {
 		bounds.setRect(
-			bounds.getX() + pos[0],
-			bounds.getY() + pos[1],
+			bounds.getX() + pos.x,
+			bounds.getY() + pos.y,
 			bounds.getWidth(),
 			bounds.getHeight()
 		);
@@ -50,21 +51,15 @@ public abstract class Entity {
 	protected void incrementPos(Vector v) {
 		double xComp = v.magnitude*Math.cos(Math.toRadians(v.magnitude));
 		double yComp = v.magnitude*Math.sin(Math.toRadians(v.magnitude));
-		this.incrementPos(new double[] {xComp, yComp});
+		this.incrementPos(new PairDouble(xComp, yComp));
 	}
 	
-	public double[] getPos() {
-		double[] ret = new double[2];
-		ret[0] = bounds.getX();
-		ret[1] = bounds.getY();
-		return ret;
+	public PairDouble getPos() {
+		return new PairDouble(bounds.getX(), bounds.getY());
 	}
 	
-	public double[] getCenter() {
-		double[] ret = new double[2];
-		ret[0] = bounds.getCenterX();
-		ret[1] = bounds.getCenterY();
-		return ret;
+	public PairDouble getCenter() {
+		return new PairDouble(bounds.getCenterX(), bounds.getCenterY());
 	}
 	
 	/*
@@ -103,12 +98,8 @@ public abstract class Entity {
 	 * Entity size management
 	 */
 	
-	public double getWidth() {
-		return bounds.getWidth();
-	}
-	
-	public double getHeight() {
-		return bounds.getHeight();
+	public PairDouble getDims() {
+		return new PairDouble(bounds.width, bounds.height);
 	}
 
 	/*
@@ -127,8 +118,8 @@ public abstract class Entity {
 	}
 	
 	// returns whether the given coordinates are within the entity's bounding box
-	public boolean containsPoint(double[] pos) {
-		return bounds.contains(pos[0], pos[1]);
+	public boolean containsPoint(PairDouble pos) {
+		return bounds.contains(pos.x, pos.y);
 	}
 
 	/*

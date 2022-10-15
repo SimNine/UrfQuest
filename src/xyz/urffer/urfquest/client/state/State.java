@@ -5,7 +5,6 @@ import xyz.urffer.urfquest.client.entities.mobs.CameraMob;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
 
 public class State {
@@ -23,9 +22,13 @@ public class State {
 		this.client = c;
 		this.isGameRunning = false;
 		this.currentMap = new Map(c, 0, Constants.CLIENT_CACHED_MAP_DIAMETER);
-		this.camera = new CameraMob(this.client, -1, currentMap, 
-				ArrayUtils.castToDoubleArr(currentMap.getHomeCoords()), 
-				CameraMob.STILL_MODE);
+		this.camera = new CameraMob(
+			this.client, 
+			-1, 
+			currentMap, 
+			currentMap.getHomeCoords().toDouble(), 
+			CameraMob.STILL_MODE
+		);
 	}
 	
 	public boolean isGameRunning() {

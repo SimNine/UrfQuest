@@ -10,6 +10,7 @@ import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.ChatMessage;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
@@ -69,15 +70,15 @@ public class CommandProcessor {
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
 							} else {
 								Player p = server.getState().getPlayer(playerID);
-								double[] pos = p.getPos();
-								m.chatMessage = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos[0] + "," + pos[1] + ")");
+								PairDouble pos = p.getPos();
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos.x + "," + pos.y + ")");
 							}
 						} else {
 							if (clientThread == null) {
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "This command must be used with an argument when sent from the server");
 							} else {
-								double[] pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientThread.id)).getPos();
-								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos[0] + "," + pos[1] + ")");
+								PairDouble pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientThread.id)).getPos();
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos.x + "," + pos.x + ")");
 							}
 						}
 
@@ -146,10 +147,10 @@ public class CommandProcessor {
 							return;
 						}
 						
-						double xPos, yPos;
+						PairDouble pos = new PairDouble(0,0);
 						try {
-							xPos = Double.parseDouble(args[1]);
-							yPos = Double.parseDouble(args[2]);
+							pos.x = Double.parseDouble(args[1]);
+							pos.y = Double.parseDouble(args[2]);
 						} catch (Exception e) {
 							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 							return;
@@ -157,7 +158,7 @@ public class CommandProcessor {
 						
 						int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientThread.id);
 						Player thisPlayer = server.getState().getPlayer(thisPlayerID);
-						thisPlayer.setPos(xPos, yPos);
+						thisPlayer.setPos(pos);
 					}
 		};
 		commands.put("tp", tpCommand);
@@ -172,7 +173,7 @@ public class CommandProcessor {
 							return;
 						}
 						
-						double[] pos = new double[2];
+						PairDouble pos = new PairDouble(0,0);
 						Map map;
 						if (args.length == 2) {
 							if (clientThread == null) {
@@ -186,8 +187,8 @@ public class CommandProcessor {
 						} else {
 							try {
 								map = server.getState().getSurfaceMap();
-								pos[0] = Double.parseDouble(args[2]);
-								pos[1] = Double.parseDouble(args[3]);
+								pos.x = Double.parseDouble(args[2]);
+								pos.y = Double.parseDouble(args[3]);
 							} catch (Exception e) {
 								CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
 								return;

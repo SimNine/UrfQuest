@@ -15,6 +15,8 @@ import xyz.urffer.urfquest.client.entities.particles.Particle;
 import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
 import xyz.urffer.urfquest.client.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 
@@ -29,12 +31,12 @@ public class Map {
 	public static final int TEMPLATE_MAP = 5003;
 	public static final int CAVE_MAP = 5004;
 	
-	private int[] homeCoords = new int[2];
+	private PairInt homeCoords = new PairInt(0,0);
 	
 	private BufferedImage minimap;
 	
 	private MapChunk[][] localChunks;
-	private int[] localChunkOrigin = new int[2];
+	private PairInt localChunkOrigin = new PairInt(0,0);
 
 	private HashMap<Integer, Player> players = new HashMap<>();
 	private HashMap<Integer, Mob> mobs = new HashMap<>();
@@ -50,7 +52,7 @@ public class Map {
 		this.id = id;
 		
 		localChunks = new MapChunk[loadedChunkSize][loadedChunkSize];
-		localChunkOrigin[0] = localChunkOrigin[1] = 0 - (loadedChunkSize / 2);
+		localChunkOrigin.x = localChunkOrigin.y = 0 - (loadedChunkSize / 2);
 		
 		minimap = new BufferedImage(
 			localChunks.length * Constants.MAP_CHUNK_SIZE, 
@@ -184,35 +186,35 @@ public class Map {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(int[] pos) {
+	public int getTileTypeAt(PairInt pos) {
 		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return Tile.TILE_VOID;
-		int[] posInChunk = getPosInChunk(pos);
+		PairInt posInChunk = getPosInChunk(pos);
 		
 		return chunk.getTileTypeAt(posInChunk);
 	}
 	
-	public int getObjectTypeAt(int[] pos) {
+	public int getObjectTypeAt(PairInt pos) {
 		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
 			return Tile.TILE_VOID;
-		int[] chunkInPos = getPosInChunk(pos);
+		PairInt chunkInPos = getPosInChunk(pos);
 		
 		return chunk.getObjectTypeAt(chunkInPos);
 	}
 	
-	public int[] getTileAt(int[] pos) {
+	public int[] getTileAt(PairInt pos) {
 		return new int[] {getTileTypeAt(pos), getObjectTypeAt(pos)};
 	}
 	
-	public void setTileAt(int[] pos, int type) {
+	public void setTileAt(PairInt pos, int type) {
 		setTileAt(pos, type, 0);
 	}
 	
-	public void setTileAt(int[] pos, int type, int objectType) {
+	public void setTileAt(PairInt pos, int type, int objectType) {
 		MapChunk chunk = getChunkAtPos(pos);
-		int[] posInChunk = getPosInChunk(pos);
+		PairInt posInChunk = getPosInChunk(pos);
 		
 		chunk.setTileAt(posInChunk, type, objectType);
 	}
@@ -222,12 +224,11 @@ public class Map {
 	 * Chunk manipulation
 	 */
 	
-	private MapChunk getChunk(int[] posChunk) {
-		int xChunkLocal = posChunk[0] - localChunkOrigin[0];
-		int yChunkLocal = posChunk[1] - localChunkOrigin[1];
+	private MapChunk getChunk(PairInt posChunk) {
+		PairInt chunkLocal = posChunk.subtract(localChunkOrigin);
 		
 		try {
-			return localChunks[xChunkLocal][yChunkLocal];
+			return localChunks[chunkLocal.x][chunkLocal.y];
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -235,32 +236,32 @@ public class Map {
 		}
 	}
 	
-	public MapChunk getChunkAtPos(int[] pos) {
-		if (pos[0] < localChunkOrigin[0] * Constants.MAP_CHUNK_SIZE || 
-			pos[1] < localChunkOrigin[1] * Constants.MAP_CHUNK_SIZE)
+	public MapChunk getChunkAtPos(PairInt pos) {
+		if (pos.x < localChunkOrigin.x * Constants.MAP_CHUNK_SIZE || 
+			pos.y < localChunkOrigin.y * Constants.MAP_CHUNK_SIZE)
 			return null;
-		if (pos[0] >= (localChunkOrigin[0] + localChunks.length) * Constants.MAP_CHUNK_SIZE || 
-			pos[1] >= (localChunkOrigin[1] + localChunks[0].length) * Constants.MAP_CHUNK_SIZE)
+		if (pos.x >= (localChunkOrigin.x + localChunks.length) * Constants.MAP_CHUNK_SIZE || 
+			pos.y >= (localChunkOrigin.y + localChunks[0].length) * Constants.MAP_CHUNK_SIZE)
 			return null;
 
-		int xChunk = Math.floorDiv(pos[0], Constants.MAP_CHUNK_SIZE);
-		int yChunk = Math.floorDiv(pos[1], Constants.MAP_CHUNK_SIZE);
-		return getChunk(new int[] {xChunk, yChunk});
+		int xChunk = Math.floorDiv(pos.x, Constants.MAP_CHUNK_SIZE);
+		int yChunk = Math.floorDiv(pos.y, Constants.MAP_CHUNK_SIZE);
+		return getChunk(new PairInt(xChunk, yChunk));
 	}
 
-	private int[] getPosInChunk(int[] pos) {
-		pos[0] %= Constants.MAP_CHUNK_SIZE;
-		if (pos[0] < 0)
-			pos[0] += Constants.MAP_CHUNK_SIZE;
+	private PairInt getPosInChunk(PairInt pos) {
+		pos.x %= Constants.MAP_CHUNK_SIZE;
+		if (pos.x < 0)
+			pos.x += Constants.MAP_CHUNK_SIZE;
 
-		pos[1] %= Constants.MAP_CHUNK_SIZE;
-		if (pos[1] < 0)
-			pos[1] += Constants.MAP_CHUNK_SIZE;
+		pos.y %= Constants.MAP_CHUNK_SIZE;
+		if (pos.y < 0)
+			pos.y += Constants.MAP_CHUNK_SIZE;
 		
 		return pos;
 	}
 
-	public int[] getLocalChunkOrigin() {
+	public PairInt getLocalChunkOrigin() {
 		return localChunkOrigin;
 	}
 	
@@ -268,16 +269,14 @@ public class Map {
 		return localChunks.length;
 	}
 	
-	public void shiftMapChunks(int xChunkOriginNew, int yChunkOriginNew) {
+	public void shiftMapChunks(PairInt chunkOriginNew) {
 		this.client.getLogger().debug("Shifting local chunk origin to: " + 
-									  "(" + xChunkOriginNew + "," + yChunkOriginNew + ")");
+									  "(" + chunkOriginNew.x + "," + chunkOriginNew.y + ")");
 		
-		int xChunkOriginDiff = xChunkOriginNew - localChunkOrigin[0];
-		int yChunkOriginDiff = yChunkOriginNew - localChunkOrigin[1];
+		PairInt chunkOriginDiff = chunkOriginNew.subtract(localChunkOrigin);
 		
 		// shift local chunk origin
-		localChunkOrigin[0] = xChunkOriginNew;
-		localChunkOrigin[1] = yChunkOriginNew;
+		localChunkOrigin = chunkOriginNew.clone();
 		
 		// instantiate new local chunk matrix
 		MapChunk[][] newLocalChunks = new MapChunk[localChunks.length][localChunks[0].length];
@@ -286,15 +285,14 @@ public class Map {
 		this.client.getLogger().debug("Copying existing chunks");
 		for (int x = 0; x < localChunks.length; x++) {
 			for (int y = 0; y < localChunks[0].length; y++) {
-				int xChunkOld = x + xChunkOriginDiff;
-				int yChunkOld = y + yChunkOriginDiff;
+				PairInt chunkOld = new PairInt(x, y).add(chunkOriginDiff);
 				
 				// if new chunk position is within bounds, copy it over
-				if (xChunkOld >= 0 &&
-					yChunkOld >= 0 &&
-					xChunkOld < localChunks.length &&
-					yChunkOld < localChunks[0].length) {
-					newLocalChunks[x][y] = localChunks[xChunkOld][yChunkOld];
+				if (chunkOld.x >= 0 &&
+					chunkOld.y >= 0 &&
+					chunkOld.x < localChunks.length &&
+					chunkOld.y < localChunks[0].length) {
+					newLocalChunks[x][y] = localChunks[chunkOld.x][chunkOld.y];
 				} else {
 					newLocalChunks[x][y] = null;
 				}
@@ -314,27 +312,26 @@ public class Map {
 				if (localChunks[x][y] == null) {
 					MessageRequestChunk m = new MessageRequestChunk();
 					m.mapID = this.id;
-					m.xyChunk = new int[] {
-						x + localChunkOrigin[0],
-						y + localChunkOrigin[1]
-					};
+					m.xyChunk = new PairInt(
+						x + localChunkOrigin.x,
+						y + localChunkOrigin.y
+					);
 					this.client.send(m);
 				}
 			}
 		}
 	}
 	
-	private MapChunk createChunk(int[] posChunk) {
-		int xChunkLocal = posChunk[0] - localChunkOrigin[0];
-		int yChunkLocal = posChunk[1] - localChunkOrigin[1];
+	private MapChunk createChunk(PairInt posChunk) {
+		PairInt chunkLocal = posChunk.subtract(localChunkOrigin);
 		
 		MapChunk newChunk = new MapChunk();
-		localChunks[xChunkLocal][yChunkLocal] = newChunk;
+		localChunks[chunkLocal.x][chunkLocal.y] = newChunk;
 		return newChunk;
 	}
 	
 	public void setChunk(
-		int[] chunkPos,
+		PairInt chunkPos,
 		int[][] tileTypes,
 		int[][] objectTypes
 	) {
@@ -382,7 +379,7 @@ public class Map {
 	 * Misc map manipulation
 	 */
 	
-	public boolean setHomeCoords(int[] pos) {
+	public boolean setHomeCoords(PairInt pos) {
 		if (Tile.isWalkable(getTileAt(pos))) {
 			homeCoords = pos;
 			return true;
@@ -391,7 +388,7 @@ public class Map {
 		}
 	}
 	
-	public int[] getHomeCoords() {
+	public PairInt getHomeCoords() {
 		return homeCoords;
 	}
 	
@@ -400,21 +397,21 @@ public class Map {
 	 * ActiveTile management
 	 */
 
-	public void setActiveTile(int[] pos, ActiveTile at) {
+	public void setActiveTile(PairInt pos, ActiveTile at) {
 		MapChunk chunk = getChunkAtPos(pos);
-		int[] posInChunk = getPosInChunk(pos);
+		PairInt posInChunk = getPosInChunk(pos);
 		
 		chunk.setActiveTile(posInChunk, at);
 	}
 	
-	public ActiveTile getActiveTile(int[] pos) {
+	public ActiveTile getActiveTile(PairInt pos) {
 		MapChunk chunk = getChunkAtPos(pos);
-		int[] posInChunk = getPosInChunk(pos);
+		PairInt posInChunk = getPosInChunk(pos);
 		
 		return chunk.getActiveTile(posInChunk);
 	}
 	
-	public void useActiveTile(int[] pos, Mob m) {
+	public void useActiveTile(PairInt pos, Mob m) {
 		ActiveTile tile = getActiveTile(pos);
 		if (tile != null) {
 			tile.use(m);
@@ -548,7 +545,7 @@ public class Map {
 	 * Special entity methods
 	 */
 	
-	public Mob mobAt(double[] pos) {
+	public Mob mobAt(PairDouble pos) {
 		for (Mob m : mobs.values()) {
 			if (m.containsPoint(pos)) {
 				return m;

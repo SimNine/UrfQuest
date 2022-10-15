@@ -7,6 +7,8 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public abstract class Mob extends Entity {
@@ -20,7 +22,7 @@ public abstract class Mob extends Entity {
 	protected double maxFullness;
 	protected int healthbarVisibility = 0;
 
-	protected Mob(Client c, int id, Map m, double[] pos) {
+	protected Mob(Client c, int id, Map m, PairDouble pos) {
 		super(c, id, m, pos);
 	}
 
@@ -33,71 +35,45 @@ public abstract class Mob extends Entity {
 	// returns true if the move is valid (in one or both directions), returns false if not
 	// if move is valid, moves the mob
 	protected boolean attemptMove(int dir, double velocity) {
-		double newX = bounds.getCenterX();
-		double newY = bounds.getCenterY();
+		PairDouble currPos = this.getCenter();
+		PairDouble newPos = currPos.clone();
 		double xComp = velocity*Math.cos(Math.toRadians(dir));
 		double yComp = velocity*Math.sin(Math.toRadians(dir));
 		
 		boolean ret = false;
 		
 		// attempt to move on the x-axis
-		if (
-			Tile.isWalkable(
-				map.getTileAt(
-					new int[] {
-						(int)(newX + xComp), (int)newY
-					}
-				)
-			)
-		) {
-			newX += xComp;
+		PairInt xMoveVector = currPos.add(new PairDouble(xComp, 0)).toInt();
+		if (Tile.isWalkable(map.getTileAt(xMoveVector))) {
+			newPos.x += xComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
 		// attempt to move on the y-axis
-		if (Tile.isWalkable(
-				map.getTileAt(
-					new int[] {
-						(int)newX, (int)(newY + yComp)
-					}
-				)
-			)
-		) {
-			newY += yComp;
+		PairInt yMoveVector = currPos.add(new PairDouble(0, yComp)).toInt();
+		if (Tile.isWalkable(map.getTileAt(yMoveVector))) {
+			newPos.y += yComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
-		bounds.setRect(
-			newX - bounds.getWidth()/2.0,
-			newY - bounds.getHeight()/2.0,
-			bounds.getWidth(),
-			bounds.getHeight()
-		);
+		this.setPos(newPos.subtract(this.getDims().divide(2.0)));
 		return ret;
 	}
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public int[] tileAtDistance(double d) {
-		double xComp = d*Math.cos(this.movementVector.dirRadians);
-		double yComp = d*Math.sin(this.movementVector.dirRadians);
 		return map.getTileAt(
-			new int[] {
-				(int)(bounds.getCenterX() + xComp),
-				(int)(bounds.getCenterY() + yComp)
-			}
+			tileCoordsAtDistance(d)
 		);
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
-	public int[] tileCoordsAtDistance(double d) {
+	public PairInt tileCoordsAtDistance(double d) {
 		double xComp = d*Math.cos(this.movementVector.dirRadians);
 		double yComp = d*Math.sin(this.movementVector.dirRadians);
+		PairDouble dist = new PairDouble(xComp, yComp);
 		
-		int[] ret = new int[2];
-		ret[0] = (int)(bounds.getCenterX() + xComp);
-		ret[1] = (int)(bounds.getCenterY() + yComp);
-		
-		return ret;
+		return this.getCenter().add(dist).toInt();
 	}
 
 	// setters, getters, and incrementers
@@ -178,8 +154,8 @@ public abstract class Mob extends Entity {
 			return;
 		}
 		
-		int topLeftX = (int)(client.getPanel().gameToWindowX(bounds.getX()) + (bounds.getWidth()/2.0)*QuestPanel.TILE_WIDTH) - 26;
-		int topLeftY = (int)(client.getPanel().gameToWindowY(bounds.getY()) + bounds.getHeight()*QuestPanel.TILE_WIDTH);
+		int topLeftX = (int)(client.getPanel().gameToWindowX(this.getPos().x) + (this.getDims().x/2.0)*QuestPanel.TILE_WIDTH) - 26;
+		int topLeftY = (int)(client.getPanel().gameToWindowY(this.getPos().y) + this.getDims().y*QuestPanel.TILE_WIDTH);
 		
 		int vis;
 		if (healthbarVisibility > 255) {
@@ -196,9 +172,10 @@ public abstract class Mob extends Entity {
 
 	protected void drawDebug(Graphics g) {
 		g.setColor(Color.WHITE);
-		g.drawString("bounds: (" + (int)bounds.getX() + "," + (int)bounds.getY() + ") " + bounds.getWidth() + "*" + bounds.getHeight(),
-					(int) client.getPanel().gameToWindowX(bounds.getX()),
-					(int) client.getPanel().gameToWindowY(bounds.getY()));
+		g.drawString("bounds: (" + (int)this.getPos().x + "," + (int)this.getPos().y + ") " + 
+					 this.getDims().x + "*" + this.getDims().y,
+					(int) client.getPanel().gameToWindowX(this.getPos().x),
+					(int) client.getPanel().gameToWindowY(this.getPos().y));
 //		g.drawString(("routine: " + routine.getClass().getSimpleName()),
 //			 		 (int) UrfQuestClient.panel.gameToWindowX(bounds.getX()),
 //			 		 (int) UrfQuestClient.panel.gameToWindowY(bounds.getY()) +10);

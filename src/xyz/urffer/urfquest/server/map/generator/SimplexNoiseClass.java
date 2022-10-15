@@ -2,6 +2,8 @@ package xyz.urffer.urfquest.server.map.generator;
 
 import java.util.Random;
 
+import xyz.urffer.urfquest.shared.PairInt;
+
 public class SimplexNoiseClass {
 	private int grad3[][] = { { 1, 1, 0 }, { -1, 1, 0 }, { 1, -1, 0 }, { -1, -1, 0 }, { 1, 0, 1 }, { -1, 0, 1 },
 			{ 1, 0, -1 }, { -1, 0, -1 }, { 0, 1, 1 }, { 0, -1, 1 }, { 0, 1, -1 }, { 0, -1, -1 } };
@@ -125,5 +127,9 @@ public class SimplexNoiseClass {
 		float noiseNum = (float) noise(x * this.frequency, y * this.frequency);
 		noiseNum = (noiseNum + 1) / 2;
 		return noiseNum;
+	}
+	
+	public float getNoiseAt(PairInt pos) {
+		return this.getNoiseAt(pos.x, pos.y);
 	}
 }

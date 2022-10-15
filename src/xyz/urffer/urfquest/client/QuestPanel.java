@@ -34,6 +34,7 @@ import xyz.urffer.urfquest.client.guis.game.MapViewOverlay;
 import xyz.urffer.urfquest.client.guis.menus.KeybindingOverlay;
 import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
 
@@ -43,7 +44,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	
 	private Client client;
 	
-	public int dispCenterX, dispCenterY; // the center of this JPanel relative to the window's top-left corner, in pixels
+	public PairInt dispCenter; // the center of this JPanel relative to the window's top-left corner, in pixels
 	public int dispTileWidth, dispTileHeight; // the number of tiles needed to fill the screen
 	public static final int TILE_WIDTH = 30; // the width, in pixels, of each tile
 	
@@ -201,8 +202,8 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 					guiOpen = true;
 					chatOverlay.setOpaqueChatbox(true);
 				} else if (e.getKeyCode() == KeyEvent.VK_F4) {
-					String playerPosString = client.getState().getPlayer().getCenter()[0] + "," +
-							 				 client.getState().getPlayer().getCenter()[1];
+					String playerPosString = client.getState().getPlayer().getCenter().x + "," +
+							 				 client.getState().getPlayer().getCenter().y;
 					client.getLogger().debug("F4 pressed at: " + playerPosString);
 					
 					MessageDebugPlayer m = new MessageDebugPlayer();
@@ -434,8 +435,8 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 		
 		if (client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
-			g.drawLine(0, dispCenterY, getWidth(), dispCenterY);
-			g.drawLine(dispCenterX, 0, dispCenterX, getHeight());
+			g.drawLine(0, dispCenter.y, getWidth(), dispCenter.y);
+			g.drawLine(dispCenter.x, 0, dispCenter.x, getHeight());
 		}
 		
 		Toolkit.getDefaultToolkit().sync();
@@ -444,8 +445,8 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	// sets the dimensions of the panel, in pixels
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
-		dispCenterX = w/2;
-		dispCenterY = h/2;
+		dispCenter.x = w/2;
+		dispCenter.y = h/2;
 		dispTileWidth = w/TILE_WIDTH;
 		dispTileHeight = h/TILE_WIDTH;
 		
@@ -461,23 +462,23 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	 */
 	
 	public int gameToWindowX(double x) {
-		int xRet = (int)(dispCenterX - (fetchCamera().getPos()[0] - x)*TILE_WIDTH);
+		int xRet = (int)(dispCenter.x - (fetchCamera().getPos().x - x)*TILE_WIDTH);
 		return xRet;
 	}
 	
 	public int gameToWindowY(double y) {
-		int yRet = (int)(dispCenterY - (fetchCamera().getPos()[1] - y)*TILE_WIDTH);
+		int yRet = (int)(dispCenter.y - (fetchCamera().getPos().y - y)*TILE_WIDTH);
 		return yRet;
 	}
 	
 	// these two methods are broken for purposes of rendering the board, but they work for finding what tile the mouse is on.
 	// i'm not sure why this is the case. don't trust these two methods.
 	public double windowToGameX(int x) {
-		return fetchCamera().getPos()[0] - (((double)dispCenterX - (double)x) / (double)TILE_WIDTH);
+		return fetchCamera().getPos().x - (((double)dispCenter.x - (double)x) / (double)TILE_WIDTH);
 	}
 	
 	public double windowToGameY(int y) {
-		return fetchCamera().getPos()[1] - (((double)dispCenterY - (double)y) / (double)TILE_WIDTH);
+		return fetchCamera().getPos().y - (((double)dispCenter.y - (double)y) / (double)TILE_WIDTH);
 	}
 	
 	/*

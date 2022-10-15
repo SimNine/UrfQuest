@@ -17,6 +17,8 @@ import xyz.urffer.urfquest.client.guis.GUIObject;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 
 public class Minimap extends GUIObject implements Clickable {
 	// the coordinates of the pixel in the upper-left corner
@@ -35,17 +37,17 @@ public class Minimap extends GUIObject implements Clickable {
 	public void draw(Graphics g) {
 		// get references to important objects
 		Map currentMap = this.client.getState().getCurrentMap();
-		int[] mapOrigin = ArrayUtils.multiply(currentMap.getLocalChunkOrigin(), Constants.MAP_CHUNK_SIZE);
+		PairInt mapOrigin = currentMap.getLocalChunkOrigin().multiply(Constants.MAP_CHUNK_SIZE);
 		Rectangle mapBounds = new Rectangle(
-				mapOrigin[0],
-				mapOrigin[1],
+				mapOrigin.x,
+				mapOrigin.y,
 				currentMap.getMapDiameter() * Constants.MAP_CHUNK_SIZE,
 				currentMap.getMapDiameter() * Constants.MAP_CHUNK_SIZE
 		);
 		int[] mapCenter = ArrayUtils.castToIntArr(new double[] {mapBounds.getCenterX(), mapBounds.getCenterY()});
 		BufferedImage minimap = this.client.getState().getCurrentMap().getMinimap();
 		Player player = this.client.getState().getPlayer();
-		int[] playerPos = ArrayUtils.castToIntArr(player.getCenter());
+		PairInt playerPos = player.getCenter().toInt();
 		
 		// draw background and border
 		int borderWidth = 3;
@@ -64,46 +66,43 @@ public class Minimap extends GUIObject implements Clickable {
 				bounds.width - 2*(borderWidth + gapWidth),
 				bounds.height - 2*(borderWidth + gapWidth)
 		);
-		int[] minimapOrigin = {minimapBounds.x, minimapBounds.y};
-		int[] minimapCenter = ArrayUtils.castToIntArr(
-				new double[]{minimapBounds.getCenterX(),
-							 minimapBounds.getCenterY()}
-		);
+		PairInt minimapOrigin = new PairInt(minimapBounds.x, minimapBounds.y);
+		PairInt minimapCenter = new PairDouble(
+			minimapBounds.getCenterX(),
+			minimapBounds.getCenterY()
+		).toInt();
 		g.setColor(Color.BLACK);
 		g.fillRect(minimapBounds.x, minimapBounds.y, 
 				   minimapBounds.width, minimapBounds.height);
 		
 		// calculate minimapRoot: position to draw the minimap at in screen space
-		int[] dispPlayerFromMapTopLeft = ArrayUtils.subtract(
-				playerPos, 
-				mapOrigin
-		);
-		int[] minimapRoot = ArrayUtils.subtract(minimapCenter, dispPlayerFromMapTopLeft);
+		PairInt dispPlayerFromMapTopLeft = playerPos.subtract(mapOrigin);
+		PairInt minimapRoot = minimapCenter.subtract(dispPlayerFromMapTopLeft);
 		
 		// crop minimap such that it does not overflow the minimap bounds
-		if (minimapRoot[0] < minimapOrigin[0]) { // crop left side
-			int leftSideOverflow = minimapOrigin[0] - minimapRoot[0];
+		if (minimapRoot.x < minimapOrigin.x) { // crop left side
+			int leftSideOverflow = minimapOrigin.x - minimapRoot.x;
 			minimap = minimap.getSubimage(
 					leftSideOverflow, 
 					0, 
 					minimap.getWidth() - leftSideOverflow, 
 					minimap.getHeight()
 			);
-			minimapRoot[0] = minimapOrigin[0];
+			minimapRoot.x = minimapOrigin.x;
 		}
-		if (minimapRoot[1] < minimapOrigin[1]) { // crop top side
-			int topSideOverflow = minimapOrigin[1] - minimapRoot[1];
+		if (minimapRoot.y < minimapOrigin.y) { // crop top side
+			int topSideOverflow = minimapOrigin.y - minimapRoot.y;
 			minimap = minimap.getSubimage( 
 					0,
 					topSideOverflow,
 					minimap.getWidth(), 
 					minimap.getHeight() - topSideOverflow
 			);
-			minimapRoot[1] = minimapOrigin[1];
+			minimapRoot.y = minimapOrigin.y;
 		}
 		// crop right and bottom sides
-		int rightSideOverflow = (minimapRoot[0] + minimap.getWidth()) - (minimapBounds.x + minimapBounds.width);
-		int bottomSideOverflow = (minimapRoot[1] + minimap.getHeight()) - (minimapBounds.y + minimapBounds.height);
+		int rightSideOverflow = (minimapRoot.x + minimap.getWidth()) - (minimapBounds.x + minimapBounds.width);
+		int bottomSideOverflow = (minimapRoot.y + minimap.getHeight()) - (minimapBounds.y + minimapBounds.height);
 		minimap = minimap.getSubimage(
 				0, 
 				0, 
@@ -112,11 +111,11 @@ public class Minimap extends GUIObject implements Clickable {
 		);
 		
 		// draw minimap such that it is centered on the player
-		g.drawImage(minimap, minimapRoot[0], minimapRoot[1], null);
+		g.drawImage(minimap, minimapRoot.x, minimapRoot.y, null);
 		
 		// draw a square for the player
 		g.setColor(Color.BLACK);
-		g.fillRect(minimapCenter[0]-2, minimapCenter[1]-2, 5, 5);
+		g.fillRect(minimapCenter.x-2, minimapCenter.y-2, 5, 5);
 
 //		// draw a square for each item currently on the minimap
 //		g.setColor(Color.RED);

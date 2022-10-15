@@ -7,6 +7,7 @@ import xyz.urffer.urfquest.server.entities.items.Item;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
@@ -15,9 +16,9 @@ public class NPCHuman extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public NPCHuman(Server srv, Map m, double[] pos) {
+	public NPCHuman(Server srv, Map m, PairDouble pos) {
 		super(srv, m, pos);
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		movementVector.magnitude = Constants.DEFAULT_VELOCITY_PLAYER;
 		
 		health = 100.0;

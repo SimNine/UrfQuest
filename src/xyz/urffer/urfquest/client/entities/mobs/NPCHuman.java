@@ -16,6 +16,7 @@ import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.items.Item;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
+import xyz.urffer.urfquest.shared.PairDouble;
 
 public class NPCHuman extends Mob {
 
@@ -54,9 +55,9 @@ public class NPCHuman extends Mob {
 	
 	protected double pickupRange = 3.0;
 
-	public NPCHuman(Client c, int id, Map currMap, double[] pos, String name) {
+	public NPCHuman(Client c, int id, Map currMap, PairDouble pos, String name) {
 		super(c, id, currMap, pos);
-		this.bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;

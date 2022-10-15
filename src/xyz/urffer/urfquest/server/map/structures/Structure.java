@@ -4,14 +4,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import xyz.urffer.urfquest.shared.PairInt;
+
 public abstract class Structure {
 	
-	protected int[] pos;
-	protected int[] dims;
+	protected PairInt pos;
+	protected PairInt dims;
 	
 	protected HashMap<String, Structure> substructures = new HashMap<>();
 	
-	public Structure(int[] position, int[] dimensions) {
+	public Structure(PairInt position, PairInt dimensions) {
 		this.pos = position;
 		this.dims = dimensions;
 	}
@@ -42,12 +44,12 @@ public abstract class Structure {
 	 * Position and size management
 	 */
 	
-	public int[] getPosition() {
-		return pos;
+	public PairInt getPosition() {
+		return pos.clone();
 	}
 	
-	public int[] getDimensions() {
-		return dims;
+	public PairInt getDimensions() {
+		return dims.clone();
 	}
 
 }

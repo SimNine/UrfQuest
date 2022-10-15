@@ -23,7 +23,6 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.server.monitoring.MapMonitor;
 import xyz.urffer.urfquest.server.state.State;
-import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
@@ -218,11 +217,14 @@ public class Server {
 					break;
 				}
 				
-				Player newPlayer = new Player(this, this.state, 
-											  this.state.getSurfaceMap(), 
-											  ArrayUtils.castToDoubleArr(this.state.getSurfaceMap().getHomeCoords()), 
-											  playerName,
-											  c);
+				Player newPlayer = new Player(
+					this,
+					this.state,
+					this.state.getSurfaceMap(),
+					this.state.getSurfaceMap().getHomeCoords().toDouble(),
+					playerName,
+					c
+				);
 				this.state.addPlayer(newPlayer);
 				this.state.getSurfaceMap().addPlayer(newPlayer);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
@@ -271,9 +273,9 @@ public class Server {
 				MessageRequestChunk m = (MessageRequestChunk)p.getMessage();
 				
 				MessageChunkInit mci = new MessageChunkInit();
-				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().getChunk(m.xyChunk[0], m.xyChunk[1]);
+				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().getChunk(m.xyChunk);
 				if (chunk == null) {
-					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk[0], m.xyChunk[1]);
+					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk);
 				}
 				mci.xyChunk = m.xyChunk;
 				mci.tileTypes = chunk.getAllTileTypes();
@@ -286,7 +288,7 @@ public class Server {
 				
 				int playerID = userMap.getPlayerIdFromClientId(c.id);
 				Player player = state.getPlayer(playerID);
-				String playerPos = player.getCenter()[0] + "," + player.getCenter()[1];
+				String playerPos = player.getCenter().x + "," + player.getCenter().y;
 				
 				MessageDebugPlayer mdp = new MessageDebugPlayer();
 				mdp.playerPosString = playerPos;
