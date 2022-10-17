@@ -123,7 +123,7 @@ public class SimplexNoiseClass {
 	}
 	
 	// freq should be in the range of 0.0001 to 0.01
-	public float getNoiseAt(int x, int y) {
+	private float getNoiseAt(int x, int y) {
 		float noiseNum = (float) noise(x * this.frequency, y * this.frequency);
 		noiseNum = (noiseNum + 1) / 2;
 		return noiseNum;

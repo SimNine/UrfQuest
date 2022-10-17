@@ -11,7 +11,7 @@ public class State {
 	private Client client;
 	
 	private boolean isGameRunning;
-	private boolean isBuildMode;
+	private boolean isBuildMode = true;
 	
 	private Map currentMap;
 	
@@ -20,7 +20,7 @@ public class State {
 
 	public State(Client c) {
 		this.client = c;
-		this.isGameRunning = false;
+		this.isGameRunning = true;
 		this.currentMap = new Map(c, 0, Constants.CLIENT_CACHED_MAP_DIAMETER);
 		this.camera = new CameraMob(
 			this.client, 

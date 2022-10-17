@@ -1,7 +1,13 @@
 package xyz.urffer.urfquest.shared;
 
-public class PairInt {
+import java.io.Serializable;
+
+public class PairInt implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8954555054152988508L;
 	public int x;
 	public int y;
 	
@@ -14,8 +20,16 @@ public class PairInt {
 		return new PairInt(this.x + p.x, this.y + p.y);
 	}
 	
+	public PairInt add(int n) {
+		return new PairInt(this.x + n, this.y + n);
+	}
+	
 	public PairInt subtract(PairInt p) {
 		return new PairInt(this.x - p.x, this.y - p.y);
+	}
+	
+	public PairInt subtract(int n) {
+		return new PairInt(this.x - n, this.y - n);
 	}
 	
 	public PairInt multiply(PairInt p) {
@@ -34,12 +48,26 @@ public class PairInt {
 		return new PairInt(this.x / n, this.y / n);
 	}
 	
+	public PairInt mod(int n) {
+		return new PairInt(this.x % n, this.y % n);
+	}
+	
+	public PairInt floorMod(int n) {
+		return new PairInt(Math.floorMod(this.x, n), Math.floorMod(this.y, n));
+	}
+	
 	public PairDouble toDouble() {
 		return new PairDouble(this.x, this.y);
 	}
 	
 	public PairInt clone() {
 		return new PairInt(this.x, this.y);
+	}
+	
+	
+	
+	public static PairInt subtract(int n, PairInt p) {
+		return new PairInt(n - p.x, n - p.y);
 	}
 
 }

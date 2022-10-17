@@ -242,8 +242,8 @@ public abstract class Entity {
 	}
 	
 	// returns whether the given coordinates are within the entity's bounding box
-	public boolean containsPoint(double x, double y) {
-		return bounds.contains(x, y);
+	public boolean containsPoint(PairDouble pos) {
+		return bounds.contains(pos.x, pos.y);
 	}
 	
 	

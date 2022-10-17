@@ -34,6 +34,7 @@ import xyz.urffer.urfquest.client.guis.game.MapViewOverlay;
 import xyz.urffer.urfquest.client.guis.menus.KeybindingOverlay;
 import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
@@ -44,14 +45,14 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	
 	private Client client;
 	
-	public PairInt dispCenter; // the center of this JPanel relative to the window's top-left corner, in pixels
-	public int dispTileWidth, dispTileHeight; // the number of tiles needed to fill the screen
+	public PairInt dispCenter = new PairInt(0,0); // the center of this JPanel relative to the window's top-left corner, in pixels
+	public PairInt dispTileDims = new PairInt(0, 0); // the number of tiles needed to fill the screen
 	public static final int TILE_WIDTH = 30; // the width, in pixels, of each tile
 	
 	// user input fields
 	public Set<Integer> keys = new HashSet<Integer>(0);
 	public Set<Integer> prevMovementKeys = new HashSet<Integer>();
-	public int[] mousePos = new int[2];
+	public PairInt mousePos = new PairInt(0,0);
 	public boolean mouseDown = false;
 	
 	public static final Set<Integer> MOVEMENT_KEYS = new HashSet<Integer>();
@@ -254,13 +255,15 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		mouseDown = false;
-		client.getLogger().debug(windowToGameX(mousePos[0]) + ", " + windowToGameY(mousePos[1]));
+		PairDouble gamePos = this.windowToGame(mousePos);
+		client.getLogger().debug(gamePos.x + ", " + gamePos.y);
+//		client.getLogger().debug(windowToGameX(mousePos.x) + ", " + windowToGameY(mousePos.y));
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		mousePos[0] = e.getX();
-		mousePos[1] = e.getY();
+		mousePos.x = e.getX();
+		mousePos.y = e.getY();
 		if (client.getState().isBuildMode() && client.getState().isGameRunning() && !guiOpen) {
 			gameBoard.click();
 		}
@@ -268,8 +271,8 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		mousePos[0] = e.getX();
-		mousePos[1] = e.getY();
+		mousePos.x = e.getX();
+		mousePos.y = e.getY();
 	}
 	
 	/*
@@ -447,8 +450,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 		super.setSize(w, h);
 		dispCenter.x = w/2;
 		dispCenter.y = h/2;
-		dispTileWidth = w/TILE_WIDTH;
-		dispTileHeight = h/TILE_WIDTH;
+		dispTileDims = new PairInt(w, h).divide(TILE_WIDTH);
 		
 		for (GUIContainer o : overlays) {
 			o.resetBounds();
@@ -473,12 +475,16 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	
 	// these two methods are broken for purposes of rendering the board, but they work for finding what tile the mouse is on.
 	// i'm not sure why this is the case. don't trust these two methods.
-	public double windowToGameX(int x) {
-		return fetchCamera().getPos().x - (((double)dispCenter.x - (double)x) / (double)TILE_WIDTH);
-	}
+//	public double windowToGameX(int x) {
+//		return fetchCamera().getPos().x - (((double)dispCenter.x - (double)x) / (double)TILE_WIDTH);
+//	}
+//	
+//	public double windowToGameY(int y) {
+//		return fetchCamera().getPos().y - (((double)dispCenter.y - (double)y) / (double)TILE_WIDTH);
+//	}
 	
-	public double windowToGameY(int y) {
-		return fetchCamera().getPos().y - (((double)dispCenter.y - (double)y) / (double)TILE_WIDTH);
+	public PairDouble windowToGame(PairInt p) {
+		return fetchCamera().getPos().subtract(dispCenter.subtract(p).divide(TILE_WIDTH));
 	}
 	
 	/*

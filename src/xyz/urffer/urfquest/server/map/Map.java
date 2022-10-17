@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.server.map.populator.HousePopulator;
 import xyz.urffer.urfquest.server.map.structures.Structure;
 import xyz.urffer.urfquest.server.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
@@ -536,12 +537,7 @@ public class Map {
 	}
 	
 	public PairInt getCoordsInChunk(PairInt pos) {
-		PairInt returns = new PairInt(0,0);
-		
-		returns.x = Math.floorMod(pos.x, Constants.MAP_CHUNK_SIZE);
-		returns.y = Math.floorMod(pos.y, Constants.MAP_CHUNK_SIZE);
-		
-		return returns;
+		return pos.floorMod(Constants.MAP_CHUNK_SIZE);
 	}
 	
 	
@@ -680,9 +676,9 @@ public class Map {
 	 * Special entity methods
 	 */
 	
-	public Mob mobAt(double x, double y) {
+	public Mob mobAt(PairDouble pos) {
 		for (Mob m : mobs.values()) {
-			if (m.containsPoint(x, y)) {
+			if (m.containsPoint(pos)) {
 				return m;
 			}
 		}

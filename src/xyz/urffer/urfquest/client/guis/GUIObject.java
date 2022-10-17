@@ -26,7 +26,7 @@ public abstract class GUIObject {
 	}
 	
 	public boolean isMouseOver() {
-		return bounds.contains(client.getPanel().mousePos[0], client.getPanel().mousePos[1]);
+		return bounds.contains(client.getPanel().mousePos.x, client.getPanel().mousePos.y);
 	};
 	
 	public int xAnchor() {
@@ -91,8 +91,8 @@ public abstract class GUIObject {
 	private void drawMousePositioning(Graphics g) {
 		g.setColor(Color.RED);
 		if (this.isMouseOver()) {
-			g.drawLine(bounds.x, client.getPanel().mousePos[1], bounds.x + bounds.width, client.getPanel().mousePos[1]);
-			g.drawLine(client.getPanel().mousePos[0], bounds.y, client.getPanel().mousePos[0], bounds.y + bounds.height);
+			g.drawLine(bounds.x, client.getPanel().mousePos.y, bounds.x + bounds.width, client.getPanel().mousePos.y);
+			g.drawLine(client.getPanel().mousePos.x, bounds.y, client.getPanel().mousePos.x, bounds.y + bounds.height);
 		}
 	}
 	

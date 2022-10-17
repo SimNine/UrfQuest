@@ -35,8 +35,8 @@ public class CraftingRecipie extends GUIContainer {
 		super.draw(g);
 		
 		if (isMouseOver()) {
-			int xMouse = client.getPanel().mousePos[0];
-			int yMouse = client.getPanel().mousePos[1];
+			int xMouse = client.getPanel().mousePos.x;
+			int yMouse = client.getPanel().mousePos.y;
 			g.setColor(Color.BLACK);
 			g.drawString(getName(), xMouse, yMouse);
 			inputContainer.addAllObjects(inputEntries);

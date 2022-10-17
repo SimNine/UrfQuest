@@ -78,7 +78,7 @@ public class CommandProcessor {
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "This command must be used with an argument when sent from the server");
 							} else {
 								PairDouble pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientThread.id)).getPos();
-								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos.x + "," + pos.x + ")");
+								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos.x + "," + pos.y + ")");
 							}
 						}
 
