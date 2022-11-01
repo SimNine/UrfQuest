@@ -19,4 +19,8 @@ public class ChatMessage implements Serializable {
 		this.message = message;
 	}
 	
+	public String toString() {
+		return this.source + "> " + this.message;
+	}
+	
 }

@@ -9,6 +9,7 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Entity {
@@ -139,8 +140,10 @@ public abstract class Entity {
 	
 	private void drawBounds(Graphics g) {
 		g.setColor(Color.RED);
-		g.drawRect((int) client.getPanel().gameToWindowX(bounds.getX()), 
-				   (int) client.getPanel().gameToWindowY(bounds.getY()),
+		PairDouble boundsPos = new PairDouble(bounds.getX(), bounds.getY());
+		PairInt boundsPixel = client.getPanel().gameToWindow(boundsPos);
+		g.drawRect(boundsPixel.x, 
+				   boundsPixel.y,
 				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), 
 				   (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}

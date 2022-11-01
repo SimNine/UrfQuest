@@ -250,15 +250,17 @@ public class Map {
 	}
 
 	private PairInt getPosInChunk(PairInt pos) {
-		pos.x %= Constants.MAP_CHUNK_SIZE;
-		if (pos.x < 0)
-			pos.x += Constants.MAP_CHUNK_SIZE;
-
-		pos.y %= Constants.MAP_CHUNK_SIZE;
-		if (pos.y < 0)
-			pos.y += Constants.MAP_CHUNK_SIZE;
+		PairInt posInChunk = pos.clone();
 		
-		return pos;
+		posInChunk.x %= Constants.MAP_CHUNK_SIZE;
+		if (posInChunk.x < 0)
+			posInChunk.x += Constants.MAP_CHUNK_SIZE;
+
+		posInChunk.y %= Constants.MAP_CHUNK_SIZE;
+		if (posInChunk.y < 0)
+			posInChunk.y += Constants.MAP_CHUNK_SIZE;
+		
+		return posInChunk;
 	}
 
 	public PairInt getLocalChunkOrigin() {
@@ -339,6 +341,7 @@ public class Map {
 		if (chunk == null) {
 			chunk = this.createChunk(chunkPos);
 		}
+		
 		chunk.setAllTileTypes(tileTypes);
 		chunk.setAllObjectTypes(objectTypes);
 		this.generateMinimap();

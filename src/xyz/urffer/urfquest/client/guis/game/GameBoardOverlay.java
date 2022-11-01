@@ -22,7 +22,6 @@ import xyz.urffer.urfquest.shared.Tile;
 
 public class GameBoardOverlay extends GUIContainer {
 	private int selectedTileTransparency = 255;
-	private boolean transparencyIncreasing = false;
 	private int tileAnimStage = 0;
 
 	public GameBoardOverlay(Client c) {
@@ -51,131 +50,140 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 	
 	private void drawBoard(Graphics g) {
-		PairInt dispTileDims = client.getPanel().dispTileDims;
-		PairInt dispCenter = client.getPanel().dispCenter;
-		int TILE_WIDTH = QuestPanel.TILE_WIDTH;
-		Map currMap = this.client.getState().getCurrentMap();
-		Entity camera = this.client.getState().getPlayer();
-
+		// get the position in the top-left corner
+		PairDouble ul = client.getPanel().windowToGame(new PairInt(0, 0));
+		
 		// get the rendering offset
-		PairInt root = dispCenter.mod(TILE_WIDTH);
-		root = PairInt.subtract(TILE_WIDTH, root);
-		root = root.add(camera.getPos().mod(1).multiply(TILE_WIDTH).toInt());
+		PairDouble tileOffset = ul.mod(1);
+		PairInt pixelOffset = tileOffset.multiply(QuestPanel.TILE_WIDTH).floor();
 		
-		// get the block coordinate of the upper-left corner
-		PairInt ul = camera.getPos().toInt();
-		ul = ul.subtract(dispTileDims.divide(2));
-		ul = ul.subtract(1);
-		
-		// draw the tiles
-		for (int x = 0; x < dispTileDims.x + 2; x++) {
-			for (int y = 0; y < dispTileDims.y + 2; y++) {
-				PairInt tempRoot = new PairInt(-root.x, -root.y);
-				tempRoot = tempRoot.add(new PairInt(x, y).multiply(TILE_WIDTH));
+		// render every tile
+		Map currMap = this.client.getState().getCurrentMap();
+		PairInt dispTileDims = client.getPanel().dispTileDims.floor();
+		for (int x = -1; x < dispTileDims.x - 1; x++) {
+			for (int y = -1; y < dispTileDims.y - 1; y++) {
+				PairInt currTilePos = ul.toInt().add(new PairInt(x, y));
+				int[] tile = currMap.getTileAt(currTilePos);
 				
-				int[] tile = currMap.getTileAt(new PairInt(ul.x + x, ul.y + y));
 				int animStage = getAnimStage(tile[0], tile[1]);
-				g.drawImage(TileImages.getTileImage(tile[0], tile[1], animStage), tempRoot.x, tempRoot.y, null);
+				g.drawImage(
+					TileImages.getTileImage(tile[0], tile[1], animStage),
+					x * QuestPanel.TILE_WIDTH - pixelOffset.x,
+					y * QuestPanel.TILE_WIDTH - pixelOffset.y,
+					null
+				);
 			}
 		}
 
 		// change the transparency of the selected tile
-		if (transparencyIncreasing) {
-			if (selectedTileTransparency < 255) {
-				selectedTileTransparency += 2;
-			}
-			if (selectedTileTransparency > 255) {
-				selectedTileTransparency = 255;
-				transparencyIncreasing = false;
-			}
+		if (selectedTileTransparency < 250) {
+			selectedTileTransparency += 5;
 		} else {
-			if (selectedTileTransparency > 0) {
-				selectedTileTransparency -= 2;
-			}
-			if (selectedTileTransparency < 0) {
-				selectedTileTransparency = 0;
-				transparencyIncreasing = true;
-			}
+			selectedTileTransparency = 0;
 		}
 		
 		// find what coordinates the mouse is at
 		PairDouble mouseCoords = client.getPanel().windowToGame(client.getPanel().mousePos);
 		
 		// find which tile the mouse is over
-		PairInt mousePos = mouseCoords.toInt();
-		int mouseX = mousePos.x;
-		int mouseY = mousePos.y;
+		PairInt mouseTile = mouseCoords.floor();
 		
 		// convenience
 		Player p = this.client.getState().getPlayer();
 		
 		// draw the highlight of the selected tile
 		if (this.client.getState().isGameRunning()) { //&& !client.getPanel().getGUIOpen()) {
+			PairInt mouseTilePixels = client.getPanel().gameToWindow(mouseTile);
 			if (this.client.getState().isBuildMode()) {
-				int xRoot = - root.x + (mouseX - ul.x)*TILE_WIDTH;
-				int yRoot = - root.y + (mouseY - ul.y)*TILE_WIDTH;
 				g.setColor(new Color(255, 255, 255, selectedTileTransparency));
-				g.fillRect(xRoot, yRoot, TILE_WIDTH, TILE_WIDTH);
+				g.fillRect(
+					mouseTilePixels.x,
+					mouseTilePixels.y,
+					QuestPanel.TILE_WIDTH,
+					QuestPanel.TILE_WIDTH
+				);
+				
 				g.setColor(Color.WHITE);
 				for (int i = 0; i < 3; i++) {
-					g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
+					g.drawRect(
+						mouseTilePixels.x + i,
+						mouseTilePixels.y + i,
+						QuestPanel.TILE_WIDTH - i*2 - 1,
+						QuestPanel.TILE_WIDTH - i*2 - 1
+					);
 				}
-			} else if (mouseX < p.getPos().x + 3 &&
-					   mouseX > p.getPos().x - 3 &&
-					   mouseY < p.getPos().y + 3 &&
-					   mouseY > p.getPos().y - 3) {
-				int xRoot = - root.x + (mouseX - ul.x)*TILE_WIDTH;
-				int yRoot = - root.y + (mouseY - ul.y)*TILE_WIDTH;
+			} else if (
+				mouseTile.x < p.getPos().x + 3 &&
+				mouseTile.x > p.getPos().x - 3 &&
+				mouseTile.y < p.getPos().y + 3 &&
+				mouseTile.y > p.getPos().y - 3
+			) {
 				g.setColor(new Color(255, 0, 0, selectedTileTransparency));
-				g.fillRect(xRoot, yRoot, TILE_WIDTH, TILE_WIDTH);
+				g.fillRect(
+					mouseTilePixels.x,
+					mouseTilePixels.y,
+					QuestPanel.TILE_WIDTH,
+					QuestPanel.TILE_WIDTH
+				);
 				g.setColor(Color.RED);
 				for (int i = 0; i < 3; i++) {
-					g.drawRect(xRoot + i, yRoot + i, TILE_WIDTH - i*2 - 1, TILE_WIDTH - i*2 - 1);
+					g.drawRect(
+						mouseTilePixels.x + i,
+						mouseTilePixels.y + i,
+						QuestPanel.TILE_WIDTH - i*2 - 1,
+						QuestPanel.TILE_WIDTH - i*2 - 1
+					);
 				}
 			}
 		}
-		
-		// get any mob underneath the mouse cursor, highlight it
-		Mob m = this.client.getState().getCurrentMap().mobAt(mouseCoords);
-		if (m != null) {
-			int tileWidth = QuestPanel.TILE_WIDTH;
-			int xTemp = client.getPanel().gameToWindowX(m.getPos().x);
-			int yTemp = client.getPanel().gameToWindowY(m.getPos().y);
-			g.setColor(Color.RED);
-			g.drawRect(xTemp, yTemp, (int)(m.getDims().x*tileWidth), (int)(m.getDims().y*tileWidth));
-		}
-		
-		// when debugging, draw the grid itself
-		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
-			g.setColor(Color.BLACK);
-			for (int x = 0; x < dispTileDims.x + 2; x++) {
-				g.drawLine(-root.x + x*TILE_WIDTH, 0, -root.x + x*TILE_WIDTH, client.getPanel().getHeight());
-			}
-
-			for (int y = 0; y < dispTileDims.y + 2; y++) {
-				g.drawLine(0, -root.y + y * TILE_WIDTH, client.getPanel().getWidth(), -root.y + y * TILE_WIDTH);
-			}
-		}
+//		
+//		// get any mob underneath the mouse cursor, highlight it
+//		Mob m = this.client.getState().getCurrentMap().mobAt(mouseCoords);
+//		if (m != null) {
+//			int tileWidth = QuestPanel.TILE_WIDTH;
+//			int xTemp = client.getPanel().gameToWindowX(m.getPos().x);
+//			int yTemp = client.getPanel().gameToWindowY(m.getPos().y);
+//			g.setColor(Color.RED);
+//			g.drawRect(xTemp, yTemp, (int)(m.getDims().x*tileWidth), (int)(m.getDims().y*tileWidth));
+//		}
+//		
+//		// when debugging, draw the grid itself
+//		if (this.client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
+//			g.setColor(Color.BLACK);
+//			for (int x = 0; x < dispTileDims.x + 2; x++) {
+//				g.drawLine(
+//					(int)(-root.x + x*TILE_WIDTH),
+//					0,
+//					(int)(-root.x + x*TILE_WIDTH),
+//					client.getPanel().getHeight()
+//				);
+//			}
+//
+//			for (int y = 0; y < dispTileDims.y + 2; y++) {
+//				g.drawLine(
+//					0,
+//					(int)(-root.y + y * TILE_WIDTH),
+//					client.getPanel().getWidth(),
+//					(int)(-root.y + y * TILE_WIDTH)
+//				);
+//			}
+//		}
 	}
 	
 	public boolean click() {
-		PairInt mousePos = client.getPanel().windowToGame(client.getPanel().mousePos).toInt();
-		int mouseX = mousePos.x;
-		int mouseY = mousePos.y;
+		PairInt mouseTile = client.getPanel().windowToGame(client.getPanel().mousePos).floor();
 		
 		Player p = this.client.getState().getPlayer();
 		if (
-			mouseX < p.getPos().x + 3 &&
-			mouseX > p.getPos().x - 3 &&
-			mouseY < p.getPos().y + 3 &&
-			mouseY > p.getPos().y - 3) {
-			p.getMap().useActiveTile(mousePos, p);
+			mouseTile.x < p.getPos().x + 3 &&
+			mouseTile.x > p.getPos().x - 3 &&
+			mouseTile.y < p.getPos().y + 3 &&
+			mouseTile.y > p.getPos().y - 3) {
+			p.getMap().useActiveTile(mouseTile, p);
 		}
-		int[] tile = p.getMap().getTileAt(mousePos);
-		client.getLogger().debug("clicked: " + tile[0] + "/" + tile[1]);
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
-			this.client.getState().getCurrentMap().setTileAt(mousePos, 15);
+			this.client.getState().getCurrentMap().setTileAt(mouseTile, 15);
 			return true;
 		} else {
 			return false;
@@ -244,12 +252,11 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 
 	private void drawCrosshair(Graphics g) {
-		int dispCenterX = client.getPanel().dispCenter.x;
-		int dispCenterY = client.getPanel().dispCenter.y;
+		PairInt dispCenter = client.getPanel().dispCenter;
 
-		g.setColor(Color.WHITE);
-		g.drawLine(dispCenterX + 5, dispCenterY + 15, dispCenterX + 25, dispCenterY + 15);
-		g.drawLine(dispCenterX + 15, dispCenterY + 5, dispCenterX + 15, dispCenterY + 25);
+		g.setColor(Color.CYAN);
+		g.drawLine(dispCenter.x - 5, dispCenter.y - 5, dispCenter.x + 5, dispCenter.y + 5);
+		g.drawLine(dispCenter.x - 5, dispCenter.y + 5, dispCenter.x + 5, dispCenter.y - 5);
 	}
 	
 	// gets the appropriate animstage for Tiles.getTileImage(type, subtype, animstage)

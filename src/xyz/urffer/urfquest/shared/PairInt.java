@@ -48,6 +48,10 @@ public class PairInt implements Serializable {
 		return new PairInt(this.x / n, this.y / n);
 	}
 	
+	public PairDouble dividePrecise(int n) {
+		return new PairDouble(this.x / (double)n, this.y / (double)n);
+	}
+	
 	public PairInt mod(int n) {
 		return new PairInt(this.x % n, this.y % n);
 	}
@@ -60,14 +64,24 @@ public class PairInt implements Serializable {
 		return new PairDouble(this.x, this.y);
 	}
 	
-	public PairInt clone() {
-		return new PairInt(this.x, this.y);
-	}
-	
 	
 	
 	public static PairInt subtract(int n, PairInt p) {
 		return new PairInt(n - p.x, n - p.y);
+	}
+	
+	
+	
+	public PairInt clone() {
+		return new PairInt(this.x, this.y);
+	}
+	
+	public String toString() {
+		return "(" + x + "," + y + ")";
+	}
+	
+	public boolean equals(PairInt p) {
+		return (p.x == this.x) && (p.y == this.y);
 	}
 
 }

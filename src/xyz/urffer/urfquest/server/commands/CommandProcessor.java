@@ -11,6 +11,7 @@ import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
@@ -290,6 +291,38 @@ public class CommandProcessor {
 					}
 		};
 		commands.put("stop", stopCommand);
+		
+		// TODO: add a flag to determine which world to get tile from
+		// TODO: write unit tests
+		Command getTileAtCommand = new Command("/getTileAt", "<xpos> <ypos>", 
+				"Gets the tile at the specified position",
+				CommandPermissions.OP) {
+					@Override
+					public void runCommand(Server server, String[] args, ClientThread clientThread) {
+						if (args.length != 3) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
+						
+						try {
+							int xPos = Integer.parseInt(args[1]);
+							int yPos = Integer.parseInt(args[2]);
+							System.out.println("successfully parsed pos");
+							
+							PairInt queryPos = new PairInt(xPos, yPos);
+							int[] tile = server.getState().getSurfaceMap().getTileAt(queryPos);
+							MessageChat m = new MessageChat();
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Tile at " + queryPos + ": " + tile[0] + "/" + tile[1]);
+
+							int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
+							server.sendMessageToClientOrServer(m, clientThreadID);
+						} catch (Exception e) {
+							CommandProcessor.sendIncorrectArgumentsMessage(server, this, clientThread);
+							return;
+						}
+					}
+		};
+		commands.put("getTileAt", getTileAtCommand);
 	}
 	
 	public static void sendIncorrectArgumentsMessage(Server server, Command command, ClientThread clientThread) {

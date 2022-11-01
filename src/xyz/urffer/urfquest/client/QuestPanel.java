@@ -46,7 +46,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	private Client client;
 	
 	public PairInt dispCenter = new PairInt(0,0); // the center of this JPanel relative to the window's top-left corner, in pixels
-	public PairInt dispTileDims = new PairInt(0, 0); // the number of tiles needed to fill the screen
+	public PairDouble dispTileDims = new PairDouble(0, 0); // the number of tiles needed to fill the screen
 	public static final int TILE_WIDTH = 30; // the width, in pixels, of each tile
 	
 	// user input fields
@@ -438,19 +438,20 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 		
 		if (client.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
 			g.setColor(Color.WHITE);
-			g.drawLine(0, dispCenter.y, getWidth(), dispCenter.y);
-			g.drawLine(dispCenter.x, 0, dispCenter.x, getHeight());
+			g.drawLine(0, dispCenter.y + 1, getWidth(), dispCenter.y + 1);
+			g.drawLine(0, dispCenter.y - 1, getWidth(), dispCenter.y - 1);
+			g.drawLine(dispCenter.x - 1, 0, dispCenter.x - 1, getHeight());
+			g.drawLine(dispCenter.x + 1, 0, dispCenter.x + 1, getHeight());
 		}
 		
 		Toolkit.getDefaultToolkit().sync();
 	}
-	
+
 	// sets the dimensions of the panel, in pixels
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
-		dispCenter.x = w/2;
-		dispCenter.y = h/2;
-		dispTileDims = new PairInt(w, h).divide(TILE_WIDTH);
+		dispCenter = new PairInt(w,h).divide(2);
+		dispTileDims = new PairDouble(w, h).divide(TILE_WIDTH).add(2);
 		
 		for (GUIContainer o : overlays) {
 			o.resetBounds();
@@ -464,43 +465,43 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	 */
 	
 	public int gameToWindowX(double x) {
-		int xRet = (int)(dispCenter.x - (fetchCamera().getPos().x - x)*TILE_WIDTH);
+		int xRet = (int)(dispCenter.x - (getCamera().getCenter().x - x)*TILE_WIDTH);
 		return xRet;
 	}
 	
 	public int gameToWindowY(double y) {
-		int yRet = (int)(dispCenter.y - (fetchCamera().getPos().y - y)*TILE_WIDTH);
+		int yRet = (int)(dispCenter.y - (getCamera().getCenter().y - y)*TILE_WIDTH);
 		return yRet;
 	}
 	
-	// these two methods are broken for purposes of rendering the board, but they work for finding what tile the mouse is on.
-	// i'm not sure why this is the case. don't trust these two methods.
-//	public double windowToGameX(int x) {
-//		return fetchCamera().getPos().x - (((double)dispCenter.x - (double)x) / (double)TILE_WIDTH);
-//	}
-//	
-//	public double windowToGameY(int y) {
-//		return fetchCamera().getPos().y - (((double)dispCenter.y - (double)y) / (double)TILE_WIDTH);
-//	}
+	public PairInt gameToWindow(PairDouble p) {
+		PairDouble ul = windowToGame(new PairInt(0, 0));
+		return p.subtract(ul).multiply(TILE_WIDTH).toInt();
+	}
+	
+	public PairInt gameToWindow(PairInt p) {
+		return gameToWindow(p.toDouble());
+	}
 	
 	public PairDouble windowToGame(PairInt p) {
-		return fetchCamera().getPos().subtract(dispCenter.subtract(p).divide(TILE_WIDTH));
+		PairDouble tileViewDisplacement = dispCenter.subtract(p).dividePrecise(TILE_WIDTH);
+		return getCamera().getCenter().subtract(tileViewDisplacement);
+	}
+	
+	public PairDouble windowToGame(PairDouble p) {
+		return windowToGame(p.floor());
 	}
 	
 	/*
 	 * CameraMob management
 	 */
 	
-	private Entity fetchCamera() {
+	public Entity getCamera() {
 		return client.getState().getCamera();
 	}
 	
 //	public void setCamera(Entity m) {
 //		camera = m;
-//	}
-//	
-//	public Entity getCamera() {
-//		return camera;
 //	}
 	
 	private void initAssets() {

@@ -26,6 +26,7 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
+import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
@@ -111,6 +112,9 @@ public class Server {
 				while (true) {
 					try {
 						String line = reader.readLine();
+						if (line.length() == 0) {
+							continue;
+						}
 						
 						MessageChat m = new MessageChat();
 						m.chatMessage = new ChatMessage("SERVER", line);
@@ -184,10 +188,7 @@ public class Server {
 		ClientThread c = clients.get(p.getSenderID());
 		if (p.getSenderID() == this.id) {
 			if (p.getType() == MessageType.CHAT_MESSAGE) {
-				MessageChat mc = (MessageChat)p.getMessage();
-				ChatMessage chatMessage = mc.chatMessage;
-				chatMessage.source = "SERVER";
-				this.sendMessageToAllClients(mc);
+				// do nothing
 			} else if (p.getType() == MessageType.DISCONNECT_CLIENT) {
 				c = clients.get(((MessageDisconnect)p.getMessage()).disconnectedClientID);
 			} else {
@@ -299,9 +300,11 @@ public class Server {
 				MessageChat m = (MessageChat)p.getMessage();
 				
 				ChatMessage chatMessage = m.chatMessage;
-				int playerID = userMap.getPlayerIdFromClientId(p.getSenderID());
-				Player player = state.getPlayer(playerID);
-				chatMessage.source = player.getName();
+				if (p.getSenderID() != this.id) {
+					int playerID = userMap.getPlayerIdFromClientId(p.getSenderID());
+					Player player = state.getPlayer(playerID);
+					chatMessage.source = player.getName();
+				}
 				chatMessages.addFirst(chatMessage);
 				
 				if (chatMessage.message.charAt(0) == '/') {
