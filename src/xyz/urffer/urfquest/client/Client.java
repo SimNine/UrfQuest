@@ -231,11 +231,7 @@ public class Client {
 				// - Loads the payloads of this message into the specified chunk
 				MessageChunkInit m = (MessageChunkInit)p.getMessage();
 				
-				state.getCurrentMap().setChunk(
-					m.xyChunk,
-					m.tileTypes,
-					m.objectTypes
-				);
+				state.getCurrentMap().setChunk(m.xyChunk, m.tiles);
 				break;
 			}
 			case ENTITY_SET_POS: {

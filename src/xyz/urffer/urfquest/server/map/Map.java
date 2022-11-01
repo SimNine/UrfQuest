@@ -22,6 +22,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class Map {
 	private Server server;
@@ -399,14 +400,14 @@ public class Map {
 		
 		for (int x = -3; x < 4; x++) {
 			for (int y = -3; y < 4; y++) {
-				setTileAt(homeCoords.add(new PairInt(x,y)), Tile.TILE_GRASS);
+				setTileAt(homeCoords.add(new PairInt(x,y)), new Tile(TileType.GRASS));
 			}
 		}
 
-		setTileAt(homeCoords.add(new PairInt(-2,-2)), Tile.TILE_HEALTH_PAD);
-		setTileAt(homeCoords.add(new PairInt(-2,2)), Tile.TILE_HURT_PAD);
-		setTileAt(homeCoords.add(new PairInt(2,-2)), Tile.TILE_MANA_PAD);
-		setTileAt(homeCoords.add(new PairInt(2,2)), Tile.TILE_SPEED_PAD);
+		setTileAt(homeCoords.add(new PairInt(-2,-2)), new Tile(TileType.HEALTH_PAD));
+		setTileAt(homeCoords.add(new PairInt(-2,2)), new Tile(TileType.HURT_PAD));
+		setTileAt(homeCoords.add(new PairInt(2,-2)), new Tile(TileType.MANA_PAD));
+		setTileAt(homeCoords.add(new PairInt(2,2)), new Tile(TileType.SPEED_PAD));
 	}
 	
 	// TODO: this is broken and prone to not letting the server initialize. fix
@@ -499,41 +500,24 @@ public class Map {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(PairInt pos) {
+	public Tile getTileAt(PairInt pos) {
 		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null) {
-			return Tile.TILE_VOID;
+			return Tile.VOID;
 		}
 		
 		PairInt posInChunk = getCoordsInChunk(pos);
-		return chunk.getTileTypeAt(posInChunk);
+		return chunk.getTileAt(posInChunk);
 	}
 	
-	public int getTileSubtypeAt(PairInt pos) {
-		MapChunk chunk = getChunkAtPos(pos);
-		if (chunk == null)
-			return Tile.TILE_VOID;
-
-		PairInt posInChunk = getCoordsInChunk(pos);
-		return chunk.getObjectTypeAt(posInChunk);
-	}
-	
-	public int[] getTileAt(PairInt pos) {
-		return new int[] {getTileTypeAt(pos), getTileSubtypeAt(pos)};
-	}
-	
-	public void setTileAt(PairInt pos, int type) {
-		setTileAt(pos, type, 0);
-	}
-	
-	public void setTileAt(PairInt pos, int type, int objectType) {
+	public void setTileAt(PairInt pos, Tile tile) {
 		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null) {
 			chunk = createChunkAtPos(pos);
 		}
 
 		PairInt posInChunk = getCoordsInChunk(pos);
-		chunk.setTileAt(posInChunk, type, objectType);
+		chunk.setTileAt(posInChunk, tile);
 	}
 	
 	public PairInt getCoordsInChunk(PairInt pos) {

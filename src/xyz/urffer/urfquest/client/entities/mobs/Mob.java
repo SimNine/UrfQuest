@@ -61,7 +61,7 @@ public abstract class Mob extends Entity {
 	}
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
-	public int[] tileAtDistance(double d) {
+	public Tile tileAtDistance(double d) {
 		return map.getTileAt(
 			tileCoordsAtDistance(d)
 		);

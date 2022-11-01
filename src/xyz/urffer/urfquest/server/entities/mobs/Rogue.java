@@ -137,36 +137,39 @@ public class Rogue extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
-		switch (this.map.getTileTypeAt(this.getCenter().toInt())) {
-		case 0:
+		switch (map.getTileAt(this.getCenter().toInt()).tileType) {
+		case VOID:
 			//nothing
 			break;
-		case 1:
+		case BEDROCK:
 			//impossible
 			break;
-		case 2:
+		case GRASS:
 			break;
-		case 3:
+		case MANA_PAD:
 			if (mana < 100) incrementMana(0.1);
 			break;
-		case 4:
+		case HEALTH_PAD:
 			if (health < 100) incrementHealth(0.1);
 			break;
-		case 5:
+		case HURT_PAD:
 			if (health > 0) incrementHealth(-0.1);
 			if (mana > 0) incrementMana(-0.1);
 			if (movementVector.magnitude > 0.01) incrementVelocity(-0.001);
 			break;
-		case 6:
+		case SPEED_PAD:
 			if (movementVector.magnitude < 1) incrementVelocity(0.001);
 			break;
-		case 7:
+		case WATER:
 			//impossible
 			break;
-		case 8:
+		case SAND:
 			//impossible
 			break;
-		case 9:
+		case DIRT:
+			//nothing
+			break;
+		case FLOOR_WOOD:
 			//nothing
 			break;
 		default:

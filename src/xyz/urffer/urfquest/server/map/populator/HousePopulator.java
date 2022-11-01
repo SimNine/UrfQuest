@@ -8,6 +8,8 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class HousePopulator extends TerrainPopulator {
 	
@@ -49,7 +51,7 @@ public class HousePopulator extends TerrainPopulator {
 		for (int x = pos.x; x <= pos.x + dims.x; x++) {
 			for (int y = pos.y; y <= pos.y + dims.y; y++) {
 				PairInt testPos = new PairInt(x,y);
-				if (map.getTileAt(testPos)[0] != Tile.TILE_GRASS) {
+				if (map.getTileAt(testPos).tileType != TileType.GRASS) {
 					return false;
 				}
 			}
@@ -63,23 +65,23 @@ public class HousePopulator extends TerrainPopulator {
 		for (int x = pos.x; x < pos.x + dims.x; x++) {
 			for (int y = pos.y; y < pos.y + dims.y; y++) {
 				PairInt testPos = new PairInt(x,y);
-				map.setTileAt(testPos, Tile.TILE_FLOOR_WOOD, Tile.TILE_VOID);
+				map.setTileAt(testPos, new Tile(TileType.FLOOR_WOOD, ObjectType.VOID));
 			}
 		}
 		
 		// Walls
 		for (int x = pos.x; x <= pos.x + dims.x; x++) {
-			map.setTileAt(new PairInt(x, pos.y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
-			map.setTileAt(new PairInt(x, pos.y + dims.y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+			map.setTileAt(new PairInt(x, pos.y), new Tile(TileType.FLOOR_WOOD, ObjectType.WALL_STONE));
+			map.setTileAt(new PairInt(x, pos.y + dims.y), new Tile(TileType.FLOOR_WOOD, ObjectType.WALL_STONE));
 		}
 		for (int y = pos.y; y <= pos.y + dims.y; y++) {
-			map.setTileAt(new PairInt(pos.x, y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
-			map.setTileAt(new PairInt(pos.x + dims.x, y), Tile.TILE_FLOOR_WOOD, Tile.OBJECT_WALL_STONE);
+			map.setTileAt(new PairInt(pos.x, y), new Tile(TileType.FLOOR_WOOD, ObjectType.WALL_STONE));
+			map.setTileAt(new PairInt(pos.x + dims.x, y), new Tile(TileType.FLOOR_WOOD, ObjectType.WALL_STONE));
 		}
 		
 		// Door
 		map.setTileAt(new PairInt(pos.x + dims.x/2, pos.y + dims.y), 
-					  Tile.TILE_FLOOR_WOOD, Tile.TILE_VOID);
+				new Tile(TileType.FLOOR_WOOD, ObjectType.VOID));
 		
 		// Resident
 		// TODO: this line is causing client message parsing errors. look into it

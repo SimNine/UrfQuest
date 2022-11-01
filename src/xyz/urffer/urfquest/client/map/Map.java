@@ -186,37 +186,20 @@ public class Map {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(PairInt pos) {
+	public Tile getTileAt(PairInt pos) {
 		MapChunk chunk = getChunkAtPos(pos);
 		if (chunk == null)
-			return Tile.TILE_VOID;
+			return Tile.VOID;
 		PairInt posInChunk = getPosInChunk(pos);
 		
-		return chunk.getTileTypeAt(posInChunk);
+		return chunk.getTileAt(posInChunk);
 	}
 	
-	public int getObjectTypeAt(PairInt pos) {
-		MapChunk chunk = getChunkAtPos(pos);
-		if (chunk == null)
-			return Tile.TILE_VOID;
-		PairInt chunkInPos = getPosInChunk(pos);
-		
-		return chunk.getObjectTypeAt(chunkInPos);
-	}
-	
-	public int[] getTileAt(PairInt pos) {
-		return new int[] {getTileTypeAt(pos), getObjectTypeAt(pos)};
-	}
-	
-	public void setTileAt(PairInt pos, int type) {
-		setTileAt(pos, type, 0);
-	}
-	
-	public void setTileAt(PairInt pos, int type, int objectType) {
+	public void setTileAt(PairInt pos, Tile tile) {
 		MapChunk chunk = getChunkAtPos(pos);
 		PairInt posInChunk = getPosInChunk(pos);
 		
-		chunk.setTileAt(posInChunk, type, objectType);
+		chunk.setTileAt(posInChunk, tile);
 	}
 	
 	
@@ -332,18 +315,13 @@ public class Map {
 		return newChunk;
 	}
 	
-	public void setChunk(
-		PairInt chunkPos,
-		int[][] tileTypes,
-		int[][] objectTypes
-	) {
+	public void setChunk(PairInt chunkPos, Tile[][] tiles) {
 		MapChunk chunk = this.getChunk(chunkPos);
 		if (chunk == null) {
 			chunk = this.createChunk(chunkPos);
 		}
 		
-		chunk.setAllTileTypes(tileTypes);
-		chunk.setAllObjectTypes(objectTypes);
+		chunk.setAllTiles(tiles);
 		this.generateMinimap();
 	}
 	

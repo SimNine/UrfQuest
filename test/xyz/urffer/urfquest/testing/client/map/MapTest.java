@@ -14,6 +14,8 @@ import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 class MapTest {
 	
@@ -61,23 +63,20 @@ class MapTest {
 	
 	@Test
 	void testGetTileAtPos() {
-		Assertions.assertEquals(map.getTileAt(new PairInt(0,0))[0], Tile.TILE_VOID);
+		Assertions.assertEquals(map.getTileAt(new PairInt(0,0)).tileType, TileType.VOID);
 		
-		int[][] newTiles = new int[Constants.MAP_CHUNK_SIZE][Constants.MAP_CHUNK_SIZE];
-		int[][] newObjects = new int[Constants.MAP_CHUNK_SIZE][Constants.MAP_CHUNK_SIZE];
+		Tile[][] newTiles = new Tile[Constants.MAP_CHUNK_SIZE][Constants.MAP_CHUNK_SIZE];
 		for (int i = 0; i < Constants.MAP_CHUNK_SIZE; i++) {
 			for (int j = 0; j < Constants.MAP_CHUNK_SIZE; j++) {
-				newTiles[i][j] = Tile.TILE_GRASS;
-				newObjects[i][j] = Tile.OBJECT_BOULDER;
+				newTiles[i][j] = new Tile(TileType.GRASS, ObjectType.BOULDER);
 			}
 		}
 		map.setChunk(
 			new PairInt(0, 0),
-			newTiles,
-			newObjects
+			newTiles
 		);
 		
-		Assertions.assertEquals(map.getTileAt(new PairInt(0,0))[0], Tile.TILE_GRASS);
+		Assertions.assertEquals(map.getTileAt(new PairInt(0,0)).tileType, TileType.GRASS);
 	}
 	
 	@Test
@@ -88,8 +87,8 @@ class MapTest {
             for (int y = 0; y < minimapImage.getHeight(); y++) {
                 Assertions.assertEquals(
                 	Tile.minimapColor(
-                		Tile.TILE_VOID,
-                		Tile.TILE_VOID
+                		TileType.VOID,
+                		ObjectType.VOID
                 	),
                 	minimapImage.getRGB(x, y)
                 );

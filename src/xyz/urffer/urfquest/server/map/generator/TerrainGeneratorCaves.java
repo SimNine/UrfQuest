@@ -4,6 +4,8 @@ import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class TerrainGeneratorCaves extends TerrainGenerator {
 
@@ -51,11 +53,11 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileTypeAt(pos, Tile.TILE_DIRT);
+					chunk.setTileAt(pos, new Tile(TileType.DIRT));
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileTypeAt(pos, Tile.TILE_BEDROCK);
+					chunk.setTileAt(pos, new Tile(TileType.BEDROCK));
 				} else {
-					chunk.setTileTypeAt(pos, Tile.TILE_VOID);
+					chunk.setTileAt(pos, new Tile(TileType.VOID));
 				}
 			}
 		}
@@ -64,8 +66,8 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				PairInt pos = new PairInt(x, y);
-				if (stoneNoise.getNoiseAt(pos)*2 - 1 > random.nextDouble() && chunk.getTileTypeAt(pos) == Tile.TILE_DIRT) {
-					chunk.setTileTypeAt(pos, Tile.OBJECT_STONE);
+				if (stoneNoise.getNoiseAt(pos)*2 - 1 > random.nextDouble() && chunk.getTileAt(pos).tileType == TileType.DIRT) {
+					chunk.setTileAt(pos, new Tile(TileType.DIRT, ObjectType.STONE));
 				}
 			}
 		}
@@ -74,8 +76,8 @@ public class TerrainGeneratorCaves extends TerrainGenerator {
 		for (int x = 0; x < Constants.MAP_CHUNK_SIZE; x++) {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				PairInt pos = new PairInt(x, y);
-				if (oreNoise.getNoiseAt(pos) > 0.80f && chunk.getTileTypeAt(pos) == Tile.OBJECT_STONE) {
-					chunk.setTileAt(pos, Tile.OBJECT_STONE, Tile.OBJECT_IRON_ORE);
+				if (oreNoise.getNoiseAt(pos) > 0.80f && chunk.getTileAt(pos).objectType == ObjectType.STONE) {
+					chunk.setTileAt(pos, new Tile(TileType.BEDROCK, ObjectType.IRON_ORE));
 				}
 			}
 		}

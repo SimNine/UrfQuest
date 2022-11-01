@@ -98,7 +98,7 @@ public abstract class Entity {
 	}
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
-	public int[] tileAtDistance(double d) {
+	public Tile tileAtDistance(double d) {
 		double xComp = d*Math.cos(movementVector.dirRadians);
 		double yComp = d*Math.sin(movementVector.dirRadians);
 		return map.getTileAt(new PairDouble(bounds.getCenterX() + xComp, bounds.getCenterY() + yComp).floor());

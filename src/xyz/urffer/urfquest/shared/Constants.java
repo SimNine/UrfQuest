@@ -1,5 +1,8 @@
 package xyz.urffer.urfquest.shared;
 
+import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
+
 public class Constants {
 	
 	public static final double DEFAULT_VELOCITY_PLAYER = 0.15;
@@ -9,8 +12,8 @@ public class Constants {
 	public static final double DEFAULT_VELOCITY_ROGUE = 0.13;
 	
 	public static final int MAP_CHUNK_SIZE = 32;
-	public static final int DEFAULT_CHUNK_TILE = Tile.TILE_DIRT;
-	public static final int DEFAULT_CHUNK_OBJECT = Tile.TILE_VOID;
+	public static final TileType DEFAULT_CHUNK_TILE = TileType.DIRT;
+	public static final ObjectType DEFAULT_CHUNK_OBJECT = ObjectType.VOID;
 	
 	public static final String FILE_STARTUP_PREFS = "startup.config";
 	

@@ -10,8 +10,7 @@ import xyz.urffer.urfquest.shared.Tile;
 
 public class MapChunk {
 
-	private int[][] tileTypes;
-	private int[][] objectTypes;
+	private Tile[][] tiles;
 	
 	private ActiveTile[][] activeTiles;
 	
@@ -22,18 +21,17 @@ public class MapChunk {
 	}
 	
 	public MapChunk(PairInt dims) {
-		tileTypes = new int[dims.x][dims.y];
+		tiles = new Tile[dims.x][dims.y];
 		for (int x = 0; x < dims.x; x++) {
 			for (int y = 0; y < dims.y; y++) {
-				tileTypes[x][y] = Constants.DEFAULT_CHUNK_TILE;
+				tiles[x][y] = new Tile();
 			}
 		}
-		objectTypes = new int[dims.x][dims.y];
 		activeTiles = new ActiveTile[dims.x][dims.y];
 		
 		minimap = new BufferedImage(
-			tileTypes.length,
-			tileTypes[0].length,
+			tiles.length,
+			tiles[0].length,
 			BufferedImage.TYPE_4BYTE_ABGR
 		);
 	}
@@ -43,52 +41,23 @@ public class MapChunk {
 	 * Tile manipulation
 	 */
 	
-	public int getTileTypeAt(PairInt pos) {
+	public Tile getTileAt(PairInt pos) {
 		if (pos.x < 0 || pos.y < 0) {
-			return Tile.TILE_VOID;
+			return Tile.VOID;
 		}
-		if (pos.x >= tileTypes.length || pos.y >= tileTypes[0].length) {
-			return Tile.TILE_VOID;
+		if (pos.x >= tiles.length || pos.y >= tiles[0].length) {
+			return Tile.VOID;
 		}
-		return tileTypes[pos.x][pos.y];
+		return tiles[pos.x][pos.y];
 	}
 	
-	public int getObjectTypeAt(PairInt pos) {
-		if (pos.x < 0 || pos.y < 0) {
-			return Tile.TILE_VOID;
-		}
-		if (pos.x >= tileTypes.length || pos.y >= tileTypes[0].length) {
-			return Tile.TILE_VOID;
-		}
-		return objectTypes[pos.x][pos.y];
+	public void setTileAt(PairInt pos, Tile tile) {
+		tiles[pos.x][pos.y] = tile;
+		this.setMinimapAt(pos, tile);
 	}
 	
-	public int[] getTileAt(PairInt pos) {
-		return new int[] {getTileTypeAt(pos), getObjectTypeAt(pos)};
-	}
-	
-	public void setTileAt(PairInt pos, int tileType, int objectType) {
-		tileTypes[pos.x][pos.y] = tileType;
-		objectTypes[pos.x][pos.y] = objectType;
-		this.setMinimapAt(pos, tileType, objectType);
-	}
-	
-	public void setTileTypeAt(PairInt pos, int tileType) {
-		int objectType = objectTypes[pos.x][pos.y];
-		setTileAt(pos, tileType, objectType);
-	}
-	
-	public void setObjectTypeAt(PairInt pos, int objectType) {
-		int tileType = tileTypes[pos.x][pos.y];
-		setTileAt(pos, tileType, objectType);
-	}
-	
-	public int[][] getAllTileTypes() {
-		return tileTypes;
-	}
-	
-	public int[][] getAllObjectTypes() {
-		return objectTypes;
+	public Tile[][] getAllTiles() {
+		return tiles;
 	}
 	
 	
@@ -117,8 +86,8 @@ public class MapChunk {
 	
 	// A minimap should be regenerated whenever this client recieves new chunks
 	public void generateMinimap() {
-		for (int x = 0; x < tileTypes.length; x++) {
-			for (int y = 0; y < tileTypes[0].length; y++) {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[0].length; y++) {
 				int color = Tile.minimapColor(this.getTileAt(new PairInt(x, y)));
 				minimap.setRGB(x, y, color);
 			}
@@ -129,12 +98,8 @@ public class MapChunk {
 		return minimap;
 	}
 	
-	private void setMinimapAt(PairInt pos, int tileType, int objectType) {
-		if (objectType != Tile.TILE_VOID) {
-			minimap.setRGB(pos.x, pos.y, Tile.minimapColor(tileType, objectType));
-		} else {
-			minimap.setRGB(pos.x, pos.y, Tile.minimapColor(tileType, objectType));
-		}
+	private void setMinimapAt(PairInt pos, Tile tile) {
+		minimap.setRGB(pos.x, pos.y, Tile.minimapColor(tile));
 	}
 
 }

@@ -12,6 +12,7 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
@@ -310,9 +311,9 @@ public class CommandProcessor {
 							System.out.println("successfully parsed pos");
 							
 							PairInt queryPos = new PairInt(xPos, yPos);
-							int[] tile = server.getState().getSurfaceMap().getTileAt(queryPos);
+							Tile tile = server.getState().getSurfaceMap().getTileAt(queryPos);
 							MessageChat m = new MessageChat();
-							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Tile at " + queryPos + ": " + tile[0] + "/" + tile[1]);
+							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Tile at " + queryPos + ": " + tile);
 
 							int clientThreadID = (clientThread == null) ? server.getServerID() : clientThread.id;
 							server.sendMessageToClientOrServer(m, clientThreadID);

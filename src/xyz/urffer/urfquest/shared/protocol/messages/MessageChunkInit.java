@@ -2,6 +2,7 @@ package xyz.urffer.urfquest.shared.protocol.messages;
 
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
@@ -14,8 +15,7 @@ public class MessageChunkInit extends Message {
 	
 	public int mapID = 0;
 	public PairInt xyChunk = new PairInt(0, 0);
-	public int[][] tileTypes;
-	public int[][] objectTypes;
+	public Tile[][] tiles;
 
 	@Override
 	public MessageType getType() {

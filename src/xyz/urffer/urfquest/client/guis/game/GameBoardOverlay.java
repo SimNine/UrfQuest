@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class GameBoardOverlay extends GUIContainer {
 	private int selectedTileTransparency = 255;
@@ -63,11 +64,11 @@ public class GameBoardOverlay extends GUIContainer {
 		for (int x = -1; x < dispTileDims.x - 1; x++) {
 			for (int y = -1; y < dispTileDims.y - 1; y++) {
 				PairInt currTilePos = ul.toInt().add(new PairInt(x, y));
-				int[] tile = currMap.getTileAt(currTilePos);
+				Tile tile = currMap.getTileAt(currTilePos);
 				
-				int animStage = getAnimStage(tile[0], tile[1]);
+				int animStage = getAnimStage(tile);
 				g.drawImage(
-					TileImages.getTileImage(tile[0], tile[1], animStage),
+					TileImages.getTileImage(tile, animStage),
 					x * QuestPanel.TILE_WIDTH - pixelOffset.x,
 					y * QuestPanel.TILE_WIDTH - pixelOffset.y,
 					null
@@ -183,7 +184,7 @@ public class GameBoardOverlay extends GUIContainer {
 		}
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
-			this.client.getState().getCurrentMap().setTileAt(mouseTile, 15);
+			this.client.getState().getCurrentMap().setTileAt(mouseTile, new Tile(TileType.BEDROCK));
 			return true;
 		} else {
 			return false;
@@ -260,8 +261,8 @@ public class GameBoardOverlay extends GUIContainer {
 	}
 	
 	// gets the appropriate animstage for Tiles.getTileImage(type, subtype, animstage)
-	private int getAnimStage(int type, int subtype) {
-		if (type == Tile.TILE_WATER) {
+	private int getAnimStage(Tile tile) {
+		if (tile.tileType == TileType.WATER) {
 			return (tileAnimStage / 30) % 3;
 		} else {
 			return 0;

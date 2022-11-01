@@ -279,8 +279,7 @@ public class Server {
 					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk);
 				}
 				mci.xyChunk = m.xyChunk;
-				mci.tileTypes = chunk.getAllTileTypes();
-				mci.objectTypes = chunk.getAllObjectTypes();
+				mci.tiles = chunk.getAllTiles();
 				sendMessageToSingleClient(mci, c.id);
 				break;
 			}

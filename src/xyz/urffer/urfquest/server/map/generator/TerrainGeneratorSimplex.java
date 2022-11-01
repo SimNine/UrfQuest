@@ -4,6 +4,8 @@ import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class TerrainGeneratorSimplex extends TerrainGenerator {
 
@@ -62,11 +64,11 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 				}
 				
 				if (terrainNoiseValue > .55f) {
-					chunk.setTileTypeAt(pos, Tile.TILE_GRASS);
+					chunk.setTileAt(pos, new Tile(TileType.GRASS));
 				} else if (terrainNoiseValue > .5f) {
-					chunk.setTileTypeAt(pos, Tile.TILE_SAND);
+					chunk.setTileAt(pos, new Tile(TileType.SAND));
 				} else {
-					chunk.setTileTypeAt(pos, Tile.TILE_WATER);
+					chunk.setTileAt(pos, new Tile(TileType.WATER));
 				}
 			}
 		}
@@ -76,7 +78,7 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				PairInt pos = new PairInt(x, y);
 				if (boulderNoise.getNoiseAt(pos.add(rootOffset))*2 - 1.6 > random.nextDouble()) {
-					chunk.setObjectTypeAt(pos, Tile.OBJECT_BOULDER);
+					chunk.setTileAt(pos, new Tile(chunk.getTileAt(pos).tileType, ObjectType.BOULDER));
 //					if (chunk.getTileTypeAt(x, y) == Tile.TILE_GRASS) {
 //						chunk.setTileAt(x, y, Tile.TILE_GRASS, Tile.OBJECT_BOULDER);
 //					} else if (chunk.getTileTypeAt(x, y) == Tile.TILE_WATER) {
@@ -93,8 +95,8 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				PairInt pos = new PairInt(x, y);
 				if (flowerNoise.getNoiseAt(pos.add(rootOffset))*2 - 1.6 > random.nextDouble()) {
-					if (chunk.getTileTypeAt(pos) == Tile.TILE_GRASS) {
-						chunk.setObjectTypeAt(pos, Tile.OBJECT_FLOWERS);
+					if (chunk.getTileAt(pos).tileType == TileType.GRASS) {
+						chunk.setTileAt(pos, new Tile(TileType.GRASS, ObjectType.FLOWERS));
 					}
 				}
 			}
@@ -105,8 +107,8 @@ public class TerrainGeneratorSimplex extends TerrainGenerator {
 			for (int y = 0; y < Constants.MAP_CHUNK_SIZE; y++) {
 				PairInt pos = new PairInt(x, y);
 				if (treeNoise.getNoiseAt(pos.add(rootOffset))*2 - 1 > random.nextDouble() && 
-					chunk.getTileTypeAt(pos) == Tile.TILE_GRASS) {
-					chunk.setObjectTypeAt(pos, Tile.OBJECT_TREE);
+					chunk.getTileAt(pos).tileType == TileType.GRASS) {
+					chunk.setTileAt(pos, new Tile(TileType.GRASS, ObjectType.TREE));
 				}
 			}
 		}

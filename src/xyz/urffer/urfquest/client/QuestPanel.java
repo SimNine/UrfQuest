@@ -32,7 +32,6 @@ import xyz.urffer.urfquest.client.guis.game.GameStatusOverlay;
 import xyz.urffer.urfquest.client.guis.game.GameWeatherOverlay;
 import xyz.urffer.urfquest.client.guis.game.MapViewOverlay;
 import xyz.urffer.urfquest.client.guis.menus.KeybindingOverlay;
-import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
@@ -507,6 +506,6 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 	private void initAssets() {
 		Player.initGraphics();
 		NPCHuman.initGraphics();
-		TileImages.initGraphics();
+//		TileImages.initGraphics();
 	}
 }
