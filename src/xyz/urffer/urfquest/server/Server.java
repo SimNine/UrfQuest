@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
+import xyz.urffer.urfquest.server.commands.Command;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.server.commands.CommandProcessor;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
@@ -26,7 +27,6 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
@@ -307,7 +307,7 @@ public class Server {
 				}
 				chatMessages.addFirst(chatMessage);
 				
-				if (chatMessage.message.charAt(0) == '/') {
+				if (chatMessage.message.charAt(0) == Command.COMMAND_PREFIX) {
 					CommandProcessor.processCommand(this, chatMessage.message, c);
 				} else {
 					this.sendMessageToAllClients(m);

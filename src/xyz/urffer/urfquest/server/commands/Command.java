@@ -5,6 +5,8 @@ import xyz.urffer.urfquest.server.Server;
 
 public abstract class Command {
 	
+	public static final char COMMAND_PREFIX = '/';
+	
 	public String base;
 	public String usage;
 	public String description;

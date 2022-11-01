@@ -78,7 +78,7 @@ class HelpCommandTest {
 		m.chatMessage = new ChatMessage(null, messageText);
 		c1.send(m);
 
-		Assertions.assertEquals(9, c1.getAllChatMessages().size());
+		Assertions.assertEquals(10, c1.getAllChatMessages().size());
 		Assertions.assertEquals(1, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		

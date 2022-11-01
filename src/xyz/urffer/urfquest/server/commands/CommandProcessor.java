@@ -17,14 +17,14 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
 
 public class CommandProcessor {
 	
-	public static String commandNotRecognized = "Command not recognized. Use '/help' to list commands.";
+	public static String commandNotRecognized = "Command not recognized. Use '" + Command.COMMAND_PREFIX + "help' to list commands.";
 	
 	public static HashMap<String, Command> commands;
 	
 	static {
 		commands = new HashMap<>();
 		
-		Command helpCommand = new Command("/help", "[command]", 
+		Command helpCommand = new Command("help", "[command]", 
 				"Returns details about the command specified, or a list of commands if none is specified",
 				CommandPermissions.GUEST) {
 					@Override
@@ -56,9 +56,9 @@ public class CommandProcessor {
 						}
 					}
 		};
-		commands.put("help", helpCommand);
+		commands.put(helpCommand.base, helpCommand);
 		
-		Command getPosCommand = new Command("/getpos", "[player]", 
+		Command getPosCommand = new Command("getpos", "[player]", 
 				"Gets the position of the specified player, or the sender's position if no player is specified",
 				CommandPermissions.NORMAL) {
 					@Override
@@ -87,9 +87,9 @@ public class CommandProcessor {
 						server.sendMessageToClientOrServer(m, clientThreadID);
 					}
 		};
-		commands.put("getpos", getPosCommand);
+		commands.put(getPosCommand.base, getPosCommand);
 		
-		Command listCommand = new Command("/list", "", 
+		Command listCommand = new Command("list", "", 
 				"Lists all players currently on the server",
 				CommandPermissions.GUEST) {
 					@Override
@@ -110,9 +110,9 @@ public class CommandProcessor {
 						server.sendMessageToClientOrServer(m, clientThreadID);
 					}
 		};
-		commands.put("list", listCommand);
+		commands.put(listCommand.base, listCommand);
 		
-		Command meCommand = new Command("/me", "<message>",
+		Command meCommand = new Command("me", "<message>",
 				"Displays a message in third person from the sender",
 				CommandPermissions.NORMAL) {
 					@Override
@@ -133,9 +133,9 @@ public class CommandProcessor {
 						server.sendMessageToAllClients(m);
 					}
 		};
-		commands.put("me", meCommand);
+		commands.put(meCommand.base, meCommand);
 		
-		Command tpCommand = new Command("/tp", "<x_pos> <y_pos>", 
+		Command tpCommand = new Command("tp", "<x_pos> <y_pos>", 
 				"Teleports caller to the specified position",
 				CommandPermissions.OP) {
 					@Override
@@ -162,9 +162,9 @@ public class CommandProcessor {
 						thisPlayer.setPos(pos);
 					}
 		};
-		commands.put("tp", tpCommand);
+		commands.put(tpCommand.base, tpCommand);
 		
-		Command summonCommand = new Command("/summon", "<mob_type> [<xpos> <ypos>]", 
+		Command summonCommand = new Command("summon", "<mob_type> [<xpos> <ypos>]", 
 				"Summons a mob of the specified type at the caller's position",
 				CommandPermissions.OP) {
 					@Override
@@ -219,9 +219,9 @@ public class CommandProcessor {
 						}
 					}
 		};
-		commands.put("summon", summonCommand);
+		commands.put(summonCommand.base, summonCommand);
 		
-		Command opCommand = new Command("/op", "<player_name>", 
+		Command opCommand = new Command("op", "<player_name>", 
 				"Grants the specified player op permissions",
 				CommandPermissions.OP) {
 					@Override
@@ -245,9 +245,9 @@ public class CommandProcessor {
 						server.sendMessageToClientOrServer(m, clientThreadID);
 					}
 		};
-		commands.put("op", opCommand);
+		commands.put(opCommand.base, opCommand);
 		
-		Command kickCommand = new Command("/kick", "<player_name>", 
+		Command kickCommand = new Command("kick", "<player_name>", 
 				"Kicks the specified player from the server",
 				CommandPermissions.OP) {
 					@Override
@@ -275,9 +275,9 @@ public class CommandProcessor {
 						}
 					}
 		};
-		commands.put("kick", kickCommand);
+		commands.put(kickCommand.base, kickCommand);
 		
-		Command stopCommand = new Command("/stop", "", 
+		Command stopCommand = new Command("stop", "", 
 				"Stops the server",
 				CommandPermissions.OP) {
 					@Override
@@ -290,11 +290,11 @@ public class CommandProcessor {
 						server.shutdown();
 					}
 		};
-		commands.put("stop", stopCommand);
+		commands.put(stopCommand.base, stopCommand);
 		
 		// TODO: add a flag to determine which world to get tile from
 		// TODO: write unit tests
-		Command getTileAtCommand = new Command("/getTileAt", "<xpos> <ypos>", 
+		Command getTileAtCommand = new Command("gettileat", "<xpos> <ypos>", 
 				"Gets the tile at the specified position",
 				CommandPermissions.OP) {
 					@Override
@@ -322,11 +322,11 @@ public class CommandProcessor {
 						}
 					}
 		};
-		commands.put("getTileAt", getTileAtCommand);
+		commands.put(getTileAtCommand.base, getTileAtCommand);
 	}
 	
 	public static void sendIncorrectArgumentsMessage(Server server, Command command, ClientThread clientThread) {
-		CommandProcessor.sendSimpleResponseMessage(server, clientThread, "Incorrect usage. '" + command.base + " " + command.usage + "'");
+		CommandProcessor.sendSimpleResponseMessage(server, clientThread, "Incorrect usage. '" + Command.COMMAND_PREFIX + command.base + " " + command.usage + "'");
 	}
 	
 	public static void sendSimpleResponseMessage(Server server, ClientThread clientThread, String payloadMessage) {
@@ -342,6 +342,7 @@ public class CommandProcessor {
 			server.getLogger().info("Client " + clientThread.id + " sent raw command: \"" + commandStr + "\"");
 		}
 		
+		// strip the command delimiter from the front and then split by spaces
 		String tokens[] = commandStr.substring(1).split(" ");
 		Command command = commands.get(tokens[0]);
 		if (command == null) {
@@ -357,7 +358,7 @@ public class CommandProcessor {
 		
 		// if this was sent by a user, check their permissions
 		if (clientThread.getCommandPermissions() > command.permissionLevel) {
-			CommandProcessor.sendSimpleResponseMessage(server, clientThread, "You do not have permissions to use '" + command.base + "'");
+			CommandProcessor.sendSimpleResponseMessage(server, clientThread, "You do not have permissions to use '" + Command.COMMAND_PREFIX + command.base + "'");
 		} else {
 			command.runCommand(server, tokens, clientThread);
 		}
