@@ -4,19 +4,20 @@ import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessageDisconnect extends Message {
+public class MessageClientConnectionConfirmed extends Message {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4081635830952669746L;
+	private static final long serialVersionUID = 2454607223442843988L;
 	
 	public String reason;
-	public int disconnectedClientID;
+	public int clientID;
+	public int startingMapID;
 
 	@Override
 	public MessageType getType() {
-		return MessageType.DISCONNECT_CLIENT;
+		return MessageType.CONNECTION_CONFIRMED;
 	}
 	
 	@Override
@@ -26,7 +27,7 @@ public class MessageDisconnect extends Message {
 
 	@Override
 	public String toString() {
-		return "disconnectedClientID:" + disconnectedClientID + ",reason:\"" + reason + "\"";
+		return "assigned_client_id:" + clientID + ",starting_map_id:" + startingMapID + ",reason:\"" + reason + "\"";
 	}
 
 }

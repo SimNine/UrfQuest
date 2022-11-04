@@ -9,7 +9,7 @@ import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
@@ -40,7 +40,7 @@ public class Cyclops extends Mob {
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
 		
-		MessageEntityInit msg = new MessageEntityInit();
+		MessageInitEntity msg = new MessageInitEntity();
 		msg.entityType = EntityType.MOB;
 		msg.entitySubtype = MobType.CYCLOPS;
 		msg.pos = this.getPos();

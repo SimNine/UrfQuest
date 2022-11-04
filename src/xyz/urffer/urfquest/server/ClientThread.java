@@ -10,7 +10,7 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 
 public class ClientThread {
 	
@@ -78,7 +78,7 @@ public class ClientThread {
 	}
 	
 	private void beginDisconnectProcess(String reason) {
-		MessageDisconnect m = new MessageDisconnect();
+		MessageClientDisconnect m = new MessageClientDisconnect();
 		m.reason = reason;
 		m.disconnectedClientID = this.id;
 		

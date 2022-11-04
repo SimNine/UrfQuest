@@ -4,12 +4,13 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
 
 public class Rocket extends Projectile {
 
-	public Rocket(Server s, Map m, double[] pos, double dirRadians, double velocity, Entity source) {
+	public Rocket(Server s, Map m, PairDouble pos, double dirRadians, double velocity, Entity source) {
 		super(s, m, pos, source);
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		this.movementVector = new Vector(dirRadians, velocity);
@@ -17,7 +18,7 @@ public class Rocket extends Projectile {
 
 	public void tick() {
 		this.incrementPos(this.movementVector);
-		if(!Tile.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
+		if(!Tile.isPenetrable(map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()))) {
 			// animStage = 1000;
 			explode();
 		}

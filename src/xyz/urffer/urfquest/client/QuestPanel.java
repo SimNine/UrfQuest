@@ -36,7 +36,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
 
 @SuppressWarnings("serial")
 public class QuestPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
@@ -206,7 +206,7 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 							 				 client.getState().getPlayer().getCenter().y;
 					client.getLogger().debug("F4 pressed at: " + playerPosString);
 					
-					MessageDebugPlayer m = new MessageDebugPlayer();
+					MessagePlayerDebug m = new MessagePlayerDebug();
 					m.playerPosString = playerPosString;
 					client.send(m);
 				}

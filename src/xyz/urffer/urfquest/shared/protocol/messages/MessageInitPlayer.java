@@ -5,7 +5,7 @@ import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessagePlayerInit extends Message {
+public class MessageInitPlayer extends Message {
 
 	/**
 	 * 

@@ -6,7 +6,7 @@ import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessageEntityInit extends Message {
+public class MessageInitEntity extends Message {
 
 	/**
 	 * 

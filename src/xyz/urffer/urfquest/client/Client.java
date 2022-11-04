@@ -27,15 +27,15 @@ import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageChunkInit;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageMapInit;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
@@ -131,7 +131,7 @@ public class Client {
 				// - Informs this client of the surface map's ID
 				// - Sends a request to the server to load the current map
 				// - Sends a request to the server to create a player
-				MessageConnectionConfirmed m = (MessageConnectionConfirmed)p.getMessage();
+				MessageClientConnectionConfirmed m = (MessageClientConnectionConfirmed)p.getMessage();
 				
 				this.clientID = m.clientID;
 				this.logger.setPrefix("CLIENT(" + this.clientID + ")");
@@ -159,7 +159,7 @@ public class Client {
 				// - If the entity is a player with the ID of this client:
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
-				MessageEntityInit m = (MessageEntityInit)p.getMessage();
+				MessageInitEntity m = (MessageInitEntity)p.getMessage();
 				
 				if (m.entityType == EntityType.MOB) {
 					// TODO: spawn entity only on the specified map, which should be retrieved based on m.mapID
@@ -212,7 +212,7 @@ public class Client {
 				// if (m.mapID != state.getCurrentMap().id) {
 				// 		return;
 				// }
-				MessagePlayerInit m = (MessagePlayerInit)p.getMessage();
+				MessageInitPlayer m = (MessageInitPlayer)p.getMessage();
 				
 				Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos, m.entityName);
 				state.getCurrentMap().addPlayer(player);
@@ -229,7 +229,7 @@ public class Client {
 			}
 			case CHUNK_INIT: {
 				// - Loads the payloads of this message into the specified chunk
-				MessageChunkInit m = (MessageChunkInit)p.getMessage();
+				MessageInitChunk m = (MessageInitChunk)p.getMessage();
 				
 				state.getCurrentMap().setChunk(m.xyChunk, m.tiles);
 				break;
@@ -255,7 +255,7 @@ public class Client {
 			}
 			case MAP_INIT: {
 				// - Loads metadata about the current map (id, climate, etc)
-				MessageMapInit m = (MessageMapInit)p.getMessage();
+				MessageInitMap m = (MessageInitMap)p.getMessage();
 				
 				state.createNewMap(m.mapID);
 				break;
@@ -277,7 +277,7 @@ public class Client {
 				break;
 			}
 			case DISCONNECT_CLIENT: {
-				MessageDisconnect m = (MessageDisconnect)p.getMessage();
+				MessageClientDisconnect m = (MessageClientDisconnect)p.getMessage();
 				
 				if (m.disconnectedClientID == this.clientID) {
 					if (this.server == null) {

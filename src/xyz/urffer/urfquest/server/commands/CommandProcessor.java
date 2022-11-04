@@ -14,7 +14,7 @@ import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 
 public class CommandProcessor {
 	
@@ -269,7 +269,7 @@ public class CommandProcessor {
 							m.chatMessage = new ChatMessage(ChatMessage.serverSource, "You cannot kick yourself");
 							server.sendMessageToClientOrServer(m, thisClientID);
 						} else {
-							MessageDisconnect m = new MessageDisconnect();
+							MessageClientDisconnect m = new MessageClientDisconnect();
 							m.disconnectedClientID = otherClientID;
 							m.reason = "You have been kicked from the server";
 							server.sendMessageToClientOrServer(m, server.getServerID());

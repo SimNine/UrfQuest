@@ -4,19 +4,20 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
 
 public class Bullet extends Projectile {
 	
-	public Bullet(Server s, Map m, double[] pos, Entity source) {
+	public Bullet(Server s, Map m, PairDouble pos, Entity source) {
 		// TODO: set default movementvector
 		//Vector movementVector = new Vector(id, id);
 		
 		super(s, m, pos, source);
 	}
 
-	public Bullet(Server s, Map m, double[] pos, double dirRadians, double velocity, Entity source) {
+	public Bullet(Server s, Map m, PairDouble pos, double dirRadians, double velocity, Entity source) {
 		super(s, m, pos, source);
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
 		this.movementVector = new Vector(dirRadians, velocity);
@@ -24,7 +25,7 @@ public class Bullet extends Projectile {
 
 	public void tick() {
 		this.incrementPos(this.movementVector);
-		if(!Tile.isPenetrable(map.getTileAt((int)bounds.x, (int)bounds.y))) {
+		if(!Tile.isPenetrable(map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()))) {
 			// animStage = 1000;
 			this.splashParticles();
 		}

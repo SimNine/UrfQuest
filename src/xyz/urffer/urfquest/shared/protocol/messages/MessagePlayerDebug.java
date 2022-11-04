@@ -4,7 +4,7 @@ import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessageDebugPlayer extends Message {
+public class MessagePlayerDebug extends Message {
 	
 	/**
 	 * 

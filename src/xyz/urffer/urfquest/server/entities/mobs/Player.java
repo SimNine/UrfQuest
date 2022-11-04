@@ -12,7 +12,7 @@ import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 
 public class Player extends Mob {
 	
@@ -44,7 +44,7 @@ public class Player extends Mob {
 		this.name = name;
 		this.client = c;
 		
-		MessagePlayerInit msg = new MessagePlayerInit();
+		MessageInitPlayer msg = new MessageInitPlayer();
 		msg.clientOwnerID = c.id;
 		msg.entityID = this.id;
 		msg.entityName = this.name;

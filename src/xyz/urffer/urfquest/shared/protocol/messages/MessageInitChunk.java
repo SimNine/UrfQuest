@@ -6,7 +6,7 @@ import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessageChunkInit extends Message {
+public class MessageInitChunk extends Message {
 	
 	/**
 	 * 

@@ -30,12 +30,12 @@ import xyz.urffer.urfquest.shared.MessageQueue;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageChunkInit;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDebugPlayer;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageDisconnect;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageMapInit;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerInit;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
+import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
@@ -190,7 +190,7 @@ public class Server {
 			if (p.getType() == MessageType.CHAT_MESSAGE) {
 				// do nothing
 			} else if (p.getType() == MessageType.DISCONNECT_CLIENT) {
-				c = clients.get(((MessageDisconnect)p.getMessage()).disconnectedClientID);
+				c = clients.get(((MessageClientDisconnect)p.getMessage()).disconnectedClientID);
 			} else {
 				this.getLogger().error("Non-chat message recieved from server console");
 				return;
@@ -253,12 +253,12 @@ public class Server {
 				
 				Map map = state.getMapByID(m.mapID);
 				
-				MessageMapInit mmi = new MessageMapInit();
+				MessageInitMap mmi = new MessageInitMap();
 				mmi.mapID = map.id;
 				sendMessageToSingleClient(mmi, c.id);
 
 				for (Player player : map.getPlayers().values()) {
-					MessagePlayerInit mpi = new MessagePlayerInit();
+					MessageInitPlayer mpi = new MessageInitPlayer();
 					mpi.clientOwnerID = userMap.getClientIdFromPlayerId(player.id);
 					mpi.mapID = map.id;
 					mpi.entityID = player.id;
@@ -273,7 +273,7 @@ public class Server {
 				// - Sends the chunk data back to the client
 				MessageRequestChunk m = (MessageRequestChunk)p.getMessage();
 				
-				MessageChunkInit mci = new MessageChunkInit();
+				MessageInitChunk mci = new MessageInitChunk();
 				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().getChunk(m.xyChunk);
 				if (chunk == null) {
 					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk);
@@ -290,7 +290,7 @@ public class Server {
 				Player player = state.getPlayer(playerID);
 				String playerPos = player.getCenter().x + "," + player.getCenter().y;
 				
-				MessageDebugPlayer mdp = new MessageDebugPlayer();
+				MessagePlayerDebug mdp = new MessagePlayerDebug();
 				mdp.playerPosString = playerPos;
 				sendMessageToSingleClient(mdp, c.id);
 				break;
@@ -316,7 +316,7 @@ public class Server {
 			case DISCONNECT_CLIENT: {
 				// - Recieves a request from either this client or the server to disconnect
 				// - Cleans up the client's resources
-				MessageDisconnect m = (MessageDisconnect)p.getMessage();
+				MessageClientDisconnect m = (MessageClientDisconnect)p.getMessage();
 				
 				int playerID = userMap.getPlayerIdFromClientId(m.disconnectedClientID);
 				String playerName = userMap.getPlayerNameFromClientId(m.disconnectedClientID);
@@ -347,7 +347,7 @@ public class Server {
 				c.stop();
 				
 				// Alert all other clients that this client has been disconnected
-				MessageDisconnect md = new MessageDisconnect();
+				MessageClientDisconnect md = new MessageClientDisconnect();
 				md.reason = playerName + " has been disconnected";
 				md.disconnectedClientID = m.disconnectedClientID;
 				this.sendMessageToAllClients(md);
@@ -407,7 +407,7 @@ public class Server {
 		}
 		
 		// send disconnect message to every client
-		MessageDisconnect m = new MessageDisconnect();
+		MessageClientDisconnect m = new MessageClientDisconnect();
 		m.reason = "The server has shut down";
 		
 		// close all sockets
@@ -444,7 +444,7 @@ public class Server {
 		t.setCommandPermissions(commandPermissions);
 		
 		// send connection confirmation message
-		MessageConnectionConfirmed m = new MessageConnectionConfirmed();
+		MessageClientConnectionConfirmed m = new MessageClientConnectionConfirmed();
 		m.clientID = t.id;
 		m.startingMapID = state.getSurfaceMap().id;
 		sendMessageToSingleClient(m, t.id);

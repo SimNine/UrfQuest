@@ -3,7 +3,7 @@ package xyz.urffer.urfquest.server;
 import java.io.IOException;
 import java.net.Socket;
 
-import xyz.urffer.urfquest.shared.protocol.messages.MessageConnectionConfirmed;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 
 class ServerListenerThread implements Runnable {
 	
@@ -36,7 +36,7 @@ class ServerListenerThread implements Runnable {
 				this.s.addClient(t.id, t);
 				
 				// send a connection confirmation message
-				MessageConnectionConfirmed m = new MessageConnectionConfirmed();
+				MessageClientConnectionConfirmed m = new MessageClientConnectionConfirmed();
 				m.startingMapID = this.s.getState().getSurfaceMap().id;
 				m.clientID = t.id;
 				this.s.sendMessageToSingleClient(m, t.id);
