@@ -20,83 +20,18 @@ import xyz.urffer.urfquest.client.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.tiles.TileImages;
 import xyz.urffer.urfquest.shared.ArrayUtils;
+import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 
 public class Item extends Entity {
-	public static final String assetPath = "/xyz/urffer/urfquest/assets/items/";
-	
-	public static final int EMPTY_ITEM = 0;
-	public static final int ASTRAL_RUNE = 1;
-	public static final int COSMIC_RUNE = 2;
-	public static final int LAW_RUNE = 3;
-	public static final int CHICKEN_LEG = 4;
-	public static final int CHEESE = 5;
-	public static final int BONE = 6;
-	public static final int GEM = 7;
-	public static final int LOG = 8;
-	public static final int STONE = 9;
-	public static final int MIC = 10;
-	public static final int KEY = 11;
-	public static final int GRENADE_ITEM = 12;
-	public static final int PISTOL = 13;
-	public static final int RPG = 14;
-	public static final int SHOTGUN = 15;
-	public static final int SMG = 16;
-	public static final int PICKAXE = 17;
-	public static final int HATCHET = 18;
-	public static final int SHOVEL = 19;
-	public static final int IRON_ORE = 20;
-	public static final int COPPER_ORE = 21;
-
-	public static final BufferedImage[] itemImages = new BufferedImage[21];
-	
-//	public Item(int id, int type) {
-//		// TODO: this is wrong, change it
-//		super(null, 0, 0);
-//		if (itemImages[type - 1] == null) {
-//			initItemPics();
-//		}
-//	}
-	
-	/*
-	 * Pic initialization
-	 */
-	
-	private static void initItemPics() {
-		try {
-			Class<?> c = Main.self.getClass();
-			itemImages[0] = ImageIO.read(c.getResourceAsStream(assetPath + "astralRune_scaled_30px.png"));
-			itemImages[1] = ImageIO.read(c.getResourceAsStream(assetPath + "cosmicRune_scaled_30px.png"));
-			itemImages[2] = ImageIO.read(c.getResourceAsStream(assetPath + "lawRune_scaled_30px.png"));
-			itemImages[3] = ImageIO.read(c.getResourceAsStream(assetPath + "chickenLeg_scaled_30px.png"));
-			itemImages[4] = ImageIO.read(c.getResourceAsStream(assetPath + "cheese_scaled_30px.png"));
-			itemImages[5] = ImageIO.read(c.getResourceAsStream(assetPath + "bone_scaled_30px.png"));
-			itemImages[6] = ImageIO.read(c.getResourceAsStream(assetPath + "pink_gem_scaled_30px.png"));
-			itemImages[7] = ImageIO.read(c.getResourceAsStream(assetPath + "log_scaled_30px.png"));
-			itemImages[8] = ImageIO.read(c.getResourceAsStream(assetPath + "stoneitem_scaled_30px.png"));
-			itemImages[9] = ImageIO.read(c.getResourceAsStream(assetPath + "mic_scaled_30px.png"));
-			itemImages[10] = ImageIO.read(c.getResourceAsStream(assetPath + "key_scaled_30px.png"));
-			itemImages[11] = ImageIO.read(c.getResourceAsStream(assetPath + "grenade_scaled_30px.png"));
-			itemImages[12] = ImageIO.read(c.getResourceAsStream(assetPath + "gun_scaled_30px.png"));
-			itemImages[13] = ImageIO.read(c.getResourceAsStream(assetPath + "rocket_scaled_30px.png"));
-			itemImages[14] = ImageIO.read(c.getResourceAsStream(assetPath + "shotgun_scaled_30px.png"));
-			itemImages[15] = ImageIO.read(c.getResourceAsStream(assetPath + "smg_scaled_30px.png"));
-			itemImages[16] = ImageIO.read(c.getResourceAsStream(assetPath + "pickaxe_scaled_30px.png"));
-			itemImages[17] = ImageIO.read(c.getResourceAsStream(assetPath + "hatchet_scaled_30px.png"));
-			itemImages[18] = ImageIO.read(c.getResourceAsStream(assetPath + "shovel_scaled_30px.png"));
-			itemImages[19] = ImageIO.read(c.getResourceAsStream(assetPath + "ironore_scaled_30px.png"));
-			itemImages[20] = ImageIO.read(c.getResourceAsStream(assetPath + "copperore_scaled_30px.png"));
-		} catch (IOException e) {
-			Main.mainLogger.error(e.getMessage());
-			e.printStackTrace();
-		}
-	}
 	
 	/*
 	 * drawing methods
 	 */
 	
 	protected void drawEntity(Graphics g) {
-		g.drawImage(itemImages[itemType - 1], 
+		g.drawImage(itemType.getImage(), 
 					client.getPanel().gameToWindowX(bounds.getX()), 
 					client.getPanel().gameToWindowY(bounds.getY()), 
 					null);
@@ -113,77 +48,29 @@ public class Item extends Entity {
 	};
 
 	public BufferedImage getPic() {
-		return itemImages[itemType - 1];
+		return itemType.getImage();
 	}
-	
-	public static final boolean[][] itemBooleanProperties = 
-			   //consumable
-			{ {true},//1
-			  {true},//2
-			  {true},
-			  {true},//4
-			  {true},
-			  {false},//6
-			  {false},
-			  {false},//8
-			  {false},
-			  {true},//10
-			  {false},
-			  {true},//12
-			  {false},
-			  {false},//14
-			  {false},
-			  {false},//16
-			  {false},
-			  {false},//18
-			  {false},
-			  {false},//20
-			  {false} };
-		
-	public static final int[][] itemIntProperties = 
-			   //maxCooldown	//maxDurability	//maxStackSize
-			{ {1000, 			-1,				10},
-			  {1000,			-1,				10},//2
-			  {1000,			-1,				10},
-			  {50,				-1,				100},//4
-			  {50,				-1, 			100},
-			  {-1,				-1,				100},//6
-			  {-1,				-1,				100},
-			  {-1,				-1,				100},//8
-			  {-1,				-1,				100},
-			  {1000,			-1,				10},//10
-			  {-1,				-1,				100},
-			  {100,				-1,				10},//12
-			  {100,				-1,				1},
-			  {400,				-1,				1},//14
-			  {400,				-1,				1},
-			  {10,				-1,				1},//16
-			  {100,				100,			1},
-			  {100,				100,			1},//18
-			  {100,				100,			1},
-			  {-1,				-1,				100},//20
-			  {-1,				-1,				100} };
-	
+
+	private ItemType itemType;
 	private int cooldown;
 	private int durability;
 	private int stackSize;
-	private int itemType;
 	
-	private double[] vel = new double[] {0, 0};
+	private PairDouble vel = new PairDouble(0, 0);
 	
 	private int dropTimeout = 500;
 	
-	public Item(Client c, int id, Map m, double[] pos, int type) {
+	public Item(Client c, int id, Map m, PairDouble pos, ItemType type) {
 		this(c, id, m, pos, type, 1, -1);
 	}
 	
-	public Item(Client c, int id, Map m, double[] pos, int type, int durability) {
+	public Item(Client c, int id, Map m, PairDouble pos, ItemType type, int durability) {
 		this(c, id, m, pos, type, 1, durability);
 	}
 	
-	public Item(Client c, int id, Map m, double[] pos, int type, int stackSize, int durability) {
+	public Item(Client c, int id, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
 		super(c, id, m, pos);
-		bounds = new Rectangle2D.Double(pos[0], pos[1], 1, 1);
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		this.itemType = type;
 		this.cooldown = 0;
@@ -215,41 +102,41 @@ public class Item extends Entity {
 		}
 		
 		switch (itemType) {
-		case Item.EMPTY_ITEM:
+		case EMPTY_ITEM:
 			throw new IllegalStateException("something fucked up");
-		case Item.ASTRAL_RUNE:
+		case ASTRAL_RUNE:
 			if (m.getMana() < 50.0) {
 				return false;
 			} // else
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-50.0);
-			double[] pos = m.getCenter();
+			PairDouble pos = m.getCenter();
 			for (int i = 0; i < 180; i++) {
 				//m.getMap().addProjectile(new Bullet(client, id, map, pos, i*2, Bullet.getDefaultVelocity(), m, map));
 			}
 			return true;
-		case Item.COSMIC_RUNE:
+		case COSMIC_RUNE:
 			if (m.getMana() < 5.0) {
 				return false;
 			} // else
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-5.0);
-			double[] pos3 = m.getPos();
+			PairDouble pos3 = m.getPos();
 			//m.getMap().addMob(new Chicken(client, map, pos3[0], pos3[1]));
 			return true;
-		case Item.LAW_RUNE:
+		case LAW_RUNE:
 			if (m.getMana() < 30.0) {
 				return false;
 			}
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-30.0);
-			int[] home = m.getMap().getHomeCoords();
-			m.setPos(ArrayUtils.castToDoubleArr(home));
+			PairInt home = m.getMap().getHomeCoords();
+			m.setPos(home.toDouble());
 			return true;
-		case Item.CHICKEN_LEG:
+		case CHICKEN_LEG:
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -258,7 +145,7 @@ public class Item extends Entity {
 				m.incrementFullness(5.0);
 				return true;
 			}
-		case Item.CHEESE:
+		case CHEESE:
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -267,15 +154,15 @@ public class Item extends Entity {
 				m.setFullness(m.getMaxFullness());
 				return true;
 			}
-		case Item.BONE:
+		case BONE:
 			return false;
-		case Item.GEM:
+		case GEM:
 			return false;
-		case Item.LOG:
+		case LOG:
 			return false;
-		case Item.STONE:
+		case STONE:
 			return false;
-		case Item.MIC:
+		case MIC:
 			if (m.getMana() < 30.0) {
 				return false;
 			}
@@ -285,21 +172,21 @@ public class Item extends Entity {
 				//map.addProjectile(new RocketExplosion(null, bounds.x + (Math.random() - 0.5)*20, bounds.y + (Math.random() - 0.5)*20, this, map));
 			}
 			return true;
-		case Item.KEY:
+		case KEY:
 			return false;
-		case Item.GRENADE_ITEM:
+		case GRENADE_ITEM:
 			cooldown = getMaxCooldown();
 			
 			//m.getMap().addProjectile(new GrenadeProjectile(null, m.getCenter()[0], m.getCenter()[1], m, m.getMap()));
 			return true;
-		case Item.PISTOL:
+		case PISTOL:
 			cooldown = getMaxCooldown();
 			
 //			double[] pos1 = m.getCenter();
 //			int dir = m.getDirection() + (int)((Math.random() - 0.5)*10);
 //			m.getMap().addProjectile(new Bullet(pos1[0], pos1[1], dir, Bullet.getDefaultVelocity(), m, map));
 			return true;
-		case Item.RPG:
+		case RPG:
 			cooldown = getMaxCooldown();
 //			
 //			double[] pos2 = m.getCenter();
@@ -307,10 +194,10 @@ public class Item extends Entity {
 //			m.getMap().addProjectile(new Rocket(client, id, m.getMap(), pos2[0], dir1, Rocket.getDefaultVelocity(), m));
 			
 			return true;
-		case Item.SHOTGUN:
+		case SHOTGUN:
 			cooldown = getMaxCooldown();
 			
-			double[] pos4 = m.getCenter();
+			PairDouble pos4 = m.getCenter();
 			int dir4;
 			int numShots = 15 + (int)(Math.random()*5);
 			
@@ -320,14 +207,14 @@ public class Item extends Entity {
 //			}
 			
 			return true;
-		case Item.SMG:
+		case SMG:
 			cooldown = getMaxCooldown();
 			
 //			double[] pos5 = m.getCenter();
 //			int dir5 = m.getDirection() + (int)((Math.random() - 0.5)*10);
 //			m.getMap().addProjectile(new Bullet(pos5[0], pos5[1], dir5, Bullet.getDefaultVelocity(), m, map));
 			return true;
-		case Item.PICKAXE:
+		case PICKAXE:
 			int[] tile = m.tileAtDistance(1.0);
 			if (tile[0] == TileImages.BOULDER) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
@@ -374,7 +261,7 @@ public class Item extends Entity {
 			} else {
 				return false;
 			}
-		case Item.HATCHET:
+		case HATCHET:
 			if (m.tileAtDistance(1.0)[0] == TileImages.TREE) {
 				int[] coords = m.tileCoordsAtDistance(1.0);
 				//m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
@@ -385,7 +272,7 @@ public class Item extends Entity {
 			} else {
 				return false;
 			}
-		case Item.SHOVEL:
+		case SHOVEL:
 			if (m.tileAtDistance(0)[0] == TileImages.GRASS) {
 				int[] coords = m.tileCoordsAtDistance(0);
 				if (Math.random() > .05) {
@@ -418,9 +305,9 @@ public class Item extends Entity {
 			} else {
 				return false;
 			}
-		case Item.IRON_ORE:
+		case IRON_ORE:
 			return false;
-		case Item.COPPER_ORE:
+		case COPPER_ORE:
 			return false;
 		default:
 			throw new IllegalArgumentException("something fucked up - nonexistent item ID");
@@ -436,11 +323,11 @@ public class Item extends Entity {
 			}
 		}
 		
-		if (vel[0] != 0) {
-			vel[0] -= vel[0]*0.02;
+		if (vel.x != 0) {
+			vel.x -= vel.x*0.02;
 		}
-		if (vel[1] != 0) {
-			vel[1] -= vel[1]*0.02;
+		if (vel.y != 0) {
+			vel.y -= vel.y*0.02;
 		}
 		
 		if (dropTimeout > 0) {
@@ -478,11 +365,11 @@ public class Item extends Entity {
 	 */
 	
 	public boolean isConsumable() {
-		return itemBooleanProperties[itemType - 1][0];
+		return itemType.getConsumable();
 	}
 	
 	public int getMaxCooldown() {
-		return itemIntProperties[itemType - 1][0];
+		return itemType.getMaxCooldown();
 	}
 	
 	public int getCooldown() {
@@ -506,7 +393,7 @@ public class Item extends Entity {
 	}
 	
 	public int getMaxDurability() {
-		return itemIntProperties[itemType - 1][1];
+		return itemType.getMaxDurability();
 	}
 	
 	public int getDurability() {
@@ -562,10 +449,10 @@ public class Item extends Entity {
 	}
 	
 	public int maxStackSize() {
-		return itemIntProperties[itemType - 1][2];
+		return itemType.getMaxStacksize();
 	}
 	
-	public int getType() {
+	public ItemType getType() {
 		return itemType;
 	}
 	

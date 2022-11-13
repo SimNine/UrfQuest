@@ -11,6 +11,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
 public class Cyclops extends Mob {
@@ -35,7 +36,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(srv, this.map, new PairDouble(0, 0), 15);
+		shotgun = new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
@@ -89,7 +90,7 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		this.map.addItem(new Item(this.server, this.map, this.getCenter(), 6));
+		this.map.addItem(new Item(this.server, this.map, this.getCenter(), ItemType.BONE));
 	}
 
 	@Override

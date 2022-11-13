@@ -17,101 +17,30 @@ import xyz.urffer.urfquest.server.tiles.MapLink;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class Item extends Entity {
-	public static final String assetPath = "/assets/items/";
-	
-	public static final int EMPTY_ITEM = 0;
-	public static final int ASTRAL_RUNE = 1;
-	public static final int COSMIC_RUNE = 2;
-	public static final int LAW_RUNE = 3;
-	public static final int CHICKEN_LEG = 4;
-	public static final int CHEESE = 5;
-	public static final int BONE = 6;
-	public static final int GEM = 7;
-	public static final int LOG = 8;
-	public static final int STONE = 9;
-	public static final int MIC = 10;
-	public static final int KEY = 11;
-	public static final int GRENADE_ITEM = 12;
-	public static final int PISTOL = 13;
-	public static final int RPG = 14;
-	public static final int SHOTGUN = 15;
-	public static final int SMG = 16;
-	public static final int PICKAXE = 17;
-	public static final int HATCHET = 18;
-	public static final int SHOVEL = 19;
-	public static final int IRON_ORE = 20;
-	public static final int COPPER_ORE = 21;
-	
-	public static final boolean[][] itemBooleanProperties = 
-			   //consumable
-			{ {true},//1
-			  {true},//2
-			  {true},
-			  {true},//4
-			  {true},
-			  {false},//6
-			  {false},
-			  {false},//8
-			  {false},
-			  {true},//10
-			  {false},
-			  {true},//12
-			  {false},
-			  {false},//14
-			  {false},
-			  {false},//16
-			  {false},
-			  {false},//18
-			  {false},
-			  {false},//20
-			  {false} };
-		
-	public static final int[][] itemIntProperties = 
-			   //maxCooldown	//maxDurability	//maxStackSize
-			{ {1000, 			-1,				10},
-			  {1000,			-1,				10},//2
-			  {1000,			-1,				10},
-			  {50,				-1,				100},//4
-			  {50,				-1, 			100},
-			  {-1,				-1,				100},//6
-			  {-1,				-1,				100},
-			  {-1,				-1,				100},//8
-			  {-1,				-1,				100},
-			  {1000,			-1,				10},//10
-			  {-1,				-1,				100},
-			  {100,				-1,				10},//12
-			  {100,				-1,				1},
-			  {400,				-1,				1},//14
-			  {400,				-1,				1},
-			  {10,				-1,				1},//16
-			  {100,				100,			1},
-			  {100,				100,			1},//18
-			  {100,				100,			1},
-			  {-1,				-1,				100},//20
-			  {-1,				-1,				100} };
 	
 	private Server server;
 	
+	private ItemType itemType;
 	private int cooldown;
 	private int durability;
 	private int stackSize;
-	private int itemType;
 	
 	private int dropTimeout = 500;
 	
-	public Item(Server srv, Map m, PairDouble pos, int type) {
+	public Item(Server srv, Map m, PairDouble pos, ItemType type) {
 		this(srv, m, pos, type, -1);
 	}
 	
-	public Item(Server srv, Map m, PairDouble pos, int type, int durability) {
+	public Item(Server srv, Map m, PairDouble pos, ItemType type, int durability) {
 		this(srv, m, pos, type, 1, durability);
 	}
 	
-	public Item(Server srv, Map m, PairDouble pos, int type, int stackSize, int durability) {
+	public Item(Server srv, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
 		super(srv, m, pos);
 		
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
@@ -146,10 +75,10 @@ public class Item extends Entity {
 		}
 		
 		switch (itemType) {
-		case Item.EMPTY_ITEM: {
+		case EMPTY_ITEM: {
 			throw new IllegalStateException("something fucked up");
 		}
-		case Item.ASTRAL_RUNE: {
+		case ASTRAL_RUNE: {
 			if (m.getMana() < 50.0) {
 				return false;
 			} // else
@@ -163,7 +92,7 @@ public class Item extends Entity {
 			}
 			return true;
 		}
-		case Item.COSMIC_RUNE: {
+		case COSMIC_RUNE: {
 			if (m.getMana() < 5.0) {
 				return false;
 			} // else
@@ -174,7 +103,7 @@ public class Item extends Entity {
 			m.getMap().addMob(new Chicken(this.server, this.map, pos));
 			return true;
 		}
-		case Item.LAW_RUNE: {
+		case LAW_RUNE: {
 			if (m.getMana() < 30.0) {
 				return false;
 			}
@@ -185,7 +114,7 @@ public class Item extends Entity {
 			m.setPos(home.toDouble());
 			return true;
 		}
-		case Item.CHICKEN_LEG: {
+		case CHICKEN_LEG: {
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -195,7 +124,7 @@ public class Item extends Entity {
 				return true;
 			}
 		}
-		case Item.CHEESE: {
+		case CHEESE: {
 			cooldown = getMaxCooldown();
 			
 			if (m.getFullness() > 95.0) {
@@ -205,15 +134,15 @@ public class Item extends Entity {
 				return true;
 			}
 		}
-		case Item.BONE:
+		case BONE:
 			return false;
-		case Item.GEM:
+		case GEM:
 			return false;
-		case Item.LOG:
+		case LOG:
 			return false;
-		case Item.STONE:
+		case STONE:
 			return false;
-		case Item.MIC: {
+		case MIC: {
 			if (m.getMana() < 30.0) {
 				return false;
 			}
@@ -224,16 +153,16 @@ public class Item extends Entity {
 			}
 			return true;
 		}
-		case Item.KEY: {
+		case KEY: {
 			return false;
 		}
-		case Item.GRENADE_ITEM: {
+		case GRENADE_ITEM: {
 			cooldown = getMaxCooldown();
 			
 			m.getMap().addProjectile(new GrenadeProjectile(server, m.getMap(), m.getCenter(), m));
 			return true;
 		}
-		case Item.PISTOL: {
+		case PISTOL: {
 			cooldown = getMaxCooldown();
 			
 			PairDouble pos = m.getCenter();
@@ -241,7 +170,7 @@ public class Item extends Entity {
 			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
 			return true;
 		}
-		case Item.RPG: {
+		case RPG: {
 			cooldown = getMaxCooldown();
 			
 			PairDouble pos = m.getCenter();
@@ -250,7 +179,7 @@ public class Item extends Entity {
 			
 			return true;
 		}
-		case Item.SHOTGUN: {
+		case SHOTGUN: {
 			cooldown = getMaxCooldown();
 			
 			PairDouble pos = m.getCenter();
@@ -262,7 +191,7 @@ public class Item extends Entity {
 			
 			return true;
 		}
-		case Item.SMG: {
+		case SMG: {
 			cooldown = getMaxCooldown();
 			
 			PairDouble pos = m.getCenter();
@@ -270,7 +199,7 @@ public class Item extends Entity {
 			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
 			return true;
 		}
-		case Item.PICKAXE: {
+		case PICKAXE: {
 			PairInt coords = m.tileCoordsAtDistance(1.0);
 			Tile tile = m.tileAtDistance(1.0);
 			if (tile.objectType == ObjectType.BOULDER) {
@@ -284,31 +213,31 @@ public class Item extends Entity {
 					m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
 					double rand = server.randomDouble();
 					if (rand > .95) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.LAW_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.LAW_RUNE));
 					} else if (rand > .90) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.COSMIC_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.COSMIC_RUNE));
 					} else if (rand > .85) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.ASTRAL_RUNE));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.ASTRAL_RUNE));
 					} else if (rand > .82) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.SHOTGUN));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.SHOTGUN));
 					} else if (rand > .79) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.SMG));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.SMG));
 					} else if (rand > .75) {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.GRENADE_ITEM));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.GRENADE_ITEM));
 					} else {
-						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.STONE));
+						m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.STONE));
 					}
 				}
-				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.STONE));
+				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.STONE));
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile.objectType == ObjectType.COPPER_ORE) {
-				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.COPPER_ORE));
+				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.COPPER_ORE));
 				m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
 				cooldown = getMaxCooldown();			
 				return true;
 			} else if (tile.objectType == ObjectType.IRON_ORE) {
-				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.IRON_ORE));
+				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.IRON_ORE));
 				m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
 				cooldown = getMaxCooldown();			
 				return true;
@@ -316,12 +245,12 @@ public class Item extends Entity {
 				return false;
 			}
 		}
-		case Item.HATCHET: {
+		case HATCHET: {
 			Tile tileAtDistance = m.tileAtDistance(1.0);
 			if (tileAtDistance.objectType == ObjectType.TREE) {
 				PairInt coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords, new Tile(tileAtDistance.tileType, ObjectType.VOID));
-				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), Item.LOG));
+				m.getMap().addItem(new Item(this.server, this.map, coords.toDouble(), ItemType.LOG));
 				
 				cooldown = getMaxCooldown();
 				return true;
@@ -329,7 +258,7 @@ public class Item extends Entity {
 				return false;
 			}
 		}
-		case Item.SHOVEL: {
+		case SHOVEL: {
 			if (m.tileAtDistance(0).tileType == TileType.GRASS) {
 				PairInt coords = m.tileCoordsAtDistance(0);
 				if (server.randomDouble() > .05) {
@@ -363,9 +292,9 @@ public class Item extends Entity {
 				return false;
 			}
 		}
-		case Item.IRON_ORE:
+		case IRON_ORE:
 			return false;
-		case Item.COPPER_ORE:
+		case COPPER_ORE:
 			return false;
 		default:
 			throw new IllegalArgumentException("something fucked up - nonexistent item ID");
@@ -413,7 +342,7 @@ public class Item extends Entity {
 	}
 	
 	public Item clone() {
-		return new Item(this.server, this.map, this.getPos(), durability);
+		return new Item(this.server, this.map, this.getPos(), this.itemType, durability);
 	}
 	
 	/*
@@ -421,11 +350,11 @@ public class Item extends Entity {
 	 */
 	
 	public boolean isConsumable() {
-		return itemBooleanProperties[itemType - 1][0];
+		return itemType.getConsumable();
 	}
 	
 	public int getMaxCooldown() {
-		return itemIntProperties[itemType - 1][0];
+		return itemType.getMaxCooldown();
 	}
 	
 	public int getCooldown() {
@@ -449,7 +378,7 @@ public class Item extends Entity {
 	}
 	
 	public int getMaxDurability() {
-		return itemIntProperties[itemType - 1][1];
+		return itemType.getMaxDurability();
 	}
 	
 	public int getDurability() {
@@ -505,10 +434,10 @@ public class Item extends Entity {
 	}
 	
 	public int maxStackSize() {
-		return itemIntProperties[itemType - 1][2];
+		return this.itemType.getMaxStacksize();
 	}
 	
-	public int getType() {
+	public ItemType getType() {
 		return itemType;
 	}
 	

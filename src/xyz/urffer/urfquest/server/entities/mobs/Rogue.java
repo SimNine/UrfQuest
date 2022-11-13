@@ -12,6 +12,7 @@ import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 
 public class Rogue extends Mob {
 	
@@ -37,9 +38,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 16));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 15));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 13));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SMG));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);

@@ -10,6 +10,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
 public class NPCHuman extends Mob {
@@ -82,7 +83,7 @@ public class NPCHuman extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new Item(this.server, this.map, this.getCenter(), 4));
+			this.map.addItem(new Item(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
 		}
 	}
 }

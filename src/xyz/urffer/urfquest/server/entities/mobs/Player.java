@@ -13,6 +13,7 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 
 public class Player extends Mob {
 	
@@ -37,9 +38,9 @@ public class Player extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 19));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 17));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), 18));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.PICKAXE));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.HATCHET));
+		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOVEL));
 		
 		this.name = name;
 		this.client = c;
