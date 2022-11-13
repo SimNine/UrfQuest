@@ -209,10 +209,4 @@ public enum ItemType {
     public BufferedImage getImage() {
     	return ITEM_IMAGES[this.value];
     }
-    
-    
-    
-    public String toString() {
-    	return Integer.toString(this.value);
-    }
 }

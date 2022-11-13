@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.entities.particles.Particle;
@@ -40,7 +40,7 @@ public class Map {
 
 	private HashMap<Integer, Player> players = new HashMap<>();
 	private HashMap<Integer, Mob> mobs = new HashMap<>();
-	private HashMap<Integer, Item> items = new HashMap<>();
+	private HashMap<Integer, ItemStack> items = new HashMap<>();
 	private HashMap<Integer, Projectile> projectiles = new HashMap<>();
 	
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
@@ -404,15 +404,15 @@ public class Map {
 	 * Entity management
 	 */
 	
-	public void addItem(Item i) {
+	public void addItem(ItemStack i) {
 		items.put(i.id, i);
 	}
 	
-	public void removeItem(Item i) {
+	public void removeItem(ItemStack i) {
 		items.remove(i.id);
 	}
 	
-	public HashMap<Integer, Item> getItems() {
+	public HashMap<Integer, ItemStack> getItems() {
 		return items;
 	}
 	
@@ -420,7 +420,7 @@ public class Map {
 		return items.size();
 	}
 	
-	public Item getItem(int entityID) {
+	public ItemStack getItem(int entityID) {
 		return items.get(entityID);
 	}
 	

@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
@@ -82,7 +82,7 @@ public class Player extends Mob {
 	private String name;
 	private int statCounter = 200;
 	private Inventory inventory;
-	private Item heldItem;
+	private ItemStack heldItem;
 	
 	private double pickupRange = 3.0;
 
@@ -97,7 +97,7 @@ public class Player extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(this, 10);
+		inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
 	}
@@ -177,7 +177,7 @@ public class Player extends Mob {
 		}
 		
 		// update each entry (cooldown) in the inventory
-		for (Item i : inventory.getItems()) {
+		for (ItemStack i : inventory.getItems()) {
 			if (i != null) {
 				i.update();
 			}
@@ -208,20 +208,20 @@ public class Player extends Mob {
 		return inventory;
 	}
 	
-	public ArrayList<Item> getInventoryItems() {
+	public ArrayList<ItemStack> getInventoryItems() {
 		return inventory.getItems();
 	}
 	
-	public boolean addItem(Item i) {
+	public boolean addItem(ItemStack i) {
 		return inventory.addItem(i);
 	}
 	
-	public Item getSelectedItem() {
+	public ItemStack getSelectedItem() {
 		return inventory.getSelectedItem();
 	}
 	
 	public void dropOneOfSelectedItem() {
-		Item i = inventory.removeOneOfSelectedItem();
+		ItemStack i = inventory.removeOneOfSelectedItem();
 		
 		if (i == null) {
 			return;
@@ -241,15 +241,15 @@ public class Player extends Mob {
 		inventory.useSelectedItem();
 	}
 	
-	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
+	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
 		inventory.tryCrafting(input, output);
 	}
 	
-	public void setHeldItem(Item i) {
+	public void setHeldItem(ItemStack i) {
 		heldItem = i;
 	}
 	
-	public Item getHeldItem() {
+	public ItemStack getHeldItem() {
 		return heldItem;
 	}
 	

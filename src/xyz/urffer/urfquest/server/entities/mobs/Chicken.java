@@ -3,7 +3,7 @@ package xyz.urffer.urfquest.server.entities.mobs;
 import java.awt.geom.Rectangle2D;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.Item;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
@@ -82,7 +82,7 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new Item(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
+			this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
 		}
 	}
 }

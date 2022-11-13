@@ -6,20 +6,20 @@ import java.util.Collection;
 
 import xyz.urffer.urfquest.server.ClientThread;
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.Item;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
-import xyz.urffer.urfquest.shared.protocol.types.ItemType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
 
 public class Player extends Mob {
 	
 	private int statCounter = 200;
 	private Inventory inventory;
-	private Item heldItem;
+	private ItemStack heldItem;
 	
 	private double pickupRange = 3.0;
 	
@@ -37,10 +37,7 @@ public class Player extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.PICKAXE));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.HATCHET));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOVEL));
+		inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
 		this.client = c;
@@ -165,51 +162,59 @@ public class Player extends Mob {
 	 * Inventory management
 	 */
 	
-	public Inventory getInventory() {
-		return inventory;
-	}
-	
-	public ArrayList<Item> getInventoryItems() {
+	public ArrayList<ItemStack> getInventoryItems() {
 		return inventory.getItems();
 	}
 	
-	public boolean addItem(Item i) {
+	public boolean addItem(ItemStack i) {
+		MessageItemSetPos misp = new MessageItemSetPos();
+		misp.entityID = i.id;
+		misp.mapID = -1;
+		misp.pos = null;
+		misp.entityOwnerID = this.id;
+		server.sendMessageToAllClients(misp);
+		
 		return inventory.addItem(i);
 	}
 	
-	public Item getSelectedItem() {
+	public ItemStack getSelectedItem() {
 		return inventory.getSelectedItem();
 	}
 	
 	public void dropOneOfSelectedItem() {
-		Item i = inventory.removeOneOfSelectedItem();
-		
-		if (i == null) {
-			return;
-		}
-		
-		i.setPos(this.getPos().clone());
-		i.resetDropTimeout();
-		map.addItem(i);
+		// TODO: multiplayerize
+//		ItemStack i = inventory.removeOneOfSelectedItem();
+//		
+//		if (i == null) {
+//			return;
+//		}
+//		
+//		i.setPos(this.getPos().clone());
+//		i.resetDropTimeout();
+//		map.addItem(i);
 	}
 	
 	public void setSelectedEntry(int i) {
-		inventory.setSelectedEntry(i);
+		// TODO: multiplayerize
+//		inventory.setSelectedEntry(i);
 	}
 	
 	public void useSelectedItem() {
+		// TODO: multiplayerize
 		inventory.useSelectedItem();
 	}
 	
-	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
-		inventory.tryCrafting(input, output);
+	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
+		// TODO: multiplayerize
+//		inventory.tryCrafting(input, output);
 	}
 	
-	public void setHeldItem(Item i) {
-		heldItem = i;
+	public void setHeldItem(ItemStack i) {
+		// TODO: multiplayerize
+//		heldItem = i;
 	}
 	
-	public Item getHeldItem() {
+	public ItemStack getHeldItem() {
 		return heldItem;
 	}
 	

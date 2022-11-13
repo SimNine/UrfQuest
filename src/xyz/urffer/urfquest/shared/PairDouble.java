@@ -11,6 +11,10 @@ public class PairDouble implements Serializable {
 	public double x;
 	public double y;
 	
+	public PairDouble(double n) {
+		this(n, n);
+	}
+	
 	public PairDouble(double x, double y) {
 		this.x = x;
 		this.y = y;

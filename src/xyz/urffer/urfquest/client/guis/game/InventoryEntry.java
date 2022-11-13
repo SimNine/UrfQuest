@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.guis.Clickable;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
@@ -14,7 +14,7 @@ import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.GUIObject;
 
 public class InventoryEntry extends GUIObject implements Clickable {
-	private Item item;
+	private ItemStack item;
 	private Color color;
 	private int entryNum;
 	
@@ -30,7 +30,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		this.type = INVENTORY;
 	}
 	
-	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, Item item) {
+	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, ItemStack item) {
 		super(c, anchorPoint, xRel, yRel, width, height, parent);
 		this.item = item;
 		this.color = new Color(128, 128, 128, 128);
@@ -42,7 +42,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		g.setColor(color);
 		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		
-		Item tempItem;
+		ItemStack tempItem;
 		if (type == INVENTORY) {
 			tempItem = this.client.getState().getPlayer().getInventoryItems().get(entryNum);
 			if (this.client.getState().getPlayer().getInventory().getSelectedIndex() == entryNum) {
@@ -88,7 +88,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		this.color = c;
 	}
 	
-	public Item getItem() {
+	public ItemStack getItem() {
 		return item;
 	}
 
@@ -100,8 +100,8 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		//System.out.println("ding");
 		
 		Player p = this.client.getState().getPlayer();
-		Item tempItem = p.getInventory().getItems().get(entryNum);
-		Item heldItem = p.getHeldItem();
+		ItemStack tempItem = p.getInventory().getItems().get(entryNum);
+		ItemStack heldItem = p.getHeldItem();
 		if (tempItem == null && heldItem != null) {
 			p.getInventory().setItemAtIndex(entryNum, heldItem);
 			p.setHeldItem(null);
@@ -109,7 +109,7 @@ public class InventoryEntry extends GUIObject implements Clickable {
 			p.setHeldItem(tempItem);
 			p.getInventory().setItemAtIndex(entryNum, null);
 		} else if (tempItem != null && heldItem != null) {
-			Item swap = tempItem;
+			ItemStack swap = tempItem;
 			p.getInventory().setItemAtIndex(entryNum, heldItem);
 			p.setHeldItem(swap);
 		}

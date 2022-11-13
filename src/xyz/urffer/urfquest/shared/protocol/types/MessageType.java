@@ -23,5 +23,7 @@ public enum MessageType {
 	INIT_PLAYER,
 	INIT_MAP,
 	INIT_CHUNK,
+	INIT_ITEM,
+	ITEM_SET_POS,
 	SERVER_ERROR
 }

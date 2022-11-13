@@ -7,7 +7,7 @@ import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.Entity;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.entities.particles.Particle;
@@ -226,7 +226,7 @@ public class GameBoardOverlay extends GUIContainer {
 			m.draw(g);
 		}
 
-		for (Item i : currMap.getItems().values()) {
+		for (ItemStack i : currMap.getItems().values()) {
 			if (i.getCenter().x > camera.getPos().x - 30 &&
 				i.getCenter().x < camera.getPos().x + 30 &&
 				i.getCenter().y > camera.getPos().y - 30 &&

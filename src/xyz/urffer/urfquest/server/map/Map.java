@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import xyz.urffer.urfquest.server.IDGenerator;
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.Item;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.entities.projectiles.Projectile;
@@ -35,7 +35,7 @@ public class Map {
 
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 	private HashMap<Integer, Mob> mobs = new HashMap<Integer, Mob>();
-	private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
+	private HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
 	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
 	
 	private HashSet<Structure> structures = new HashSet<Structure>();
@@ -101,11 +101,11 @@ public class Map {
 	public void tick() {
 		ArrayList<Player> addPlayers = new ArrayList<Player>();
 		ArrayList<Mob> addMobs = new ArrayList<Mob>();
-		ArrayList<Item> addItems = new ArrayList<Item>();
+		ArrayList<ItemStack> addItems = new ArrayList<ItemStack>();
 		ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
 		
 		ArrayList<Player> removePlayers = new ArrayList<Player>();
-		ArrayList<Item> removeItems = new ArrayList<Item>();
+		ArrayList<ItemStack> removeItems = new ArrayList<ItemStack>();
 		ArrayList<Mob> removeMobs = new ArrayList<Mob>();
 		ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
 		
@@ -121,7 +121,7 @@ public class Map {
 		}
 		
 		// update items
-		for (Item i : items.values()) {
+		for (ItemStack i : items.values()) {
 			i.tick();
 		}
 		
@@ -205,7 +205,7 @@ public class Map {
 		}
 
 		// remove entities
-		for (Item i : removeItems) {
+		for (ItemStack i : removeItems) {
 			items.remove(i.id);
 		}
 		for (Mob m : removeMobs) {
@@ -223,7 +223,7 @@ public class Map {
 		removePlayers.clear();
 
 		// add entities
-		for (Item i : addItems) {
+		for (ItemStack i : addItems) {
 			items.put(i.id, i);
 		}
 		for (Mob m : addMobs) {
@@ -575,7 +575,7 @@ public class Map {
 	 * Entity management
 	 */
 	
-	public void addItem(Item i) {
+	public void addItem(ItemStack i) {
 		items.put(i.id, i);
 	}
 	
@@ -595,7 +595,7 @@ public class Map {
 		items.remove(entityID);
 	}
 	
-	public void removeItem(Item i) {
+	public void removeItem(ItemStack i) {
 		items.remove(i.id);
 	}
 	
@@ -623,7 +623,7 @@ public class Map {
 		players.remove(p.id);
 	}
 	
-	public HashMap<Integer, Item> getItems() {
+	public HashMap<Integer, ItemStack> getItems() {
 		return items;
 	}
 	

@@ -17,10 +17,12 @@ import javax.swing.SwingUtilities;
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.entities.Entity;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
+import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -32,10 +34,12 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfi
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
@@ -225,6 +229,45 @@ public class Client {
 						state.getCurrentMap().requestMissingChunks();
 					}
 				}
+				break;
+			}
+			case INIT_ITEM: {
+				// - Initializes an item
+				// -- Spawns in (very briefly) at the origin of the surface map
+				// TODO: improve that
+				MessageInitItem mii = (MessageInitItem)p.getMessage();
+				
+				ItemStack item = new ItemStack(
+					this,
+					mii.entityID,
+					this.state.getCurrentMap(), // TODO: use specific mapID
+					mii.pos,
+					mii.itemType,
+					mii.stacksize,
+					mii.durability
+				);
+				this.state.getCurrentMap().addItem(item);
+				
+				break;
+			}
+			case ITEM_SET_POS: {
+				// - Sets the position or owner of an item
+				MessageItemSetPos misp = (MessageItemSetPos)p.getMessage();
+				
+				// TODO: fix for multiple maps
+				if (misp.mapID != -1) {
+//					Map map = state.getMap(misp.mapID);
+					Map map = state.getCurrentMap();
+					map.getItem(misp.entityID).setPos(misp.pos);
+				} else {
+//					Item item = state.getItem(misp.entityID);
+					Map map = state.getCurrentMap();
+					ItemStack item = map.getItem(misp.entityID);
+					map.removeItem(item);
+					Player newOwner = map.getPlayer(misp.entityOwnerID);
+					newOwner.addItem(item);
+				}
+				
 				break;
 			}
 			case INIT_CHUNK: {

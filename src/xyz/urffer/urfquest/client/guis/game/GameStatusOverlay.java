@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 
@@ -90,7 +90,7 @@ public class GameStatusOverlay extends GUIContainer {
 	
 	public void draw(Graphics g) {
 		super.draw(g);
-		Item heldItem = this.client.getState().getPlayer().getHeldItem();
+		ItemStack heldItem = this.client.getState().getPlayer().getHeldItem();
 		if (heldItem != null) {
 			g.drawImage(heldItem.getPic(), client.getPanel().mousePos.x, client.getPanel().mousePos.y, null);
 		}

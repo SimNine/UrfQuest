@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 
 public class Inventory {
-	private Item[] entries;
+	private ItemStack[] entries;
 	private HashSet<Integer> occupiedEntries = new HashSet<Integer>();
 	private int selectedEntry = 0;
 	private Mob owner;
 	
 	public Inventory(Mob owner, int size) {
-		entries = new Item[size];
+		entries = new ItemStack[size];
 		this.owner = owner;
 	}
 	
 	// gets an arrayList of all entries in the inventory
-	public ArrayList<Item> getItems() {
-		ArrayList<Item> e = new ArrayList<Item>();
+	public ArrayList<ItemStack> getItems() {
+		ArrayList<ItemStack> e = new ArrayList<ItemStack>();
 		for (int i = 0; i < entries.length; i++) {
 			e.add(entries[i]);
 		}
@@ -28,7 +28,7 @@ public class Inventory {
 	}
 	
 	// finds either an empty slot for the item, or adds it to a preexisting stack
-	public boolean addItem(Item i) {
+	public boolean addItem(ItemStack i) {
 		if (i.maxStackSize() > 1) { // if the item is stackable
 			if (hasItem(i)) { // if the item already has a stack
 				entries[findIndexOfEntry(i)].incStackSize(1);
@@ -57,7 +57,7 @@ public class Inventory {
 	
 	// takes one of the selected item out of the stack and returns it
 	// (removes the stack if the item is unstackable)
-	public Item removeOneOfSelectedItem() {
+	public ItemStack removeOneOfSelectedItem() {
 //		if (entries[selectedEntry] != null) {
 //			if (entries[selectedEntry].maxStackSize() == 1) {
 //				Item temp = entries[selectedEntry];
@@ -77,7 +77,7 @@ public class Inventory {
 		return null;
 	}
 	
-	public Item getSelectedItem() {
+	public ItemStack getSelectedItem() {
 		return entries[selectedEntry];
 	}
 	
@@ -95,12 +95,12 @@ public class Inventory {
 		selectedEntry = i;
 	}
 	
-	public boolean hasItem(Item i) {
+	public boolean hasItem(ItemStack i) {
 		return (findIndexOfEntry(i) != -1);
 	}
 	
 	public void useSelectedItem() {
-		Item entry = entries[selectedEntry];
+		ItemStack entry = entries[selectedEntry];
 		
 		if (entry == null) {
 			return;
@@ -133,7 +133,7 @@ public class Inventory {
 	}
 	
 	// finds the first index of the given type of item, -1 if it isn't in the inventory
-	private int findIndexOfEntry(Item i) {
+	private int findIndexOfEntry(ItemStack i) {
 		for (int j = 0; j < entries.length; j++) {
 			if (entries[j] != null && 
 				entries[j].getType() == i.getType()) {
@@ -154,9 +154,9 @@ public class Inventory {
 	}
 	
 	// attempts to craft, using the given inputs and outputs
-	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
+	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
 		// check to see if the recipie is craftable
-		for (Item i : input) {
+		for (ItemStack i : input) {
 			int index = findIndexOfEntry(i);
 			if (index == -1) {
 				return;
@@ -169,12 +169,12 @@ public class Inventory {
 		}
 		
 		//at this point, the recipie is craftable
-		for (Item i : input) {
+		for (ItemStack i : input) {
 			int index = findIndexOfEntry(i);
 			removeItemsOfEntry(index, i.currStackSize());
 		}
 		
-		for (Item i : output) {
+		for (ItemStack i : output) {
 			int index = nextOpenSlot();
 			entries[index] = i;
 			occupiedEntries.add(index);
@@ -185,7 +185,7 @@ public class Inventory {
 		return selectedEntry;
 	}
 	
-	public void setItemAtIndex(int index, Item i) {
+	public void setItemAtIndex(int index, ItemStack i) {
 		if (i == null) {
 			occupiedEntries.remove(index);
 			entries[index] = null;

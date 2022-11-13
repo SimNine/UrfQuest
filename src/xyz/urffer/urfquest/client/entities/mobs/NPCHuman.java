@@ -13,9 +13,10 @@ import javax.imageio.ImageIO;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
+import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.PairDouble;
 
 public class NPCHuman extends Mob {
@@ -51,7 +52,7 @@ public class NPCHuman extends Mob {
 	protected String name;
 	protected int statCounter = 200;
 	protected Inventory inventory;
-	protected Item heldItem;
+	protected ItemStack heldItem;
 	
 	protected double pickupRange = 3.0;
 
@@ -66,7 +67,7 @@ public class NPCHuman extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(this, 10);
+		inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
 	}

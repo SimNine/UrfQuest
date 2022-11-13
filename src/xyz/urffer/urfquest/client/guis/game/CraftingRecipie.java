@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.GUIObject;
 
 public class CraftingRecipie extends GUIContainer {
-	private ArrayList<Item> input = new ArrayList<Item>();
-	private ArrayList<Item> output = new ArrayList<Item>();
+	private ArrayList<ItemStack> input = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> output = new ArrayList<ItemStack>();
 	
 	private HashSet<GUIObject> inputEntries = new HashSet<GUIObject>();
 	private GUIContainer inputContainer;
@@ -43,7 +43,7 @@ public class CraftingRecipie extends GUIContainer {
 		}
 	}
 	
-	public void addInput(Item i) {
+	public void addInput(ItemStack i) {
 		InventoryEntry e = new InventoryEntry(this.client, 
 				  GUIAnchor.TOP_LEFT, 
 				  5 + input.size()*45, 
@@ -55,11 +55,11 @@ public class CraftingRecipie extends GUIContainer {
 		inputEntries.add(e);
 	}
 	
-	public ArrayList<Item> getInput() {
+	public ArrayList<ItemStack> getInput() {
 		return input;
 	}
 	
-	public void addOutput(Item i) {
+	public void addOutput(ItemStack i) {
 		InventoryEntry e = new InventoryEntry(this.client, 
 				  GUIAnchor.TOP_LEFT, 
 				  5 + output.size()*45, 
@@ -71,7 +71,7 @@ public class CraftingRecipie extends GUIContainer {
 		guiObjects.add(e);
 	}
 	
-	public ArrayList<Item> getOutput() {
+	public ArrayList<ItemStack> getOutput() {
 		return output;
 	}
 	

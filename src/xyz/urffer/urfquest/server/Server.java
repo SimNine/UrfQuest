@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.commands.Command;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.server.commands.CommandProcessor;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.MapChunk;
@@ -27,6 +28,7 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
+import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
@@ -41,6 +43,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
 public class Server {
@@ -227,8 +230,13 @@ public class Server {
 					c
 				);
 				this.state.addPlayer(newPlayer);
+				Map surfaceMap = this.state.getSurfaceMap();
 				this.state.getSurfaceMap().addPlayer(newPlayer);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
+				
+				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.PICKAXE));
+				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.HATCHET));
+				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.SHOVEL));
 				
 				if (opsList.contains(playerName)) {
 					c.setCommandPermissions(CommandPermissions.OP);

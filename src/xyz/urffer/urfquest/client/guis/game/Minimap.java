@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.guis.Clickable;

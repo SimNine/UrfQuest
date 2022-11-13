@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.Item;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
@@ -38,9 +38,9 @@ public class Rogue extends Mob {
 		maxFullness = 100.0;
 		
 		inventory = new Inventory(this, 10);
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
-		inventory.addItem(new Item(srv, this.map, new PairDouble(0, 0), ItemType.SMG));
+		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
+		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
+		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SMG));
 		
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
@@ -80,7 +80,7 @@ public class Rogue extends Mob {
 		}
 		
 		// update each entry (cooldown) in the inventory
-		for (Item i : inventory.getItems()) {
+		for (ItemStack i : inventory.getItems()) {
 			if (i != null) {
 				i.tick();
 			}
@@ -199,20 +199,20 @@ public class Rogue extends Mob {
 		return inventory;
 	}
 	
-	public ArrayList<Item> getInventoryItems() {
+	public ArrayList<ItemStack> getInventoryItems() {
 		return inventory.getItems();
 	}
 	
-	public boolean addItem(Item i) {
+	public boolean addItem(ItemStack i) {
 		return inventory.addItem(i);
 	}
 	
-	public Item getSelectedItem() {
+	public ItemStack getSelectedItem() {
 		return inventory.getSelectedItem();
 	}
 	
 	public void dropOneOfSelectedItem() {
-		Item i = inventory.removeOneOfSelectedItem();
+		ItemStack i = inventory.removeOneOfSelectedItem();
 		
 		if (i == null) {
 			return;
@@ -231,7 +231,7 @@ public class Rogue extends Mob {
 		inventory.useSelectedItem();
 	}
 	
-	public void tryCrafting(Collection<Item> input, Collection<Item> output) {
+	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
 		inventory.tryCrafting(input, output);
 	}
 

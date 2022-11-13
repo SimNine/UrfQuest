@@ -3,7 +3,7 @@ package xyz.urffer.urfquest.server.entities.mobs;
 import java.awt.geom.Rectangle2D;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.Item;
+import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
@@ -18,7 +18,7 @@ public class Cyclops extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	private Item shotgun;
+	private ItemStack shotgun;
 
 	public Cyclops(Server srv, Map m, PairDouble pos) {
 		super(srv, m, pos);
@@ -36,7 +36,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new Item(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN);
+		shotgun = new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
@@ -90,7 +90,7 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		this.map.addItem(new Item(this.server, this.map, this.getCenter(), ItemType.BONE));
+		this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.BONE));
 	}
 
 	@Override

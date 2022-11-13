@@ -17,6 +17,8 @@ public class Constants {
 	
 	public static final String FILE_STARTUP_PREFS = "startup.config";
 	
+	public static final int DEFAULT_PLAYER_INVENTORY_SIZE = 10;
+	
 	
 	/*
 	 * CLIENT ONLY

@@ -4,11 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
@@ -18,38 +14,12 @@ import xyz.urffer.urfquest.client.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.client.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.client.tiles.TileImages;
-import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
+import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
-public class Item extends Entity {
-	
-	/*
-	 * drawing methods
-	 */
-	
-	protected void drawEntity(Graphics g) {
-		g.drawImage(itemType.getImage(), 
-					client.getPanel().gameToWindowX(bounds.getX()), 
-					client.getPanel().gameToWindowY(bounds.getY()), 
-					null);
-	}
-
-	public void drawDebug(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
-					 (int) client.getPanel().gameToWindowX(bounds.getX()),
-					 (int) client.getPanel().gameToWindowY(bounds.getY()));
-		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
-				 (int) client.getPanel().gameToWindowX(bounds.getX()),
-				 (int) client.getPanel().gameToWindowY(bounds.getY()) + 10);
-	};
-
-	public BufferedImage getPic() {
-		return itemType.getImage();
-	}
+public class ItemStack extends Entity {
 
 	private ItemType itemType;
 	private int cooldown;
@@ -60,15 +30,15 @@ public class Item extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public Item(Client c, int id, Map m, PairDouble pos, ItemType type) {
+	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type) {
 		this(c, id, m, pos, type, 1, -1);
 	}
 	
-	public Item(Client c, int id, Map m, PairDouble pos, ItemType type, int durability) {
+	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type, int durability) {
 		this(c, id, m, pos, type, 1, durability);
 	}
 	
-	public Item(Client c, int id, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
+	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
 		super(c, id, m, pos);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
@@ -214,97 +184,105 @@ public class Item extends Entity {
 //			int dir5 = m.getDirection() + (int)((Math.random() - 0.5)*10);
 //			m.getMap().addProjectile(new Bullet(pos5[0], pos5[1], dir5, Bullet.getDefaultVelocity(), m, map));
 			return true;
-		case PICKAXE:
-			int[] tile = m.tileAtDistance(1.0);
-			if (tile[0] == TileImages.BOULDER) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				if (tile[1] == TileImages.GRASS_BOULDER) {
-					//m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				} else if (tile[1] == TileImages.WATER_BOULDER) {
-					//m.getMap().setTileAt(coords[0], coords[1], Tiles.WATER);
-				} else if (tile[1] == TileImages.SAND_BOULDER) {
-					//m.getMap().setTileAt(coords[0], coords[1], Tiles.SAND);
-				} else if (tile[1] == TileImages.DIRT_BOULDER) {
-					//m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
-					double rand = Math.random();
-					if (rand > .95) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LAW_RUNE));
-					} else if (rand > .90) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COSMIC_RUNE));
-					} else if (rand > .85) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.ASTRAL_RUNE));
-					} else if (rand > .82) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SHOTGUN));
-					} else if (rand > .79) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SMG));
-					} else if (rand > .75) {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.GRENADE_ITEM));
-					} else {
-						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
-					}
-				}
-				//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
-				cooldown = getMaxCooldown();
-				return true;
-			} else if (tile[0] == TileImages.STONE) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				if (tile[1] == TileImages.STONE_DEF) {
-					// nothing else
-				} else if (tile[1] == TileImages.COPPERORE_STONE) {
-					//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COPPER_ORE));
-				} else if (tile[1] == TileImages.IRONORE_STONE) {
-					//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.IRON_ORE));
-				}
-				//m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
-				cooldown = getMaxCooldown();			
-				return true;
-			} else {
-				return false;
-			}
-		case HATCHET:
-			if (m.tileAtDistance(1.0)[0] == TileImages.TREE) {
-				int[] coords = m.tileCoordsAtDistance(1.0);
-				//m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
-				//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LOG));
-				
-				cooldown = getMaxCooldown();
-				return true;
-			} else {
-				return false;
-			}
-		case SHOVEL:
-			if (m.tileAtDistance(0)[0] == TileImages.GRASS) {
-				int[] coords = m.tileCoordsAtDistance(0);
-				if (Math.random() > .05) {
-					m.getMap().setTileAt(coords, 0);
-				} else {
-					m.getMap().setTileAt(coords, 13);
-					
-					//int caveSize = 400;
-					
-					// create new map
-//					Map newCaveMap = new Map(Map.CAVE_MAP);
-//					int xHome = newCaveMap.getHomeCoords()[0];
-//					int yHome = newCaveMap.getHomeCoords()[1];
-//					newCaveMap.setTileAt(xHome, yHome, 13);
-//					
-//					//generate and add new link
-//					MapLink newLink = new MapLink(m.getMap(), coords[0], coords[1], newCaveMap, xHome, yHome);
-//					m.getMap().setActiveTile(coords[0], coords[1], newLink);
-//					newCaveMap.setActiveTile(xHome, yHome, newLink);
-//					
-//					//debug
-//					if (UrfQuestClient.debug) {
-//						System.out.println("soruce: " + coords[0] + ", " + coords[1]);
-//						System.out.println("exit: " + xHome + ", " + yHome);
+		case PICKAXE: {
+			// TODO: fix
+//			int[] tile = m.tileAtDistance(1.0);
+//			if (tile[0] == TileImages.BOULDER) {
+//				int[] coords = m.tileCoordsAtDistance(1.0);
+//				if (tile[1] == TileImages.GRASS_BOULDER) {
+//					//m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
+//				} else if (tile[1] == TileImages.WATER_BOULDER) {
+//					//m.getMap().setTileAt(coords[0], coords[1], Tiles.WATER);
+//				} else if (tile[1] == TileImages.SAND_BOULDER) {
+//					//m.getMap().setTileAt(coords[0], coords[1], Tiles.SAND);
+//				} else if (tile[1] == TileImages.DIRT_BOULDER) {
+//					//m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
+//					double rand = Math.random();
+//					if (rand > .95) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LAW_RUNE));
+//					} else if (rand > .90) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COSMIC_RUNE));
+//					} else if (rand > .85) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.ASTRAL_RUNE));
+//					} else if (rand > .82) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SHOTGUN));
+//					} else if (rand > .79) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.SMG));
+//					} else if (rand > .75) {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.GRENADE_ITEM));
+//					} else {
+//						//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
 //					}
-				}
-				
-				cooldown = getMaxCooldown();
-				return true;
-			} else {
-				return false;
-			}
+//				}
+//				//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.STONE));
+//				cooldown = getMaxCooldown();
+//				return true;
+//			} else if (tile[0] == TileImages.STONE) {
+//				int[] coords = m.tileCoordsAtDistance(1.0);
+//				if (tile[1] == TileImages.STONE_DEF) {
+//					// nothing else
+//				} else if (tile[1] == TileImages.COPPERORE_STONE) {
+//					//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.COPPER_ORE));
+//				} else if (tile[1] == TileImages.IRONORE_STONE) {
+//					//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.IRON_ORE));
+//				}
+//				//m.getMap().setTileAt(coords[0], coords[1], Tiles.DIRT);
+//				cooldown = getMaxCooldown();			
+//				return true;
+//			} else {
+//				return false;
+//			}
+			return false;
+		}
+		case HATCHET: {
+			// TODO: fix
+//			if (m.tileAtDistance(1.0).objectType == TileType.TREE) {
+//				int[] coords = m.tileCoordsAtDistance(1.0);
+//				//m.getMap().setTileAt(coords[0], coords[1], Tiles.GRASS);
+//				//m.getMap().addItem(new Item(client, map, coords[0], coords[1], Item.LOG));
+//				
+//				cooldown = getMaxCooldown();
+//				return true;
+//			} else {
+//				return false;
+//			}
+			return false;
+		}
+		case SHOVEL: {
+//			if (m.tileAtDistance(0)[0] == TileImages.GRASS) {
+//				int[] coords = m.tileCoordsAtDistance(0);
+//				if (Math.random() > .05) {
+//					m.getMap().setTileAt(coords, 0);
+//				} else {
+//					m.getMap().setTileAt(coords, 13);
+//					
+//					//int caveSize = 400;
+//					
+//					// create new map
+////					Map newCaveMap = new Map(Map.CAVE_MAP);
+////					int xHome = newCaveMap.getHomeCoords()[0];
+////					int yHome = newCaveMap.getHomeCoords()[1];
+////					newCaveMap.setTileAt(xHome, yHome, 13);
+////					
+////					//generate and add new link
+////					MapLink newLink = new MapLink(m.getMap(), coords[0], coords[1], newCaveMap, xHome, yHome);
+////					m.getMap().setActiveTile(coords[0], coords[1], newLink);
+////					newCaveMap.setActiveTile(xHome, yHome, newLink);
+////					
+////					//debug
+////					if (UrfQuestClient.debug) {
+////						System.out.println("soruce: " + coords[0] + ", " + coords[1]);
+////						System.out.println("exit: " + xHome + ", " + yHome);
+////					}
+//				}
+//				
+//				cooldown = getMaxCooldown();
+//				return true;
+//			} else {
+//				return false;
+//			}
+			return false;
+		}
 		case IRON_ORE:
 			return false;
 		case COPPER_ORE:
@@ -336,21 +314,20 @@ public class Item extends Entity {
 	}
 	
 	public void accelerateTowards(Mob m) {
-		double xDiff = (m.getCenter()[0] - this.getCenter()[0]);
-		double yDiff = (m.getCenter()[1] - this.getCenter()[1]);
+		PairDouble diff = m.getCenter().subtract(this.getCenter());
 		
-		if (xDiff > 0) { // if m is east of this
-			vel[0] += 0.002;
-		} else if (xDiff < 0) { // if m is west of this
-			vel[0] -= 0.002;
+		if (diff.x > 0) { // if m is east of this
+			vel.x += 0.002;
+		} else if (diff.x < 0) { // if m is west of this
+			vel.x -= 0.002;
 		} else {
 			// nada
 		}
 		
-		if (yDiff > 0) { // if m is south of this
-			vel[1] += 0.002;
-		} else if (yDiff < 0) { // if m is north of this
-			vel[1] -= 0.002;
+		if (diff.y > 0) { // if m is south of this
+			vel.y += 0.002;
+		} else if (diff.y < 0) { // if m is north of this
+			vel.y -= 0.002;
 		} else {
 			// nada
 		}
@@ -462,5 +439,30 @@ public class Item extends Entity {
 	
 	public boolean isPickupable() {
 		return (dropTimeout == 0);
+	}
+	
+	/*
+	 * drawing methods
+	 */
+	
+	protected void drawEntity(Graphics g) {
+		g.drawImage(itemType.getImage(), 
+					client.getPanel().gameToWindowX(bounds.getX()), 
+					client.getPanel().gameToWindowY(bounds.getY()), 
+					null);
+	}
+
+	public void drawDebug(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.drawString("bounds coords: " + bounds.getX() + ", " + bounds.getY(),
+					 (int) client.getPanel().gameToWindowX(bounds.getX()),
+					 (int) client.getPanel().gameToWindowY(bounds.getY()));
+		g.drawString("bounds dimensions: " + bounds.getWidth() + ", " + bounds.getHeight(),
+				 (int) client.getPanel().gameToWindowX(bounds.getX()),
+				 (int) client.getPanel().gameToWindowY(bounds.getY()) + 10);
+	};
+
+	public BufferedImage getPic() {
+		return itemType.getImage();
 	}
 }

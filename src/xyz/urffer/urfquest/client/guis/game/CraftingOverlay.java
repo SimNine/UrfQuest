@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.entities.items.Item;
+import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.menus.TextBox;
