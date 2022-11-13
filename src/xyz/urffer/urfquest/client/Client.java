@@ -147,7 +147,7 @@ public class Client {
 				this.send(mrp);
 				break;
 			}
-			case ENTITY_INIT: {
+			case INIT_ENTITY: {
 				// - Initializes an entity of the given type
 				
 				// If this entity is not on the current map, do nothing
@@ -202,7 +202,7 @@ public class Client {
 				}
 				break;
 			}
-			case PLAYER_INIT: {
+			case INIT_PLAYER: {
 				// - Initializes a player
 				// -- Assign it to this client
 				// -- Initialize this client's frontend
@@ -227,7 +227,7 @@ public class Client {
 				}
 				break;
 			}
-			case CHUNK_INIT: {
+			case INIT_CHUNK: {
 				// - Loads the payloads of this message into the specified chunk
 				MessageInitChunk m = (MessageInitChunk)p.getMessage();
 				
@@ -253,7 +253,7 @@ public class Client {
 				}
 				break;
 			}
-			case MAP_INIT: {
+			case INIT_MAP: {
 				// - Loads metadata about the current map (id, climate, etc)
 				MessageInitMap m = (MessageInitMap)p.getMessage();
 				

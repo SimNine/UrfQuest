@@ -17,7 +17,7 @@ public class MessageRequestChunk extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.CHUNK_REQUEST;
+		return MessageType.REQUEST_CHUNK;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class MessageRequestMap extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.MAP_REQUEST;
+		return MessageType.REQUEST_MAP;
 	}
 
 	@Override

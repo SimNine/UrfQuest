@@ -15,7 +15,7 @@ public class MessageInitMap extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.MAP_INIT;
+		return MessageType.INIT_MAP;
 	}
 
 	@Override

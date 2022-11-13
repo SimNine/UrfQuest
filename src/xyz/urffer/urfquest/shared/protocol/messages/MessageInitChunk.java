@@ -19,7 +19,7 @@ public class MessageInitChunk extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.CHUNK_INIT;
+		return MessageType.INIT_CHUNK;
 	}
 
 	@Override

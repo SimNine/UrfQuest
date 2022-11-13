@@ -22,7 +22,7 @@ public class MessageInitEntity extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.ENTITY_INIT;
+		return MessageType.INIT_ENTITY;
 	}
 
 	@Override

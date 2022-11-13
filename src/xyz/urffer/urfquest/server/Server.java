@@ -243,7 +243,7 @@ public class Server {
 				player.setMovementVector(m.vector);
 				break;
 			}
-			case MAP_REQUEST: {
+			case REQUEST_MAP: {
 				// - Recieves a request from a client to load a new map
 				// - Sends metadata of the requested map to the client - TODO
 				// - Sends chunks nearby the player to the client
@@ -268,7 +268,7 @@ public class Server {
 				}
 				break;
 			}
-			case CHUNK_REQUEST: {
+			case REQUEST_CHUNK: {
 				// - Recieves a request from a client to load a chunk
 				// - Sends the chunk data back to the client
 				MessageRequestChunk m = (MessageRequestChunk)p.getMessage();

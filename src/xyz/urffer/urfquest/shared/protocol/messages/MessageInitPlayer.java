@@ -20,7 +20,7 @@ public class MessageInitPlayer extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.PLAYER_INIT;
+		return MessageType.INIT_PLAYER;
 	}
 
 	@Override
