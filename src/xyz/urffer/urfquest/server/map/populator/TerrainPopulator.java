@@ -1,9 +1,10 @@
 package xyz.urffer.urfquest.server.map.populator;
 
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.structures.Structure;
-import xyz.urffer.urfquest.shared.PairInt;
 
 public abstract class TerrainPopulator {
 	

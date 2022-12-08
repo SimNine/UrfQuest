@@ -2,10 +2,11 @@ package xyz.urffer.urfquest.server.map;
 
 import java.awt.image.BufferedImage;
 
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public class MapChunk {

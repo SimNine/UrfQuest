@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
@@ -17,8 +20,6 @@ import xyz.urffer.urfquest.client.guis.GUIObject;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.ArrayUtils;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 
 public class Minimap extends GUIObject implements Clickable {
 	// the coordinates of the pixel in the upper-left corner

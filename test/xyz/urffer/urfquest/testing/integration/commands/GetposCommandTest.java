@@ -7,10 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 
 class GetposCommandTest {

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>xyz.urffer</groupId>
   <artifactId>urfquest</artifactId>
-  <version>0.19.0</version>
+  <version>0.20.0</version>
   <name>UrfQuest</name>
   <description>A top-down open world survival game</description>
   <repositories>
@@ -15,7 +15,7 @@
     <dependency>
       <groupId>com.github.SimNine</groupId>
       <artifactId>UrfJavaUtils</artifactId>
-      <version>v0.1.1</version>
+      <version>v0.2.0</version>
     </dependency>
     <dependency>
         <groupId>org.junit.jupiter</groupId>

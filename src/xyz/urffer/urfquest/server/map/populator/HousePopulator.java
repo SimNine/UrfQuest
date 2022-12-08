@@ -1,12 +1,13 @@
 package xyz.urffer.urfquest.server.map.populator;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.structures.House;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;

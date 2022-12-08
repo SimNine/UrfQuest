@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
@@ -17,7 +19,6 @@ import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
 
 public class NPCHuman extends Mob {
 

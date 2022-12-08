@@ -2,13 +2,14 @@ package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;

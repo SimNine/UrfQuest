@@ -19,6 +19,9 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
@@ -33,8 +36,6 @@ import xyz.urffer.urfquest.client.guis.game.GameWeatherOverlay;
 import xyz.urffer.urfquest.client.guis.game.MapViewOverlay;
 import xyz.urffer.urfquest.client.guis.menus.KeybindingOverlay;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
 

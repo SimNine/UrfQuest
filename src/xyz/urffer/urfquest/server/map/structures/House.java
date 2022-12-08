@@ -1,6 +1,6 @@
 package xyz.urffer.urfquest.server.map.structures;
 
-import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfutils.math.PairInt;
 
 public class House extends Structure {
 

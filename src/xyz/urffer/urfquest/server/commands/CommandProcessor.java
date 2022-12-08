@@ -2,6 +2,9 @@ package xyz.urffer.urfquest.server.commands;
 
 import java.util.HashMap;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.ClientThread;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.Chicken;
@@ -10,8 +13,6 @@ import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.ChatMessage;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;

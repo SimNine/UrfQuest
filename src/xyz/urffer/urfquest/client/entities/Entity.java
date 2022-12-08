@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Entity {

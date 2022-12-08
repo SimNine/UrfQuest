@@ -1,8 +1,9 @@
 package xyz.urffer.urfquest.server.map.generator;
 
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;

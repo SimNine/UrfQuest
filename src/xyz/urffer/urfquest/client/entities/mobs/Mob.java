@@ -3,12 +3,13 @@ package xyz.urffer.urfquest.client.entities.mobs;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 
 public abstract class Mob extends Entity {

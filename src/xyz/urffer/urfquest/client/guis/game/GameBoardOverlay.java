@@ -3,6 +3,9 @@ package xyz.urffer.urfquest.client.guis.game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
@@ -16,8 +19,6 @@ import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.tiles.TileImages;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 

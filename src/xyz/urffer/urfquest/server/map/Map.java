@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.IDGenerator;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
@@ -19,8 +22,6 @@ import xyz.urffer.urfquest.server.map.populator.HousePopulator;
 import xyz.urffer.urfquest.server.map.structures.Structure;
 import xyz.urffer.urfquest.server.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 

@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
@@ -15,8 +18,6 @@ import xyz.urffer.urfquest.client.entities.particles.Particle;
 import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
 import xyz.urffer.urfquest.client.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 

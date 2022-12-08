@@ -1,7 +1,8 @@
 package xyz.urffer.urfquest.shared.protocol.messages;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.Logger;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;

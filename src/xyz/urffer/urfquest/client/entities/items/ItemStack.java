@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
@@ -14,8 +17,6 @@ import xyz.urffer.urfquest.client.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.client.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 

@@ -2,10 +2,11 @@ package xyz.urffer.urfquest.client.entities.mobs;
 
 import java.awt.Graphics;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Vector;
 
 public class CameraMob extends Mob {

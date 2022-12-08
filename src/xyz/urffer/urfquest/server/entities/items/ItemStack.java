@@ -2,6 +2,9 @@ package xyz.urffer.urfquest.server.entities.items;
 
 import java.awt.geom.Rectangle2D;
 
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.server.Server;
@@ -14,8 +17,6 @@ import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.server.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.tiles.MapLink;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;

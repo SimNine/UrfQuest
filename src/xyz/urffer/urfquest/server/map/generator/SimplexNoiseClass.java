@@ -2,7 +2,7 @@ package xyz.urffer.urfquest.server.map.generator;
 
 import java.util.Random;
 
-import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfutils.math.PairInt;
 
 public class SimplexNoiseClass {
 	private int grad3[][] = { { 1, 1, 0 }, { -1, 1, 0 }, { 1, -1, 0 }, { -1, -1, 0 }, { 1, 0, 1 }, { -1, 0, 1 },

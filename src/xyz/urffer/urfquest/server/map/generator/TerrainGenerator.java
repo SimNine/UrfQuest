@@ -2,8 +2,9 @@ package xyz.urffer.urfquest.server.map.generator;
 
 import java.util.Random;
 
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.server.map.MapChunk;
-import xyz.urffer.urfquest.shared.PairInt;
 
 public abstract class TerrainGenerator {
 	

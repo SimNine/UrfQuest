@@ -5,13 +5,14 @@ import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import xyz.urffer.urfutils.math.PairInt;
+
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.MapChunk;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.PairInt;
 import xyz.urffer.urfutils.pannablepanel.PannablePanel;
 
 @SuppressWarnings("serial")

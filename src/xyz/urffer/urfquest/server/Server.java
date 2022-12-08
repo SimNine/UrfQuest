@@ -13,6 +13,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
@@ -28,7 +30,6 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.MessageQueue;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.Packet;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageChat;

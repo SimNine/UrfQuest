@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import xyz.urffer.urfquest.shared.PairInt;
+import xyz.urffer.urfutils.math.PairInt;
 
 public abstract class Structure {
 	
