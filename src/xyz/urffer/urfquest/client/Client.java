@@ -40,6 +40,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
@@ -294,6 +295,17 @@ public class Client {
 				if (e != null) {
 					e.setMovementVector(m.vector);
 				}
+				break;
+			}
+			case MOB_SET_HELD_ITEM: {
+				// - Sets the held item of the specified mob
+				MessageMobSetHeldItem m = (MessageMobSetHeldItem)p.getMessage();
+				
+				Player player = state.getCurrentMap().getPlayer(m.entityID);
+				if (player != null) {
+					player.setSelectedInventoryIndex(m.setHeldSlot, false);
+				}
+				
 				break;
 			}
 			case INIT_MAP: {

@@ -90,9 +90,9 @@ public class GameStatusOverlay extends GUIContainer {
 	
 	public void draw(Graphics g) {
 		super.draw(g);
-		ItemStack heldItem = this.client.getState().getPlayer().getHeldItem();
-		if (heldItem != null) {
-			g.drawImage(heldItem.getPic(), client.getPanel().mousePos.x, client.getPanel().mousePos.y, null);
-		}
+//		ItemStack heldItem = this.client.getState().getPlayer().getHeldItem();
+//		if (heldItem != null) {
+//			g.drawImage(heldItem.getPic(), client.getPanel().mousePos.x, client.getPanel().mousePos.y, null);
+//		}
 	}
 }

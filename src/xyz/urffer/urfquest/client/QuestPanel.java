@@ -24,7 +24,6 @@ import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.client.entities.Entity;
-import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.OverlayInit;
@@ -108,8 +107,6 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 		this.addKeyListener(this);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		
-		initAssets();
 	}
 	
 	/*
@@ -172,25 +169,25 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 				} else if (e.getKeyCode() == keybindings.BUILDMODE) {
 					//UrfQuestClient.client.getState().toggleBuildMode();
 				} else if (e.getKeyCode() == KeyEvent.VK_1) {
-					client.getState().getPlayer().setSelectedEntry(0);
+					client.getState().getPlayer().setSelectedInventoryIndex(0, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_2) {
-					client.getState().getPlayer().setSelectedEntry(1);
+					client.getState().getPlayer().setSelectedInventoryIndex(1, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_3) {
-					client.getState().getPlayer().setSelectedEntry(2);
+					client.getState().getPlayer().setSelectedInventoryIndex(2, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_4) {
-					client.getState().getPlayer().setSelectedEntry(3);
+					client.getState().getPlayer().setSelectedInventoryIndex(3, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_5) {
-					client.getState().getPlayer().setSelectedEntry(4);
+					client.getState().getPlayer().setSelectedInventoryIndex(4, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_6) {
-					client.getState().getPlayer().setSelectedEntry(5);
+					client.getState().getPlayer().setSelectedInventoryIndex(5, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_7) {
-					client.getState().getPlayer().setSelectedEntry(6);
+					client.getState().getPlayer().setSelectedInventoryIndex(6, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_8) {
-					client.getState().getPlayer().setSelectedEntry(7);
+					client.getState().getPlayer().setSelectedInventoryIndex(7, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_9) {
-					client.getState().getPlayer().setSelectedEntry(8);
+					client.getState().getPlayer().setSelectedInventoryIndex(8, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_0) {
-					client.getState().getPlayer().setSelectedEntry(9);
+					client.getState().getPlayer().setSelectedInventoryIndex(9, true);
 				} else if (e.getKeyCode() == keybindings.TOGGLEMAPVIEW) {
 					swap(mapView);
 					guiOpen = true;
@@ -503,10 +500,4 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 //	public void setCamera(Entity m) {
 //		camera = m;
 //	}
-	
-	private void initAssets() {
-		Player.initGraphics();
-		NPCHuman.initGraphics();
-//		TileImages.initGraphics();
-	}
 }

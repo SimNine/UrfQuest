@@ -3,22 +3,18 @@ package xyz.urffer.urfquest.client.entities.mobs;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import xyz.urffer.urfutils.math.PairDouble;
 
-import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.ImageUtils;
 
 public class NPCHuman extends Mob {
 
@@ -30,25 +26,20 @@ public class NPCHuman extends Mob {
 	// walk: 1 -> 2 -> 3 -> 2 -> 1 -> 2 etc...
 	private static BufferedImage[][] img = new BufferedImage[2][4];
 	
-	public static void initGraphics() {
-		try {
-			BufferedImage idle = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "new_0.png"));
-			BufferedImage walk1 = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "new_1.png"));
-			BufferedImage walk2 = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "new_2.png"));
-			
-			img[0][0] = idle;
-			img[0][1] = walk1;
-			img[0][2] = walk2;
-			img[0][3] = walk1;
-			img[1][0] = flipImage(idle, true, false);
-			img[1][1] = flipImage(walk1, true, false);
-			img[1][2] = flipImage(walk2, true, false);
-			img[1][3] = flipImage(walk1, true, false);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Main.mainLogger.error("Image could not be read at: " + "new_0.png");
-		}
-	}  
+	static {
+		BufferedImage idle = ImageUtils.loadImage(assetPath + "new_0.png");
+		BufferedImage walk1 = ImageUtils.loadImage(assetPath + "new_1.png");
+		BufferedImage walk2 = ImageUtils.loadImage(assetPath + "new_2.png");
+		
+		img[0][0] = idle;
+		img[0][1] = walk1;
+		img[0][2] = walk2;
+		img[0][3] = walk1;
+		img[1][0] = ImageUtils.flipImage(idle, true, false);
+		img[1][1] = ImageUtils.flipImage(walk1, true, false);
+		img[1][2] = ImageUtils.flipImage(walk2, true, false);
+		img[1][3] = ImageUtils.flipImage(walk1, true, false);
+	}
 	
 	protected String name;
 	protected int statCounter = 200;
@@ -72,31 +63,6 @@ public class NPCHuman extends Mob {
 		
 		this.name = name;
 	}
-	
-	public static BufferedImage flipImage(final BufferedImage image, boolean horizontal, boolean vertical) {
-        int x = 0;
-        int y = 0;
-        int w = image.getWidth();
-        int h = image.getHeight();
-
-        final BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        final Graphics2D g2d = out.createGraphics();
-
-        if (horizontal) {
-            x = w;
-            w *= -1;
-        }
-
-        if (vertical) {
-            y = h;
-            h *= -1;
-        }
-
-        g2d.drawImage(image, x, y, w, h, null);
-        g2d.dispose();
-
-        return out;
-    }
 
 	@Override
 	public void update() {

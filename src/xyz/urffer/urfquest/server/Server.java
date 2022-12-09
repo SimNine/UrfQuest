@@ -39,6 +39,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
@@ -250,6 +251,13 @@ public class Server {
 				
 				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(c.id));
 				player.setMovementVector(m.vector);
+				break;
+			}
+			case MOB_SET_HELD_ITEM: {
+				MessageMobSetHeldItem m = (MessageMobSetHeldItem)p.getMessage();
+				
+				Player player = state.getPlayer(m.entityID);
+				player.setSelectedInventoryIndex(m.setHeldSlot);
 				break;
 			}
 			case REQUEST_MAP: {

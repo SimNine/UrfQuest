@@ -15,12 +15,12 @@ import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 
 public class Player extends Mob {
 	
 	private int statCounter = 200;
 	private Inventory inventory;
-	private ItemStack heldItem;
 	
 	private double pickupRange = 3.0;
 	
@@ -38,7 +38,7 @@ public class Player extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
+		inventory = new Inventory(srv, this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
 		this.client = c;
@@ -178,10 +178,6 @@ public class Player extends Mob {
 		return inventory.addItem(i);
 	}
 	
-	public ItemStack getSelectedItem() {
-		return inventory.getSelectedItem();
-	}
-	
 	public void dropOneOfSelectedItem() {
 		// TODO: multiplayerize
 //		ItemStack i = inventory.removeOneOfSelectedItem();
@@ -195,11 +191,6 @@ public class Player extends Mob {
 //		map.addItem(i);
 	}
 	
-	public void setSelectedEntry(int i) {
-		// TODO: multiplayerize
-//		inventory.setSelectedEntry(i);
-	}
-	
 	public void useSelectedItem() {
 		// TODO: multiplayerize
 		inventory.useSelectedItem();
@@ -210,13 +201,21 @@ public class Player extends Mob {
 //		inventory.tryCrafting(input, output);
 	}
 	
-	public void setHeldItem(ItemStack i) {
-		// TODO: multiplayerize
-//		heldItem = i;
+	public void setSelectedInventoryIndex(int itemIndex) {
+		inventory.setSelectedEntry(itemIndex);
+		
+		MessageMobSetHeldItem m = new MessageMobSetHeldItem();
+		m.entityID = this.id;
+		m.setHeldSlot = itemIndex;
+		server.sendMessageToAllClients(m);
 	}
 	
-	public ItemStack getHeldItem() {
-		return heldItem;
+	public int getSelectedInventoryIndex() {
+		return inventory.getSelectedIndex();
+	}
+	
+	public ItemStack getSelectedInventoryItem() {
+		return inventory.getSelectedItem();
 	}
 	
 	/*

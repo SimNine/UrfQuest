@@ -16,15 +16,15 @@ import xyz.urffer.urfquest.client.guis.GUIObject;
 public class InventoryEntry extends GUIObject implements Clickable {
 	private ItemStack item;
 	private Color color;
-	private int entryNum;
+	private int entryIndex;
 	
 	private static final int INVENTORY = 10;
 	private static final int MISC = 11;
 	private int type;
 
-	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryNum) {
+	protected InventoryEntry(Client c, GUIAnchor anchorPoint, int xRel, int yRel, int width, int height, GUIContainer parent, int entryIndex) {
 		super(c, anchorPoint, xRel, yRel, width, height, parent);
-		this.entryNum = entryNum;
+		this.entryIndex = entryIndex;
 		this.color = new Color(128, 128, 128, 128);
 		
 		this.type = INVENTORY;
@@ -44,8 +44,8 @@ public class InventoryEntry extends GUIObject implements Clickable {
 		
 		ItemStack tempItem;
 		if (type == INVENTORY) {
-			tempItem = this.client.getState().getPlayer().getInventoryItems().get(entryNum);
-			if (this.client.getState().getPlayer().getInventory().getSelectedIndex() == entryNum) {
+			tempItem = this.client.getState().getPlayer().getInventoryItems().get(entryIndex);
+			if (this.client.getState().getPlayer().getInventory().getSelectedIndex() == entryIndex) {
 				this.setBkgColor(new Color(192, 192, 192));
 			} else {
 				this.setBkgColor(new Color(128, 128, 128, 128));
@@ -93,26 +93,26 @@ public class InventoryEntry extends GUIObject implements Clickable {
 	}
 
 	public boolean click() {
-		if (type != INVENTORY) {
-			return false;
-		}
-		
-		//System.out.println("ding");
-		
-		Player p = this.client.getState().getPlayer();
-		ItemStack tempItem = p.getInventory().getItems().get(entryNum);
-		ItemStack heldItem = p.getHeldItem();
-		if (tempItem == null && heldItem != null) {
-			p.getInventory().setItemAtIndex(entryNum, heldItem);
-			p.setHeldItem(null);
-		} else if (tempItem != null && heldItem == null) {
-			p.setHeldItem(tempItem);
-			p.getInventory().setItemAtIndex(entryNum, null);
-		} else if (tempItem != null && heldItem != null) {
-			ItemStack swap = tempItem;
-			p.getInventory().setItemAtIndex(entryNum, heldItem);
-			p.setHeldItem(swap);
-		}
-		return true;
+		return false;
+//		
+//		if (type != INVENTORY) {
+//			return false;
+//		}
+//		
+//		Player p = this.client.getState().getPlayer();
+//		ItemStack tempItem = p.getInventory().getItems().get(entryIndex);
+//		ItemStack heldItem = p.getSelectedInventoryItem();
+//		if (tempItem == null && heldItem != null) {
+//			p.getInventory().setItemAtIndex(entryIndex, heldItem);
+//			p.setSelectedInventoryIndex(null);
+//		} else if (tempItem != null && heldItem == null) {
+//			p.setSelectedInventoryIndex(tempItem);
+//			p.getInventory().setItemAtIndex(entryIndex, null);
+//		} else if (tempItem != null && heldItem != null) {
+//			ItemStack swap = tempItem;
+//			p.getInventory().setItemAtIndex(entryIndex, heldItem);
+//			p.setSelectedInventoryIndex(swap);
+//		}
+//		return true;
 	}
 }

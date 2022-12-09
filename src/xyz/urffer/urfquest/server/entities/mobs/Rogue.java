@@ -38,7 +38,7 @@ public class Rogue extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(this, 10);
+		inventory = new Inventory(srv, this, 10);
 		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
 		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
 		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SMG));

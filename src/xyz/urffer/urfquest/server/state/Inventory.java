@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 
 public class Inventory {
+	private Server server;
 	private ItemStack[] entries;
 	private HashSet<Integer> occupiedEntries = new HashSet<Integer>();
 	private int selectedEntry = 0;
 	private Mob owner;
 	
-	public Inventory(Mob owner, int size) {
-		entries = new ItemStack[size];
+	public Inventory(Server s, Mob owner, int size) {
+		this.server = s;
+		this.entries = new ItemStack[size];
 		this.owner = owner;
 	}
 	
