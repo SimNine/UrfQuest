@@ -1,13 +1,15 @@
 package xyz.urffer.urfquest;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -62,7 +64,7 @@ public class Main {
 				.help("IP address to connect to");
 		parser.addArgument("-p", "--port")
 				.type(Integer.class)
-				.setDefault("7096")
+				.setDefault(7096)
 				.help("Port to connect to");
 		parser.addArgument("-n", "--playerName")
 				.type(String.class)
@@ -120,17 +122,21 @@ public class Main {
 			// try to load last used config from file
 			File startupPrefs = new File(Constants.FILE_STARTUP_PREFS);
 			if (startupPrefs.exists()) {
+				mainLogger.info("loading config file");
 				try {
-					mainLogger.info("loading config file");
-					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
-					ip = prefsReader.readLine();
-					port = Integer.parseInt(prefsReader.readLine());
-					mode = StartupMode.valueOf(Integer.parseInt(prefsReader.readLine()));
-					playerName = prefsReader.readLine();
-					debugLevel = LogLevel.valueOf(prefsReader.readLine());
-					prefsReader.close();
+					JSONParser jsonParser = new JSONParser();
+					JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(startupPrefs));
+					playerName = (String)jsonObject.keySet().iterator().next();
+					
+					JSONObject firstProfileObject = (JSONObject)jsonObject.get(playerName);
+					ip = (String)firstProfileObject.get("ip");
+					port = Integer.parseInt((String)firstProfileObject.get("port"));
+					mode = StartupMode.valueOf(Integer.parseInt((String)firstProfileObject.get("mode")));
+					debugLevel = LogLevel.valueOf((String)firstProfileObject.get("debugLevel"));
 				} catch (IOException e) {
 					System.err.println("Malformed prefs file. going with defaults");
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
 			}
 			
@@ -160,14 +166,19 @@ public class Main {
 			}
 			
 			// save inputs to prefs file
+			mainLogger.info("saving config file");
 			try {
-				mainLogger.info("saving config file");
-				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
-				prefsWriter.println(ip);
-				prefsWriter.println(port + "");
-				prefsWriter.println(mode.value + "");
-				prefsWriter.println(playerName);
-				prefsWriter.println(debugLevel);
+				JSONObject userPrefsObject = new JSONObject();
+				userPrefsObject.put("ip", ip);
+				userPrefsObject.put("port", port + "");
+				userPrefsObject.put("mode", mode.value + "");
+				userPrefsObject.put("debugLevel", debugLevel.toString());
+				
+				JSONObject prefsObject = new JSONObject();
+				prefsObject.put(playerName, userPrefsObject);
+				
+				FileWriter prefsWriter = new FileWriter(startupPrefs);
+				prefsWriter.write(prefsObject.toJSONString());
 				prefsWriter.close();
 			} catch (IOException e) {
 				System.err.println("Error writing startup prefs to file");

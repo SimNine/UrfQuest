@@ -15,7 +15,7 @@ public class Constants {
 	public static final TileType DEFAULT_CHUNK_TILE = TileType.DIRT;
 	public static final ObjectType DEFAULT_CHUNK_OBJECT = ObjectType.VOID;
 	
-	public static final String FILE_STARTUP_PREFS = "startup.config";
+	public static final String FILE_STARTUP_PREFS = "startup_prefs.json";
 	
 	public static final int DEFAULT_PLAYER_INVENTORY_SIZE = 10;
 	
