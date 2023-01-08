@@ -1,13 +1,15 @@
 package xyz.urffer.urfquest;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -49,10 +51,18 @@ public class Main {
 	                .defaultHelp(true)
 	                .description("A 2D top-down adventure game");
 		
-		parser.addArgument("-g", "--gui")
+		parser.addArgument("--gui")
 				.type(Boolean.class)
 				.setDefault(Boolean.FALSE);
-		
+		parser.addArgument("--loadFromProfile")
+				.type(Boolean.class)
+				.setDefault(Boolean.FALSE)
+				.help("Whether to load the profile named by `--playerName`");
+
+		parser.addArgument("-n", "--playerName")
+				.type(String.class)
+				.setDefault("DEFAULT")
+				.help("The name of the player to use");
 		parser.addArgument("-m", "--mode")
 				.type(StartupMode.class)
 				.setDefault(StartupMode.FULL);
@@ -62,15 +72,12 @@ public class Main {
 				.help("IP address to connect to");
 		parser.addArgument("-p", "--port")
 				.type(Integer.class)
-				.setDefault("7096")
+				.setDefault(7096)
 				.help("Port to connect to");
-		parser.addArgument("-n", "--playerName")
-				.type(String.class)
-				.setDefault("Chris")
-				.help("The name of the player to use");
 		parser.addArgument("-d", "--debuglevel")
 				.type(LogLevel.class)
 				.setDefault(debugLevel);
+		
 		parser.addArgument("--windowWidth")
 				.type(Integer.class)
 				.setDefault(1440)
@@ -98,10 +105,11 @@ public class Main {
 		    System.exit(1);
 		}
 		Boolean guiStart = ns.getBoolean("gui");
+		Boolean loadFromProfile = ns.getBoolean("loadFromProfile");
+		String playerName = ns.getString("playerName");
 		StartupMode mode = (StartupMode)ns.get("mode");
 		String ip = ns.getString("ip");
 		Integer port = ns.getInt("port");
-		String playerName = ns.getString("playerName");
 		LogLevel debugLevel = (LogLevel)ns.get("debuglevel");
 		PairInt initWindowDims = new PairInt(
 				ns.getInt("windowWidth").intValue(),
@@ -115,25 +123,35 @@ public class Main {
 		// Create the launcher's logger
 		mainLogger = new Logger(debugLevel, "LAUNCHER");
 		
-		// Parse arguments through GUI/config if requested
-		if (guiStart.booleanValue() == true) {
-			// try to load last used config from file
-			File startupPrefs = new File(Constants.FILE_STARTUP_PREFS);
-			if (startupPrefs.exists()) {
-				try {
-					mainLogger.info("loading config file");
-					BufferedReader prefsReader = new BufferedReader(new FileReader(startupPrefs));
-					ip = prefsReader.readLine();
-					port = Integer.parseInt(prefsReader.readLine());
-					mode = StartupMode.valueOf(Integer.parseInt(prefsReader.readLine()));
-					playerName = prefsReader.readLine();
-					debugLevel = LogLevel.valueOf(prefsReader.readLine());
-					prefsReader.close();
-				} catch (IOException e) {
-					System.err.println("Malformed prefs file. going with defaults");
-				}
+		// Load profile if requested
+		if (loadFromProfile.booleanValue() == true) {
+			if (playerName == null || playerName.isBlank()) {
+				mainLogger.error("No user specified. Use `--playerName <name>`");
+				System.exit(1);
 			}
 			
+			// Load whichever profile is requested
+			File startupPrefs = new File(Constants.FILE_STARTUP_PREFS);
+			if (startupPrefs.exists()) {
+				mainLogger.info("loading config file");
+				try {
+					JSONParser jsonParser = new JSONParser();
+					JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(startupPrefs));
+					
+					JSONObject firstProfileObject = (JSONObject)jsonObject.get(playerName);
+					ip = (String)firstProfileObject.get("ip");
+					port = Integer.parseInt((String)firstProfileObject.get("port"));
+					mode = StartupMode.valueOf(Integer.parseInt((String)firstProfileObject.get("mode")));
+					debugLevel = LogLevel.valueOf((String)firstProfileObject.get("debugLevel"));
+				} catch (ParseException | IOException e) {
+					mainLogger.error("Malformed prefs file. going with defaults");
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		// Parse arguments through GUI/config if requested
+		if (guiStart.booleanValue() == true) {
 			// create the startup dialog with filled-in defaults
 			mainLogger.info("opening startup dialog");
 			StartupDialog dialog = new StartupDialog(ip, port + "", mode, playerName);
@@ -154,24 +172,36 @@ public class Main {
 			}
 			playerName = dialog.playerName.getText();
 			if (dialog.useDebug.isSelected()) {
-				debugLevel = LogLevel.ALL;
+				debugLevel = LogLevel.DEBUG;
 			} else {
 				debugLevel = LogLevel.INFO;
 			}
-			
-			// save inputs to prefs file
-			try {
-				mainLogger.info("saving config file");
-				PrintWriter prefsWriter = new PrintWriter(new FileWriter(startupPrefs));
-				prefsWriter.println(ip);
-				prefsWriter.println(port + "");
-				prefsWriter.println(mode.value + "");
-				prefsWriter.println(playerName);
-				prefsWriter.println(debugLevel);
-				prefsWriter.close();
-			} catch (IOException e) {
-				System.err.println("Error writing startup prefs to file");
+		}
+		
+		// Save startup inputs to prefs file
+		mainLogger.info("saving config file");
+		try {
+			JSONObject userPrefsObject = new JSONObject();
+			userPrefsObject.put("ip", ip);
+			userPrefsObject.put("port", port + "");
+			userPrefsObject.put("mode", mode.value + "");
+			userPrefsObject.put("debugLevel", debugLevel.toString());
+
+			File startupPrefs = new File(Constants.FILE_STARTUP_PREFS);
+			JSONObject prefsObject = new JSONObject();
+			if (startupPrefs.exists()) {
+				JSONParser jsonParser = new JSONParser();
+				prefsObject = (JSONObject) jsonParser.parse(new FileReader(startupPrefs));
 			}
+			prefsObject.put(playerName, userPrefsObject);
+			
+			FileWriter prefsWriter = new FileWriter(startupPrefs);
+			prefsWriter.write(prefsObject.toJSONString());
+			prefsWriter.close();
+		} catch (IOException e) {
+			System.err.println("Error writing startup prefs to file");
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		
 		// Start either the client, the server, or both
