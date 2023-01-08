@@ -46,6 +46,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
 import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
+import xyz.urffer.urfutils.math.PairInt;
 
 public class Client {
 	
@@ -68,6 +69,8 @@ public class Client {
     public JFrame frame;
 	public boolean isFullscreen;
 	private QuestPanel panel;
+	private PairInt initWindowDims;
+	private PairInt initWindowPos;
 	
 	private Client(String playerName) {
 		this.state = new State(this);
@@ -82,8 +85,11 @@ public class Client {
 		this.socket = null;
 	}
 	
-	public Client(Socket socket, String playerName) {
+	public Client(Socket socket, String playerName, PairInt initWindowDims, PairInt initWindowPos) {
 		this(playerName);
+		
+		this.initWindowDims = initWindowDims;
+		this.initWindowPos = initWindowPos;
 		
 		// initialize streams on the socket
 		this.server = null;
@@ -400,19 +406,26 @@ public class Client {
 			frame.dispose();
 		}
 		
-        frame = new JFrame("UrfQuest");
+		frame = new JFrame("UrfQuest");
 
-        if (fullscreen) {
-    		frame.setResizable(false);
-    		frame.setUndecorated(true);
-    		isFullscreen = true;
-        } else {
-            frame.setMinimumSize(new Dimension(700, 600));
-    		frame.setResizable(true);
-    		frame.setExtendedState(JFrame.NORMAL);
-    		frame.setUndecorated(false);
-    		isFullscreen = false;
-        }
+		if (fullscreen) {
+			frame.setResizable(false);
+			frame.setUndecorated(true);
+			isFullscreen = true;
+		} else {
+			frame.setMinimumSize(new Dimension(700, 600));
+			frame.setResizable(true);
+			frame.setExtendedState(JFrame.NORMAL);
+			frame.setUndecorated(false);
+			isFullscreen = false;
+			
+			if (initWindowDims != null) {
+				frame.setSize(initWindowDims.x, initWindowDims.y);
+			}
+			if (initWindowPos != null) {
+				frame.setLocation(initWindowPos.x, initWindowPos.y);
+			}
+		}
 		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -420,9 +433,14 @@ public class Client {
 		
 		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                panel.setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight());
-            }
-        });
+			public void componentResized(ComponentEvent e) {
+				initWindowDims.x = frame.getWidth();
+				initWindowDims.y = frame.getHeight();
+				
+				int newPanelWidth = frame.getContentPane().getWidth();
+				int newPanelHeight = frame.getContentPane().getHeight();
+				panel.setSize(newPanelWidth, newPanelHeight);
+			}
+		});
 	}
 }
