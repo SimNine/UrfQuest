@@ -1,5 +1,6 @@
 package xyz.urffer.urfquest.server;
 
+import java.awt.FlowLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,7 +11,6 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
-
 import javax.swing.JFrame;
 
 import xyz.urffer.urfutils.math.PairDouble;
@@ -25,7 +25,8 @@ import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.MapChunk;
-import xyz.urffer.urfquest.server.monitoring.MapMonitor;
+import xyz.urffer.urfquest.server.monitoring.MapOverviewPanel;
+import xyz.urffer.urfquest.server.monitoring.PlayerInfoPanel;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.ChatMessage;
 import xyz.urffer.urfquest.shared.Constants;
@@ -67,7 +68,7 @@ public class Server {
 	
 	private Thread commandParserThread;
 	
-	private HashSet<JFrame> monitoringFrames = new HashSet<JFrame>();
+	private JFrame monitoringFrame = new JFrame();
 	
 	public Server(long seed) {
 		this.seed = seed;
@@ -134,13 +135,18 @@ public class Server {
 		});
 		commandParserThread.start();
 		
-		// launch monitoring windows
-		JFrame mapMonitorFrame = new JFrame("ServerMonitor");
-		mapMonitorFrame.setVisible(true);
-		mapMonitorFrame.setSize(500, 500);
-		MapMonitor mapMonitor = new MapMonitor(this, 500, 500);
-		mapMonitorFrame.add(mapMonitor);
-		monitoringFrames.add(mapMonitorFrame);
+		// launch monitoring window
+		monitoringFrame = new JFrame("ServerMonitor");
+		monitoringFrame.setLayout(new FlowLayout());
+		monitoringFrame.setVisible(true);
+		monitoringFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		MapOverviewPanel mapMonitor = new MapOverviewPanel(this);
+		monitoringFrame.add(mapMonitor);
+		PlayerInfoPanel serverStats = new PlayerInfoPanel(this);
+		monitoringFrame.add(serverStats);
+		
+		monitoringFrame.pack();
 	}
 
 	public void mainLoop() {
@@ -151,9 +157,7 @@ public class Server {
 			this.tick();
 			long endTime = System.currentTimeMillis();
 			
-			for (JFrame f : monitoringFrames) {
-				f.repaint();
-			}
+			monitoringFrame.repaint();
 			
 			long remainingTime = Constants.MILLISECONDS_PER_TICK - (endTime - startTime);
 			if (remainingTime > 0) {

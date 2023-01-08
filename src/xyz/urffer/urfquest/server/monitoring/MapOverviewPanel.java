@@ -1,6 +1,7 @@
 package xyz.urffer.urfquest.server.monitoring;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -16,12 +17,16 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfutils.pannablepanel.PannablePanel;
 
 @SuppressWarnings("serial")
-public class MapMonitor extends PannablePanel {
+public class MapOverviewPanel extends PannablePanel {
 	
 	private Server server;
+	
+	private static Dimension minimumDims = new Dimension(500, 500);
 
-	public MapMonitor(Server s, int width, int height) {
-		super(width, height, true);
+	public MapOverviewPanel(Server s) {
+		super(minimumDims.width, minimumDims.height, true);
+		this.setMinimumSize(minimumDims);
+		this.setPreferredSize(minimumDims);
 		this.server = s;
 	}
 
