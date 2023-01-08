@@ -69,6 +69,8 @@ public class Server {
 	
 	private HashSet<JFrame> monitoringFrames = new HashSet<JFrame>();
 	
+	private boolean replayMode = false;
+	
 	public Server(long seed) {
 		this.seed = seed;
 		this.random = new Random(seed);
@@ -83,8 +85,10 @@ public class Server {
         this.logger.info("Initialized server with ID: " + this.id);
 	}
 
-	public Server(long seed, int port) {
+	public Server(long seed, int port, boolean replayMode) {
 		this(seed);
+		
+		this.replayMode = replayMode;
         
 		// Try to load list of op-permission players from file
 		File opsListFile = new File(Constants.FILE_OPS_LIST);
@@ -102,37 +106,39 @@ public class Server {
 			}
 		}
 		
-		// launch master listener
-		try {
-			serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-		// launch command line parser
-		commandParserThread = new Thread(new Runnable() {
-			public void run() {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-				while (true) {
-					try {
-						String line = reader.readLine();
-						if (line.length() == 0) {
-							continue;
+		if (!this.replayMode) {
+			// launch master listener
+			try {
+				serverSocket = new ServerSocket(port);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+			
+			// launch command line parser
+			commandParserThread = new Thread(new Runnable() {
+				public void run() {
+					BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+					while (true) {
+						try {
+							String line = reader.readLine();
+							if (line.length() == 0) {
+								continue;
+							}
+							
+							MessageChat m = new MessageChat();
+							m.chatMessage = new ChatMessage("SERVER", line);
+							
+							Packet p = new Packet(id, m);
+							incomingPackets.add(p);
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-						
-						MessageChat m = new MessageChat();
-						m.chatMessage = new ChatMessage("SERVER", line);
-						
-						Packet p = new Packet(id, m);
-						incomingPackets.add(p);
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
 				}
-			}
-		});
-		commandParserThread.start();
+			});
+			commandParserThread.start();
+		}
 		
 		// launch monitoring windows
 		JFrame mapMonitorFrame = new JFrame("ServerMonitor");

@@ -34,7 +34,7 @@ public class Main {
 	private static StartupMode mode = StartupMode.FULL;
 	private static String playerName = "playerName";
 	
-	public static LogLevel debugLevel = LogLevel.DEBUG;
+	public static LogLevel debugLevel = LogLevel.INFO;
 	
 	/**
 	 * Starts either the server, client, or both. Instantiates loggers, reads 
@@ -146,7 +146,7 @@ public class Main {
 	 */
 	private static Server startServer(long seed, int port) {
 		mainLogger.info("Starting server on port " + port);
-		Server server = new Server(seed, port);
+		Server server = new Server(seed, port, false);
 		server.getLogger().setLogLevel(debugLevel);
 		Thread serverThread = new Thread(new Runnable() {
 			public void run() {
