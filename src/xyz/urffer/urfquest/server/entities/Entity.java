@@ -146,7 +146,6 @@ public abstract class Entity {
 	public void setPos(PairDouble pos, int mapID) {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
 		this.server.getState().getMapByID(mapID).addEntity(this);
-		this.mapID = mapID;
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;
@@ -275,7 +274,7 @@ public abstract class Entity {
 	}
 	
 	public void setMapID(int mapID) {
-		
+		this.mapID = mapID;
 	}
 	
 	public Map getMap() {
