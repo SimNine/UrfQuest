@@ -60,8 +60,8 @@ public abstract class Entity {
 		this.movementVector = vector;
 		
 		MessageEntitySetMoveVector m = new MessageEntitySetMoveVector();
-		m.vector = this.movementVector;
 		m.entityID = this.id;
+		m.vector = this.movementVector;
 		server.sendMessageToAllClients(m);
 	}
 	

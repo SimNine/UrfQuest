@@ -2,8 +2,11 @@ package xyz.urffer.urfquest.server.state;
 
 import java.util.HashMap;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
+import xyz.urffer.urfquest.server.entities.projectiles.Bullet;
 import xyz.urffer.urfquest.server.map.Map;
 
 public class State {
@@ -12,6 +15,8 @@ public class State {
 	private Map surfaceMap;
 	private HashMap<Integer, Map> maps = new HashMap<Integer, Map>(); // mapID to map
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>(); // playerID to player
+	
+	private int tickCount = 0;
 
 	public State(Server srv) {
 		this.server = srv;
@@ -26,8 +31,15 @@ public class State {
 	 */
 	
 	public void tick() {
+		tickCount++;
 		for (Map m : maps.values()) {
 			m.tick();
+			
+			// TODO: remove. temp
+			if (tickCount > 100) {
+				tickCount = 0;
+				m.addProjectile(new Bullet(server, m, new PairDouble(5, 5), null));
+			}
 		}
 	}
 	

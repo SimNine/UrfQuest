@@ -2,6 +2,8 @@ package xyz.urffer.urfquest.client.entities.projectiles;
 
 import java.awt.Graphics;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
@@ -9,7 +11,7 @@ import xyz.urffer.urfquest.client.map.Map;
 
 public class GrenadeProjectile extends Projectile {
 
-	public GrenadeProjectile(Client c, int id, Map m, double[] pos, Entity source) {
+	public GrenadeProjectile(Client c, int id, Map m, PairDouble pos, Entity source) {
 		super(c, id, m, pos, source);
 		
 		bounds.setFrame(bounds.x, bounds.y, 1, 1);

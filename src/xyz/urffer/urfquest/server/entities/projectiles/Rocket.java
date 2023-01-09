@@ -1,10 +1,11 @@
 package xyz.urffer.urfquest.server.entities.projectiles;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
 

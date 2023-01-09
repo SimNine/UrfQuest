@@ -25,6 +25,7 @@ public enum MessageType {
 	INIT_MAP,
 	INIT_CHUNK,
 	INIT_ITEM,
+	INIT_PROJECTILE,
 	ITEM_SET_POS,
 	SERVER_ERROR
 }

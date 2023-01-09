@@ -3,17 +3,17 @@ package xyz.urffer.urfquest.client.entities.projectiles;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import xyz.urffer.urfutils.math.PairDouble;
+
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Projectile extends Entity {
-	protected Vector movementVector;
 	protected Entity source;
 
-	protected Projectile(Client c, int id, Map m, double[] pos, Entity source) {
+	protected Projectile(Client c, int id, Map m, PairDouble pos, Entity source) {
 		super(c, id, m, pos);
 		this.source = source;
 	}
