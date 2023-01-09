@@ -226,22 +226,23 @@ public class Server {
 					sendMessageToSingleClient(mse, c.id);
 					break;
 				}
+
+				Map surfaceMap = this.state.getSurfaceMap();
 				
 				Player newPlayer = new Player(
 					this,
-					this.state.getSurfaceMap(),
-					this.state.getSurfaceMap().getHomeCoords().toDouble(),
+					surfaceMap.id,
+					surfaceMap.getHomeCoords().toDouble(),
 					playerName,
 					c
 				);
 				this.state.addPlayer(newPlayer);
-				Map surfaceMap = this.state.getSurfaceMap();
 				this.state.getSurfaceMap().addPlayer(newPlayer);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
 				
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.PICKAXE));
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.HATCHET));
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.SHOVEL));
+				newPlayer.addItem(new ItemStack(this, surfaceMap.id, new PairDouble(Double.MAX_VALUE), ItemType.PICKAXE));
+				newPlayer.addItem(new ItemStack(this, surfaceMap.id, new PairDouble(Double.MAX_VALUE), ItemType.HATCHET));
+				newPlayer.addItem(new ItemStack(this, surfaceMap.id, new PairDouble(Double.MAX_VALUE), ItemType.SHOVEL));
 				
 				if (opsList.contains(playerName)) {
 					c.setCommandPermissions(CommandPermissions.OP);

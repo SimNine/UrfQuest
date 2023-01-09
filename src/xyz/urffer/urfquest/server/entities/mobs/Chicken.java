@@ -17,7 +17,7 @@ public class Chicken extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(Server srv, Map m, PairDouble pos) {
+	public Chicken(Server srv, int mapID, PairDouble pos) {
 		super(srv);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
@@ -37,7 +37,7 @@ public class Chicken extends Mob {
 		msg.mobType = MobType.CHICKEN;
 		server.sendMessageToAllClients(msg);
 		
-		this.setPos(pos, m.id);
+		this.setPos(pos, mapID);
 	}
 
 	public void tick() {
@@ -80,7 +80,8 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
+			Map map = this.server.getState().getMapByID(this.mapID);
+			map.addItem(new ItemStack(this.server, this.mapID, this.getCenter(), ItemType.CHICKEN_LEG));
 		}
 	}
 }

@@ -20,7 +20,7 @@ public class Cyclops extends Mob {
 	
 	private ItemStack shotgun;
 
-	public Cyclops(Server srv, Map m, PairDouble pos) {
+	public Cyclops(Server srv, int mapID, PairDouble pos) {
 		super(srv);
 		
 		// figure out what scaling this should be
@@ -35,7 +35,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN);
+		shotgun = new ItemStack(srv, this.mapID, new PairDouble(0, 0), ItemType.SHOTGUN);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
@@ -45,7 +45,7 @@ public class Cyclops extends Mob {
 		msg.mobType = MobType.CYCLOPS;
 		server.sendMessageToAllClients(msg);
 		
-		this.setPos(pos, m.id);
+		this.setPos(pos, mapID);
 	}
 
 	public void tick() {
@@ -88,7 +88,8 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.BONE));
+		Map map = this.server.getState().getMapByID(this.mapID);
+		map.addItem(new ItemStack(this.server, this.mapID, this.getCenter(), ItemType.BONE));
 	}
 
 	@Override

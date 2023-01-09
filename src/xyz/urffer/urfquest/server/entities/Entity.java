@@ -18,7 +18,7 @@ public abstract class Entity {
 	protected Server server;
 
 	protected Rectangle2D.Double bounds = new Rectangle2D.Double(0, 0, 1, 1);
-	protected Map map = null;
+	protected int mapID = 0;
 	
 	protected Vector movementVector = new Vector(0, 0);
 	
@@ -72,18 +72,20 @@ public abstract class Entity {
 	}
 	
 	public void attemptIncrementPos(PairDouble delta) {
+		Map map = this.server.getState().getMapByID(this.mapID);
+		
 		double newX = bounds.getCenterX() + delta.x;
 		double newY = bounds.getCenterY() + delta.y;
 		
 		boolean canMove = true;
 		
 		// check if this move is valid on the x-axis
-		if (!Tile.isWalkable(map.getTileAt(new PairDouble(newX, bounds.getCenterY()).floor()))) {
+		if (!map.getTileAt(new PairDouble(newX, bounds.getCenterY()).floor()).isWalkable()) {
 			canMove = false;
 		}
 		
 		// check if this move is valid on the y-axis
-		if (!Tile.isWalkable(map.getTileAt(new PairDouble(bounds.getCenterX(), newY).floor()))) {
+		if (!map.getTileAt(new PairDouble(bounds.getCenterX(), newY).floor()).isWalkable()) {
 			canMove = false;
 		}
 				
@@ -96,6 +98,7 @@ public abstract class Entity {
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public Tile tileAtDistance(double d) {
+		Map map = this.server.getState().getMapByID(this.mapID);
 		double xComp = d*Math.cos(movementVector.dirRadians);
 		double yComp = d*Math.sin(movementVector.dirRadians);
 		return map.getTileAt(new PairDouble(bounds.getCenterX() + xComp, bounds.getCenterY() + yComp).floor());
@@ -135,17 +138,17 @@ public abstract class Entity {
 	}
 	
 	public void setPos(PairDouble pos) {
-		setPos(pos, this.map.id);
+		setPos(pos, this.mapID);
 	}
 	
 	public void setPos(PairDouble pos, int mapID) {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
-		this.map = this.server.getState().getMapByID(mapID);
+		this.mapID = mapID;
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;
 		m.pos = this.getPos();
-		m.mapID = this.map.id;
+		m.mapID = this.mapID;
 		this.server.sendMessageToAllClients(m);
 	}
 	
@@ -264,7 +267,15 @@ public abstract class Entity {
 	}
 
 	// map methods
+	public int getMapID() {
+		return this.mapID;
+	}
+	
+	public void setMapID(int mapID) {
+		
+	}
+	
 	public Map getMap() {
-		return map;
+		return this.server.getState().getMapByID(this.mapID);
 	}
 }

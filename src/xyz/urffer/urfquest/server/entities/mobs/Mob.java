@@ -3,7 +3,6 @@ package xyz.urffer.urfquest.server.entities.mobs;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.MobRoutine;
-import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Mob extends Entity {
@@ -99,11 +98,5 @@ public abstract class Mob extends Entity {
 	
 	public boolean isDead() {
 		return health <= 0;
-	}
-	
-	public void setMap(Map m) {
-		map.removeMob(this);
-		m.addMob(this);
-		map = m;
 	}
 }

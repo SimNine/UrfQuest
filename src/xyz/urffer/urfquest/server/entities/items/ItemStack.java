@@ -35,15 +35,15 @@ public class ItemStack extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public ItemStack(Server srv, Map m, PairDouble pos, ItemType type) {
-		this(srv, m, pos, type, -1);
+	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type) {
+		this(srv, mapID, pos, type, -1);
 	}
 	
-	public ItemStack(Server srv, Map m, PairDouble pos, ItemType type, int durability) {
-		this(srv, m, pos, type, 1, durability);
+	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type, int durability) {
+		this(srv, mapID, pos, type, 1, durability);
 	}
 	
-	public ItemStack(Server srv, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
+	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type, int stackSize, int durability) {
 		super(srv);
 		
 		this.itemType = type;
@@ -71,7 +71,7 @@ public class ItemStack extends Entity {
 		srv.sendMessageToAllClients(mii);
 		
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		this.setPos(pos, m.id);
+		this.setPos(pos, mapID);
 		
 		this.setMovementVector(new Vector(0, 0));
 	}
@@ -113,7 +113,7 @@ public class ItemStack extends Entity {
 			
 			m.incrementMana(-5.0);
 			PairDouble pos = m.getPos();
-			m.getMap().addMob(new Chicken(this.server, this.map, pos));
+			m.getMap().addMob(new Chicken(this.server, this.mapID, pos));
 			return true;
 		}
 		case LAW_RUNE: {

@@ -210,9 +210,9 @@ public class GameBoardOverlay extends GUIContainer {
 		g.drawString("CharacterHealth: " + player.getHealth(), 10, 70);
 		g.drawString("CharacterMana: " + player.getMana(), 10, 80);
 		g.drawString("CharacterSpeed: " + player.getVelocity(), 10, 90);
-		g.drawString("NumMobs: " + currMap.getNumMobs(), 10, 100);
-		g.drawString("NumItems: " + currMap.getNumItems(), 10, 110);
-		g.drawString("NumParticles: " + currMap.getNumProjectiles(), 10, 120);
+		g.drawString("NumMobs: " + currMap.getMobs().size(), 10, 100);
+		g.drawString("NumItems: " + currMap.getItems().size(), 10, 110);
+		g.drawString("NumParticles: " + currMap.getProjectiles().size(), 10, 120);
 	}
 
 	private void drawEntities(Graphics g) {

@@ -81,7 +81,8 @@ public class NPCHuman extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
+			Map map = this.server.getState().getMapByID(this.mapID);
+			map.addItem(new ItemStack(this.server, this.mapID, this.getCenter(), ItemType.CHICKEN_LEG));
 		}
 	}
 }

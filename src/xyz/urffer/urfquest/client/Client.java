@@ -270,15 +270,7 @@ public class Client {
 					
 					// If this entity is not yet on the current map, place it
 					if (state.getCurrentMap().getEntity(e.id) == null) {
-						if (e instanceof Player) {
-							state.getCurrentMap().addPlayer((Player)e);
-						} else if (e instanceof Mob) {
-							state.getCurrentMap().addMob((Mob)e);
-						} else if (e instanceof ItemStack) {
-							state.getCurrentMap().addItem((ItemStack)e);
-						} else if (e instanceof Projectile) {
-							state.getCurrentMap().addProjectile((Projectile)e);
-						}
+						state.getCurrentMap().addEntity(e);
 					}
 					
 					// Set the position on the map of this entity

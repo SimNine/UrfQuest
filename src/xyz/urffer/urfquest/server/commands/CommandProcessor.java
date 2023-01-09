@@ -200,12 +200,12 @@ public class CommandProcessor {
 						
 						switch (args[1].toUpperCase()) {
 							case "CHICKEN": {
-								Chicken c = new Chicken(server, map, pos);
+								Chicken c = new Chicken(server, map.id, pos);
 								map.addMob(c);
 								break;
 							}
 							case "CYCLOPS": {
-								Cyclops c = new Cyclops(server, map, pos);
+								Cyclops c = new Cyclops(server, map.id, pos);
 								map.addMob(c);
 								break;
 							}

@@ -26,7 +26,7 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(Server srv, Map m, PairDouble pos, String name, ClientThread c) {
+	public Player(Server srv, int mapID, PairDouble pos, String name, ClientThread c) {
 		super(srv);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
@@ -48,8 +48,7 @@ public class Player extends Mob {
 		msg.entityName = this.name;
 		server.sendMessageToAllClients(msg);
 		
-		this.map = m;
-		this.setPos(pos, m.id);
+		this.setPos(pos, mapID);
 	}
 
 	/*
@@ -100,6 +99,7 @@ public class Player extends Mob {
 	
 	// helpers
 	private void processCurrentTile() {
+		Map map = this.server.getState().getMapByID(this.mapID);
 		switch (map.getTileAt(this.getCenter().toInt()).tileType) {
 		case VOID:
 			//nothing
@@ -151,12 +151,6 @@ public class Player extends Mob {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public void setMap(Map m) {
-		map.removePlayer(this);
-		m.addPlayer(this);
-		map = m;
 	}
 	
 	/*
@@ -221,6 +215,7 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
+		Map map = this.server.getState().getMapByID(this.mapID);
 		map.useActiveTile(getCenter().toInt(), this);
 	}
 	
