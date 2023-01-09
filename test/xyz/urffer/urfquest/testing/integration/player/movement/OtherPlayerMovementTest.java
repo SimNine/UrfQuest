@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import xyz.urffer.urfquest.client.Client;
+import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Vector;
@@ -31,7 +32,7 @@ class OtherPlayerMovementTest {
 	@Test
 	void testMovementOneMotion() {
 		xyz.urffer.urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
-		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = (Player)c2.getState().getCurrentMap().getEntity(c1p1.id);
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;
@@ -64,7 +65,7 @@ class OtherPlayerMovementTest {
 	@Test
 	void testMovementSquare() {
 		xyz.urffer.urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
-		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = (Player)c2.getState().getCurrentMap().getEntity(c1p1.id);
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;
@@ -139,7 +140,7 @@ class OtherPlayerMovementTest {
 	@Test
 	void testMovementDiamond() {
 		xyz.urffer.urfquest.client.entities.mobs.Player c1p1 = c1.getState().getPlayer();
-		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = c2.getState().getCurrentMap().getPlayer(c1p1.id);
+		xyz.urffer.urfquest.client.entities.mobs.Player c2p1 = (Player)c2.getState().getCurrentMap().getEntity(c1p1.id);
 		Assertions.assertNotNull(c2p1);
 		
 		int numStepsMoved = 10;

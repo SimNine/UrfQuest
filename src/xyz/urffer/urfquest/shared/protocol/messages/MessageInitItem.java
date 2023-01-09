@@ -1,7 +1,5 @@
 package xyz.urffer.urfquest.shared.protocol.messages;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
@@ -15,9 +13,6 @@ public class MessageInitItem extends Message {
 	private static final long serialVersionUID = -8352846007865555290L;
 	
 	public int entityID;
-	
-	public int mapID;
-	public PairDouble pos = new PairDouble(0, 0);
 	
 	public ItemType itemType;
 	public int durability;
@@ -37,7 +32,8 @@ public class MessageInitItem extends Message {
 	public String toString() {
 		String ret = 
 				"entityID:" + this.entityID + 
-				",type:" + this.itemType +
+				",itemType:" + this.itemType +
+				",durability:" + this.durability +
 				",stacksize:" + this.stacksize;
 		return ret;
 	}

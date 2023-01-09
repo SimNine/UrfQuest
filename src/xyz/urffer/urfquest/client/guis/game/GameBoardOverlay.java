@@ -175,14 +175,14 @@ public class GameBoardOverlay extends GUIContainer {
 	public boolean click() {
 		PairInt mouseTile = client.getPanel().windowToGame(client.getPanel().mousePos).floor();
 		
-		Player p = this.client.getState().getPlayer();
-		if (
-			mouseTile.x < p.getPos().x + 3 &&
-			mouseTile.x > p.getPos().x - 3 &&
-			mouseTile.y < p.getPos().y + 3 &&
-			mouseTile.y > p.getPos().y - 3) {
-			p.getMap().useActiveTile(mouseTile, p);
-		}
+//		Player p = this.client.getState().getPlayer();
+//		if (
+//			mouseTile.x < p.getPos().x + 3 &&
+//			mouseTile.x > p.getPos().x - 3 &&
+//			mouseTile.y < p.getPos().y + 3 &&
+//			mouseTile.y > p.getPos().y - 3) {
+//			p.getMap().useActiveTile(mouseTile, p);
+//		}
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
 			this.client.getState().getCurrentMap().setTileAt(mouseTile, new Tile(TileType.BEDROCK));
@@ -210,9 +210,9 @@ public class GameBoardOverlay extends GUIContainer {
 		g.drawString("CharacterHealth: " + player.getHealth(), 10, 70);
 		g.drawString("CharacterMana: " + player.getMana(), 10, 80);
 		g.drawString("CharacterSpeed: " + player.getVelocity(), 10, 90);
-		g.drawString("NumMobs: " + currMap.getNumMobs(), 10, 100);
-		g.drawString("NumItems: " + currMap.getNumItems(), 10, 110);
-		g.drawString("NumParticles: " + currMap.getNumProjectiles(), 10, 120);
+		g.drawString("NumMobs: " + currMap.getMobs().size(), 10, 100);
+		g.drawString("NumItems: " + currMap.getItems().size(), 10, 110);
+		g.drawString("NumParticles: " + currMap.getProjectiles().size(), 10, 120);
 	}
 
 	private void drawEntities(Graphics g) {

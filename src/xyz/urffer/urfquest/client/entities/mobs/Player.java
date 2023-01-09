@@ -20,7 +20,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.ImageUtils;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerSetMoveVector;
 
 public class Player extends Mob {
 
@@ -53,9 +53,9 @@ public class Player extends Mob {
 	
 	private double pickupRange = 3.0;
 
-	public Player(Client c, int id, Map currMap, PairDouble pos, String name) {
-		super(c, id, currMap, pos);
-		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+	public Player(Client c, int id, String name) {
+		super(c, id);
+		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -69,7 +69,7 @@ public class Player extends Mob {
 	
 	public void setMovementVector(double dirRadians, double velocity, boolean byClient) {
 		if (byClient) {
-			MessagePlayerSetMoveVector m = new MessagePlayerSetMoveVector();
+			MessageRequestPlayerSetMoveVector m = new MessageRequestPlayerSetMoveVector();
 			m.vector = new Vector(dirRadians, velocity);
 			m.entityID = this.id;
 			this.client.send(m);
@@ -80,6 +80,16 @@ public class Player extends Mob {
 	
 	public void setPos(PairDouble pos) {
 		super.setPos(pos);
+		
+		// If this player isn't the one owned by this client, do nothing else
+		if (this != this.client.getState().getPlayer()) {
+			return;
+		}
+		
+		Map map = this.getMap();
+		if (map == null) {
+			return;
+		}
 		
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
@@ -161,10 +171,6 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public void setMap(Map m) {
-		map = m;
-	}
-	
 	/*
 	 * Inventory management
 	 */
@@ -191,7 +197,9 @@ public class Player extends Mob {
 		PairDouble playerPos = getPos();
 		i.setPos(playerPos);
 		i.resetDropTimeout();
-		map.addItem(i);
+		
+		// TODO: figure out how to handle this
+//		map.addItem(i);
 	}
 	
 	public int getSelectedInventoryIndex() {
@@ -226,6 +234,10 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
+		Map map = this.getMap();
+		if (map == null) {
+			return;
+		}
 		map.useActiveTile(getCenter().toInt(), this);
 	}
 	

@@ -5,7 +5,7 @@ import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 
-public class MessagePlayerSetMoveVector extends Message {
+public class MessageRequestPlayerSetMoveVector extends Message {
 	
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class MessagePlayerSetMoveVector extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.PLAYER_SET_MOVE_VECTOR;
+		return MessageType.REQUEST_PLAYER_SET_MOVE_VECTOR;
 	}
 	
 	@Override

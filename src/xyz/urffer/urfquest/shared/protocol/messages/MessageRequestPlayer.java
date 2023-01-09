@@ -15,7 +15,7 @@ public class MessageRequestPlayer extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.PLAYER_REQUEST;
+		return MessageType.REQUEST_PLAYER;
 	}
 
 	@Override

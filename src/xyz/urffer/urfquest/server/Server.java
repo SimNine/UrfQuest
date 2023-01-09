@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.JFrame;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
@@ -38,10 +36,11 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerSetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
@@ -213,7 +212,7 @@ public class Server {
 		p.print(this.getLogger());
 		
 		switch (p.getType()) {
-			case PLAYER_REQUEST: {
+			case REQUEST_PLAYER: {
 				// - Creates a player with the requested name
 				// - Sends the newly created player to all clients
 				// TODO: check if the requesting client already has an assigned player
@@ -226,41 +225,34 @@ public class Server {
 					sendMessageToSingleClient(mse, c.id);
 					break;
 				}
-				
-				Player newPlayer = new Player(
-					this,
-					this.state,
-					this.state.getSurfaceMap(),
-					this.state.getSurfaceMap().getHomeCoords().toDouble(),
-					playerName,
-					c
-				);
-				this.state.addPlayer(newPlayer);
-				Map surfaceMap = this.state.getSurfaceMap();
-				this.state.getSurfaceMap().addPlayer(newPlayer);
+
+				Player newPlayer = new Player(this, playerName, c);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
+
+				Map surfaceMap = this.state.getSurfaceMap();
+				newPlayer.setPos(surfaceMap.getHomeCoords().toDouble(), surfaceMap.id);
 				
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.PICKAXE));
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.HATCHET));
-				newPlayer.addItem(new ItemStack(this, surfaceMap, new PairDouble(Double.MAX_VALUE), ItemType.SHOVEL));
+				newPlayer.addItem(new ItemStack(this, ItemType.PICKAXE));
+				newPlayer.addItem(new ItemStack(this, ItemType.HATCHET));
+				newPlayer.addItem(new ItemStack(this, ItemType.SHOVEL));
 				
 				if (opsList.contains(playerName)) {
 					c.setCommandPermissions(CommandPermissions.OP);
 				}
 				break;
 			}
-			case PLAYER_SET_MOVE_VECTOR: {
+			case REQUEST_PLAYER_SET_MOVE_VECTOR: {
 				// - Recieves a request from a client to set the velocity and direction of their player
-				MessagePlayerSetMoveVector m = (MessagePlayerSetMoveVector)p.getMessage();
+				MessageRequestPlayerSetMoveVector m = (MessageRequestPlayerSetMoveVector)p.getMessage();
 				
-				Player player = state.getPlayer(userMap.getPlayerIdFromClientId(c.id));
+				Player player = (Player)state.getEntity(userMap.getPlayerIdFromClientId(c.id));
 				player.setMovementVector(m.vector);
 				break;
 			}
 			case MOB_SET_HELD_ITEM: {
 				MessageMobSetHeldItem m = (MessageMobSetHeldItem)p.getMessage();
 				
-				Player player = state.getPlayer(m.entityID);
+				Player player = (Player)state.getEntity(m.entityID);
 				player.setSelectedInventoryIndex(m.setHeldSlot);
 				break;
 			}
@@ -281,11 +273,15 @@ public class Server {
 				for (Player player : map.getPlayers().values()) {
 					MessageInitPlayer mpi = new MessageInitPlayer();
 					mpi.clientOwnerID = userMap.getClientIdFromPlayerId(player.id);
-					mpi.mapID = map.id;
 					mpi.entityID = player.id;
 					mpi.entityName = player.getName();
-					mpi.pos = player.getPos();
 					sendMessageToSingleClient(mpi, c.id);
+					
+					MessageEntitySetPos mesp = new MessageEntitySetPos();
+					mesp.entityID = player.id;
+					mesp.mapID = player.getMapID();
+					mesp.pos = player.getPos();
+					sendMessageToSingleClient(mesp, c.id);
 				}
 				break;
 			}
@@ -295,9 +291,9 @@ public class Server {
 				MessageRequestChunk m = (MessageRequestChunk)p.getMessage();
 				
 				MessageInitChunk mci = new MessageInitChunk();
-				MapChunk chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().getChunk(m.xyChunk);
+				MapChunk chunk = ((Player)state.getEntity(userMap.getPlayerIdFromClientId(c.id))).getMap().getChunk(m.xyChunk);
 				if (chunk == null) {
-					chunk = state.getPlayer(userMap.getPlayerIdFromClientId(c.id)).getMap().createChunk(m.xyChunk);
+					chunk = ((Player)state.getEntity(userMap.getPlayerIdFromClientId(c.id))).getMap().createChunk(m.xyChunk);
 				}
 				mci.xyChunk = m.xyChunk;
 				mci.tiles = chunk.getAllTiles();
@@ -308,7 +304,7 @@ public class Server {
 				// MessageDebugPlayer m = (MessageDebugPlayer)p.getMessage();
 				
 				int playerID = userMap.getPlayerIdFromClientId(c.id);
-				Player player = state.getPlayer(playerID);
+				Player player = (Player)state.getEntity(playerID);
 				String playerPos = player.getCenter().x + "," + player.getCenter().y;
 				
 				MessagePlayerDebug mdp = new MessagePlayerDebug();
@@ -322,7 +318,7 @@ public class Server {
 				ChatMessage chatMessage = m.chatMessage;
 				if (p.getSenderID() != this.id) {
 					int playerID = userMap.getPlayerIdFromClientId(p.getSenderID());
-					Player player = state.getPlayer(playerID);
+					Player player = (Player)state.getEntity(playerID);
 					chatMessage.source = player.getName();
 				}
 				chatMessages.addFirst(chatMessage);
@@ -358,7 +354,8 @@ public class Server {
 				
 				// TODO: this is not sustainable design. find a way to clean up entites correctly
 				// Clean up this client's Player
-				Player player = this.state.removePlayer(playerID);
+				Player player = (Player)this.state.getEntity(playerID);
+				this.state.removeEntity(playerID);
 				player.destroy();
 				
 				// Remove this client from the server state

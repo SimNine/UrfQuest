@@ -13,8 +13,10 @@ public class MessageEntitySetPos extends Message {
 	 */
 	private static final long serialVersionUID = 1065420566717112677L;
 	
-	public int entityID = 0;
+	public int entityID;
+	
 	public PairDouble pos;
+	public int mapID;
 
 	@Override
 	public MessageType getType() {
@@ -28,7 +30,11 @@ public class MessageEntitySetPos extends Message {
 
 	@Override
 	public String toString() {
-		return "entityID:" + this.entityID + ",x:" + pos.x + ",y:" + pos.y;
+		String ret =
+				"entityID:" + this.entityID +
+				",pos:" + this.pos.toString() +
+				",mapID:" + this.mapID;
+		return ret;
 	}
 
 }

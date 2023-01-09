@@ -72,7 +72,7 @@ public class CommandProcessor {
 							if (playerID == null) { // if the specified player wasn't found
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Specified player '" + args[1] + "' not found");
 							} else {
-								Player p = server.getState().getPlayer(playerID);
+								Player p = (Player)server.getState().getEntity(playerID);
 								PairDouble pos = p.getPos();
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, args[1] + "'s position is (" + pos.x + "," + pos.y + ")");
 							}
@@ -80,7 +80,7 @@ public class CommandProcessor {
 							if (clientThread == null) {
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "This command must be used with an argument when sent from the server");
 							} else {
-								PairDouble pos = server.getState().getPlayer(server.getUserMap().getPlayerIdFromClientId(clientThread.id)).getPos();
+								PairDouble pos = ((Player)server.getState().getEntity(server.getUserMap().getPlayerIdFromClientId(clientThread.id))).getPos();
 								m.chatMessage = new ChatMessage(ChatMessage.serverSource, "Your position is (" + pos.x + "," + pos.y + ")");
 							}
 						}
@@ -160,7 +160,7 @@ public class CommandProcessor {
 						}
 						
 						int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientThread.id);
-						Player thisPlayer = server.getState().getPlayer(thisPlayerID);
+						Player thisPlayer = (Player)server.getState().getEntity(thisPlayerID);
 						thisPlayer.setPos(pos);
 					}
 		};
@@ -184,7 +184,7 @@ public class CommandProcessor {
 							}
 							
 							int thisPlayerID = server.getUserMap().getPlayerIdFromClientId(clientThread.id);
-							Player thisPlayer = server.getState().getPlayer(thisPlayerID);
+							Player thisPlayer = (Player)server.getState().getEntity(thisPlayerID);
 							map = thisPlayer.getMap();
 							pos = thisPlayer.getPos();
 						} else {
@@ -200,18 +200,18 @@ public class CommandProcessor {
 						
 						switch (args[1].toUpperCase()) {
 							case "CHICKEN": {
-								Chicken c = new Chicken(server, map, pos);
-								map.addMob(c);
+								Chicken c = new Chicken(server);
+								c.setPos(pos, map.id);
 								break;
 							}
 							case "CYCLOPS": {
-								Cyclops c = new Cyclops(server, map, pos);
-								map.addMob(c);
+								Cyclops c = new Cyclops(server);
+								c.setPos(pos, map.id);
 								break;
 							}
 							case "NPC": {
-								NPCHuman n = new NPCHuman(server, map, pos);
-								map.addMob(n);
+								NPCHuman n = new NPCHuman(server);
+								n.setPos(pos, map.id);
 								break;
 							}
 							default: {

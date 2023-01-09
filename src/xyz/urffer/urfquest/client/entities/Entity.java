@@ -16,19 +16,15 @@ import xyz.urffer.urfquest.shared.Vector;
 public abstract class Entity {
 	protected Client client;
 	
-	protected Rectangle2D.Double bounds;
-	protected Vector movementVector;
-	
-	protected Map map;
+	protected Rectangle2D.Double bounds = new Rectangle2D.Double(0, 0, 1, 1);
+	protected int mapID = 0;
+	protected Vector movementVector = new Vector(0, 0);
 	
 	public final int id;
 	
-	protected Entity(Client c, int id, Map m, PairDouble pos) {
+	protected Entity(Client c, int id) {
 		this.client = c;
 		this.id = id;
-		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		this.movementVector = new Vector(0, 0);
-		this.map = m;
 	}
 	
 	/*
@@ -108,8 +104,21 @@ public abstract class Entity {
 	 * Misc
 	 */
 	
-	public Map getMap() {
-		return map;
+	public int getMapID() {
+		return this.mapID;
+	}
+	
+	public void setMapID(int mapID) {
+		this.mapID = mapID;
+	}
+	
+	protected Map getMap() {
+		Map currentClientMap = this.client.getState().getCurrentMap();
+		if (this.mapID == currentClientMap.id) {
+			return currentClientMap;
+		} else {
+			return null;
+		}
 	}
 	
 	// interactions with other entities
