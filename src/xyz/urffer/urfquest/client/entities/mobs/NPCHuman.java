@@ -6,12 +6,9 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
-import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.ImageUtils;
@@ -48,9 +45,9 @@ public class NPCHuman extends Mob {
 	
 	protected double pickupRange = 3.0;
 
-	public NPCHuman(Client c, int id, Map currMap, PairDouble pos, String name) {
-		super(c, id, currMap, pos);
-		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+	public NPCHuman(Client c, int id, String name) {
+		super(c, id);
+		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;

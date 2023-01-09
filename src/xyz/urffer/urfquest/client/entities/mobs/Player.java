@@ -53,9 +53,9 @@ public class Player extends Mob {
 	
 	private double pickupRange = 3.0;
 
-	public Player(Client c, int id, Map currMap, PairDouble pos, String name) {
-		super(c, id, currMap, pos);
-		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+	public Player(Client c, int id, String name) {
+		super(c, id);
+		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -80,6 +80,11 @@ public class Player extends Mob {
 	
 	public void setPos(PairDouble pos) {
 		super.setPos(pos);
+		
+		Map map = this.getMap();
+		if (map == null) {
+			return;
+		}
 		
 		// if this new position would put the player within one chunk of the world edge,
 		// shift the map and load more chunks
@@ -161,10 +166,6 @@ public class Player extends Mob {
 		this.name = name;
 	}
 	
-	public void setMap(Map m) {
-		map = m;
-	}
-	
 	/*
 	 * Inventory management
 	 */
@@ -191,7 +192,9 @@ public class Player extends Mob {
 		PairDouble playerPos = getPos();
 		i.setPos(playerPos);
 		i.resetDropTimeout();
-		map.addItem(i);
+		
+		// TODO: figure out how to handle this
+//		map.addItem(i);
 	}
 	
 	public int getSelectedInventoryIndex() {
@@ -226,6 +229,10 @@ public class Player extends Mob {
 	 */
 	
 	public void useTileUnderneath() {
+		Map map = this.getMap();
+		if (map == null) {
+			return;
+		}
 		map.useActiveTile(getCenter().toInt(), this);
 	}
 	

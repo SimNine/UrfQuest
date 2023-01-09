@@ -17,16 +17,17 @@ public class CameraMob extends Mob {
 	private int mode;
 
 	public CameraMob(Server srv, State s, Map m, PairDouble pos, int mode) {
-		super(srv, m, pos);
-		
-		movementVector.magnitude = 0.01;
-		movementVector.dirRadians = server.randomDouble()*2.0*Math.PI;
+		super(srv);
 		
 		health = 100.0;
 		maxHealth = 100.0;
 		routine = new IdleRoutine(server, this);
 		
 		this.mode = mode;
+		
+		this.setPos(pos, m.id);
+		
+		this.setMovementVector(server.randomDouble()*2.0*Math.PI, 0.01);
 	}
 
 	public void tick() {

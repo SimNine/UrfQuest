@@ -10,8 +10,7 @@ import xyz.urffer.urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
@@ -22,13 +21,12 @@ public class Cyclops extends Mob {
 	private ItemStack shotgun;
 
 	public Cyclops(Server srv, Map m, PairDouble pos) {
-		super(srv, m, pos);
+		super(srv);
 		
 		// figure out what scaling this should be
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CYCLOPS;
 		
 		health = 50.0;
 		maxHealth = 50.0;
@@ -42,13 +40,12 @@ public class Cyclops extends Mob {
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
 		
-		MessageInitEntity msg = new MessageInitEntity();
-		msg.entityType = EntityType.MOB;
-		msg.entitySubtype = MobType.CYCLOPS;
-		msg.pos = this.getPos();
+		MessageInitMob msg = new MessageInitMob();
 		msg.entityID = this.id;
-		msg.mapID = m.id;
+		msg.mobType = MobType.CYCLOPS;
 		server.sendMessageToAllClients(msg);
+		
+		this.setPos(pos, m.id);
 	}
 
 	public void tick() {

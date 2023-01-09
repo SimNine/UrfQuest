@@ -9,8 +9,7 @@ import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
@@ -19,9 +18,8 @@ public class NPCHuman extends Mob {
 	private final int intelligence;
 	
 	public NPCHuman(Server srv, Map m, PairDouble pos) {
-		super(srv, m, pos);
+		super(srv);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_PLAYER;
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -34,14 +32,13 @@ public class NPCHuman extends Mob {
 		intelligence = 20;
 		thinkingDelay = intelligence;
 		
-		MessageInitEntity msg = new MessageInitEntity();
-		msg.entityType = EntityType.MOB;
-		msg.entitySubtype = MobType.NPC_HUMAN;
-		msg.pos = this.getPos();
+		MessageInitMob msg = new MessageInitMob();
 		msg.entityID = this.id;
-		msg.mapID = m.id;
-		msg.entityName = "NewNPC";
+		msg.mobType = MobType.NPC_HUMAN;
+		msg.mobName = "NewNPC";
 		server.sendMessageToAllClients(msg);
+		
+		this.setPos(pos, m.id);
 	}
 
 	public void tick() {

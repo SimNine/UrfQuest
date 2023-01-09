@@ -7,11 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
-import xyz.urffer.urfquest.client.map.Map;
 
 public class Cyclops extends Mob {
 
@@ -28,11 +25,11 @@ public class Cyclops extends Mob {
 		}
 	}
 
-	public Cyclops(Client c, int id, Map m, PairDouble pos) {
-		super(c, id, m, pos);
+	public Cyclops(Client c, int id) {
+		super(c, id);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 10, 10);
+		bounds = new Rectangle2D.Double(0, 0, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		

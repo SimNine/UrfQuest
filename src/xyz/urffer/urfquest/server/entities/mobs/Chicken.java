@@ -9,8 +9,7 @@ import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
@@ -19,9 +18,8 @@ public class Chicken extends Mob {
 	private final int intelligence;
 	
 	public Chicken(Server srv, Map m, PairDouble pos) {
-		super(srv, m, pos);
+		super(srv);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_CHICKEN;
 		
 		health = 10.0;
 		maxHealth = 10.0;
@@ -34,13 +32,12 @@ public class Chicken extends Mob {
 		intelligence = 20;
 		thinkingDelay = intelligence;
 		
-		MessageInitEntity msg = new MessageInitEntity();
-		msg.entityType = EntityType.MOB;
-		msg.entitySubtype = MobType.CHICKEN;
-		msg.pos = this.getPos();
+		MessageInitMob msg = new MessageInitMob();
 		msg.entityID = this.id;
-		msg.mapID = m.id;
+		msg.mobType = MobType.CHICKEN;
 		server.sendMessageToAllClients(msg);
+		
+		this.setPos(pos, m.id);
 	}
 
 	public void tick() {

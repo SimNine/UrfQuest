@@ -11,10 +11,9 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
-import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 
 public class Player extends Mob {
@@ -27,8 +26,8 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(Server srv, State s, Map m, PairDouble pos, String name, ClientThread c) {
-		super(srv, m, pos);
+	public Player(Server srv, Map m, PairDouble pos, String name, ClientThread c) {
+		super(srv);
 		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
 		
 		health = 100.0;
@@ -44,12 +43,13 @@ public class Player extends Mob {
 		this.client = c;
 		
 		MessageInitPlayer msg = new MessageInitPlayer();
-		msg.clientOwnerID = c.id;
 		msg.entityID = this.id;
+		msg.clientOwnerID = c.id;
 		msg.entityName = this.name;
-		msg.pos = this.getPos();
-		msg.mapID = this.map.id;
 		server.sendMessageToAllClients(msg);
+		
+		this.map = m;
+		this.setPos(pos, m.id);
 	}
 
 	/*
@@ -168,10 +168,8 @@ public class Player extends Mob {
 	}
 	
 	public boolean addItem(ItemStack i) {
-		MessageItemSetPos misp = new MessageItemSetPos();
+		MessageItemSetOwner misp = new MessageItemSetOwner();
 		misp.entityID = i.id;
-		misp.mapID = -1;
-		misp.pos = null;
 		misp.entityOwnerID = this.id;
 		server.sendMessageToAllClients(misp);
 		

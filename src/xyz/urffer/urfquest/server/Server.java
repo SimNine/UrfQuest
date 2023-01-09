@@ -229,7 +229,6 @@ public class Server {
 				
 				Player newPlayer = new Player(
 					this,
-					this.state,
 					this.state.getSurfaceMap(),
 					this.state.getSurfaceMap().getHomeCoords().toDouble(),
 					playerName,
@@ -281,10 +280,8 @@ public class Server {
 				for (Player player : map.getPlayers().values()) {
 					MessageInitPlayer mpi = new MessageInitPlayer();
 					mpi.clientOwnerID = userMap.getClientIdFromPlayerId(player.id);
-					mpi.mapID = map.id;
 					mpi.entityID = player.id;
 					mpi.entityName = player.getName();
-					mpi.pos = player.getPos();
 					sendMessageToSingleClient(mpi, c.id);
 				}
 				break;

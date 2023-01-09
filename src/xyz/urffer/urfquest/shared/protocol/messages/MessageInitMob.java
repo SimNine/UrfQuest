@@ -1,13 +1,11 @@
 package xyz.urffer.urfquest.shared.protocol.messages;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.shared.protocol.Message;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
+import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
-public class MessageInitEntity extends Message {
+public class MessageInitMob extends Message {
 
 	/**
 	 * 
@@ -15,15 +13,13 @@ public class MessageInitEntity extends Message {
 	private static final long serialVersionUID = -8352846007865555290L;
 	
 	public int entityID;
-	public String entityName;
-	public EntityType entityType;
-	public Object entitySubtype;
-	public PairDouble pos = new PairDouble(0,0);
-	public int mapID;
+
+	public MobType mobType;
+	public String mobName;
 
 	@Override
 	public MessageType getType() {
-		return MessageType.INIT_ENTITY;
+		return MessageType.INIT_MOB;
 	}
 
 	@Override
@@ -34,11 +30,9 @@ public class MessageInitEntity extends Message {
 	@Override
 	public String toString() {
 		String ret = 
-				",entityID:" + this.entityID + 
-				",type:" + entityType.toString();
-		if (entityType == EntityType.PLAYER) {
-			ret += ",name:" + this.entityName;
-		}
+				",entityID:" + this.entityID +
+				",mobType:" + this.mobType.toString() +
+				",mobName:" + this.mobName;
 		return ret;
 	}
 

@@ -16,22 +16,18 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 
 public abstract class Entity {
 	protected Server server;
-	protected Map map;
+
+	protected Rectangle2D.Double bounds = new Rectangle2D.Double(0, 0, 1, 1);
+	protected Map map = null;
 	
-	protected Rectangle2D.Double bounds;
-	protected Vector movementVector;
+	protected Vector movementVector = new Vector(0, 0);
 	
 	public int id;
 	
-	protected Entity(Server srv, Map m, PairDouble pos) {
+	protected Entity(Server srv) {
 		this.server = srv;
 		
 		this.id = IDGenerator.newID();
-		
-		this.bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		this.movementVector = new Vector(0.0, 0.0);
-		
-		this.map = m;
 	}
 	
 	public abstract void tick();
@@ -139,11 +135,17 @@ public abstract class Entity {
 	}
 	
 	public void setPos(PairDouble pos) {
+		setPos(pos, this.map.id);
+	}
+	
+	public void setPos(PairDouble pos, int mapID) {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
+		this.map = this.server.getState().getMapByID(mapID);
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;
 		m.pos = this.getPos();
+		m.mapID = this.map.id;
 		this.server.sendMessageToAllClients(m);
 	}
 	

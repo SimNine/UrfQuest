@@ -503,6 +503,19 @@ public class Map {
 	
 	
 	
+	public void addEntity(Entity e) {
+		if (e instanceof Player) {
+			this.addPlayer((Player)e);
+		} else if (e instanceof Mob) {
+			this.addMob((Mob)e);
+		} else if (e instanceof ItemStack) {
+			this.addItem((ItemStack)e);
+		} else if (e instanceof Projectile) {
+			this.addProjectile((Projectile)e);
+		}
+		e.setMapID(this.id);
+	}
+	
 	public Entity getEntity(int entityID) {
 		if (players.containsKey(entityID))
 			return players.get(entityID);

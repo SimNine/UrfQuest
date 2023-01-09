@@ -175,14 +175,14 @@ public class GameBoardOverlay extends GUIContainer {
 	public boolean click() {
 		PairInt mouseTile = client.getPanel().windowToGame(client.getPanel().mousePos).floor();
 		
-		Player p = this.client.getState().getPlayer();
-		if (
-			mouseTile.x < p.getPos().x + 3 &&
-			mouseTile.x > p.getPos().x - 3 &&
-			mouseTile.y < p.getPos().y + 3 &&
-			mouseTile.y > p.getPos().y - 3) {
-			p.getMap().useActiveTile(mouseTile, p);
-		}
+//		Player p = this.client.getState().getPlayer();
+//		if (
+//			mouseTile.x < p.getPos().x + 3 &&
+//			mouseTile.x > p.getPos().x - 3 &&
+//			mouseTile.y < p.getPos().y + 3 &&
+//			mouseTile.y > p.getPos().y - 3) {
+//			p.getMap().useActiveTile(mouseTile, p);
+//		}
 		
 		if (this.client.getState().isBuildMode() && this.client.getState().isGameRunning() && !client.getPanel().getGUIOpen()) {
 			this.client.getState().getCurrentMap().setTileAt(mouseTile, new Tile(TileType.BEDROCK));

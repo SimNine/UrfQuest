@@ -18,6 +18,7 @@ import xyz.urffer.urfquest.server.entities.projectiles.RocketExplosion;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.tiles.MapLink;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
@@ -43,9 +44,7 @@ public class ItemStack extends Entity {
 	}
 	
 	public ItemStack(Server srv, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
-		super(srv, m, pos);
-		
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+		super(srv);
 		
 		this.itemType = type;
 		this.cooldown = 0;
@@ -69,9 +68,12 @@ public class ItemStack extends Entity {
 		mii.itemType = this.itemType;
 		mii.durability = this.durability;
 		mii.stacksize = this.stackSize;
-		mii.mapID = m.id;
-		mii.pos = pos;
 		srv.sendMessageToAllClients(mii);
+		
+		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+		this.setPos(pos, m.id);
+		
+		this.setMovementVector(new Vector(0, 0));
 	}
 
 	/*
