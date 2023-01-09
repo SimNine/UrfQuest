@@ -2,13 +2,10 @@ package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.AttackRoutine;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
-import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
@@ -20,11 +17,11 @@ public class Cyclops extends Mob {
 	
 	private ItemStack shotgun;
 
-	public Cyclops(Server srv, int mapID, PairDouble pos) {
+	public Cyclops(Server srv) {
 		super(srv);
 		
 		// figure out what scaling this should be
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 10, 10);
+		bounds = new Rectangle2D.Double(0, 0, 10, 10);
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
@@ -35,7 +32,7 @@ public class Cyclops extends Mob {
 		fullness = 0.0;
 		maxFullness = 0.0;
 		
-		shotgun = new ItemStack(srv, this.mapID, new PairDouble(0, 0), ItemType.SHOTGUN);
+		shotgun = new ItemStack(srv, ItemType.SHOTGUN);
 		intelligence = 50;
 		routine = new IdleRoutine(server, this);
 		thinkingDelay = intelligence;
@@ -44,8 +41,6 @@ public class Cyclops extends Mob {
 		msg.entityID = this.id;
 		msg.mobType = MobType.CYCLOPS;
 		server.sendMessageToAllClients(msg);
-		
-		this.setPos(pos, mapID);
 	}
 
 	public void tick() {
@@ -88,8 +83,8 @@ public class Cyclops extends Mob {
 	}
 	
 	public void onDeath() {
-		Map map = this.server.getState().getMapByID(this.mapID);
-		map.addItem(new ItemStack(this.server, this.mapID, this.getCenter(), ItemType.BONE));
+		ItemStack bones = new ItemStack(this.server, ItemType.BONE);
+		bones.setPos(this.getCenter(), this.mapID);
 	}
 
 	@Override

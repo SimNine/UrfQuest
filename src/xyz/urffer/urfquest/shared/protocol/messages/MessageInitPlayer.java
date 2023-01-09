@@ -23,7 +23,7 @@ public class MessageInitPlayer extends Message {
 
 	@Override
 	public void print(String prefix, Logger logger) {
-		logger.debug(prefix + "," + this.toString());
+		logger.info(prefix + "," + this.toString());
 	}
 
 	@Override

@@ -2,12 +2,9 @@ package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
-import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
@@ -17,9 +14,9 @@ public class Chicken extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public Chicken(Server srv, int mapID, PairDouble pos) {
+	public Chicken(Server srv) {
 		super(srv);
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 10.0;
 		maxHealth = 10.0;
@@ -36,8 +33,6 @@ public class Chicken extends Mob {
 		msg.entityID = this.id;
 		msg.mobType = MobType.CHICKEN;
 		server.sendMessageToAllClients(msg);
-		
-		this.setPos(pos, mapID);
 	}
 
 	public void tick() {
@@ -80,8 +75,8 @@ public class Chicken extends Mob {
 	
 	public void onDeath() {
 		if (server.randomDouble() > 0.5) {
-			Map map = this.server.getState().getMapByID(this.mapID);
-			map.addItem(new ItemStack(this.server, this.mapID, this.getCenter(), ItemType.CHICKEN_LEG));
+			ItemStack chickenLeg = new ItemStack(this.server, ItemType.CHICKEN_LEG);
+			chickenLeg.setPos(this.getCenter(), this.mapID);
 		}
 	}
 }

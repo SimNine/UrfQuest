@@ -42,7 +42,7 @@ public class PlayerInfoPanel extends JPanel {
 		g.drawString("Position", 225, lineHeight);
 		for (int clientID : userMap.getAllClientIDs()) {
 			int playerID = userMap.getPlayerIdFromClientId(clientID);
-			Player player = server.getState().getPlayer(playerID);
+			Player player = (Player)server.getState().getEntity(playerID);
 			
 			lineHeight += 15;
 			g.drawString(clientID + "", 0, lineHeight);

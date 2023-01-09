@@ -4,8 +4,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.ClientThread;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
@@ -26,9 +24,9 @@ public class Player extends Mob {
 	private String name;
 	private ClientThread client;
 	
-	public Player(Server srv, int mapID, PairDouble pos, String name, ClientThread c) {
+	public Player(Server srv, String name, ClientThread c) {
 		super(srv);
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -47,8 +45,6 @@ public class Player extends Mob {
 		msg.clientOwnerID = c.id;
 		msg.entityName = this.name;
 		server.sendMessageToAllClients(msg);
-		
-		this.setPos(pos, mapID);
 	}
 
 	/*

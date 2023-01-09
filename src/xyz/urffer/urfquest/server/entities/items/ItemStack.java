@@ -35,15 +35,15 @@ public class ItemStack extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type) {
-		this(srv, mapID, pos, type, -1);
+	public ItemStack(Server srv, ItemType type) {
+		this(srv, type, -1);
 	}
 	
-	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type, int durability) {
-		this(srv, mapID, pos, type, 1, durability);
+	public ItemStack(Server srv, ItemType type, int durability) {
+		this(srv, type, 1, durability);
 	}
 	
-	public ItemStack(Server srv, int mapID, PairDouble pos, ItemType type, int stackSize, int durability) {
+	public ItemStack(Server srv, ItemType type, int stackSize, int durability) {
 		super(srv);
 		
 		this.itemType = type;
@@ -70,10 +70,7 @@ public class ItemStack extends Entity {
 		mii.stacksize = this.stackSize;
 		srv.sendMessageToAllClients(mii);
 		
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		this.setPos(pos, mapID);
-		
-		this.setMovementVector(new Vector(0, 0));
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 	}
 
 	/*
@@ -112,8 +109,9 @@ public class ItemStack extends Entity {
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-5.0);
-			PairDouble pos = m.getPos();
-			m.getMap().addMob(new Chicken(this.server, this.mapID, pos));
+			
+			Chicken newChicken = new Chicken(this.server);
+			newChicken.setPos(m.getPos(), this.mapID);
 			return true;
 		}
 		case LAW_RUNE: {
@@ -213,45 +211,51 @@ public class ItemStack extends Entity {
 			return true;
 		}
 		case PICKAXE: {
+			Map map = m.getMap();
 			PairInt coords = m.tileCoordsAtDistance(1.0);
 			Tile tile = m.tileAtDistance(1.0);
 			if (tile.objectType == ObjectType.BOULDER) {
 				if (tile.tileType == TileType.GRASS) {
-					m.getMap().setTileAt(coords, new Tile(TileType.GRASS));
+					map.setTileAt(coords, new Tile(TileType.GRASS));
 				} else if (tile.tileType == TileType.WATER) {
-					m.getMap().setTileAt(coords, new Tile(TileType.WATER));
+					map.setTileAt(coords, new Tile(TileType.WATER));
 				} else if (tile.tileType == TileType.SAND) {
-					m.getMap().setTileAt(coords, new Tile(TileType.SAND));
+					map.setTileAt(coords, new Tile(TileType.SAND));
 				} else if (tile.tileType == TileType.DIRT) {
-					m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
+					map.setTileAt(coords, new Tile(TileType.DIRT));
 					double rand = server.randomDouble();
+					ItemStack item;
 					if (rand > .95) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.LAW_RUNE));
+						item = new ItemStack(this.server, ItemType.LAW_RUNE);
 					} else if (rand > .90) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.COSMIC_RUNE));
+						item = new ItemStack(this.server, ItemType.COSMIC_RUNE);
 					} else if (rand > .85) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.ASTRAL_RUNE));
+						item = new ItemStack(this.server, ItemType.ASTRAL_RUNE);
 					} else if (rand > .82) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.SHOTGUN));
+						item = new ItemStack(this.server, ItemType.SHOTGUN);
 					} else if (rand > .79) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.SMG));
+						item = new ItemStack(this.server, ItemType.SMG);
 					} else if (rand > .75) {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.GRENADE_ITEM));
+						item = new ItemStack(this.server, ItemType.GRENADE_ITEM);
 					} else {
-						m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.STONE));
+						item = new ItemStack(this.server, ItemType.STONE);
 					}
+					item.setPos(coords.toDouble(), this.mapID);
 				}
-				m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.STONE));
+				ItemStack stoneStack = new ItemStack(this.server, ItemType.STONE);
+				stoneStack.setPos(coords.toDouble(), this.mapID);
 				cooldown = getMaxCooldown();
 				return true;
 			} else if (tile.objectType == ObjectType.COPPER_ORE) {
-				m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.COPPER_ORE));
-				m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
+				ItemStack item = new ItemStack(this.server, ItemType.COPPER_ORE);
+				item.setPos(coords.toDouble(), this.mapID);
+				map.setTileAt(coords, new Tile(TileType.DIRT));
 				cooldown = getMaxCooldown();			
 				return true;
 			} else if (tile.objectType == ObjectType.IRON_ORE) {
-				m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.IRON_ORE));
-				m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
+				ItemStack item = new ItemStack(this.server, ItemType.IRON_ORE);
+				item.setPos(coords.toDouble(), this.mapID);
+				map.setTileAt(coords, new Tile(TileType.DIRT));
 				cooldown = getMaxCooldown();			
 				return true;
 			} else {
@@ -263,7 +267,8 @@ public class ItemStack extends Entity {
 			if (tileAtDistance.objectType == ObjectType.TREE) {
 				PairInt coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords, new Tile(tileAtDistance.tileType, ObjectType.VOID));
-				m.getMap().addItem(new ItemStack(this.server, this.map, coords.toDouble(), ItemType.LOG));
+				ItemStack item = new ItemStack(this.server, ItemType.LOG);
+				item.setPos(coords.toDouble(), this.mapID);
 				
 				cooldown = getMaxCooldown();
 				return true;
@@ -355,7 +360,7 @@ public class ItemStack extends Entity {
 	}
 	
 	public ItemStack clone() {
-		return new ItemStack(this.server, this.map, this.getPos(), this.itemType, durability);
+		return new ItemStack(this.server, this.itemType, durability);
 	}
 	
 	/*

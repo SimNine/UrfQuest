@@ -20,7 +20,7 @@ import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.ImageUtils;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
-import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerSetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerSetMoveVector;
 
 public class Player extends Mob {
 
@@ -69,7 +69,7 @@ public class Player extends Mob {
 	
 	public void setMovementVector(double dirRadians, double velocity, boolean byClient) {
 		if (byClient) {
-			MessagePlayerSetMoveVector m = new MessagePlayerSetMoveVector();
+			MessageRequestPlayerSetMoveVector m = new MessageRequestPlayerSetMoveVector();
 			m.vector = new Vector(dirRadians, velocity);
 			m.entityID = this.id;
 			this.client.send(m);
@@ -80,6 +80,11 @@ public class Player extends Mob {
 	
 	public void setPos(PairDouble pos) {
 		super.setPos(pos);
+		
+		// If this player isn't the one owned by this client, do nothing else
+		if (this != this.client.getState().getPlayer()) {
+			return;
+		}
 		
 		Map map = this.getMap();
 		if (map == null) {

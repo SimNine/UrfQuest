@@ -28,6 +28,8 @@ public abstract class Entity {
 		this.server = srv;
 		
 		this.id = IDGenerator.newID();
+		
+		this.server.getState().addEntity(this);
 	}
 	
 	public abstract void tick();
@@ -143,6 +145,7 @@ public abstract class Entity {
 	
 	public void setPos(PairDouble pos, int mapID) {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
+		this.server.getState().getMapByID(mapID).addEntity(this);
 		this.mapID = mapID;
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
