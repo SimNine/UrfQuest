@@ -51,9 +51,10 @@ class SummonCommandTest {
 		Assertions.assertEquals(0, c1.getAllChatMessages().size());
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
-		
-		Assertions.assertEquals(0, s.getState().getSurfaceMap().getNumMobs());
-		Assertions.assertEquals(0, c1.getState().getCurrentMap().getNumMobs());
+
+		// NOTE: The given map will start out with three NPCs having already spawned
+		Assertions.assertEquals(3, s.getState().getSurfaceMap().getMobs().size());
+		Assertions.assertEquals(3, c1.getState().getCurrentMap().getMobs().size());
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
@@ -65,8 +66,8 @@ class SummonCommandTest {
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
 		
-		Assertions.assertEquals(1, s.getState().getSurfaceMap().getNumMobs());
-		Assertions.assertEquals(1, c1.getState().getCurrentMap().getNumMobs());
+		Assertions.assertEquals(4, s.getState().getSurfaceMap().getMobs().size());
+		Assertions.assertEquals(4, c1.getState().getCurrentMap().getMobs().size());
 		Player p1c = c1.getState().getPlayer();
 		Mob mob = c1.getState().getCurrentMap().getMobs().values().iterator().next();
 		Assertions.assertEquals(p1c.getPos().x, mob.getPos().x, Constants.TESTING_POSITION_TOLERANCE);
@@ -81,8 +82,9 @@ class SummonCommandTest {
 		Assertions.assertEquals(0, s.getAllChatMessages().size());
 		Assertions.assertEquals(0, c2.getAllChatMessages().size());
 		
-		Assertions.assertEquals(0, s.getState().getSurfaceMap().getNumMobs());
-		Assertions.assertEquals(0, c1.getState().getCurrentMap().getNumMobs());
+		// NOTE: The given map will start out with three NPCs having already spawned
+		Assertions.assertEquals(3, s.getState().getSurfaceMap().getMobs().size());
+		Assertions.assertEquals(3, c1.getState().getCurrentMap().getMobs().size());
 
 		MessageChat m = new MessageChat();
 		m.chatMessage = new ChatMessage(null, messageText);
@@ -94,8 +96,8 @@ class SummonCommandTest {
 		
 		Assertions.assertEquals(messageText, s.getAllChatMessages().getFirst().message);
 		
-		Assertions.assertEquals(1, s.getState().getSurfaceMap().getNumMobs());
-		Assertions.assertEquals(1, c1.getState().getCurrentMap().getNumMobs());
+		Assertions.assertEquals(4, s.getState().getSurfaceMap().getMobs().size());
+		Assertions.assertEquals(4, c1.getState().getCurrentMap().getMobs().size());
 		Mob mob = c1.getState().getCurrentMap().getMobs().values().iterator().next();
 		Assertions.assertEquals(5.0, mob.getPos().x, Constants.TESTING_POSITION_TOLERANCE);
 		Assertions.assertEquals(3.0, mob.getPos().y, Constants.TESTING_POSITION_TOLERANCE);

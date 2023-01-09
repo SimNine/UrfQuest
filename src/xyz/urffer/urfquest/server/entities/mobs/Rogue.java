@@ -25,28 +25,29 @@ public class Rogue extends Mob {
 	
 	private Inventory inventory;
 
-	public Rogue(Server srv, State s, Map m, PairDouble pos) {
-		super(srv, m, pos);
-		
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_ROGUE;
-		
-		health = 100.0;
-		maxHealth = 100.0;
-		mana = 100.0;
-		maxMana = 100.0;
-		fullness = 100.0;
-		maxFullness = 100.0;
-		
-		inventory = new Inventory(srv, this, 10);
-		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
-		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
-		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SMG));
-		
-		intelligence = 50;
-		routine = new IdleRoutine(server, this);
-		thinkingDelay = intelligence;
-	}
+//	public Rogue(Server srv, State s, Map m, PairDouble pos) {
+//		super(srv);
+//		
+//		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+//		
+//		health = 100.0;
+//		maxHealth = 100.0;
+//		mana = 100.0;
+//		maxMana = 100.0;
+//		fullness = 100.0;
+//		maxFullness = 100.0;
+//		
+//		inventory = new Inventory(srv, this, 10);
+//		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.PISTOL));
+//		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SHOTGUN));
+//		inventory.addItem(new ItemStack(srv, this.map, new PairDouble(0, 0), ItemType.SMG));
+//		
+//		intelligence = 50;
+//		routine = new IdleRoutine(server, this);
+//		thinkingDelay = intelligence;
+//		
+//		// TODO: add initialization message-sending
+//	}
 
 	/*
 	 * per-tick updater

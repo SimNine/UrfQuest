@@ -405,103 +405,40 @@ public class Map {
 	 * Entity management
 	 */
 	
-	public void addItem(ItemStack i) {
-		items.put(i.id, i);
-	}
-	
-	public void removeItem(ItemStack i) {
-		items.remove(i.id);
-	}
-	
 	public HashMap<Integer, ItemStack> getItems() {
 		return items;
-	}
-	
-	public int getNumItems() {
-		return items.size();
-	}
-	
-	public ItemStack getItem(int entityID) {
-		return items.get(entityID);
-	}
-	
-	
-	
-	public void addMob(Mob m) {
-		mobs.put(m.id, m);
-	}
-	
-	public void removeMob(Mob m) {
-		mobs.remove(m.id);
 	}
 	
 	public HashMap<Integer, Mob> getMobs() {
 		return mobs;
 	}
 	
-	public int getNumMobs() {
-		return mobs.size();
-	}
-	
-	public Mob getMob(int entityID) {
-		return mobs.get(entityID);
-	}
-	
-	
-	
-	public void addProjectile(Projectile p) {
-		projectiles.put(p.id, p);
-	}
-	
-	public void removeProjectile(Projectile p) {
-		projectiles.remove(p.id);
-	}
-	
 	public HashMap<Integer, Projectile> getProjectiles() {
 		return projectiles;
-	}
-	
-	public int getNumProjectiles() {
-		return projectiles.size();
-	}
-	
-	public Projectile getProjectile(int entityID) {
-		return projectiles.get(entityID);
-	}
-	
-	
-	
-	public void addPlayer(Player p) {
-		players.put(p.id, p);
-	}
-	
-	public void removePlayer(Player p) {
-		players.remove(p.id);
 	}
 	
 	public HashMap<Integer, Player> getPlayers() {
 		return players;
 	}
 	
-	public int getNumPlayers() {
-		return players.size();
-	}
-	
-	public Player getPlayer(int entityID) {
-		return players.get(entityID);
-	}
-	
-	
-	
 	public ArrayList<Particle> getParticles() {
 		return particles;
 	}
 	
-	public int getNumParticles() {
-		return particles.size();
+	
+	
+	public void addEntity(Entity e) {
+		if (e instanceof Player) {
+			this.players.put(e.id, (Player)e);
+		} else if (e instanceof Mob) {
+			this.mobs.put(e.id, (Mob)e);
+		} else if (e instanceof ItemStack) {
+			this.items.put(e.id, (ItemStack)e);
+		} else if (e instanceof Projectile) {
+			this.projectiles.put(e.id, (Projectile)e);
+		}
+		e.setMapID(this.id);
 	}
-	
-	
 	
 	public Entity getEntity(int entityID) {
 		if (players.containsKey(entityID))

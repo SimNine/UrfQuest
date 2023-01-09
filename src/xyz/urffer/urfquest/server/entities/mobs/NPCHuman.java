@@ -2,26 +2,19 @@ package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
-import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Constants;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
-import xyz.urffer.urfquest.shared.protocol.types.ItemType;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
 
 public class NPCHuman extends Mob {
 	private int thinkingDelay;
 	private final int intelligence;
 	
-	public NPCHuman(Server srv, Map m, PairDouble pos) {
-		super(srv, m, pos);
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
-		movementVector.magnitude = Constants.DEFAULT_VELOCITY_PLAYER;
+	public NPCHuman(Server srv) {
+		super(srv);
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		health = 100.0;
 		maxHealth = 100.0;
@@ -34,13 +27,10 @@ public class NPCHuman extends Mob {
 		intelligence = 20;
 		thinkingDelay = intelligence;
 		
-		MessageInitEntity msg = new MessageInitEntity();
-		msg.entityType = EntityType.MOB;
-		msg.entitySubtype = MobType.NPC_HUMAN;
-		msg.pos = this.getPos();
+		MessageInitMob msg = new MessageInitMob();
 		msg.entityID = this.id;
-		msg.mapID = m.id;
-		msg.entityName = "NewNPC";
+		msg.mobType = MobType.NPC_HUMAN;
+		msg.mobName = "NewNPC";
 		server.sendMessageToAllClients(msg);
 	}
 
@@ -83,8 +73,6 @@ public class NPCHuman extends Mob {
 	}
 	
 	public void onDeath() {
-		if (server.randomDouble() > 0.5) {
-			this.map.addItem(new ItemStack(this.server, this.map, this.getCenter(), ItemType.CHICKEN_LEG));
-		}
+		// Do nothing
 	}
 }

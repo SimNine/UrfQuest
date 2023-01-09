@@ -42,7 +42,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideOneMotion() {
-		xyz.urffer.urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		xyz.urffer.urfquest.server.entities.mobs.Player p1s = (xyz.urffer.urfquest.server.entities.mobs.Player)s.getState().getEntity(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		
 		// check initial position
@@ -62,7 +62,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideSquare() {
-		xyz.urffer.urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		xyz.urffer.urfquest.server.entities.mobs.Player p1s = (xyz.urffer.urfquest.server.entities.mobs.Player)s.getState().getEntity(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		
 		// check initial position
@@ -106,7 +106,7 @@ class BasicPlayerMovementTest {
 
 	@Test
 	void testMovementServerSideDiamond() {
-		xyz.urffer.urfquest.server.entities.mobs.Player p1s = s.getState().getPlayer(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
+		xyz.urffer.urfquest.server.entities.mobs.Player p1s = (xyz.urffer.urfquest.server.entities.mobs.Player)s.getState().getEntity(s.getUserMap().getPlayerIdFromClientId(c1.getClientID()));
 		int numStepsMoved = 10;
 		double stepDistanceComponent = numStepsMoved*Constants.DEFAULT_VELOCITY_PLAYER*Math.sin(Math.toRadians(45));
 		

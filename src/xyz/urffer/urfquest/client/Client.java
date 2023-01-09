@@ -20,9 +20,10 @@ import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
+import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
-import xyz.urffer.urfquest.client.map.Map;
+import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -33,19 +34,17 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitEntity;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetPos;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
-import xyz.urffer.urfquest.shared.protocol.types.EntityType;
-import xyz.urffer.urfquest.shared.protocol.types.MobType;
 import xyz.urffer.urfutils.math.PairInt;
 
 public class Client {
@@ -158,57 +157,29 @@ public class Client {
 				this.send(mrp);
 				break;
 			}
-			case INIT_ENTITY: {
+			case INIT_MOB: {
 				// - Initializes an entity of the given type
+				// -- Adds it to the current state's entity pool but does not put it on a map
 				
-				// If this entity is not on the current map, do nothing
-				// TODO: must implement MAP_METADATA first
-				// if (m.mapID != state.getCurrentMap().id) {
-				// 		return;
-				// }
-				
-				// - If the entity is a player with the ID of this client:
-				// -- Assign it to this client
-				// -- Initialize this client's frontend
-				MessageInitEntity m = (MessageInitEntity)p.getMessage();
-				
-				if (m.entityType == EntityType.MOB) {
-					// TODO: spawn entity only on the specified map, which should be retrieved based on m.mapID
-					switch ((MobType) m.entitySubtype) {
-						case CHICKEN: {
-							Chicken chicken = new Chicken(
-								this,
-								m.entityID, 
-								state.getCurrentMap(),
-								m.pos
-							);
-							state.getCurrentMap().addMob(chicken);
-							break;
-						}
-						case CYCLOPS: {
-							Cyclops cyclops = new Cyclops(
-								this,
-								m.entityID,
-								state.getCurrentMap(),
-								m.pos
-							);
-							state.getCurrentMap().addMob(cyclops);
-							break;
-						}
-						case NPC_HUMAN: {
-							NPCHuman npc = new NPCHuman(
-								this,
-								m.entityID,
-								state.getCurrentMap(),
-								m.pos,
-								m.entityName
-							);
-							state.getCurrentMap().addMob(npc);
-							break;
-						}
-						default: {
-							break;
-						}
+				MessageInitMob m = (MessageInitMob)p.getMessage();
+				switch (m.mobType) {
+					case CHICKEN: {
+						Chicken chicken = new Chicken(this, m.entityID);
+						state.addEntity(chicken);
+						break;
+					}
+					case CYCLOPS: {
+						Cyclops cyclops = new Cyclops(this, m.entityID);
+						state.addEntity(cyclops);
+						break;
+					}
+					case NPC_HUMAN: {
+						NPCHuman npc = new NPCHuman(this, m.entityID, m.mobName);
+						state.addEntity(npc);
+						break;
+					}
+					default: {
+						break;
 					}
 				}
 				break;
@@ -225,9 +196,8 @@ public class Client {
 				// }
 				MessageInitPlayer m = (MessageInitPlayer)p.getMessage();
 				
-				Player player = new Player(this, m.entityID, state.getCurrentMap(), m.pos, m.entityName);
-				state.getCurrentMap().addPlayer(player);
-				player.setMap(state.getCurrentMap());
+				Player player = new Player(this, m.entityID, m.entityName);
+				this.state.addEntity(player);
 				
 				if (m.clientOwnerID == this.clientID) {
 					state.setPlayer(player);
@@ -244,36 +214,39 @@ public class Client {
 				// TODO: improve that
 				MessageInitItem mii = (MessageInitItem)p.getMessage();
 				
-				ItemStack item = new ItemStack(
-					this,
-					mii.entityID,
-					this.state.getCurrentMap(), // TODO: use specific mapID
-					mii.pos,
-					mii.itemType,
-					mii.stacksize,
-					mii.durability
-				);
-				this.state.getCurrentMap().addItem(item);
+				ItemStack item = new ItemStack(this, mii.entityID, mii.itemType, mii.stacksize, mii.durability);
+				this.state.addEntity(item);
 				
 				break;
 			}
-			case ITEM_SET_POS: {
+			case ITEM_SET_OWNER: {
 				// - Sets the position or owner of an item
-				MessageItemSetPos misp = (MessageItemSetPos)p.getMessage();
+				MessageItemSetOwner miso = (MessageItemSetOwner)p.getMessage();
 				
-				// TODO: fix for multiple maps
-				if (misp.mapID != -1) {
-//					Map map = state.getMap(misp.mapID);
-					Map map = state.getCurrentMap();
-					map.getItem(misp.entityID).setPos(misp.pos);
-				} else {
-//					Item item = state.getItem(misp.entityID);
-					Map map = state.getCurrentMap();
-					ItemStack item = map.getItem(misp.entityID);
-					map.removeItem(item);
-					Player newOwner = map.getPlayer(misp.entityOwnerID);
-					newOwner.addItem(item);
+				ItemStack item = (ItemStack)state.getEntity(miso.entityID);
+				Player owner = (Player)state.getEntity(miso.entityOwnerID);
+				
+				// Sanity check
+				if (item == null || owner == null) {
+					break;
 				}
+				
+				// Set the owner of the item
+				owner.addItem(item);
+	
+//				// TODO: look into how to do this properly
+//				if (misp.mapID != -1) {
+////					Map map = state.getMap(misp.mapID);
+//					Map map = state.getCurrentMap();
+//					map.getItem(misp.entityID).setPos(misp.pos);
+//				} else {
+////					Item item = state.getItem(misp.entityID);
+//					Map map = state.getCurrentMap();
+//					ItemStack item = map.getItem(misp.entityID);
+//					map.removeItem(item);
+//					Player newOwner = map.getPlayer(misp.entityOwnerID);
+//					newOwner.addItem(item);
+//				}
 				
 				break;
 			}
@@ -288,8 +261,19 @@ public class Client {
 				// - Sets the position of the given entity
 				MessageEntitySetPos m = (MessageEntitySetPos)p.getMessage();
 				
-				Entity e = state.getCurrentMap().getEntity(m.entityID);
-				if (e != null) {
+				Entity e = state.getEntity(m.entityID);
+				if (e != null) { // Sanity check
+					// If the destination isn't the current map, do nothing
+					if (m.mapID != state.getCurrentMap().id) {
+						break;
+					}
+					
+					// If this entity is not yet on the current map, place it
+					if (state.getCurrentMap().getEntity(e.id) == null) {
+						state.getCurrentMap().addEntity(e);
+					}
+					
+					// Set the position on the map of this entity
 					e.setPos(m.pos);
 				}
 				break;
@@ -297,7 +281,7 @@ public class Client {
 			case ENTITY_SET_MOVE_VECTOR: {
 				MessageEntitySetMoveVector m = (MessageEntitySetMoveVector)p.getMessage();
 				
-				Entity e = state.getCurrentMap().getEntity(m.entityID);
+				Entity e = state.getEntity(m.entityID);
 				if (e != null) {
 					e.setMovementVector(m.vector);
 				}
@@ -307,7 +291,7 @@ public class Client {
 				// - Sets the held item of the specified mob
 				MessageMobSetHeldItem m = (MessageMobSetHeldItem)p.getMessage();
 				
-				Player player = state.getCurrentMap().getPlayer(m.entityID);
+				Player player = (Player)state.getEntity(m.entityID);
 				if (player != null) {
 					player.setSelectedInventoryIndex(m.setHeldSlot, false);
 				}

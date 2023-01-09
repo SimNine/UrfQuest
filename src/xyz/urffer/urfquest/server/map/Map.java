@@ -9,6 +9,7 @@ import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.server.IDGenerator;
 import xyz.urffer.urfquest.server.Server;
+import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
@@ -576,54 +577,6 @@ public class Map {
 	 * Entity management
 	 */
 	
-	public void addItem(ItemStack i) {
-		items.put(i.id, i);
-	}
-	
-	public void addMob(Mob m) {
-		mobs.put(m.id, m);
-	}
-	
-	public void addProjectile(Projectile p) {
-		projectiles.put(p.id, p);
-	}
-	
-	public void addPlayer(Player p) {
-		players.put(p.id, p);
-	}
-	
-	public void removeItem(int entityID) {
-		items.remove(entityID);
-	}
-	
-	public void removeItem(ItemStack i) {
-		items.remove(i.id);
-	}
-	
-	public void removeMob(int entityID) {
-		mobs.remove(entityID);
-	}
-	
-	public void removeMob(Mob m) {
-		mobs.remove(m.id);
-	}
-	
-	public void removeProjectile(int entityID) {
-		projectiles.remove(entityID);
-	}
-	
-	public void removeProjectile(Projectile p) {
-		projectiles.remove(p.id);
-	}
-	
-	public void removePlayer(int entityID) {
-		players.remove(entityID);
-	}
-	
-	public void removePlayer(Player p) {
-		players.remove(p.id);
-	}
-	
 	public HashMap<Integer, ItemStack> getItems() {
 		return items;
 	}
@@ -640,20 +593,38 @@ public class Map {
 		return players;
 	}
 	
-	public int getNumItems() {
-		return items.size();
+	public void addEntity(Entity e) {
+		if (e instanceof Player) {
+			this.players.put(e.id, (Player)e);
+		} else if (e instanceof Mob) {
+			this.mobs.put(e.id, (Mob)e);
+		} else if (e instanceof ItemStack) {
+			this.items.put(e.id, (ItemStack)e);
+		} else if (e instanceof Projectile) {
+			this.projectiles.put(e.id, (Projectile)e);
+		} else {
+			server.getLogger().error("Unknown entity type");
+		}
+		e.setMapID(this.id);
 	}
 	
-	public int getNumMobs() {
-		return mobs.size();
+	public Entity getEntity(int entityID) {
+		if (players.containsKey(entityID))
+			return players.get(entityID);
+		if (items.containsKey(entityID))
+			return items.get(entityID);
+		if (mobs.containsKey(entityID))
+			return mobs.get(entityID);
+		if (projectiles.containsKey(entityID))
+			return projectiles.get(entityID);
+		return null;
 	}
 	
-	public int getNumProjectiles() {
-		return projectiles.size();
-	}
-	
-	public int getNumPlayers() {
-		return players.size();
+	public void removeEntity(int entityID) {
+		players.remove(entityID);
+		items.remove(entityID);
+		mobs.remove(entityID);
+		projectiles.remove(entityID);
 	}
 	
 	

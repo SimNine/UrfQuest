@@ -31,17 +31,17 @@ public class ItemStack extends Entity {
 	
 	private int dropTimeout = 500;
 	
-	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type) {
-		this(c, id, m, pos, type, 1, -1);
+	public ItemStack(Client c, int id, ItemType type) {
+		this(c, id, type, 1, -1);
 	}
 	
-	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type, int durability) {
-		this(c, id, m, pos, type, 1, durability);
+	public ItemStack(Client c, int id, ItemType type, int durability) {
+		this(c, id, type, 1, durability);
 	}
 	
-	public ItemStack(Client c, int id, Map m, PairDouble pos, ItemType type, int stackSize, int durability) {
-		super(c, id, m, pos);
-		bounds = new Rectangle2D.Double(pos.x, pos.y, 1, 1);
+	public ItemStack(Client c, int id, ItemType type, int stackSize, int durability) {
+		super(c, id);
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
 		this.itemType = type;
 		this.cooldown = 0;
@@ -103,9 +103,10 @@ public class ItemStack extends Entity {
 			}
 			cooldown = getMaxCooldown();
 			
-			m.incrementMana(-30.0);
-			PairInt home = m.getMap().getHomeCoords();
-			m.setPos(home.toDouble());
+			// TODO: reimplement
+//			m.incrementMana(-30.0);
+//			PairInt home = m.getMap().getHomeCoords();
+//			m.setPos(home.toDouble());
 			return true;
 		case CHICKEN_LEG:
 			cooldown = getMaxCooldown();

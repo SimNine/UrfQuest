@@ -23,8 +23,8 @@ public abstract class Mob extends Entity {
 	protected double maxFullness;
 	protected int healthbarVisibility = 0;
 
-	protected Mob(Client c, int id, Map m, PairDouble pos) {
-		super(c, id, m, pos);
+	protected Mob(Client c, int id) {
+		super(c, id);
 	}
 
 	public abstract void update();
@@ -36,6 +36,11 @@ public abstract class Mob extends Entity {
 	// returns true if the move is valid (in one or both directions), returns false if not
 	// if move is valid, moves the mob
 	protected boolean attemptMove(int dir, double velocity) {
+		Map map = this.getMap();
+		if (map == null) {
+			return false;
+		}
+		
 		PairDouble currPos = this.getCenter();
 		PairDouble newPos = currPos.clone();
 		double xComp = velocity*Math.cos(Math.toRadians(dir));
@@ -45,14 +50,14 @@ public abstract class Mob extends Entity {
 		
 		// attempt to move on the x-axis
 		PairInt xMoveVector = currPos.add(new PairDouble(xComp, 0)).toInt();
-		if (Tile.isWalkable(map.getTileAt(xMoveVector))) {
+		if (map.getTileAt(xMoveVector).isWalkable()) {
 			newPos.x += xComp;
 			ret = true;
 		} // else (if collision) do nothing
 		
 		// attempt to move on the y-axis
 		PairInt yMoveVector = currPos.add(new PairDouble(0, yComp)).toInt();
-		if (Tile.isWalkable(map.getTileAt(yMoveVector))) {
+		if (map.getTileAt(yMoveVector).isWalkable()) {
 			newPos.y += yComp;
 			ret = true;
 		} // else (if collision) do nothing
@@ -63,9 +68,11 @@ public abstract class Mob extends Entity {
 	
 	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
 	public Tile tileAtDistance(double d) {
-		return map.getTileAt(
-			tileCoordsAtDistance(d)
-		);
+		Map map = this.getMap();
+		if (map == null) {
+			return null;
+		}
+		return map.getTileAt(tileCoordsAtDistance(d));
 	}
 	
 	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
@@ -135,13 +142,6 @@ public abstract class Mob extends Entity {
 	public boolean isDead() {
 		return health <= 0;
 	}
-	
-	public void setMap(Map m) {
-		map.removeMob(this);
-		m.addMob(this);
-		map = m;
-	}
-
 	
 	
 	/*

@@ -2,11 +2,8 @@ package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.Graphics;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
-import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
 
@@ -16,11 +13,8 @@ public class CameraMob extends Mob {
 	
 	private int mode;
 
-	public CameraMob(Server srv, State s, Map m, PairDouble pos, int mode) {
-		super(srv, m, pos);
-		
-		movementVector.magnitude = 0.01;
-		movementVector.dirRadians = server.randomDouble()*2.0*Math.PI;
+	public CameraMob(Server srv, State s, int mode) {
+		super(srv);
 		
 		health = 100.0;
 		maxHealth = 100.0;
