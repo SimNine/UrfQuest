@@ -1,9 +1,13 @@
 package xyz.urffer.urfquest.client.entities.projectiles;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import xyz.urffer.urfquest.client.Client;
+import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
+import xyz.urffer.urfutils.math.PairDouble;
+import xyz.urffer.urfutils.math.PairInt;
 
 public class Explosion extends Projectile {
 
@@ -43,5 +47,17 @@ public class Explosion extends Projectile {
 	protected void drawEntity(Graphics g) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void drawDebug(Graphics g) {
+		super.drawDebug(g);
+		
+		g.setColor(Color.RED);
+		PairDouble boundsPos = new PairDouble(bounds.getX(), bounds.getY());
+		PairInt boundsPixel = client.getPanel().gameToWindow(boundsPos);
+		g.drawOval(boundsPixel.x, 
+				   boundsPixel.y,
+				   (int)(bounds.getWidth()*QuestPanel.TILE_WIDTH), 
+				   (int)(bounds.getHeight()*QuestPanel.TILE_WIDTH));
 	}
 }

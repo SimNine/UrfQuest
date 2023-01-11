@@ -30,7 +30,7 @@ public class Explosion extends Projectile {
 
 	public void tick() {
 		this.incrementPos(new PairDouble(-0.04, -0.04));
-		bounds.setRect(bounds.x, bounds.y, bounds.width + 0.08, bounds.height + 0.08);
+		this.setDims(new PairDouble(bounds.width + 0.08, bounds.height + 0.08));
 		this.tickCount++;
 		
 		// clear trees

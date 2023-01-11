@@ -11,6 +11,7 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetDims;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 
@@ -266,6 +267,16 @@ public abstract class Entity {
 	
 	public double getHeight() {
 		return bounds.getHeight();
+	}
+	
+	public void setDims(PairDouble dims) {
+		bounds.width = dims.x;
+		bounds.height = dims.y;
+		
+		MessageEntitySetDims mesd = new MessageEntitySetDims();
+		mesd.entityID = this.id;
+		mesd.dimensions = dims;
+		this.server.sendMessageToAllClients(mesd);
 	}
 
 	// map methods

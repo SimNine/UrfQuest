@@ -36,6 +36,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetDims;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
@@ -318,6 +319,14 @@ public class Client {
 				} else {
 					System.err.println("Entity not found: " + m.entityID);
 				}
+				break;
+			}
+			case ENTITY_SET_DIMS: {
+				MessageEntitySetDims m = (MessageEntitySetDims)p.getMessage();
+				
+				Entity e = state.getEntity(m.entityID);
+				e.setDims(m.dimensions);
+				
 				break;
 			}
 			case MOB_SET_HELD_ITEM: {
