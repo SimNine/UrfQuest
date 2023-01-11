@@ -37,7 +37,7 @@ public class Main {
 	public static Logger mainLogger;
 	
 	// Debug level
-	public static LogLevel debugLevel = LogLevel.INFO;
+	public static LogLevel debugLevel = LogLevel.DEBUG;
 	
 	/**
 	 * Starts either the server, client, or both. Instantiates loggers, reads 

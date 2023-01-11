@@ -1,6 +1,5 @@
 package xyz.urffer.urfquest.server.map;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -24,6 +23,7 @@ import xyz.urffer.urfquest.server.map.structures.Structure;
 import xyz.urffer.urfquest.server.tiles.ActiveTile;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageTileSet;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class Map {
@@ -101,18 +101,11 @@ public class Map {
 	 */
 	
 	public void tick() {
-		ArrayList<Player> addPlayers = new ArrayList<Player>();
-		ArrayList<Mob> addMobs = new ArrayList<Mob>();
-		ArrayList<ItemStack> addItems = new ArrayList<ItemStack>();
-		ArrayList<Projectile> addProjectiles = new ArrayList<Projectile>();
-		
-		ArrayList<Player> removePlayers = new ArrayList<Player>();
-		ArrayList<ItemStack> removeItems = new ArrayList<ItemStack>();
-		ArrayList<Mob> removeMobs = new ArrayList<Mob>();
-		ArrayList<Projectile> removeProjectiles = new ArrayList<Projectile>();
-		
-		
+		HashSet<Entity> addEntities = new HashSet<>();
+		HashSet<Entity> removeEntities = new HashSet<>();
+
 		// update projectiles
+//		System.out.println("Num projectiles: " + projectiles.size());
 		for (Projectile p : projectiles.values()) {
 			p.tick();
 		}
@@ -193,8 +186,8 @@ public class Map {
 		
 		// clean up dead projectiles
 		for (Projectile p : projectiles.values()) {
-			if (p.isDead()) {
-				removeProjectiles.add(p);
+			if (p.isConsumed()) {
+				removeEntities.add(p);
 			}
 		}
 		
@@ -202,45 +195,21 @@ public class Map {
 		for (Mob m : mobs.values()) {
 			if (m.isDead()) {
 				m.onDeath();
-				removeMobs.add(m);
+				removeEntities.add(m);
 			}
 		}
 
 		// remove entities
-		for (ItemStack i : removeItems) {
-			items.remove(i.id);
+		for (Entity e : removeEntities) {
+			this.server.getState().removeEntity(e.id);
 		}
-		for (Mob m : removeMobs) {
-			mobs.remove(m.id);
-		}
-		for (Projectile p : removeProjectiles) {
-			projectiles.remove(p.id);
-		}
-		for (Player p : removePlayers) {
-			players.remove(p.id);
-		}
-		removeItems.clear();
-		removeMobs.clear();
-		removeProjectiles.clear();
-		removePlayers.clear();
+		removeEntities.clear();
 
 		// add entities
-		for (ItemStack i : addItems) {
-			items.put(i.id, i);
+		for (Entity e : addEntities) {
+			this.server.getState().addEntity(e);
 		}
-		for (Mob m : addMobs) {
-			mobs.put(m.id, m);
-		}
-		for (Projectile p : addProjectiles) {
-			projectiles.put(p.id, p);
-		}
-		for (Player p : addPlayers) {
-			players.put(p.id, p);
-		}
-		addItems.clear();
-		addMobs.clear();
-		addProjectiles.clear();
-		addPlayers.clear();
+		addEntities.clear();
 		
 		// updateTiles();
 	}
@@ -520,6 +489,12 @@ public class Map {
 
 		PairInt posInChunk = getCoordsInChunk(pos);
 		chunk.setTileAt(posInChunk, tile);
+		
+		MessageTileSet mts = new MessageTileSet();
+		mts.mapID = this.id;
+		mts.pos = pos;
+		mts.tile = tile;
+		this.server.sendMessageToAllClients(mts);
 	}
 	
 	public PairInt getCoordsInChunk(PairInt pos) {

@@ -15,7 +15,7 @@ import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
 import xyz.urffer.urfquest.client.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
-import xyz.urffer.urfquest.client.entities.projectiles.RocketExplosion;
+import xyz.urffer.urfquest.client.entities.projectiles.Explosion;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;

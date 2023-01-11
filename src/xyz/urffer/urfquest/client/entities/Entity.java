@@ -99,6 +99,11 @@ public abstract class Entity {
 	public PairDouble getDims() {
 		return new PairDouble(bounds.width, bounds.height);
 	}
+	
+	public void setDims(PairDouble dims) {
+		this.bounds.width = dims.x;
+		this.bounds.height = dims.y;
+	}
 
 	/*
 	 * Misc

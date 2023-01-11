@@ -20,10 +20,12 @@ import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
-import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
-import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
+import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
+import xyz.urffer.urfquest.client.entities.projectiles.Explosion;
+import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
+import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -34,17 +36,20 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetDims;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageTileSet;
 import xyz.urffer.urfutils.math.PairInt;
 
 public class Client {
@@ -155,6 +160,33 @@ public class Client {
 				MessageRequestPlayer mrp = new MessageRequestPlayer();
 				mrp.entityName = this.playerName;
 				this.send(mrp);
+				break;
+			}
+			case INIT_PROJECTILE: {
+				// - Initializes a projectile-type entity
+				
+				MessageInitProjectile mip = (MessageInitProjectile)p.getMessage();
+				switch (mip.projectileType) {
+					case BULLET: {
+						Bullet bullet = new Bullet(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(bullet);
+						break;
+					}
+					case ROCKET: {
+						Rocket rocket = new Rocket(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(rocket);
+						break;
+					}
+					case EXPLOSION: {
+						Explosion explosion = new Explosion(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(explosion);
+						break;
+					}
+					default: {
+						break;
+					}
+				}
+				
 				break;
 			}
 			case INIT_MOB: {
@@ -284,7 +316,17 @@ public class Client {
 				Entity e = state.getEntity(m.entityID);
 				if (e != null) {
 					e.setMovementVector(m.vector);
+				} else {
+					System.err.println("Entity not found: " + m.entityID);
 				}
+				break;
+			}
+			case ENTITY_SET_DIMS: {
+				MessageEntitySetDims m = (MessageEntitySetDims)p.getMessage();
+				
+				Entity e = state.getEntity(m.entityID);
+				e.setDims(m.dimensions);
+				
 				break;
 			}
 			case MOB_SET_HELD_ITEM: {
@@ -339,8 +381,16 @@ public class Client {
 			case ENTITY_DESTROY: {
 				MessageEntityDestroy m = (MessageEntityDestroy)p.getMessage();
 				
-				state.getCurrentMap().removeEntity(m.entityID);
+				state.removeEntity(m.entityID);
 				break;
+			}
+			case TILE_SET: {
+				MessageTileSet m = (MessageTileSet)p.getMessage();
+				
+				Map currMap = this.state.getCurrentMap();
+				if (currMap.id == m.mapID) {
+					currMap.setTileAt(m.pos, m.tile);
+				}
 			}
 			default: {
 				break;

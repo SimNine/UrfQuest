@@ -62,6 +62,7 @@ public class State {
 	}
 	
 	public void removeEntity(int entityID) {
+		entities.get(entityID).destroy();
 		entities.remove(entityID);
 		for (Map m : maps.values()) {
 			m.removeEntity(entityID);

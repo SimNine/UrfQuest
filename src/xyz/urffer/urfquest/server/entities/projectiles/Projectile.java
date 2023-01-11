@@ -3,23 +3,23 @@ package xyz.urffer.urfquest.server.entities.projectiles;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
-import xyz.urffer.urfquest.server.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.Vector;
 
 public abstract class Projectile extends Entity {
-	protected Vector movementVector;
 	protected Entity source;
+	protected boolean consumed;
 
-	protected Projectile(Server s, Map m, PairDouble pos, Entity source) {
-		super(s, m, pos);
+	protected Projectile(Server s, Entity source) {
+		super(s);
 		this.source = source;
+		this.consumed = false;
 	}
 	
 	public abstract void tick();
-	
-	public abstract boolean isDead();
 
+	public boolean isConsumed() {
+		return this.consumed;
+	}
+	
 	public Entity getSource() {
 		return source;
 	}

@@ -5,37 +5,25 @@ import java.awt.Graphics;
 
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
-import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
-import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.Tile;
-import xyz.urffer.urfquest.shared.Vector;
 
 public class Bullet extends Projectile {
 
-	public Bullet(Client c, int id, Map m, double[] pos, double dir, double velocity, Entity source) {
-		super(c, id, m, pos, source);
+	public Bullet(Client c, int id, int sourceID) {
+		super(c, id, sourceID);
+		
 		bounds.setRect(bounds.getX(), bounds.getY(), 0.15, 0.15);
-		this.movementVector = new Vector(dir, velocity);
 	}
 
 	public void update() {
-		this.incrementPos(this.movementVector);
-		if (
-			!Tile.isPenetrable(
-				map.getTileAt(
-					new int[] {(int)bounds.x, (int)bounds.y}
-				)
-			)
-		) {
-			// animStage = 1000;
-			splashParticles();
-		}
-		//animStage++;
+//		this.incrementPos(this.movementVector);
+//		if (map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()).isPenetrable()) {
+//			// animStage = 1000;
+//			splashParticles();
+//		}
 	}
 
 	public boolean isDead() {
-		//return (animStage > 1000);
 		return false;
 	}
 	
@@ -46,7 +34,6 @@ public class Bullet extends Projectile {
 	public void collideWith(Mob m) {
 		m.incrementHealth(-5.0);
 		splashParticles();
-		//animStage = 1001;
 	}
 	
 	private void splashParticles() {

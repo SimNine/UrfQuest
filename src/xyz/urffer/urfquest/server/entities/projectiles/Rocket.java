@@ -4,29 +4,36 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
-import xyz.urffer.urfquest.shared.PairDouble;
-import xyz.urffer.urfquest.shared.Tile;
-import xyz.urffer.urfquest.shared.Vector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
+import xyz.urffer.urfquest.shared.protocol.types.ProjectileType;
 
 public class Rocket extends Projectile {
 
-	public Rocket(Server s, Map m, PairDouble pos, double dirRadians, double velocity, Entity source) {
-		super(s, m, pos, source);
+	public Rocket(Server s, Entity source) {
+		super(s, source);
+		
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		this.movementVector = new Vector(dirRadians, velocity);
+		
+		MessageInitProjectile mip = new MessageInitProjectile();
+		mip.entityID = this.id;
+		mip.projectileType = ProjectileType.ROCKET;
+		s.sendMessageToAllClients(mip);
+	}
+	
+	public void destroy() {
+		super.destroy();
+		
+		Explosion expl = new Explosion(server, this);
+		expl.setPos(this.getPos(), this.mapID);
 	}
 
 	public void tick() {
 		this.incrementPos(this.movementVector);
-		if(!Tile.isPenetrable(map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()))) {
-			// animStage = 1000;
-			explode();
+		
+		Map currMap = this.server.getState().getMapByID(this.mapID);
+		if (!currMap.getTileAt(this.getCenter().floor()).isPenetrable()) {
+			this.consumed = true;
 		}
-	}
-
-	public boolean isDead() {
-		// return (animStage > 1000);
-		return false;
 	}
 	
 	public double getDefaultVelocity() {
@@ -35,12 +42,7 @@ public class Rocket extends Projectile {
 	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-5.0);
-		explode();
-		// animStage = 1001;
-	}
-	
-	private void explode() {
-		map.addProjectile(new RocketExplosion(server, this.map, this.getPos(), this));
+		this.consumed = true;
 	}
 
 }
