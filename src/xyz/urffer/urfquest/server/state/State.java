@@ -3,9 +3,8 @@ package xyz.urffer.urfquest.server.state;
 import java.util.HashMap;
 
 import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.projectiles.Bullet;
+import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.map.Map;
 
@@ -35,11 +34,10 @@ public class State {
 		for (Map m : maps.values()) {
 			m.tick();
 			
-			// TODO: remove. temp
-			if (tickCount == 100) {
-				Bullet newBullet = new Bullet(server, null);
+			if (tickCount == 50) {
+				Rocket newBullet = new Rocket(server, null);
 				newBullet.setPos(new PairDouble(5, 5), m.id);
-				newBullet.setMovementVector(4.0, newBullet.getDefaultVelocity());
+				newBullet.setMovementVector(4.5, newBullet.getDefaultVelocity());
 			}
 		}
 	}
@@ -75,6 +73,7 @@ public class State {
 	}
 	
 	public void removeEntity(int entityID) {
+		entities.get(entityID).destroy();
 		entities.remove(entityID);
 		for (Map m : maps.values()) {
 			m.removeEntity(entityID);

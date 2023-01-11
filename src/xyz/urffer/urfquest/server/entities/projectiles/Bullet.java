@@ -23,7 +23,7 @@ public class Bullet extends Projectile {
 
 	public void tick() {
 		this.incrementPos(this.movementVector);
-		
+
 		Map currMap = this.server.getState().getMapByID(this.mapID);
 		Tile currTile = currMap.getTileAt(this.getCenter().floor());
 		if (!currTile.isPenetrable()) {

@@ -21,11 +21,9 @@ public class Bullet extends Projectile {
 //			// animStage = 1000;
 //			splashParticles();
 //		}
-		//animStage++;
 	}
 
 	public boolean isDead() {
-		//return (animStage > 1000);
 		return false;
 	}
 	
@@ -36,7 +34,6 @@ public class Bullet extends Projectile {
 	public void collideWith(Mob m) {
 		m.incrementHealth(-5.0);
 		splashParticles();
-		//animStage = 1001;
 	}
 	
 	private void splashParticles() {

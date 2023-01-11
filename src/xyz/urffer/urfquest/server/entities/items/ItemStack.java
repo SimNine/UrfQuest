@@ -14,7 +14,7 @@ import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.projectiles.Bullet;
 import xyz.urffer.urfquest.server.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
-import xyz.urffer.urfquest.server.entities.projectiles.RocketExplosion;
+import xyz.urffer.urfquest.server.entities.projectiles.Explosion;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.tiles.MapLink;
 import xyz.urffer.urfquest.shared.Tile;
@@ -160,7 +160,7 @@ public class ItemStack extends Entity {
 			cooldown = getMaxCooldown();
 			
 			for (int i = 0; i < 20; i++) {
-				map.addProjectile(new RocketExplosion(server, m.getMap(), this.getCenter(), this));
+				map.addProjectile(new Explosion(server, m.getMap(), this.getCenter(), this));
 			}
 			return true;
 		}

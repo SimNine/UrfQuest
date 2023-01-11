@@ -23,6 +23,9 @@ import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
+import xyz.urffer.urfquest.client.entities.projectiles.Explosion;
+import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
+import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -45,6 +48,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageTileSet;
 import xyz.urffer.urfutils.math.PairInt;
 
 public class Client {
@@ -165,6 +169,16 @@ public class Client {
 					case BULLET: {
 						Bullet bullet = new Bullet(this, mip.entityID, mip.sourceEntityID);
 						state.addEntity(bullet);
+						break;
+					}
+					case ROCKET: {
+						Rocket rocket = new Rocket(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(rocket);
+						break;
+					}
+					case EXPLOSION: {
+						Explosion explosion = new Explosion(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(explosion);
 						break;
 					}
 					default: {
@@ -358,8 +372,16 @@ public class Client {
 			case ENTITY_DESTROY: {
 				MessageEntityDestroy m = (MessageEntityDestroy)p.getMessage();
 				
-				state.getCurrentMap().removeEntity(m.entityID);
+				state.removeEntity(m.entityID);
 				break;
+			}
+			case TILE_SET: {
+				MessageTileSet m = (MessageTileSet)p.getMessage();
+				
+				Map currMap = this.state.getCurrentMap();
+				if (currMap.id == m.mapID) {
+					currMap.setTileAt(m.pos, m.tile);
+				}
 			}
 			default: {
 				break;

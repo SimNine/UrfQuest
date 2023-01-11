@@ -27,5 +27,6 @@ public enum MessageType {
 	INIT_ITEM,
 	INIT_PROJECTILE,
 	ITEM_SET_OWNER,
+	TILE_SET,
 	SERVER_ERROR
 }

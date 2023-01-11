@@ -198,6 +198,9 @@ public class Map {
 	
 	public void setTileAt(PairInt pos, Tile tile) {
 		MapChunk chunk = getChunkAtPos(pos);
+		if (chunk == null) {
+			return;
+		}
 		PairInt posInChunk = getPosInChunk(pos);
 		
 		chunk.setTileAt(posInChunk, tile);

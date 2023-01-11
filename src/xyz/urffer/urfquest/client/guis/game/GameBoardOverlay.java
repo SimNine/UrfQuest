@@ -256,9 +256,18 @@ public class GameBoardOverlay extends GUIContainer {
 	private void drawCrosshair(Graphics g) {
 		PairInt dispCenter = client.getPanel().dispCenter;
 
+		// Draw the crosshair at the center of the screen
 		g.setColor(Color.CYAN);
 		g.drawLine(dispCenter.x - 5, dispCenter.y - 5, dispCenter.x + 5, dispCenter.y + 5);
 		g.drawLine(dispCenter.x - 5, dispCenter.y + 5, dispCenter.x + 5, dispCenter.y - 5);
+		
+		// Draw a crosshair at the mouse's position, plus debug text
+		g.setColor(Color.BLACK);
+		PairInt mousePos = client.getPanel().mousePos;
+		g.drawLine(mousePos.x - 5, mousePos.y - 5, mousePos.x + 5, mousePos.y + 5);
+		g.drawLine(mousePos.x - 5, mousePos.y + 5, mousePos.x + 5, mousePos.y - 5);
+		PairDouble mouseGamePos = client.getPanel().windowToGame(mousePos);
+		g.drawString(mouseGamePos.toString(), mousePos.x, mousePos.y);
 	}
 	
 	// gets the appropriate animstage for Tiles.getTileImage(type, subtype, animstage)

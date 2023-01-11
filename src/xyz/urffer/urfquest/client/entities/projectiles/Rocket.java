@@ -3,29 +3,24 @@ package xyz.urffer.urfquest.client.entities.projectiles;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
-import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
-import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.Vector;
 
 public class Rocket extends Projectile {
 
-	public Rocket(Client c, int id, Map m, PairDouble pos, double dir, double velocity, Entity source) {
-		super(c, id, m, pos, source);
+	public Rocket(Client c, int id, int sourceID) {
+		super(c, id, sourceID);
+		
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		this.movementVector = new Vector(dir, velocity);
 	}
 
 	public void update() {
-		this.incrementPos(this.movementVector);
-		if (!map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()).isPenetrable()) {
-			// animStage = 1000;
-			explode();
-		}
+//		this.incrementPos(this.movementVector);
+//		if (!map.getTileAt(new PairDouble(bounds.x, bounds.y).toInt()).isPenetrable()) {
+//			// animStage = 1000;
+//			explode();
+//		}
 	}
 
 	public boolean isDead() {
