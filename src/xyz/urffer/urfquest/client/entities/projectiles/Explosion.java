@@ -45,8 +45,12 @@ public class Explosion extends Projectile {
 
 	@Override
 	protected void drawEntity(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		int tileWidth = QuestPanel.TILE_WIDTH;
+		g.setColor(Color.ORANGE);
+		g.fillOval(client.getPanel().gameToWindowX(bounds.getX()), 
+				   client.getPanel().gameToWindowY(bounds.getY()),
+				   (int)(bounds.getWidth()*tileWidth), 
+				   (int)(bounds.getHeight()*tileWidth));
 	}
 	
 	public void drawDebug(Graphics g) {

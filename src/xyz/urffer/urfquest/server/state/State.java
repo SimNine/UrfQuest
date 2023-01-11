@@ -2,9 +2,7 @@ package xyz.urffer.urfquest.server.state;
 
 import java.util.HashMap;
 
-import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.map.Map;
 
@@ -14,8 +12,6 @@ public class State {
 	private Map surfaceMap;
 	private HashMap<Integer, Map> maps = new HashMap<>();
 	private HashMap<Integer, Entity> entities = new HashMap<>();
-
-	private int tickCount = 0;
 
 	public State(Server srv) {
 		this.server = srv;
@@ -30,15 +26,8 @@ public class State {
 	 */
 	
 	public void tick() {
-		tickCount++;
 		for (Map m : maps.values()) {
 			m.tick();
-			
-			if (tickCount == 50) {
-				Rocket newBullet = new Rocket(server, null);
-				newBullet.setPos(new PairDouble(5, 5), m.id);
-				newBullet.setMovementVector(4.5, newBullet.getDefaultVelocity());
-			}
 		}
 	}
 	
