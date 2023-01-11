@@ -38,7 +38,9 @@ public class State {
 			// TODO: remove. temp
 			if (tickCount > 100) {
 				tickCount = 0;
-				//new Bullet(server, null).setPos(new PairDouble(5, 5), m.id);
+				Bullet newBullet = new Bullet(server, null);
+				newBullet.setPos(new PairDouble(5, 5), m.id);
+				newBullet.setMovementVector(Math.PI*2*this.server.randomDouble(), newBullet.getDefaultVelocity());
 			}
 		}
 	}

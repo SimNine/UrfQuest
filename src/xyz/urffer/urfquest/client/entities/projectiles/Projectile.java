@@ -3,27 +3,24 @@ package xyz.urffer.urfquest.client.entities.projectiles;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import xyz.urffer.urfutils.math.PairDouble;
-
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.mobs.Mob;
-import xyz.urffer.urfquest.client.map.Map;
 
 public abstract class Projectile extends Entity {
-	protected Entity source;
+	protected int sourceID;
 
-	protected Projectile(Client c, int id, Map m, PairDouble pos, Entity source) {
-		super(c, id, m, pos);
-		this.source = source;
+	protected Projectile(Client c, int id, int sourceID) {
+		super(c, id);
+		this.sourceID = sourceID;
 	}
 	
 	public abstract void update();
 	
 	public abstract boolean isDead();
 
-	public Entity getSource() {
-		return source;
+	public int getSourceID() {
+		return this.sourceID;
 	}
 	
 	public abstract void collideWith(Mob m);

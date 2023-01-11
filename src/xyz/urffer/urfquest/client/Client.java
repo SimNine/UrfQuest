@@ -20,10 +20,9 @@ import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
-import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
-import xyz.urffer.urfquest.client.entities.projectiles.Projectile;
+import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
 import xyz.urffer.urfquest.client.state.State;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.shared.ChatMessage;
@@ -40,6 +39,7 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
@@ -155,6 +155,23 @@ public class Client {
 				MessageRequestPlayer mrp = new MessageRequestPlayer();
 				mrp.entityName = this.playerName;
 				this.send(mrp);
+				break;
+			}
+			case INIT_PROJECTILE: {
+				// - Initializes a projectile-type entity
+				
+				MessageInitProjectile mip = (MessageInitProjectile)p.getMessage();
+				switch (mip.projectileType) {
+					case BULLET: {
+						Bullet bullet = new Bullet(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(bullet);
+						break;
+					}
+					default: {
+						break;
+					}
+				}
+				
 				break;
 			}
 			case INIT_MOB: {
@@ -284,6 +301,8 @@ public class Client {
 				Entity e = state.getEntity(m.entityID);
 				if (e != null) {
 					e.setMovementVector(m.vector);
+				} else {
+					System.err.println("Entity not found: " + m.entityID);
 				}
 				break;
 			}

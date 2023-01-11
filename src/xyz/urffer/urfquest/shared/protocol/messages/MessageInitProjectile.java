@@ -13,6 +13,7 @@ public class MessageInitProjectile extends Message {
 	private static final long serialVersionUID = -994137336855575456L;
 	
 	public int entityID;
+	public int sourceEntityID;
 	public ProjectileType projectileType;
 
 	@Override
@@ -29,7 +30,8 @@ public class MessageInitProjectile extends Message {
 	public String toString() {
 		String ret = 
 				",entityID:" + this.entityID +
-				",projectileType:" + projectileType.toString();
+				",sourceID:" + this.sourceEntityID +
+				",projectileType:" + this.projectileType.toString();
 		return ret;
 	}
 
