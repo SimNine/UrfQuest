@@ -2,32 +2,24 @@ package xyz.urffer.urfquest.server.entities.items;
 
 import java.awt.geom.Rectangle2D;
 
-import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.LogLevel;
-import xyz.urffer.urfquest.Logger;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Chicken;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.projectiles.Bullet;
-import xyz.urffer.urfquest.server.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
-import xyz.urffer.urfquest.server.entities.projectiles.Explosion;
 import xyz.urffer.urfquest.server.map.Map;
-import xyz.urffer.urfquest.server.tiles.MapLink;
 import xyz.urffer.urfquest.shared.Tile;
-import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class ItemStack extends Entity {
-	
-	private Server server;
-	
+		
 	private ItemType itemType;
 	private int cooldown;
 	private int durability;
@@ -77,138 +69,208 @@ public class ItemStack extends Entity {
 	 * Manipulation methods
 	 */
 	
-	// true if used successfully, false if otherwise
-	public boolean use(Mob m) {
-		// don't use if not cooled down
+	public boolean canUse(int mobID) {
+		// Don't use if not cooled down
 		if (cooldown > 0) {
 			return false;
 		}
 		
+		// Get mob to try using this item on
+		Mob m = (Mob)this.server.getState().getEntity(mobID);
+		
+		// Usability depends on type of item
+		switch (this.itemType) {
+			case EMPTY_ITEM: {
+				throw new IllegalStateException("Tried to use an empty item. Should never happen");
+			}
+			case ASTRAL_RUNE: {
+				return (m.getMana() > 50.0);
+			}
+			case COSMIC_RUNE: {
+				return (m.getMana() > 5.0);
+			}
+			case LAW_RUNE: {
+				return (m.getMana() > 30.0);
+			}
+			case CHICKEN_LEG: {
+				return (m.getFullness() < 95.0);
+			}
+			case CHEESE: {
+				return (m.getFullness() < 95.0);
+			}
+			case BONE:
+				return false;
+			case GEM:
+				return false;
+			case LOG:
+				return false;
+			case STONE:
+				return false;
+			case MIC: {
+				return (m.getMana() > 30.0);
+			}
+			case KEY: {
+				return false;
+			}
+			case GRENADE_ITEM: {
+				return true;
+			}
+			case PISTOL: {
+				return true;
+			}
+			case RPG: {
+				return true;
+			}
+			case SHOTGUN: {
+				return true;
+			}
+			case SMG: {
+				return true;
+			}
+			case PICKAXE: {
+				Tile tile = m.tileAtDistance(1.0);
+				if (tile.objectType == ObjectType.BOULDER) {
+					return true;
+				} else if (tile.objectType == ObjectType.COPPER_ORE) {		
+					return true;
+				} else if (tile.objectType == ObjectType.IRON_ORE) {			
+					return true;
+				} else {
+					return false;
+				}
+			}
+			case HATCHET: {
+				Tile tileAtDistance = m.tileAtDistance(1.0);
+				if (tileAtDistance.objectType == ObjectType.TREE) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			case SHOVEL: {
+				if (m.tileAtDistance(0).tileType == TileType.GRASS) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			case IRON_ORE:
+				return false;
+			case COPPER_ORE:
+				return false;
+			default:
+				throw new IllegalArgumentException("something fucked up - nonexistent item ID");
+		}
+	}
+	
+	public void use(int mobID) {
+		
+		// Get mob to use this item by
+		Mob m = (Mob)this.server.getState().getEntity(mobID);
+		
 		switch (itemType) {
 		case EMPTY_ITEM: {
-			throw new IllegalStateException("something fucked up");
+			throw new IllegalStateException("Tried to use an empty item. Should never happen");
 		}
 		case ASTRAL_RUNE: {
-			if (m.getMana() < 50.0) {
-				return false;
-			} // else
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-50.0);
-			PairDouble pos = m.getCenter();
 			for (int i = 0; i < 180; i++) {
-				// TODO: reimplement?
-				// m.getMap().addProjectile(new Bullet(this.server, this.map, pos, i*2, Bullet.getDefaultVelocity(), m));
+				Bullet b = new Bullet(this.server, m.id);
+				b.setPos(m.getCenter(), m.getMapID());
+				b.setMovementVector(Math.toRadians(i*2), b.getDefaultVelocity());
 			}
-			return true;
+			break;
 		}
 		case COSMIC_RUNE: {
-			if (m.getMana() < 5.0) {
-				return false;
-			} // else
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-5.0);
 			
 			Chicken newChicken = new Chicken(this.server);
 			newChicken.setPos(m.getPos(), this.mapID);
-			return true;
+			break;
 		}
 		case LAW_RUNE: {
-			if (m.getMana() < 30.0) {
-				return false;
-			}
 			cooldown = getMaxCooldown();
 			
 			m.incrementMana(-30.0);
 			PairInt home = m.getMap().getHomeCoords();
 			m.setPos(home.toDouble());
-			return true;
+			break;
 		}
 		case CHICKEN_LEG: {
 			cooldown = getMaxCooldown();
 			
-			if (m.getFullness() > 95.0) {
-				return false;
-			} else {
-				m.incrementFullness(5.0);
-				return true;
-			}
+			// TODO: consume
 		}
 		case CHEESE: {
 			cooldown = getMaxCooldown();
 			
-			if (m.getFullness() > 95.0) {
-				return false;
-			} else {
-				m.setFullness(m.getMaxFullness());
-				return true;
-			}
+			// TODO: consume
 		}
 		case BONE:
-			return false;
+			break;
 		case GEM:
-			return false;
+			break;
 		case LOG:
-			return false;
+			break;
 		case STONE:
-			return false;
+			break;
 		case MIC: {
-			if (m.getMana() < 30.0) {
-				return false;
-			}
 			cooldown = getMaxCooldown();
 			
 			for (int i = 0; i < 20; i++) {
-				map.addProjectile(new Explosion(server, m.getMap(), this.getCenter(), this));
+//				map.addProjectile(new Explosion(server, m.getMap(), this.getCenter(), this));
 			}
-			return true;
+			break;
 		}
 		case KEY: {
-			return false;
+			break;
 		}
 		case GRENADE_ITEM: {
 			cooldown = getMaxCooldown();
 			
-			m.getMap().addProjectile(new GrenadeProjectile(server, m.getMap(), m.getCenter(), m));
-			return true;
+//			m.getMap().addProjectile(new GrenadeProjectile(server, m.getMap(), m.getCenter(), m));
+			break;
 		}
 		case PISTOL: {
-			cooldown = getMaxCooldown();
+//			cooldown = getMaxCooldown();
 			
-			PairDouble pos = m.getCenter();
-			double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*10);
-			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
-			return true;
+			double dir = m.getDirection() + (server.randomDouble()/4 - 0.125);
+			Bullet b = new Bullet(this.server, m.id);
+			b.setPos(m.getCenter(), m.getMapID());
+			b.setMovementVector(dir, b.getDefaultVelocity());
+			break;
 		}
 		case RPG: {
 			cooldown = getMaxCooldown();
 			
-			PairDouble pos = m.getCenter();
 			double dir = m.getDirection();
-			m.getMap().addProjectile(new Rocket(server, m.getMap(), pos, dir, server.randomDouble()*0.04 + 0.08, m));
-			
-			return true;
+			Rocket r = new Rocket(this.server, m.id);
+			r.setPos(m.getCenter(), m.getMapID());
+			r.setMovementVector(dir, r.getDefaultVelocity());
+			break;
 		}
 		case SHOTGUN: {
 			cooldown = getMaxCooldown();
 			
-			PairDouble pos = m.getCenter();
-			int numShots = 15 + (int)(server.randomDouble()*5);
-			for (int i = 0; i < numShots; i++) {
-				double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
-				m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
-			}
-			
-			return true;
+//			PairDouble pos = m.getCenter();
+//			int numShots = 15 + (int)(server.randomDouble()*5);
+//			for (int i = 0; i < numShots; i++) {
+//				double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
+//				m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
+//			}
+			break;
 		}
 		case SMG: {
 			cooldown = getMaxCooldown();
 			
-			PairDouble pos = m.getCenter();
-			double dir = m.getDirection() + (server.randomDouble() - 0.5)*10;
-			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
-			return true;
+//			PairDouble pos = m.getCenter();
+//			double dir = m.getDirection() + (server.randomDouble() - 0.5)*10;
+//			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
+			break;
 		}
 		case PICKAXE: {
 			Map map = m.getMap();
@@ -245,22 +307,18 @@ public class ItemStack extends Entity {
 				ItemStack stoneStack = new ItemStack(this.server, ItemType.STONE);
 				stoneStack.setPos(coords.toDouble(), this.mapID);
 				cooldown = getMaxCooldown();
-				return true;
 			} else if (tile.objectType == ObjectType.COPPER_ORE) {
 				ItemStack item = new ItemStack(this.server, ItemType.COPPER_ORE);
 				item.setPos(coords.toDouble(), this.mapID);
 				map.setTileAt(coords, new Tile(TileType.DIRT));
-				cooldown = getMaxCooldown();			
-				return true;
+				cooldown = getMaxCooldown();
 			} else if (tile.objectType == ObjectType.IRON_ORE) {
 				ItemStack item = new ItemStack(this.server, ItemType.IRON_ORE);
 				item.setPos(coords.toDouble(), this.mapID);
 				map.setTileAt(coords, new Tile(TileType.DIRT));
-				cooldown = getMaxCooldown();			
-				return true;
-			} else {
-				return false;
+				cooldown = getMaxCooldown();
 			}
+			break;
 		}
 		case HATCHET: {
 			Tile tileAtDistance = m.tileAtDistance(1.0);
@@ -271,10 +329,8 @@ public class ItemStack extends Entity {
 				item.setPos(coords.toDouble(), this.mapID);
 				
 				cooldown = getMaxCooldown();
-				return true;
-			} else {
-				return false;
 			}
+			break;
 		}
 		case SHOVEL: {
 			if (m.tileAtDistance(0).tileType == TileType.GRASS) {
@@ -305,15 +361,13 @@ public class ItemStack extends Entity {
 				}
 				
 				cooldown = getMaxCooldown();
-				return true;
-			} else {
-				return false;
 			}
+			break;
 		}
 		case IRON_ORE:
-			return false;
+			break;
 		case COPPER_ORE:
-			return false;
+			break;
 		default:
 			throw new IllegalArgumentException("something fucked up - nonexistent item ID");
 		}

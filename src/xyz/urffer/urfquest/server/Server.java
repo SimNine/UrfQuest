@@ -235,10 +235,16 @@ public class Server {
 				newPlayer.addItem(new ItemStack(this, ItemType.PICKAXE));
 				newPlayer.addItem(new ItemStack(this, ItemType.HATCHET));
 				newPlayer.addItem(new ItemStack(this, ItemType.SHOVEL));
+				newPlayer.addItem(new ItemStack(this, ItemType.PISTOL));
 				
 				if (opsList.contains(playerName)) {
 					c.setCommandPermissions(CommandPermissions.OP);
 				}
+				break;
+			}
+			case REQUEST_PLAYER_USE_HELD_ITEM: {
+				Player player = (Player)state.getEntity(userMap.getPlayerIdFromClientId(c.id));
+				player.useSelectedItem();
 				break;
 			}
 			case REQUEST_PLAYER_SET_MOVE_VECTOR: {

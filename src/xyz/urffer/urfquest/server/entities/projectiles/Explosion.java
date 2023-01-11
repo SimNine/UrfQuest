@@ -4,7 +4,6 @@ import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
@@ -17,8 +16,8 @@ public class Explosion extends Projectile {
 	
 	private int tickCount = 0;
 
-	public Explosion(Server s, Entity source) {
-		super(s, source);
+	public Explosion(Server s, int sourceID) {
+		super(s, sourceID);
 		
 		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
 		

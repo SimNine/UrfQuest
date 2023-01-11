@@ -5,12 +5,12 @@ import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 
 public abstract class Projectile extends Entity {
-	protected Entity source;
+	protected int sourceID;
 	protected boolean consumed;
 
-	protected Projectile(Server s, Entity source) {
+	protected Projectile(Server s, int sourceID) {
 		super(s);
-		this.source = source;
+		this.sourceID = sourceID;
 		this.consumed = false;
 	}
 	
@@ -20,8 +20,8 @@ public abstract class Projectile extends Entity {
 		return this.consumed;
 	}
 	
-	public Entity getSource() {
-		return source;
+	public int getSourceID() {
+		return sourceID;
 	}
 	
 	public abstract void collideWith(Mob m);

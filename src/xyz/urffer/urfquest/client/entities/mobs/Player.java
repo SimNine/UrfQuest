@@ -21,6 +21,7 @@ import xyz.urffer.urfquest.shared.ImageUtils;
 import xyz.urffer.urfquest.shared.Vector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerSetMoveVector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerUseHeldItem;
 
 public class Player extends Mob {
 
@@ -222,7 +223,9 @@ public class Player extends Mob {
 	}
 	
 	public void useSelectedItem() {
-		inventory.useSelectedItem();
+		MessageRequestPlayerUseHeldItem m = new MessageRequestPlayerUseHeldItem();
+		this.client.send(m);
+//		inventory.useSelectedItem();
 	}
 	
 	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {

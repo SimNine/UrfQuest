@@ -1,24 +1,24 @@
 package xyz.urffer.urfquest.server.state;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
-import xyz.urffer.urfquest.server.entities.mobs.Mob;
+import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 
 public class Inventory {
 	private Server server;
 	private ItemStack[] entries;
-	private HashSet<Integer> occupiedEntries = new HashSet<Integer>();
 	private int selectedEntry = 0;
-	private Mob owner;
+	private int ownerID;
 	
-	public Inventory(Server s, Mob owner, int size) {
+	public Inventory(Server s, int ownerID, int size) {
 		this.server = s;
 		this.entries = new ItemStack[size];
-		this.owner = owner;
+		for (int i = 0; i < this.entries.length; i++) {
+			this.entries[i] = null;
+		}
+		this.ownerID = ownerID;
 	}
 	
 	// gets an arrayList of all entries in the inventory
@@ -42,7 +42,6 @@ public class Inventory {
 					return false;
 				} else { // if there are open slots
 					entries[place] = i;
-					occupiedEntries.add(place);
 					return true;
 				}
 			}
@@ -52,7 +51,6 @@ public class Inventory {
 				return false;
 			} else {
 				entries[place] = i;
-				occupiedEntries.add(place);
 				return true;
 			}
 		}
@@ -85,12 +83,10 @@ public class Inventory {
 	
 	public void removeSelectedEntry() {
 		entries[selectedEntry] = null;
-		occupiedEntries.remove(selectedEntry);
 	}
 	
 	private void removeEntry(int index) {
 		entries[index] = null;
-		occupiedEntries.remove(index);
 	}
 	
 	public void setSelectedEntry(int i) {
@@ -107,7 +103,9 @@ public class Inventory {
 		if (entry == null) {
 			return;
 		}
-		if (entry.use(owner)) {// if the item is cooled and usable
+		
+		if (entry.canUse(this.ownerID)) {
+			entry.use(this.ownerID);
 			if (entry.isConsumable()) {
 				entry.incStackSize(-1);
 			}
@@ -124,10 +122,10 @@ public class Inventory {
 		}
 	}
 	
-	// finds index of next open slot. returns -1 if no open slots
+	// Finds index of next open slot. Returns -1 if no open slots
 	private int nextOpenSlot() {
 		for (int i = 0; i < entries.length; i++) {
-			if (!occupiedEntries.contains(i)) {
+			if (entries[i] == null || entries[i].getType() == ItemType.EMPTY_ITEM) {
 				return i;
 			}
 		}
@@ -156,44 +154,38 @@ public class Inventory {
 	}
 	
 	// attempts to craft, using the given inputs and outputs
-	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
-		// check to see if the recipie is craftable
-		for (ItemStack i : input) {
-			int index = findIndexOfEntry(i);
-			if (index == -1) {
-				return;
-			} else if (entries[index].currStackSize() < i.currStackSize()) {
-				return;
-			}
-		}
-		if (output.size() > 10 - occupiedEntries.size()) {
-			return;
-		}
-		
-		//at this point, the recipie is craftable
-		for (ItemStack i : input) {
-			int index = findIndexOfEntry(i);
-			removeItemsOfEntry(index, i.currStackSize());
-		}
-		
-		for (ItemStack i : output) {
-			int index = nextOpenSlot();
-			entries[index] = i;
-			occupiedEntries.add(index);
-		}
-	}
+//	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
+//		// check to see if the recipie is craftable
+//		for (ItemStack i : input) {
+//			int index = findIndexOfEntry(i);
+//			if (index == -1) {
+//				return;
+//			} else if (entries[index].currStackSize() < i.currStackSize()) {
+//				return;
+//			}
+//		}
+//		if (output.size() > 10 - occupiedEntries.size()) {
+//			return;
+//		}
+//		
+//		//at this point, the recipie is craftable
+//		for (ItemStack i : input) {
+//			int index = findIndexOfEntry(i);
+//			removeItemsOfEntry(index, i.currStackSize());
+//		}
+//		
+//		for (ItemStack i : output) {
+//			int index = nextOpenSlot();
+//			entries[index] = i;
+//			occupiedEntries.add(index);
+//		}
+//	}
 	
 	public int getSelectedIndex() {
 		return selectedEntry;
 	}
 	
 	public void setItemAtIndex(int index, ItemStack i) {
-		if (i == null) {
-			occupiedEntries.remove(index);
-			entries[index] = null;
-		} else {
-			occupiedEntries.add(index);
-			entries[index] = i;
-		}
+		entries[index] = i;
 	}
 }

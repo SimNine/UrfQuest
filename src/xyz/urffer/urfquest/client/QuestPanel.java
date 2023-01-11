@@ -165,9 +165,11 @@ public class QuestPanel extends JPanel implements KeyListener, MouseListener, Mo
 				} else if (e.getKeyCode() == keybindings.CYCLE_MINIMAP) {
 					gameStatus.cycleMinimapSize();
 				} else if (e.getKeyCode() == keybindings.DROPITEM) {
-					client.getState().getPlayer().dropOneOfSelectedItem();
+//					client.getState().getPlayer().dropOneOfSelectedItem();
 				} else if (e.getKeyCode() == keybindings.BUILDMODE) {
 					//UrfQuestClient.client.getState().toggleBuildMode();
+				} else if (e.getKeyCode() == keybindings.USE_HELD_ITEM) {
+					client.getState().getPlayer().useSelectedItem();
 				} else if (e.getKeyCode() == KeyEvent.VK_1) {
 					client.getState().getPlayer().setSelectedInventoryIndex(0, true);
 				} else if (e.getKeyCode() == KeyEvent.VK_2) {

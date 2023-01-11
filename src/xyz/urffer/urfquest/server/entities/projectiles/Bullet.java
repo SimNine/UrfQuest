@@ -1,7 +1,6 @@
 package xyz.urffer.urfquest.server.entities.projectiles;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
@@ -10,8 +9,8 @@ import xyz.urffer.urfquest.shared.protocol.types.ProjectileType;
 
 public class Bullet extends Projectile {
 	
-	public Bullet(Server s, Entity source) {
-		super(s, source);
+	public Bullet(Server s, int sourceID) {
+		super(s, sourceID);
 		
 		bounds.setFrame(bounds.x, bounds.y, 0.2, 0.2);
 		

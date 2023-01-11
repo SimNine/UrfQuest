@@ -10,6 +10,7 @@ public enum MessageType {
 	DEBUG_PLAYER_INFO,
 	
 	// sent only by client
+	REQUEST_PLAYER_USE_HELD_ITEM,
 	REQUEST_PLAYER_SET_MOVE_VECTOR,
 	REQUEST_PLAYER,
 	REQUEST_MAP,

@@ -35,7 +35,7 @@ public class Player extends Mob {
 		fullness = 100.0;
 		maxFullness = 100.0;
 		
-		inventory = new Inventory(srv, this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
+		inventory = new Inventory(srv, this.id, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
 		this.client = c;
