@@ -6,16 +6,20 @@ import xyz.urffer.urfquest.server.entities.mobs.Mob;
 
 public abstract class Projectile extends Entity {
 	protected Entity source;
+	protected boolean consumed;
 
 	protected Projectile(Server s, Entity source) {
 		super(s);
 		this.source = source;
+		this.consumed = false;
 	}
 	
 	public abstract void tick();
-	
-	public abstract boolean isDead();
 
+	public boolean isConsumed() {
+		return this.consumed;
+	}
+	
 	public Entity getSource() {
 		return source;
 	}

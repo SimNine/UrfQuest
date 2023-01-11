@@ -35,11 +35,6 @@ public class RocketExplosion extends Projectile {
 		    }
 		}
 	}
-
-	public boolean isDead() {
-		// return (animStage > 100);
-		return false;
-	}
 	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-0.15);

@@ -18,11 +18,6 @@ public class GrenadeProjectile extends Projectile {
 		
 	}
 
-	public boolean isDead() {
-		// return (animStage > 1000);
-		return false;
-	}
-
 	public void collideWith(Mob m) {
 		// do nothing
 	}

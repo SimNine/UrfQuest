@@ -193,7 +193,7 @@ public class Map {
 		
 		// clean up dead projectiles
 		for (Projectile p : projectiles.values()) {
-			if (p.isDead()) {
+			if (p.isConsumed()) {
 				removeProjectiles.add(p);
 			}
 		}

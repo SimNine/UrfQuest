@@ -68,7 +68,7 @@ public class Tile implements Serializable {
 		if (objectType != ObjectType.VOID) {
 			return objectType.getPenetrable();
 		} else {
-			return objectType.getWalkable();
+			return tileType.getPenetrable();
 		}
 	}
 	

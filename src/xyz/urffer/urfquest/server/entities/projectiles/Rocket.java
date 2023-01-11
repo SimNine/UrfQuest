@@ -23,11 +23,6 @@ public class Rocket extends Projectile {
 			explode();
 		}
 	}
-
-	public boolean isDead() {
-		// return (animStage > 1000);
-		return false;
-	}
 	
 	public double getDefaultVelocity() {
 		return server.randomDouble()*0.04 + 0.08;

@@ -36,11 +36,10 @@ public class State {
 			m.tick();
 			
 			// TODO: remove. temp
-			if (tickCount > 100) {
-				tickCount = 0;
+			if (tickCount == 100) {
 				Bullet newBullet = new Bullet(server, null);
 				newBullet.setPos(new PairDouble(5, 5), m.id);
-				newBullet.setMovementVector(Math.PI*2*this.server.randomDouble(), newBullet.getDefaultVelocity());
+				newBullet.setMovementVector(4.0, newBullet.getDefaultVelocity());
 			}
 		}
 	}
