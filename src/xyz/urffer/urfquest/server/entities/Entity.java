@@ -10,6 +10,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
 import xyz.urffer.urfquest.shared.Vector;
+import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntityDestroy;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetDims;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
@@ -32,6 +33,8 @@ public abstract class Entity {
 		
 		this.server.getState().addEntity(this);
 	}
+	
+	public abstract Message initMessage();
 	
 	public abstract void tick();
 	
@@ -146,7 +149,13 @@ public abstract class Entity {
 	
 	public void setPos(PairDouble pos, int mapID) {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
-		this.server.getState().getMapByID(mapID).addEntity(this);
+		
+		if (this.mapID != 0) {
+			this.server.getState().getMapByID(this.mapID).removeEntity(this.id);
+		}
+		if (mapID != 0) {
+			this.server.getState().getMapByID(mapID).addEntity(this);
+		}
 		
 		MessageEntitySetPos m = new MessageEntitySetPos();
 		m.entityID = this.id;

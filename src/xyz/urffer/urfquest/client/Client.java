@@ -24,6 +24,7 @@ import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
 import xyz.urffer.urfquest.client.entities.projectiles.Explosion;
+import xyz.urffer.urfquest.client.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.client.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.client.map.Map;
 import xyz.urffer.urfquest.client.state.State;
@@ -166,6 +167,12 @@ public class Client {
 				// - Initializes a projectile-type entity
 				
 				MessageInitProjectile mip = (MessageInitProjectile)p.getMessage();
+				
+				// If this entity already exists, do nothing
+				if (this.state.getEntity(mip.entityID) != null) {
+					break;
+				}
+				
 				switch (mip.projectileType) {
 					case BULLET: {
 						Bullet bullet = new Bullet(this, mip.entityID, mip.sourceEntityID);
@@ -182,6 +189,11 @@ public class Client {
 						state.addEntity(explosion);
 						break;
 					}
+					case GRENADE: {
+						GrenadeProjectile grenade = new GrenadeProjectile(this, mip.entityID, mip.sourceEntityID);
+						state.addEntity(grenade);
+						break;
+					}
 					default: {
 						break;
 					}
@@ -194,6 +206,12 @@ public class Client {
 				// -- Adds it to the current state's entity pool but does not put it on a map
 				
 				MessageInitMob m = (MessageInitMob)p.getMessage();
+				
+				// If this entity already exists, do nothing
+				if (this.state.getEntity(m.entityID) != null) {
+					break;
+				}
+				
 				switch (m.mobType) {
 					case CHICKEN: {
 						Chicken chicken = new Chicken(this, m.entityID);
@@ -228,6 +246,11 @@ public class Client {
 				// }
 				MessageInitPlayer m = (MessageInitPlayer)p.getMessage();
 				
+				// If this entity already exists, do nothing
+				if (this.state.getEntity(m.entityID) != null) {
+					break;
+				}
+				
 				Player player = new Player(this, m.entityID, m.entityName);
 				this.state.addEntity(player);
 				
@@ -245,6 +268,11 @@ public class Client {
 				// -- Spawns in (very briefly) at the origin of the surface map
 				// TODO: improve that
 				MessageInitItem mii = (MessageInitItem)p.getMessage();
+				
+				// If this entity already exists, do nothing
+				if (this.state.getEntity(mii.entityID) != null) {
+					break;
+				}
 				
 				ItemStack item = new ItemStack(this, mii.entityID, mii.itemType, mii.stacksize, mii.durability);
 				this.state.addEntity(item);

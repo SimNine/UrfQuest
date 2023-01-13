@@ -16,7 +16,6 @@ public class ImageUtils {
 			return ImageIO.read(Main.self.getClass().getResourceAsStream(s));
 		} catch (IOException | IllegalArgumentException e) {
 			Main.mainLogger.error("Tile image \"" + s + "\" was unable to be loaded");
-			//e.printStackTrace();
 		}
 		return null;
 	}

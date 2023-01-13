@@ -10,16 +10,22 @@ import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Chicken;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.entities.projectiles.Bullet;
+import xyz.urffer.urfquest.server.entities.projectiles.GrenadeProjectile;
 import xyz.urffer.urfquest.server.entities.projectiles.Rocket;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitItem;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemActivateCooldown;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemResetCooldown;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.TileType;
 
 public class ItemStack extends Entity {
-		
+	
+	private int ownerID = 0;
+	
 	private ItemType itemType;
 	private int cooldown;
 	private int durability;
@@ -28,26 +34,18 @@ public class ItemStack extends Entity {
 	private int dropTimeout = 500;
 	
 	public ItemStack(Server srv, ItemType type) {
-		this(srv, type, -1);
-	}
-	
-	public ItemStack(Server srv, ItemType type, int durability) {
-		this(srv, type, 1, durability);
+		this(srv, type, 1, type.getMaxDurability());
 	}
 	
 	public ItemStack(Server srv, ItemType type, int stackSize, int durability) {
 		super(srv);
-		
-		this.itemType = type;
+
 		this.cooldown = 0;
-		if (this.degrades()) {
-			if (durability == -1) {
-				this.durability = this.getMaxDurability();
-			} else {
-				this.durability = durability;
-			}
+		this.itemType = type;
+		if (durability == -1) {
+			this.durability = this.itemType.getMaxDurability();
 		} else {
-			this.durability = -1;
+			this.durability = durability;
 		}
 		if (stackSize == -1) {
 			this.stackSize = this.maxStackSize();
@@ -55,14 +53,18 @@ public class ItemStack extends Entity {
 			this.stackSize = stackSize;
 		}
 		
+		bounds = new Rectangle2D.Double(0, 0, 1, 1);
+		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
 		MessageInitItem mii = new MessageInitItem();
 		mii.entityID = this.id;
 		mii.itemType = this.itemType;
 		mii.durability = this.durability;
 		mii.stacksize = this.stackSize;
-		srv.sendMessageToAllClients(mii);
-		
-		bounds = new Rectangle2D.Double(0, 0, 1, 1);
+		return mii;
 	}
 
 	/*
@@ -173,8 +175,6 @@ public class ItemStack extends Entity {
 			throw new IllegalStateException("Tried to use an empty item. Should never happen");
 		}
 		case ASTRAL_RUNE: {
-			cooldown = getMaxCooldown();
-			
 			m.incrementMana(-50.0);
 			for (int i = 0; i < 180; i++) {
 				Bullet b = new Bullet(this.server, m.id);
@@ -184,30 +184,21 @@ public class ItemStack extends Entity {
 			break;
 		}
 		case COSMIC_RUNE: {
-			cooldown = getMaxCooldown();
-			
 			m.incrementMana(-5.0);
-			
 			Chicken newChicken = new Chicken(this.server);
-			newChicken.setPos(m.getPos(), this.mapID);
+			newChicken.setPos(m.getPos(), m.getMapID());
 			break;
 		}
 		case LAW_RUNE: {
-			cooldown = getMaxCooldown();
-			
 			m.incrementMana(-30.0);
 			PairInt home = m.getMap().getHomeCoords();
 			m.setPos(home.toDouble());
 			break;
 		}
 		case CHICKEN_LEG: {
-			cooldown = getMaxCooldown();
-			
 			// TODO: consume
 		}
 		case CHEESE: {
-			cooldown = getMaxCooldown();
-			
 			// TODO: consume
 		}
 		case BONE:
@@ -219,25 +210,22 @@ public class ItemStack extends Entity {
 		case STONE:
 			break;
 		case MIC: {
-			cooldown = getMaxCooldown();
-			
-			for (int i = 0; i < 20; i++) {
+			// TODO: (maybe) reimplement
+//			for (int i = 0; i < 20; i++) {
 //				map.addProjectile(new Explosion(server, m.getMap(), this.getCenter(), this));
-			}
+//			}
 			break;
 		}
 		case KEY: {
 			break;
 		}
 		case GRENADE_ITEM: {
-			cooldown = getMaxCooldown();
-			
-//			m.getMap().addProjectile(new GrenadeProjectile(server, m.getMap(), m.getCenter(), m));
+			GrenadeProjectile gp = new GrenadeProjectile(server, m.id);
+			gp.setPos(m.getCenter(), m.getMapID());
+			gp.setMovementVector(m.getDirection(), gp.getDefaultVelocity());
 			break;
 		}
 		case PISTOL: {
-//			cooldown = getMaxCooldown();
-			
 			double dir = m.getDirection() + (server.randomDouble()/4 - 0.125);
 			Bullet b = new Bullet(this.server, m.id);
 			b.setPos(m.getCenter(), m.getMapID());
@@ -245,8 +233,6 @@ public class ItemStack extends Entity {
 			break;
 		}
 		case RPG: {
-			cooldown = getMaxCooldown();
-			
 			double dir = m.getDirection();
 			Rocket r = new Rocket(this.server, m.id);
 			r.setPos(m.getCenter(), m.getMapID());
@@ -254,22 +240,20 @@ public class ItemStack extends Entity {
 			break;
 		}
 		case SHOTGUN: {
-			cooldown = getMaxCooldown();
-			
-//			PairDouble pos = m.getCenter();
-//			int numShots = 15 + (int)(server.randomDouble()*5);
-//			for (int i = 0; i < numShots; i++) {
-//				double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
-//				m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
-//			}
+			int numShots = 15 + (int)(server.randomDouble()*5);
+			for (int i = 0; i < numShots; i++) {
+				double dir = m.getDirection() + (int)((server.randomDouble() - 0.5)*20);
+				Bullet b = new Bullet(server, m.id);
+				b.setPos(m.getCenter(), m.getMapID());
+				b.setMovementVector(dir, b.getDefaultVelocity());
+			}
 			break;
 		}
 		case SMG: {
-			cooldown = getMaxCooldown();
-			
-//			PairDouble pos = m.getCenter();
-//			double dir = m.getDirection() + (server.randomDouble() - 0.5)*10;
-//			m.getMap().addProjectile(new Bullet(server, m.getMap(), pos, dir, server.randomDouble()*0.03 + 0.07, m));
+			double dir = m.getDirection() + (server.randomDouble() - 0.5)*10;
+			Bullet b = new Bullet(server, m.id);
+			b.setPos(m.getCenter(), m.getMapID());
+			b.setMovementVector(dir, b.getDefaultVelocity());
 			break;
 		}
 		case PICKAXE: {
@@ -302,21 +286,18 @@ public class ItemStack extends Entity {
 					} else {
 						item = new ItemStack(this.server, ItemType.STONE);
 					}
-					item.setPos(coords.toDouble(), this.mapID);
+					item.setPos(coords.toDouble(), m.getMapID());
 				}
 				ItemStack stoneStack = new ItemStack(this.server, ItemType.STONE);
-				stoneStack.setPos(coords.toDouble(), this.mapID);
-				cooldown = getMaxCooldown();
+				stoneStack.setPos(coords.toDouble(), m.getMapID());
 			} else if (tile.objectType == ObjectType.COPPER_ORE) {
 				ItemStack item = new ItemStack(this.server, ItemType.COPPER_ORE);
-				item.setPos(coords.toDouble(), this.mapID);
+				item.setPos(coords.toDouble(), m.getMapID());
 				map.setTileAt(coords, new Tile(TileType.DIRT));
-				cooldown = getMaxCooldown();
 			} else if (tile.objectType == ObjectType.IRON_ORE) {
 				ItemStack item = new ItemStack(this.server, ItemType.IRON_ORE);
-				item.setPos(coords.toDouble(), this.mapID);
+				item.setPos(coords.toDouble(), m.getMapID());
 				map.setTileAt(coords, new Tile(TileType.DIRT));
-				cooldown = getMaxCooldown();
 			}
 			break;
 		}
@@ -326,42 +307,39 @@ public class ItemStack extends Entity {
 				PairInt coords = m.tileCoordsAtDistance(1.0);
 				m.getMap().setTileAt(coords, new Tile(tileAtDistance.tileType, ObjectType.VOID));
 				ItemStack item = new ItemStack(this.server, ItemType.LOG);
-				item.setPos(coords.toDouble(), this.mapID);
-				
-				cooldown = getMaxCooldown();
+				item.setPos(coords.toDouble(), m.getMapID());
 			}
 			break;
 		}
 		case SHOVEL: {
-			if (m.tileAtDistance(0).tileType == TileType.GRASS) {
-				PairInt coords = m.tileCoordsAtDistance(0);
-				if (server.randomDouble() > .05) {
-					m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
-				} else {
-					m.getMap().setTileAt(coords, new Tile(TileType.DIRT, ObjectType.HOLE));
-					
-					//int caveSize = 400;
-					
-					// create new map
-					Map newCaveMap = new Map(server, Map.CAVE_MAP);
-					PairInt caveMapHome = newCaveMap.getHomeCoords();
-					newCaveMap.setTileAt(caveMapHome, new Tile(TileType.DIRT, ObjectType.HOLE));
-					
-					//generate and add new link
-					// TODO: fix
-//					MapLink newLink = new MapLink(m.getMap(), coords[0], coords[1], newCaveMap, xHome, yHome);
-//					m.getMap().setActiveTile(coords[0], coords[1], newLink);
-//					newCaveMap.setActiveTile(xHome, yHome, newLink);
-					
-					//debug
-					if (this.server.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
-						this.server.getLogger().debug("soruce: " + coords);
-						this.server.getLogger().debug("exit: " + caveMapHome);
-					}
-				}
-				
-				cooldown = getMaxCooldown();
-			}
+			// TODO: reimplement
+//			if (m.tileAtDistance(0).tileType == TileType.GRASS) {
+//				PairInt coords = m.tileCoordsAtDistance(0);
+//				if (server.randomDouble() > .05) {
+//					m.getMap().setTileAt(coords, new Tile(TileType.DIRT));
+//				} else {
+//					m.getMap().setTileAt(coords, new Tile(TileType.DIRT, ObjectType.HOLE));
+//					
+//					//int caveSize = 400;
+//					
+//					// create new map
+//					Map newCaveMap = new Map(server, Map.CAVE_MAP);
+//					PairInt caveMapHome = newCaveMap.getHomeCoords();
+//					newCaveMap.setTileAt(caveMapHome, new Tile(TileType.DIRT, ObjectType.HOLE));
+//					
+//					//generate and add new link
+//					// TODO: fix
+////					MapLink newLink = new MapLink(m.getMap(), coords[0], coords[1], newCaveMap, xHome, yHome);
+////					m.getMap().setActiveTile(coords[0], coords[1], newLink);
+////					newCaveMap.setActiveTile(xHome, yHome, newLink);
+//					
+//					//debug
+//					if (this.server.getLogger().getLogLevel().compareTo(LogLevel.DEBUG) >= 0) {
+//						this.server.getLogger().debug("soruce: " + coords);
+//						this.server.getLogger().debug("exit: " + caveMapHome);
+//					}
+//				}
+//			}
 			break;
 		}
 		case IRON_ORE:
@@ -371,14 +349,35 @@ public class ItemStack extends Entity {
 		default:
 			throw new IllegalArgumentException("something fucked up - nonexistent item ID");
 		}
+		
+		this.activateCooldown();
+		
+		// If the item is consumable, consume one of it
+		if (this.itemType.getConsumable()) {
+			this.incStackSize(-1);
+		}
+		
+		// If the item degrades, degrade it
+		if (this.itemType.getMaxDurability() > -1 && this.durability > 0) {
+			this.durability -= 1;
+			if (this.durability == 0) { // if the item is fully degraded
+				this.incStackSize(-1);
+			}
+		}
 	}
 	
 	public void tick() {
-		incrementPos(this.movementVector);
+		if (this.ownerID == 0) {
+			incrementPos(this.movementVector);
+		}
 		
-		if (getMaxCooldown() > -1) {
-			if (cooldown > 0) {
-				cooldown--;
+		if (cooldown > 0) {
+			cooldown--;
+			
+			if (cooldown == 0) {
+				MessageItemResetCooldown m = new MessageItemResetCooldown();
+				m.entityID = this.id;
+				this.server.sendMessageToAllClients(m);
 			}
 		}
 		
@@ -389,6 +388,20 @@ public class ItemStack extends Entity {
 		if (dropTimeout > 0) {
 			dropTimeout--;
 		}
+	}
+	
+	private void activateCooldown() {
+		int maxCooldown = this.itemType.getMaxCooldown();
+		if (maxCooldown == 0) {
+			return;
+		}
+		
+		this.cooldown = maxCooldown;
+		
+		// Send a message to clients that this item has been used
+		MessageItemActivateCooldown miac = new MessageItemActivateCooldown();
+		miac.entityID = this.id;
+		this.server.sendMessageToAllClients(miac);
 	}
 	
 	public void accelerateTowards(Mob m) {
@@ -414,72 +427,12 @@ public class ItemStack extends Entity {
 	}
 	
 	public ItemStack clone() {
-		return new ItemStack(this.server, this.itemType, durability);
+		return new ItemStack(this.server, this.itemType, this.stackSize, this.durability);
 	}
 	
 	/*
 	 * Getters and setters
 	 */
-	
-	public boolean isConsumable() {
-		return itemType.getConsumable();
-	}
-	
-	public int getMaxCooldown() {
-		return itemType.getMaxCooldown();
-	}
-	
-	public int getCooldown() {
-		return cooldown;
-	}
-	
-	public void setCooldown(int i) {
-		if (getMaxCooldown() > -1) {
-			cooldown = i;
-		} else {
-			throw new IllegalArgumentException("This item has no cooldown");
-		}
-	}
-	
-	public double getCooldownPercentage() {
-		return (cooldown/(double)getMaxCooldown());
-	}
-	
-	public boolean isUsable() {
-		return (getMaxCooldown() > -1);
-	}
-	
-	public int getMaxDurability() {
-		return itemType.getMaxDurability();
-	}
-	
-	public int getDurability() {
-		return durability;
-	}
-	
-	public void setDurability(int i) {
-		if (getMaxDurability() > -1) {
-			if (i < 0) {
-				durability = 0;
-			} else {
-				durability = i;
-			}
-		} else {
-			throw new IllegalArgumentException("This item has no durability");
-		}
-	}
-	
-	public void incDurability(int i) {
-		setDurability(durability + i);
-	}
-	
-	public double getDurabilityPercentage() {
-		return (durability/(double)getMaxDurability());
-	}
-	
-	public boolean degrades() {
-		return (getMaxDurability() > -1);
-	}
 	
 	public int currStackSize() {
 		return stackSize;
@@ -513,11 +466,11 @@ public class ItemStack extends Entity {
 		return itemType;
 	}
 	
-	public void resetDropTimeout() {
-		dropTimeout = 500;
-	}
-	
-	public boolean isPickupable() {
-		return (dropTimeout == 0);
-	}
+//	public void resetDropTimeout() {
+//		dropTimeout = 500;
+//	}
+//	
+//	public boolean isPickupable() {
+//		return (dropTimeout == 0);
+//	}
 }

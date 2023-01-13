@@ -4,20 +4,27 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
 import xyz.urffer.urfquest.shared.protocol.types.ProjectileType;
+import xyz.urffer.urfutils.math.PairDouble;
 
 public class Bullet extends Projectile {
 	
 	public Bullet(Server s, int sourceID) {
 		super(s, sourceID);
 		
-		bounds.setFrame(bounds.x, bounds.y, 0.2, 0.2);
+		PairDouble defaultBounds = this.getDefaultBounds();
+		bounds.setFrame(bounds.x, bounds.y, defaultBounds.x, defaultBounds.y);
 		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
 		MessageInitProjectile mip = new MessageInitProjectile();
 		mip.entityID = this.id;
 		mip.projectileType = ProjectileType.BULLET;
-		s.sendMessageToAllClients(mip);
+		return mip;
 	}
 
 	public void tick() {
@@ -30,13 +37,18 @@ public class Bullet extends Projectile {
 		}
 	}
 	
-	public double getDefaultVelocity() {
-		return server.randomDouble()*0.03 + 0.07;
-	}
-	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-5.0);
 		this.consumed = true;
+	}
+	
+	public double getDefaultVelocity() {
+		return server.randomDouble()*0.03 + 0.2;
+	}
+
+	@Override
+	public PairDouble getDefaultBounds() {
+		return new PairDouble(0.2, 0.2);
 	}
 
 }

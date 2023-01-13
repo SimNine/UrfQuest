@@ -6,6 +6,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMob;
 import xyz.urffer.urfquest.shared.protocol.types.ItemType;
 import xyz.urffer.urfquest.shared.protocol.types.MobType;
@@ -29,10 +30,14 @@ public class Chicken extends Mob {
 		intelligence = 20;
 		thinkingDelay = intelligence;
 		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
 		MessageInitMob msg = new MessageInitMob();
 		msg.entityID = this.id;
 		msg.mobType = MobType.CHICKEN;
-		server.sendMessageToAllClients(msg);
+		return msg;
 	}
 
 	public void tick() {

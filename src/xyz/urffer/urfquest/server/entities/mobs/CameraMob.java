@@ -6,6 +6,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.IdleRoutine;
 import xyz.urffer.urfquest.server.state.State;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.protocol.Message;
 
 public class CameraMob extends Mob {
 	public static int STILL_MODE = 1301;
@@ -21,6 +22,12 @@ public class CameraMob extends Mob {
 		routine = new IdleRoutine(server, this);
 		
 		this.mode = mode;
+		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
+		return null;
 	}
 
 	public void tick() {

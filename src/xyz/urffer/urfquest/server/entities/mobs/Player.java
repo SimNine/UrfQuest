@@ -1,18 +1,18 @@
 package xyz.urffer.urfquest.server.entities.mobs;
 
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import xyz.urffer.urfquest.server.ClientThread;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
+import xyz.urffer.urfquest.shared.protocol.Message;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
+import xyz.urffer.urfutils.math.PairDouble;
 
 public class Player extends Mob {
 	
@@ -22,9 +22,9 @@ public class Player extends Mob {
 	private double pickupRange = 3.0;
 	
 	private String name;
-	private ClientThread client;
+	private int clientID;
 	
-	public Player(Server srv, String name, ClientThread c) {
+	public Player(Server srv, String name, int clientID) {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
@@ -38,13 +38,17 @@ public class Player extends Mob {
 		inventory = new Inventory(srv, this.id, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
 		this.name = name;
-		this.client = c;
+		this.clientID = clientID;
 		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
 		MessageInitPlayer msg = new MessageInitPlayer();
 		msg.entityID = this.id;
-		msg.clientOwnerID = c.id;
+		msg.clientOwnerID = this.clientID;
 		msg.entityName = this.name;
-		server.sendMessageToAllClients(msg);
+		return msg;
 	}
 
 	/*
@@ -53,6 +57,8 @@ public class Player extends Mob {
 	
 	public void tick() {
 		this.attemptIncrementPos();
+		
+//		this.inventory.tick();
 		
 		// TODO: reimplement all this
 //		if (healthbarVisibility > 0) {
@@ -153,40 +159,20 @@ public class Player extends Mob {
 	 * Inventory management
 	 */
 	
-	public ArrayList<ItemStack> getInventoryItems() {
-		return inventory.getItems();
-	}
-	
-	public boolean addItem(ItemStack i) {
+	public void addItem(int itemID) {
+		inventory.addItem(itemID);
+		
+		ItemStack i = (ItemStack)this.server.getState().getEntity(itemID);
+		i.setPos(new PairDouble(0, 0), 0);
+		
 		MessageItemSetOwner misp = new MessageItemSetOwner();
-		misp.entityID = i.id;
+		misp.entityID = itemID;
 		misp.entityOwnerID = this.id;
 		server.sendMessageToAllClients(misp);
-		
-		return inventory.addItem(i);
-	}
-	
-	public void dropOneOfSelectedItem() {
-		// TODO: multiplayerize
-//		ItemStack i = inventory.removeOneOfSelectedItem();
-//		
-//		if (i == null) {
-//			return;
-//		}
-//		
-//		i.setPos(this.getPos().clone());
-//		i.resetDropTimeout();
-//		map.addItem(i);
 	}
 	
 	public void useSelectedItem() {
-		// TODO: multiplayerize
 		inventory.useSelectedItem();
-	}
-	
-	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
-		// TODO: multiplayerize
-//		inventory.tryCrafting(input, output);
 	}
 	
 	public void setSelectedInventoryIndex(int itemIndex) {
@@ -196,14 +182,6 @@ public class Player extends Mob {
 		m.entityID = this.id;
 		m.setHeldSlot = itemIndex;
 		server.sendMessageToAllClients(m);
-	}
-	
-	public int getSelectedInventoryIndex() {
-		return inventory.getSelectedIndex();
-	}
-	
-	public ItemStack getSelectedInventoryItem() {
-		return inventory.getSelectedItem();
 	}
 	
 	/*

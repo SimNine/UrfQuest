@@ -3,6 +3,7 @@ package xyz.urffer.urfquest.server.entities.projectiles;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
+import xyz.urffer.urfutils.math.PairDouble;
 
 public abstract class Projectile extends Entity {
 	protected int sourceID;
@@ -25,4 +26,8 @@ public abstract class Projectile extends Entity {
 	}
 	
 	public abstract void collideWith(Mob m);
+	
+	public abstract double getDefaultVelocity();
+	
+	public abstract PairDouble getDefaultBounds();
 }
