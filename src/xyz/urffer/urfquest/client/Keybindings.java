@@ -14,6 +14,7 @@ public class Keybindings {
 	public int CRAFTING = KeyEvent.VK_C;
 	public int CYCLE_DEBUG = KeyEvent.VK_F3;
 	public int CHAT = KeyEvent.VK_T;
+	public int USE_HELD_ITEM = KeyEvent.VK_SPACE;
 	
 	public String toString() {
 		String ret = "CONSOLE: " + KeyEvent.getKeyText(CONSOLE) + "\n";
@@ -26,6 +27,7 @@ public class Keybindings {
 		ret += "CRAFTING: " + KeyEvent.getKeyText(CRAFTING) + "\n";
 		ret += "CYCLE_DEBUG: " + KeyEvent.getKeyText(CYCLE_DEBUG) + "\n";
 		ret += "CHAT: " + KeyEvent.getKeyText(CHAT) + "\n";
+		ret += "USE_HELD_ITEM: " + KeyEvent.getKeyText(USE_HELD_ITEM) + "\n";
 		return ret;
 	}
 }

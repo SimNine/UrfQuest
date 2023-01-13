@@ -4,10 +4,10 @@ import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.server.Server;
-import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.shared.Tile;
+import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
 import xyz.urffer.urfquest.shared.protocol.types.ObjectType;
 import xyz.urffer.urfquest.shared.protocol.types.ProjectileType;
@@ -17,15 +17,20 @@ public class Explosion extends Projectile {
 	
 	private int tickCount = 0;
 
-	public Explosion(Server s, Entity source) {
-		super(s, source);
+	public Explosion(Server s, int sourceID) {
+		super(s, sourceID);
+
+		PairDouble defaultBounds = this.getDefaultBounds();
+		bounds.setFrame(bounds.x, bounds.y, defaultBounds.x, defaultBounds.y);
 		
-		this.bounds.setRect(bounds.getX(), bounds.getY(), 0.3, 0.3);
-		
+		this.server.sendMessageToAllClients(this.initMessage());
+	}
+	
+	public Message initMessage() {
 		MessageInitProjectile mip = new MessageInitProjectile();
 		mip.entityID = this.id;
 		mip.projectileType = ProjectileType.EXPLOSION;
-		s.sendMessageToAllClients(mip);
+		return mip;
 	}
 
 	public void tick() {
@@ -53,5 +58,15 @@ public class Explosion extends Projectile {
 	
 	public void collideWith(Mob m) {
 		m.incrementHealth(-0.15);
+	}
+
+	@Override
+	public double getDefaultVelocity() {
+		return 0;
+	}
+
+	@Override
+	public PairDouble getDefaultBounds() {
+		return new PairDouble(0.3, 0.3);
 	}
 }

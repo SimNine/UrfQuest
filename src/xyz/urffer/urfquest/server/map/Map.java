@@ -103,27 +103,6 @@ public class Map {
 	public void tick() {
 		HashSet<Entity> addEntities = new HashSet<>();
 		HashSet<Entity> removeEntities = new HashSet<>();
-
-		// update projectiles
-//		System.out.println("Num projectiles: " + projectiles.size());
-		for (Projectile p : projectiles.values()) {
-			p.tick();
-		}
-		
-		// update mobs
-		for (Mob m : mobs.values()) {
-			m.tick();
-		}
-		
-		// update items
-		for (ItemStack i : items.values()) {
-			i.tick();
-		}
-		
-		// update players
-		for (Player p : players.values()) {
-			p.tick();
-		}
 		
 		// TODO: reimplement entity collision
 //		// check for items near players

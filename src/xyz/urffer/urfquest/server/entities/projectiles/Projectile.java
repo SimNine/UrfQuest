@@ -3,14 +3,15 @@ package xyz.urffer.urfquest.server.entities.projectiles;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Mob;
+import xyz.urffer.urfutils.math.PairDouble;
 
 public abstract class Projectile extends Entity {
-	protected Entity source;
+	protected int sourceID;
 	protected boolean consumed;
 
-	protected Projectile(Server s, Entity source) {
+	protected Projectile(Server s, int sourceID) {
 		super(s);
-		this.source = source;
+		this.sourceID = sourceID;
 		this.consumed = false;
 	}
 	
@@ -20,9 +21,13 @@ public abstract class Projectile extends Entity {
 		return this.consumed;
 	}
 	
-	public Entity getSource() {
-		return source;
+	public int getSourceID() {
+		return sourceID;
 	}
 	
 	public abstract void collideWith(Mob m);
+	
+	public abstract double getDefaultVelocity();
+	
+	public abstract PairDouble getDefaultBounds();
 }

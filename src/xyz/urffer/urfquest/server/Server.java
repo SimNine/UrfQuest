@@ -19,6 +19,7 @@ import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.server.commands.Command;
 import xyz.urffer.urfquest.server.commands.CommandPermissions;
 import xyz.urffer.urfquest.server.commands.CommandProcessor;
+import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
@@ -36,9 +37,9 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageInitChunk;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientConnectionConfirmed;
 import xyz.urffer.urfquest.shared.protocol.messages.MessagePlayerDebug;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageClientDisconnect;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayerSetMoveVector;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestChunk;
@@ -226,19 +227,30 @@ public class Server {
 					break;
 				}
 
-				Player newPlayer = new Player(this, playerName, c);
+				Player newPlayer = new Player(this, playerName, c.id);
 				userMap.addEntry(c.id, newPlayer.id, newPlayer.getName());
 
 				Map surfaceMap = this.state.getSurfaceMap();
 				newPlayer.setPos(surfaceMap.getHomeCoords().toDouble(), surfaceMap.id);
 				
-				newPlayer.addItem(new ItemStack(this, ItemType.PICKAXE));
-				newPlayer.addItem(new ItemStack(this, ItemType.HATCHET));
-				newPlayer.addItem(new ItemStack(this, ItemType.SHOVEL));
+				newPlayer.addItem(new ItemStack(this, ItemType.PICKAXE).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.HATCHET).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.SHOVEL).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.PISTOL).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.COSMIC_RUNE).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.GRENADE_ITEM).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.LAW_RUNE).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.RPG).id);
+				newPlayer.addItem(new ItemStack(this, ItemType.KEY).id);
 				
 				if (opsList.contains(playerName)) {
 					c.setCommandPermissions(CommandPermissions.OP);
 				}
+				break;
+			}
+			case REQUEST_PLAYER_USE_HELD_ITEM: {
+				Player player = (Player)state.getEntity(userMap.getPlayerIdFromClientId(c.id));
+				player.useSelectedItem();
 				break;
 			}
 			case REQUEST_PLAYER_SET_MOVE_VECTOR: {
@@ -270,18 +282,21 @@ public class Server {
 				mmi.mapID = map.id;
 				sendMessageToSingleClient(mmi, c.id);
 
-				for (Player player : map.getPlayers().values()) {
-					MessageInitPlayer mpi = new MessageInitPlayer();
-					mpi.clientOwnerID = userMap.getClientIdFromPlayerId(player.id);
-					mpi.entityID = player.id;
-					mpi.entityName = player.getName();
-					sendMessageToSingleClient(mpi, c.id);
+				// Send a message to init, position, and velocity every entity
+				for (Entity e : state.getAllEntities()) {
+					Message message = e.initMessage();
+					sendMessageToSingleClient(message, c.id);
 					
 					MessageEntitySetPos mesp = new MessageEntitySetPos();
-					mesp.entityID = player.id;
-					mesp.mapID = player.getMapID();
-					mesp.pos = player.getPos();
+					mesp.entityID = e.id;
+					mesp.mapID = e.getMapID();
+					mesp.pos = e.getPos();
 					sendMessageToSingleClient(mesp, c.id);
+					
+					MessageEntitySetMoveVector mesmv = new MessageEntitySetMoveVector();
+					mesmv.entityID = e.id;
+					mesmv.vector = e.getMovementVector();
+					sendMessageToSingleClient(mesmv, c.id);
 				}
 				break;
 			}

@@ -8,12 +8,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import xyz.urffer.urfquest.Main;
 import xyz.urffer.urfquest.client.Client;
+import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 import xyz.urffer.urfquest.client.guis.GUIObject;
@@ -34,7 +35,8 @@ public class ChatWindow extends GUIContainer {
 					  Color bkg, Color borderColor, int borderThickness) {
 		super(c, anchorPoint, xRel, yRel, width, height, name, parent, bkg, borderColor, borderThickness);
 		try {
-			chatFont = Font.createFont(Font.TRUETYPE_FONT, new File("MinecraftRegular-Bmg3.otf"));
+			String fontPath = QuestPanel.assetPath + "/MinecraftRegular-Bmg3.otf";
+			chatFont = Font.createFont(Font.TRUETYPE_FONT, Main.self.getClass().getResourceAsStream(fontPath));
 			chatFont = chatFont.deriveFont(Font.PLAIN, Constants.DEFAULT_TEXT_SIZE);
 		} catch (FontFormatException e) {
 			// TODO Auto-generated catch block

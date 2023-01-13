@@ -1,5 +1,6 @@
 package xyz.urffer.urfquest.server.state;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import xyz.urffer.urfquest.server.Server;
@@ -7,6 +8,7 @@ import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.map.Map;
 
 public class State {
+	@SuppressWarnings("unused")
 	private Server server;
 
 	private Map surfaceMap;
@@ -26,6 +28,12 @@ public class State {
 	 */
 	
 	public void tick() {
+		// Tick entities
+		for (Entity e : entities.values()) {
+			e.tick();
+		}
+		
+		// Tick maps
 		for (Map m : maps.values()) {
 			m.tick();
 		}
@@ -67,5 +75,9 @@ public class State {
 		for (Map m : maps.values()) {
 			m.removeEntity(entityID);
 		}
+	}
+	
+	public Collection<Entity> getAllEntities() {
+		return entities.values();
 	}
 }
