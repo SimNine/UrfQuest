@@ -45,6 +45,8 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitProjectile;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemActivateCooldown;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageItemResetCooldown;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
@@ -419,13 +421,31 @@ public class Client {
 				if (currMap.id == m.mapID) {
 					currMap.setTileAt(m.pos, m.tile);
 				}
+				
+				break;
+			}
+			case ITEM_ACTIVATE_COOLDOWN: {
+				MessageItemActivateCooldown miac = (MessageItemActivateCooldown)p.getMessage();
+				
+				ItemStack i = (ItemStack)this.state.getEntity(miac.entityID);
+				i.setCooldown(i.getMaxCooldown());
+				
+				break;
+			}
+			case ITEM_RESET_COOLDOWN: {
+				MessageItemResetCooldown mirc = (MessageItemResetCooldown)p.getMessage();
+				
+				ItemStack i = (ItemStack)this.state.getEntity(mirc.entityID);
+				i.setCooldown(0);
+				
+				break;
 			}
 			default: {
 				break;
 			}
 		}
 	}
-	
+
 	public void send(Message m) {
 		Packet p = new Packet(this.clientID, m);
 		if (socket == null) {
