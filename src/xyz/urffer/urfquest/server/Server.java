@@ -24,6 +24,7 @@ import xyz.urffer.urfquest.server.entities.items.ItemStack;
 import xyz.urffer.urfquest.server.entities.mobs.Player;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.MapChunk;
+import xyz.urffer.urfquest.server.monitoring.EntityInfoPanel;
 import xyz.urffer.urfquest.server.monitoring.MapOverviewPanel;
 import xyz.urffer.urfquest.server.monitoring.PlayerInfoPanel;
 import xyz.urffer.urfquest.server.state.State;
@@ -145,6 +146,8 @@ public class Server {
 		monitoringFrame.add(mapMonitor);
 		PlayerInfoPanel serverStats = new PlayerInfoPanel(this);
 		monitoringFrame.add(serverStats);
+		EntityInfoPanel serverEntityStats = new EntityInfoPanel(this);
+		monitoringFrame.add(serverEntityStats);
 		
 		monitoringFrame.pack();
 	}
