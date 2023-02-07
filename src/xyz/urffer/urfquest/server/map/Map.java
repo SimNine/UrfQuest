@@ -105,34 +105,31 @@ public class Map {
 		HashSet<Entity> removeEntities = new HashSet<>();
 		
 		// TODO: reimplement entity collision
-//		// check for items near players
+		// check for items near players
 //		for (Player p : players.values()) {
-//			for (Item i : items.values()) {
-//				if (p.isWithinDistance(i, p.getPickupRange()) && i.isPickupable()) {
+//			for (ItemStack i : items.values()) {
+//				if (p.isWithinDistance(i, p.getPickupRange())) {
 //					i.accelerateTowards(p);
 //				}
 //			}
 //		}
-//		
-//		// check for players colliding with items
+		
+		// check for players colliding with items
 //		for (Player p : players.values()) {
-//			HashSet<Item> removeNow = new HashSet<Item>();
-//			for (Item i : items.values()) {
-//				if (p.collides(i) && i.isPickupable()) {
+//			HashSet<Integer> removeNow = new HashSet<>();
+//			for (ItemStack i : items.values()) {
+//				if (p.collides(i)) {
 //					this.server.getLogger().verbose(p.getName() + " collided with object: " + i.getClass().getName());
-//					if (p.addItem(i)) {
-//						removeNow.add(i);
-//					} else {
-//						continue;
-//					}
+//					p.addItem(i.id);
+//					removeNow.add(i.id);
 //				}
 //			}
-//			for (Item i : removeNow) {
-//				items.remove(i.id);
+//			for (Integer i : removeNow) {
+//				items.remove(i);
 //			}
 //		}
-//		
-//		// check for the player colliding with mobs
+		
+		// check for the player colliding with mobs
 //		for (Mob m : mobs.values()) {
 //			for (Player p : players.values()) {
 //				if (p.collides(m)) {
@@ -142,15 +139,15 @@ public class Map {
 //		}
 //		
 //		// check for collisions between projectiles and mobs
-//		for (Projectile p : projectiles.values()) {
-//			for (Mob m : mobs.values()) {
-//				if (p.getSource() == m) {
-//					continue;
-//				} else if (p.collides(m)) {
-//					p.collideWith(m);
-//				}
-//			}
-//		}
+		for (Projectile p : projectiles.values()) {
+			for (Mob m : mobs.values()) {
+				if (p.getSourceID() == m.id) {
+					continue;
+				} else if (p.collides(m)) {
+					p.collideWith(m);
+				}
+			}
+		}
 //		
 //		// check for collisions between projectiles and players
 //		for (Player p : players.values()) {

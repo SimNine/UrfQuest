@@ -4,6 +4,7 @@ import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.server.Server;
+import xyz.urffer.urfquest.server.entities.mobs.Chicken;
 import xyz.urffer.urfquest.server.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.map.structures.House;
@@ -86,7 +87,7 @@ public class HousePopulator extends TerrainPopulator {
 		
 		// Resident
 		// TODO: this line is causing client message parsing errors. look into it
-		NPCHuman resident = new NPCHuman(server);
+		Chicken resident = new Chicken(server);
 		resident.setPos(new PairDouble(pos.x + dims.x/2, pos.y + dims.y/2), map.id);
 	}
 

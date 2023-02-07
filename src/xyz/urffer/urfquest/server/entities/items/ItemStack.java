@@ -2,6 +2,7 @@ package xyz.urffer.urfquest.server.entities.items;
 
 import java.awt.geom.Rectangle2D;
 
+import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
 import xyz.urffer.urfquest.LogLevel;
@@ -405,25 +406,24 @@ public class ItemStack extends Entity {
 	}
 	
 	public void accelerateTowards(Mob m) {
-		// TODO: fix
-//		double xDiff = (m.getCenter()[0] - this.getCenter()[0]);
-//		double yDiff = (m.getCenter()[1] - this.getCenter()[1]);
-//		
-//		if (xDiff > 0) { // if m is east of this
-//			xVel += 0.002;
-//		} else if (xDiff < 0) { // if m is west of this
-//			xVel -= 0.002;
-//		} else {
-//			// nada
-//		}
-//		
-//		if (yDiff > 0) { // if m is south of this
-//			yVel += 0.002;
-//		} else if (yDiff < 0) { // if m is north of this
-//			yVel -= 0.002;
-//		} else {
-//			// nada
-//		}
+		PairDouble diff = m.getCenter().subtract(this.getCenter());
+		PairDouble velocityDelta = new PairDouble(0, 0);
+
+		if (diff.x > 0) { // if m is east of this
+			velocityDelta.x += 0.002;
+		} else if (diff.x < 0) { // if m is west of this
+			velocityDelta.x -= 0.002;
+		} else {
+			// Do nothing
+		}
+		
+		if (diff.y > 0) { // if m is south of this
+			velocityDelta.y += 0.002;
+		} else if (diff.y < 0) { // if m is north of this
+			velocityDelta.y -= 0.002;
+		} else {
+			// Do nothing
+		}
 	}
 	
 	public ItemStack clone() {
