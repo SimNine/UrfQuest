@@ -54,10 +54,6 @@ public class Rogue extends Mob {
 	 */
 	
 	public void tick() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
-		
 		// update hunger and health mechanics
 		if (statCounter > 0) {
 			statCounter--;

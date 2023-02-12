@@ -8,7 +8,6 @@ import xyz.urffer.urfquest.server.map.Map;
 import xyz.urffer.urfquest.server.state.Inventory;
 import xyz.urffer.urfquest.shared.Constants;
 import xyz.urffer.urfquest.shared.protocol.Message;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetPos;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageInitPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
@@ -28,12 +27,12 @@ public class Player extends Mob {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 100.0;
-		maxHealth = 100.0;
-		mana = 100.0;
-		maxMana = 100.0;
-		fullness = 100.0;
-		maxFullness = 100.0;
+		health = 1000;
+		maxHealth = 1000;
+		mana = 1000;
+		maxMana = 1000;
+		fullness = 1000;
+		maxFullness = 1000;
 		
 		inventory = new Inventory(srv, this.id, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		
@@ -112,14 +111,14 @@ public class Player extends Mob {
 		case GRASS:
 			break;
 		case MANA_PAD:
-			if (mana < 100) incrementMana(0.1);
+			if (mana < 100) incrementMana(1);
 			break;
 		case HEALTH_PAD:
-			if (health < 100) incrementHealth(0.1);
+			if (health < 100) incrementHealth(1);
 			break;
 		case HURT_PAD:
-			if (health > 0) incrementHealth(-0.1);
-			if (mana > 0) incrementMana(-0.1);
+			if (health > 0) incrementHealth(-1);
+			if (mana > 0) incrementMana(-1);
 			if (movementVector.magnitude > 0.01) incrementVelocity(-0.001);
 			break;
 		case SPEED_PAD:

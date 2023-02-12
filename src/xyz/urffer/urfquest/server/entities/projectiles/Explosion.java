@@ -57,7 +57,7 @@ public class Explosion extends Projectile {
 	}
 	
 	public void collideWith(Mob m) {
-		m.incrementHealth(-0.15);
+		m.incrementHealth(-2);
 	}
 
 	@Override

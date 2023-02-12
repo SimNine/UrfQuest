@@ -19,12 +19,12 @@ public class Chicken extends Mob {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 10.0;
-		maxHealth = 10.0;
-		mana = 0.0;
-		maxMana = 0.0;
-		fullness = 0.0;
-		maxFullness = 0.0;
+		health = 100;
+		maxHealth = 100;
+		mana = 0;
+		maxMana = 0;
+		fullness = 0;
+		maxFullness = 0;
 		
 		routine = new IdleRoutine(server, this);
 		intelligence = 20;
@@ -41,10 +41,6 @@ public class Chicken extends Mob {
 	}
 
 	public void tick() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
-		
 		// if the chicken can think again
 		thinkingDelay--;
 		if (thinkingDelay <= 0) {
