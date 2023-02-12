@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
+import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.guis.GUIAnchor;
 import xyz.urffer.urfquest.client.guis.GUIContainer;
 
@@ -31,7 +32,8 @@ public class GameStatusOverlay extends GUIContainer {
 								new Color(0, 0, 255, 180), 
 								true, this) {
 				public double getPercentage() {
-					return this.client.getState().getPlayer().getMana()/100.0;
+					Player p = this.client.getState().getPlayer();
+					return ((double)p.getMana()/p.getMaxMana());
 				}
 		};
 		healthBar = new StatusBar(this.client, spacing, 
@@ -41,7 +43,8 @@ public class GameStatusOverlay extends GUIContainer {
 								  new Color(255, 0, 0, 180),
 								  true, this) {
 			public double getPercentage() {
-				return this.client.getState().getPlayer().getHealth()/100.0;
+				Player p = this.client.getState().getPlayer();
+				return ((double)p.getHealth()/p.getMaxHealth());
 			}
 		};
 		fullnessBar = new StatusBar(this.client, spacing, 
@@ -51,7 +54,8 @@ public class GameStatusOverlay extends GUIContainer {
 				  				  new Color(255, 255, 255, 180),
 				  				  true, this) {
 			public double getPercentage() {
-				return this.client.getState().getPlayer().getFullness()/100.0;
+				Player p = this.client.getState().getPlayer();
+				return ((double)p.getFullness()/p.getMaxFullness());
 			}
 		};
 //		fullnessIcon = new ImageBox("bin/assets/guis/star_white_40px.png", 

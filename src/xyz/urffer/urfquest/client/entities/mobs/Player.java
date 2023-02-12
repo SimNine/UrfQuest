@@ -58,12 +58,12 @@ public class Player extends Mob {
 		super(c, id);
 		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 100.0;
-		maxHealth = 100.0;
-		mana = 100.0;
-		maxMana = 100.0;
-		fullness = 100.0;
-		maxFullness = 100.0;
+		health = 1000;
+		maxHealth = 1000;
+		mana = 1000;
+		maxMana = 1000;
+		fullness = 1000;
+		maxFullness = 1000;
 		
 		this.name = name;
 	}

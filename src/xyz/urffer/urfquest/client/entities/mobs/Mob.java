@@ -15,12 +15,14 @@ import xyz.urffer.urfquest.shared.Tile;
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/xyz/urffer/urfquest/assets/entities/";
 	
-	protected double health;
-	protected double mana;
-	protected double fullness;
-	protected double maxHealth;
-	protected double maxMana;
-	protected double maxFullness;
+	protected int health;
+	protected int mana;
+	protected int fullness;
+	
+	protected int maxHealth;
+	protected int maxMana;
+	protected int maxFullness;
+	
 	protected int healthbarVisibility = 0;
 
 	protected Mob(Client c, int id) {
@@ -86,61 +88,51 @@ public abstract class Mob extends Entity {
 
 	// setters, getters, and incrementers
 	
-	public void setHealth(double h) {
-		health = h;
-		healthbarVisibility = 500;
+	public void setHealth(int h) {
+		this.health = h;
+		this.healthbarVisibility = 500;
 	}
 	
-	public double getHealth() {
-		return health;
+	public int getHealth() {
+		return this.health;
 	}
 	
-	public void incrementHealth(double amt) {
-		setHealth(health + amt);
+	public int getMaxHealth() {
+		return this.maxHealth;
 	}
 	
-	public void incrementMana(double amt) {
-		setMana(mana + amt);
+	
+	
+	public void setMana(int m) {
+		this.mana = m;
 	}
 	
-	public void setMana(double m) {
-		if (m > maxMana) {
-			mana = maxMana;
-		} else {
-			mana = m;
-		}
+	public int getMana() {
+		return this.mana;
 	}
 	
-	public double getMana() {
-		return mana;
+	public int getMaxMana() {
+		return this.maxMana;
 	}
 	
-	public double getMaxMana() {
-		return maxMana;
+	
+	
+	public void setFullness(int f) {
+		this.fullness = f;
 	}
 	
-	public void incrementFullness(double amt) {
-		setFullness(fullness + amt);
+	public int getFullness() {
+		return this.fullness;
 	}
 	
-	public void setFullness(double f) {
-		if (f > maxFullness) {
-			fullness = maxFullness;
-		} else {
-			fullness = f;
-		}
+	public int getMaxFullness() {
+		return this.maxFullness;
 	}
 	
-	public double getFullness() {
-		return fullness;
-	}
 	
-	public double getMaxFullness() {
-		return maxFullness;
-	}
 	
 	public boolean isDead() {
-		return health <= 0;
+		return this.health <= 0;
 	}
 	
 	

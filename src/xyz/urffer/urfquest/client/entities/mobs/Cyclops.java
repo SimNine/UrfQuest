@@ -33,12 +33,12 @@ public class Cyclops extends Mob {
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
-		health = 50.0;
-		maxHealth = 50.0;
-		mana = 0.0;
-		maxMana = 0.0;
-		fullness = 0.0;
-		maxFullness = 0.0;
+		health = 500;
+		maxHealth = 500;
+		mana = 0;
+		maxMana = 0;
+		fullness = 0;
+		maxFullness = 0;
 		
 		//shotgun = new Item(0, 0, 15, m);
 	}

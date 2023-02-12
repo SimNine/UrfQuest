@@ -26,12 +26,12 @@ public class Chicken extends Mob {
 		super(c, id);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 10.0;
-		maxHealth = 10.0;
-		mana = 0.0;
-		maxMana = 0.0;
-		fullness = 0.0;
-		maxFullness = 0.0;
+		health = 100;
+		maxHealth = 100;
+		mana = 0;
+		maxMana = 0;
+		fullness = 0;
+		maxFullness = 0;
 	}
 
 	public void update() {

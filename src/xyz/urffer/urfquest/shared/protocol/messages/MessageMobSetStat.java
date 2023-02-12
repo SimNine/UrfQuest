@@ -5,7 +5,7 @@ import xyz.urffer.urfquest.shared.protocol.Message;
 import xyz.urffer.urfquest.shared.protocol.types.MessageType;
 import xyz.urffer.urfquest.shared.protocol.types.StatType;
 
-public class MessageEntitySetStat extends Message {
+public class MessageMobSetStat extends Message {
 	
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class MessageEntitySetStat extends Message {
 
 	@Override
 	public MessageType getType() {
-		return MessageType.ENTITY_SET_STAT;
+		return MessageType.MOB_SET_STAT;
 	}
 
 	@Override

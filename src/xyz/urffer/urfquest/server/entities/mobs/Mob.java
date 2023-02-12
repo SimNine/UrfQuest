@@ -4,7 +4,7 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import xyz.urffer.urfquest.shared.Vector;
-import xyz.urffer.urfquest.shared.protocol.messages.MessageEntitySetStat;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetStat;
 import xyz.urffer.urfquest.shared.protocol.types.StatType;
 
 public abstract class Mob extends Entity {
@@ -52,7 +52,8 @@ public abstract class Mob extends Entity {
 			this.health = h;
 		}
 		
-		MessageEntitySetStat mess = new MessageEntitySetStat();
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
 		mess.statType = StatType.HEALTH;
 		mess.stat = this.health;
 		this.server.sendMessageToAllClients(mess);
@@ -79,7 +80,8 @@ public abstract class Mob extends Entity {
 			mana = m;
 		}
 		
-		MessageEntitySetStat mess = new MessageEntitySetStat();
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
 		mess.statType = StatType.MANA;
 		mess.stat = this.mana;
 		this.server.sendMessageToAllClients(mess);
@@ -106,7 +108,8 @@ public abstract class Mob extends Entity {
 			fullness = f;
 		}
 		
-		MessageEntitySetStat mess = new MessageEntitySetStat();
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
 		mess.statType = StatType.HUNGER;
 		mess.stat = this.fullness;
 		this.server.sendMessageToAllClients(mess);

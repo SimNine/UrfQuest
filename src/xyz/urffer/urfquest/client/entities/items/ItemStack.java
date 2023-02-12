@@ -67,6 +67,9 @@ public class ItemStack extends Entity {
 	
 	// true if used successfully, false if otherwise
 	public boolean use(Mob m) {
+		// TODO: remove all this. no longer needed
+		return true;
+		
 		// don't use if not cooled down
 		if (cooldown > 0) {
 			return false;
@@ -81,7 +84,7 @@ public class ItemStack extends Entity {
 			} // else
 			cooldown = getMaxCooldown();
 			
-			m.incrementMana(-50.0);
+			m.incrementMana(-500);
 			PairDouble pos = m.getCenter();
 			for (int i = 0; i < 180; i++) {
 				//m.getMap().addProjectile(new Bullet(client, id, map, pos, i*2, Bullet.getDefaultVelocity(), m, map));
@@ -93,7 +96,7 @@ public class ItemStack extends Entity {
 			} // else
 			cooldown = getMaxCooldown();
 			
-			m.incrementMana(-5.0);
+			m.incrementMana(-50);
 			PairDouble pos3 = m.getPos();
 			//m.getMap().addMob(new Chicken(client, map, pos3[0], pos3[1]));
 			return true;
@@ -114,7 +117,7 @@ public class ItemStack extends Entity {
 			if (m.getFullness() > 95.0) {
 				return false;
 			} else {
-				m.incrementFullness(5.0);
+				m.incrementFullness(50);
 				return true;
 			}
 		case CHEESE:

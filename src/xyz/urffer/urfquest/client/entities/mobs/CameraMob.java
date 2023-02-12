@@ -10,8 +10,8 @@ public class CameraMob extends Mob {
 
 	public CameraMob(Client c, int id, int mode) {
 		super(c, id);
-		health = 100.0;
-		maxHealth = 100.0;
+		health = 1000;
+		maxHealth = 1000;
 	}
 
 	public void update() {
