@@ -17,8 +17,8 @@ public class CameraMob extends Mob {
 	public CameraMob(Server srv, State s, int mode) {
 		super(srv);
 		
-		health = 100;
-		maxHealth = 100;
+		health = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_PLAYER;
 		routine = new IdleRoutine(server, this);
 		
 		this.mode = mode;

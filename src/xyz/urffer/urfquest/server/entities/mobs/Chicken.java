@@ -19,12 +19,12 @@ public class Chicken extends Mob {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 100;
-		maxHealth = 100;
-		mana = 0;
-		maxMana = 0;
-		fullness = 0;
-		maxFullness = 0;
+		health = Constants.DEFAULT_HEALTH_MAX_CHICKEN;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_CHICKEN;
+		mana = Constants.DEFAULT_MANA_MAX_CHICKEN;
+		maxMana = Constants.DEFAULT_MANA_MAX_CHICKEN;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_CHICKEN;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_CHICKEN;
 		
 		routine = new IdleRoutine(server, this);
 		intelligence = 20;

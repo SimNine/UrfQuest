@@ -49,12 +49,12 @@ public class NPCHuman extends Mob {
 		super(c, id);
 		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 1000;
-		maxHealth = 1000;
-		mana = 1000;
-		maxMana = 1000;
-		fullness = 1000;
-		maxFullness = 1000;
+		health = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		mana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		maxMana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
 		
 		inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		

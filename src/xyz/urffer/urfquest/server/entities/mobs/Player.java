@@ -15,7 +15,6 @@ import xyz.urffer.urfutils.math.PairDouble;
 
 public class Player extends Mob {
 	
-	private int statCounter = 200;
 	private Inventory inventory;
 	
 	private double pickupRange = 3.0;
@@ -27,12 +26,12 @@ public class Player extends Mob {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 1000;
-		maxHealth = 1000;
-		mana = 1000;
-		maxMana = 1000;
-		fullness = 1000;
-		maxFullness = 1000;
+		health = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		mana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		maxMana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
 		
 		inventory = new Inventory(srv, this.id, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 		

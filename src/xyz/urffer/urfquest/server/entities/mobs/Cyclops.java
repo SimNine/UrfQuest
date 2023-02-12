@@ -26,12 +26,12 @@ public class Cyclops extends Mob {
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
-		health = 500;
-		maxHealth = 500;
-		mana = 0;
-		maxMana = 0;
-		fullness = 0;
-		maxFullness = 0;
+		health = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
+		mana = Constants.DEFAULT_MANA_MAX_CYCLOPS;
+		maxMana = Constants.DEFAULT_MANA_MAX_CYCLOPS;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
 		
 		shotgun = new ItemStack(srv, ItemType.SHOTGUN);
 		intelligence = 50;

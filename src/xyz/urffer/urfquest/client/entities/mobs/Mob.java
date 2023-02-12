@@ -160,7 +160,7 @@ public abstract class Mob extends Entity {
 		g.setColor(new Color(0, 0, 0, vis));
 		g.fillRect(topLeftX, topLeftY, 52, 5);
 		g.setColor(new Color(255, 0, 0, vis));
-		g.fillRect(topLeftX+1, topLeftY+1, (int)(50.0*(health/maxHealth)), 3);
+		g.fillRect(topLeftX+1, topLeftY+1, (int)(50.0*((double)health/maxHealth)), 3);
 	}
 
 	protected void drawDebug(Graphics g) {
