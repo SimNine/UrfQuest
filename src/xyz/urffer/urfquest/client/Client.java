@@ -20,6 +20,7 @@ import xyz.urffer.urfquest.client.entities.Entity;
 import xyz.urffer.urfquest.client.entities.items.ItemStack;
 import xyz.urffer.urfquest.client.entities.mobs.Chicken;
 import xyz.urffer.urfquest.client.entities.mobs.Cyclops;
+import xyz.urffer.urfquest.client.entities.mobs.Mob;
 import xyz.urffer.urfquest.client.entities.mobs.NPCHuman;
 import xyz.urffer.urfquest.client.entities.mobs.Player;
 import xyz.urffer.urfquest.client.entities.projectiles.Bullet;
@@ -49,10 +50,12 @@ import xyz.urffer.urfquest.shared.protocol.messages.MessageItemActivateCooldown;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemResetCooldown;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageItemSetOwner;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetHeldItem;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetStat;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestMap;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageRequestPlayer;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageServerError;
 import xyz.urffer.urfquest.shared.protocol.messages.MessageTileSet;
+import xyz.urffer.urfquest.shared.protocol.types.StatType;
 import xyz.urffer.urfutils.math.PairInt;
 
 public class Client {
@@ -359,6 +362,7 @@ public class Client {
 				
 				break;
 			}
+			
 			case MOB_SET_HELD_ITEM: {
 				// - Sets the held item of the specified mob
 				MessageMobSetHeldItem m = (MessageMobSetHeldItem)p.getMessage();
@@ -366,6 +370,25 @@ public class Client {
 				Player player = (Player)state.getEntity(m.entityID);
 				if (player != null) {
 					player.setSelectedInventoryIndex(m.setHeldSlot, false);
+				}
+				
+				break;
+			}
+			case MOB_SET_STAT: {
+				// - Sets a stat of the specified mob
+				
+				MessageMobSetStat mmss = (MessageMobSetStat)p.getMessage();
+				
+				Mob m = (Mob)this.state.getEntity(mmss.entityID);
+				
+				if (mmss.statType == StatType.HEALTH) {
+					m.setHealth(mmss.stat);
+				} else if (mmss.statType == StatType.HUNGER) {
+					m.setFullness(mmss.stat);
+				} else if (mmss.statType == StatType.MANA) {
+					m.setMana(mmss.stat);
+				} else if (mmss.statType == StatType.SPEED) {
+					// do nothing for now
 				}
 				
 				break;

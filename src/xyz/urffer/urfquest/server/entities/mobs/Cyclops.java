@@ -26,12 +26,12 @@ public class Cyclops extends Mob {
 		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
 		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
-		health = 50.0;
-		maxHealth = 50.0;
-		mana = 0.0;
-		maxMana = 0.0;
-		fullness = 0.0;
-		maxFullness = 0.0;
+		health = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
+		mana = Constants.DEFAULT_MANA_MAX_CYCLOPS;
+		maxMana = Constants.DEFAULT_MANA_MAX_CYCLOPS;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
 		
 		shotgun = new ItemStack(srv, ItemType.SHOTGUN);
 		intelligence = 50;
@@ -49,10 +49,6 @@ public class Cyclops extends Mob {
 	}
 
 	public void tick() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
-		
 		// if the cyclops can think again
 		thinkingDelay--;
 		if (thinkingDelay <= 0) {

@@ -4,17 +4,19 @@ import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.ai.routines.MobRoutine;
 import xyz.urffer.urfquest.shared.Vector;
+import xyz.urffer.urfquest.shared.protocol.messages.MessageMobSetStat;
+import xyz.urffer.urfquest.shared.protocol.types.StatType;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/assets/entities/";
 	
-	protected double health;
-	protected double mana;
-	protected double fullness;
-	protected double maxHealth;
-	protected double maxMana;
-	protected double maxFullness;
-	protected int healthbarVisibility = 0;
+	protected int health;
+	protected int mana;
+	protected int fullness;
+	
+	protected int maxHealth;
+	protected int maxMana;
+	protected int maxFullness;
 	
 	protected MobRoutine routine;
 
@@ -43,58 +45,89 @@ public abstract class Mob extends Entity {
 	 * Stat management
 	 */
 	
-	public void setHealth(double h) {
-		health = h;
-		healthbarVisibility = 500;
+	public void setHealth(int h) {
+		if (h > this.maxHealth) {
+			this.health = this.maxHealth;
+		} else {
+			this.health = h;
+		}
+		
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
+		mess.statType = StatType.HEALTH;
+		mess.stat = this.health;
+		this.server.sendMessageToAllClients(mess);
 	}
 	
-	public double getHealth() {
-		return health;
-	}
-	
-	public void incrementHealth(double amt) {
+	public void incrementHealth(int amt) {
 		setHealth(health + amt);
 	}
 	
-	public void incrementMana(double amt) {
-		setMana(mana + amt);
+	public int getHealth() {
+		return health;
 	}
 	
-	public void setMana(double m) {
+	public int getMaxHealth() {
+		return this.maxHealth;
+	}
+	
+	
+	
+	public void setMana(int m) {
 		if (m > maxMana) {
 			mana = maxMana;
 		} else {
 			mana = m;
 		}
+		
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
+		mess.statType = StatType.MANA;
+		mess.stat = this.mana;
+		this.server.sendMessageToAllClients(mess);
 	}
 	
-	public double getMana() {
+	public void incrementMana(int amt) {
+		setMana(mana + amt);
+	}
+	
+	public int getMana() {
 		return mana;
 	}
 	
-	public double getMaxMana() {
+	public int getMaxMana() {
 		return maxMana;
 	}
 	
-	public void incrementFullness(double amt) {
-		setFullness(fullness + amt);
-	}
 	
-	public void setFullness(double f) {
+	
+	public void setFullness(int f) {
 		if (f > maxFullness) {
 			fullness = maxFullness;
 		} else {
 			fullness = f;
 		}
+		
+		MessageMobSetStat mess = new MessageMobSetStat();
+		mess.entityID = this.id;
+		mess.statType = StatType.HUNGER;
+		mess.stat = this.fullness;
+		this.server.sendMessageToAllClients(mess);
 	}
 	
-	public double getFullness() {
+	public void incrementFullness(int amt) {
+		setFullness(fullness + amt);
+	}
+	
+	public int getFullness() {
 		return fullness;
 	}
 	
-	public double getMaxFullness() {
+	public int getMaxFullness() {
 		return maxFullness;
 	}
+	
+	
 	
 	public boolean isDead() {
 		return health <= 0;

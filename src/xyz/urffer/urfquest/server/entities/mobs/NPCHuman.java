@@ -17,12 +17,12 @@ public class NPCHuman extends Mob {
 		super(srv);
 		bounds = new Rectangle2D.Double(0, 0, 1, 1);
 		
-		health = 100.0;
-		maxHealth = 100.0;
-		mana = 100.0;
-		maxMana = 100.0;
-		fullness = 100.0;
-		maxFullness = 100.0;
+		health = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		maxHealth = Constants.DEFAULT_HEALTH_MAX_PLAYER;
+		mana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		maxMana = Constants.DEFAULT_MANA_MAX_PLAYER;
+		fullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
+		maxFullness = Constants.DEFAULT_FULLNESS_MAX_PLAYER;
 		
 		routine = new IdleRoutine(server, this);
 		intelligence = 20;
@@ -40,10 +40,6 @@ public class NPCHuman extends Mob {
 	}
 
 	public void tick() {
-		if (healthbarVisibility > 0) {
-			healthbarVisibility--;
-		}
-		
 		// if the chicken can think again
 		thinkingDelay--;
 		if (thinkingDelay <= 0) {

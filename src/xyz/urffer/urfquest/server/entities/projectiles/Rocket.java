@@ -43,7 +43,7 @@ public class Rocket extends Projectile {
 	}
 	
 	public void collideWith(Mob m) {
-		m.incrementHealth(-5.0);
+		m.incrementHealth(-50);
 		this.consumed = true;
 	}
 	

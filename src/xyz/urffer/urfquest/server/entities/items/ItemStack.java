@@ -5,7 +5,6 @@ import java.awt.geom.Rectangle2D;
 import xyz.urffer.urfutils.math.PairDouble;
 import xyz.urffer.urfutils.math.PairInt;
 
-import xyz.urffer.urfquest.LogLevel;
 import xyz.urffer.urfquest.server.Server;
 import xyz.urffer.urfquest.server.entities.Entity;
 import xyz.urffer.urfquest.server.entities.mobs.Chicken;
@@ -176,7 +175,7 @@ public class ItemStack extends Entity {
 			throw new IllegalStateException("Tried to use an empty item. Should never happen");
 		}
 		case ASTRAL_RUNE: {
-			m.incrementMana(-50.0);
+			m.incrementMana(-500);
 			for (int i = 0; i < 180; i++) {
 				Bullet b = new Bullet(this.server, m.id);
 				b.setPos(m.getCenter(), m.getMapID());
@@ -185,13 +184,13 @@ public class ItemStack extends Entity {
 			break;
 		}
 		case COSMIC_RUNE: {
-			m.incrementMana(-5.0);
+			m.incrementMana(-50);
 			Chicken newChicken = new Chicken(this.server);
 			newChicken.setPos(m.getPos(), m.getMapID());
 			break;
 		}
 		case LAW_RUNE: {
-			m.incrementMana(-30.0);
+			m.incrementMana(-300);
 			PairInt home = m.getMap().getHomeCoords();
 			m.setPos(home.toDouble());
 			break;
