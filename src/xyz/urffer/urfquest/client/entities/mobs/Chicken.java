@@ -39,10 +39,6 @@ public class Chicken extends Mob {
 		if (healthbarVisibility > 0) {
 			healthbarVisibility--;
 		}
-		
-		// execute the current action
-		// routine.update();
-		// attemptMove(routine.suggestedDirection(), routine.suggestedVelocity());
 	}
 
 	@Override

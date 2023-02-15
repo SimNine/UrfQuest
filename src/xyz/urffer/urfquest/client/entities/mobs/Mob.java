@@ -3,14 +3,9 @@ package xyz.urffer.urfquest.client.entities.mobs;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import xyz.urffer.urfutils.math.PairDouble;
-import xyz.urffer.urfutils.math.PairInt;
-
 import xyz.urffer.urfquest.client.Client;
 import xyz.urffer.urfquest.client.QuestPanel;
 import xyz.urffer.urfquest.client.entities.Entity;
-import xyz.urffer.urfquest.client.map.Map;
-import xyz.urffer.urfquest.shared.Tile;
 
 public abstract class Mob extends Entity {
 	protected final static String assetPath = "/xyz/urffer/urfquest/assets/entities/";
@@ -34,59 +29,8 @@ public abstract class Mob extends Entity {
 	public void onDeath() {
 		// do nothing by default
 	}
-	
-	// returns true if the move is valid (in one or both directions), returns false if not
-	// if move is valid, moves the mob
-	protected boolean attemptMove(int dir, double velocity) {
-		Map map = this.getMap();
-		if (map == null) {
-			return false;
-		}
-		
-		PairDouble currPos = this.getCenter();
-		PairDouble newPos = currPos.clone();
-		double xComp = velocity*Math.cos(Math.toRadians(dir));
-		double yComp = velocity*Math.sin(Math.toRadians(dir));
-		
-		boolean ret = false;
-		
-		// attempt to move on the x-axis
-		PairInt xMoveVector = currPos.add(new PairDouble(xComp, 0)).toInt();
-		if (map.getTileAt(xMoveVector).isWalkable()) {
-			newPos.x += xComp;
-			ret = true;
-		} // else (if collision) do nothing
-		
-		// attempt to move on the y-axis
-		PairInt yMoveVector = currPos.add(new PairDouble(0, yComp)).toInt();
-		if (map.getTileAt(yMoveVector).isWalkable()) {
-			newPos.y += yComp;
-			ret = true;
-		} // else (if collision) do nothing
-		
-		this.setPos(newPos.subtract(this.getDims().divide(2.0)));
-		return ret;
-	}
-	
-	// returns the tile at distance 'd' away from the center of this mob, in the direction it is facing
-	public Tile tileAtDistance(double d) {
-		Map map = this.getMap();
-		if (map == null) {
-			return null;
-		}
-		return map.getTileAt(tileCoordsAtDistance(d));
-	}
-	
-	// returns the tile coords of the tile at the distance 'd' away form the center of this mob, in the direction it is facing
-	public PairInt tileCoordsAtDistance(double d) {
-		double xComp = d*Math.cos(this.movementVector.dirRadians);
-		double yComp = d*Math.sin(this.movementVector.dirRadians);
-		PairDouble dist = new PairDouble(xComp, yComp);
-		
-		return this.getCenter().add(dist).toInt();
-	}
 
-	// setters, getters, and incrementers
+	
 	
 	public void setHealth(int h) {
 		this.health = h;

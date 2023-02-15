@@ -14,9 +14,7 @@ import xyz.urffer.urfquest.shared.Constants;
 public class Cyclops extends Mob {
 
 	private static BufferedImage pic;
-	
-	//private Item shotgun;
-	
+		
 	static {
 		try {
 			pic = ImageIO.read(Main.self.getClass().getResourceAsStream(assetPath + "cyclops_unscaled.png"));
@@ -29,10 +27,8 @@ public class Cyclops extends Mob {
 	public Cyclops(Client c, int id) {
 		super(c, id);
 		
-		// figure out what scaling this should be
+		// decide how big to make this mob
 		bounds = new Rectangle2D.Double(0, 0, 10, 10);
-		//								pic.getWidth()/(double)QuestPanel.TILE_WIDTH,
-		//								pic.getHeight()/(double)QuestPanel.TILE_WIDTH);
 		
 		health = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
 		maxHealth = Constants.DEFAULT_HEALTH_MAX_CYCLOPS;
@@ -40,16 +36,10 @@ public class Cyclops extends Mob {
 		maxMana = Constants.DEFAULT_MANA_MAX_CYCLOPS;
 		fullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
 		maxFullness = Constants.DEFAULT_FULLNESS_MAX_CYCLOPS;
-		
-		//shotgun = new Item(0, 0, 15, m);
 	}
 
 	public void update() {
-//		if (healthbarVisibility > 0) {
-//			healthbarVisibility--;
-//		}
-//	
-//		attemptMove(direction, velocity);
+		// do nothing
 	}
 
 	protected void drawEntity(Graphics g) {

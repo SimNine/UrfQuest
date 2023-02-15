@@ -63,9 +63,10 @@ public class NPCHuman extends Mob {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
+		// do nothing
 	}
+	
+	
 	
 	/*
 	 * Drawing methods
