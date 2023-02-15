@@ -99,29 +99,6 @@ public class Inventory {
 		return (findIndexOfEntry(i) != -1);
 	}
 	
-	public void useSelectedItem() {
-		ItemStack entry = entries[selectedEntry];
-		
-		if (entry == null) {
-			return;
-		}
-		if (entry.use(owner)) {// if the item is cooled and usable
-			if (entry.isConsumable()) {
-				entry.incStackSize(-1);
-			}
-			if (entry.degrades() && entry.getDurability() > 0) { // if the item degrades
-				entry.incDurability(-1);
-				if (entry.getDurability() == 0) { // if the item is fully degraded
-					entry.incStackSize(-1);
-				}
-			}
-		}
-		
-		if (entry.currStackSize() == 0) {
-			removeSelectedEntry();
-		}
-	}
-	
 	// finds index of next open slot. returns -1 if no open slots
 	private int nextOpenSlot() {
 		for (int i = 0; i < entries.length; i++) {

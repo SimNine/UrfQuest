@@ -16,7 +16,7 @@ public class CameraMob extends Mob {
 	}
 
 	public void update() {
-		this.incrementPos(this.movementVector);
+		// do nothing
 	}
 
 	protected void drawEntity(Graphics g) {

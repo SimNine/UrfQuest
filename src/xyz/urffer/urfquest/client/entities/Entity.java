@@ -27,6 +27,8 @@ public abstract class Entity {
 		this.id = id;
 	}
 	
+	
+	
 	/*
 	 * Position management
 	 */
@@ -37,21 +39,6 @@ public abstract class Entity {
 		bounds.setRect(pos.x, pos.y, bounds.getWidth(), bounds.getHeight());
 	}
 	
-	public void incrementPos(PairDouble pos) {
-		bounds.setRect(
-			bounds.getX() + pos.x,
-			bounds.getY() + pos.y,
-			bounds.getWidth(),
-			bounds.getHeight()
-		);
-	}
-	
-	protected void incrementPos(Vector v) {
-		double xComp = v.magnitude*Math.cos(Math.toRadians(v.magnitude));
-		double yComp = v.magnitude*Math.sin(Math.toRadians(v.magnitude));
-		this.incrementPos(new PairDouble(xComp, yComp));
-	}
-	
 	public PairDouble getPos() {
 		return new PairDouble(bounds.getX(), bounds.getY());
 	}
@@ -59,6 +46,8 @@ public abstract class Entity {
 	public PairDouble getCenter() {
 		return new PairDouble(bounds.getCenterX(), bounds.getCenterY());
 	}
+	
+	
 	
 	/*
 	 * MovementVector management
@@ -68,29 +57,15 @@ public abstract class Entity {
 		this.movementVector = v;
 	}
 	
-	public void setMovementVector(double dirRadians, double velocity) {
-		this.movementVector = new Vector(dirRadians, velocity);
-	}
-	
-	public void setDirection(double dirRadians) {
-		this.movementVector.dirRadians = dirRadians;
-	}
-	
 	public double getDirection() {
 		return this.movementVector.dirRadians;
-	}
-	
-	public void setVelocity(double s) {
-		this.movementVector.magnitude = s;
 	}
 	
 	public double getVelocity() {
 		return this.movementVector.magnitude;
 	}
 	
-	public void incrementVelocity(double amt) {
-		setVelocity(this.movementVector.magnitude + amt);
-	}
+	
 	
 	/*
 	 * Entity size management
@@ -105,6 +80,8 @@ public abstract class Entity {
 		this.bounds.height = dims.y;
 	}
 
+	
+	
 	/*
 	 * Misc
 	 */

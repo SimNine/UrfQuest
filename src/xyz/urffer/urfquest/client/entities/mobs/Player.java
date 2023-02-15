@@ -52,8 +52,6 @@ public class Player extends Mob {
 	private int statCounter = 200;
 	private Inventory inventory = new Inventory(this, Constants.DEFAULT_PLAYER_INVENTORY_SIZE);
 	
-	private double pickupRange = 3.0;
-
 	public Player(Client c, int id, String name) {
 		super(c, id);
 		this.bounds = new Rectangle2D.Double(0, 0, 1, 1);
@@ -195,12 +193,7 @@ public class Player extends Mob {
 			return;
 		}
 		
-		PairDouble playerPos = getPos();
-		i.setPos(playerPos);
-		i.resetDropTimeout();
-		
-		// TODO: figure out how to handle this
-//		map.addItem(i);
+		// TODO: send a message to drop this item
 	}
 	
 	public int getSelectedInventoryIndex() {
@@ -225,7 +218,6 @@ public class Player extends Mob {
 	public void useSelectedItem() {
 		MessageRequestPlayerUseHeldItem m = new MessageRequestPlayerUseHeldItem();
 		this.client.send(m);
-//		inventory.useSelectedItem();
 	}
 	
 	public void tryCrafting(Collection<ItemStack> input, Collection<ItemStack> output) {
@@ -244,13 +236,7 @@ public class Player extends Mob {
 		map.useActiveTile(getCenter().toInt(), this);
 	}
 	
-	public double getPickupRange() {
-		return pickupRange;
-	}
 	
-	public void setPickupRange(double d) {
-		pickupRange = d;
-	}
 	
 	/*
 	 * Drawing methods
